@@ -40,4 +40,22 @@ public class Relation {
 		this.endNode = endNode;
 		this.relationshipType = relationshipType;
 	}
+	
+	public void setProperties(DynamicProperties properties){
+		this.properties=properties;
+	}
+	
+	public DynamicProperties getProperties(){
+		return properties;
+	}
+	
+	public void setId(Long id){
+		this.id=id;
+	}
+	
+	public Long getId(){
+		return id;
+	}
+	
+	
 }
