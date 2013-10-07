@@ -5,4 +5,7 @@
 	
 	<!-- Root Context: defines shared resources visible to all other web components -->
 		
+	<!-- Reference to Neo4j  -->
+	
+	<import resource="neo4j.xml"/>
 </beans>

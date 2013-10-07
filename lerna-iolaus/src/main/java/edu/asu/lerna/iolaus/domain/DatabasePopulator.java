@@ -52,14 +52,14 @@ public class DatabasePopulator {
 	properties.setProperty("Role","Chairman");
 	properties.setProperty("Year", 1989);
 	rel.setProperties(properties);
-	person.addRelationship(rel);
+	//person.addRelationship(rel);
 	
 	rel=new Relation(person, location, "StaysIn");
 	rel.setId(2L);
 	properties=new DynamicPropertiesContainer();
 	properties.setProperty("Year",1991);
 	rel.setProperties(properties);
-	person.addRelationship(rel);
+	//person.addRelationship(rel);
 	
 	rel=new Relation(person,series,"Attends");
 	rel.setId(3L);
@@ -67,7 +67,7 @@ public class DatabasePopulator {
 	properties.setProperty("Role", "Instructor");
 	properties.setProperty("Year", 1989);
 	rel.setProperties(properties);
-	person.addRelationship(rel);
+	//person.addRelationship(rel);
 	
 	template.save(person);
 	

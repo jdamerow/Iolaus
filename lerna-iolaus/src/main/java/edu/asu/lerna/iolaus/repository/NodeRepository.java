@@ -7,6 +7,8 @@ import edu.asu.lerna.iolaus.domain.Node;
 
 public interface NodeRepository extends GraphRepository<Node>{
 
+	Node findById(long id);
+	
 	@Override
 	@Transactional
 	public <U extends Node> U save(U arg0);
