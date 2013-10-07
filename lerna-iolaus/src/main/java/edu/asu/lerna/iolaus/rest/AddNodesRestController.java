@@ -36,5 +36,17 @@ public class AddNodesRestController {
 //	}
 //	
 	
+	
+	/**
+	 * Simply selects the home view to render by returning its name.
+	 */
+	@RequestMapping(value = "/addnodes", method = RequestMethod.GET)
+	public String addNodes(Model model) {
+		
+		
+		
+		
+		return "home";
+	}
 
 }
