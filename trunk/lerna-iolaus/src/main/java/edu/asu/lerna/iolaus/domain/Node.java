@@ -27,8 +27,8 @@ public class Node {
 	@GraphProperty
 	private DynamicProperties properties;
 	
-	@RelatedToVia
-	private Set<Relation> relationships;
+//	@RelatedToVia
+//	private Set<Relation> relationships;
 
 	//TODO: Add proper constructors and initialize the class objects
 	
@@ -72,21 +72,21 @@ public class Node {
 		this.properties = properties;
 	}
 
-	public Set<Relation> getRelationships() {
-		return relationships;
-	}
-
-	public void setRelationships(Set<Relation> relationships) {
-		this.relationships = relationships;
-	}
-	
-	public void addRelationship(Relation relation)
-	{
-		if(this.relationships == null)
-		{
-			this.relationships = new HashSet<Relation>();
-		}
-		this.relationships.add(relation);
-	}
+//	public Set<Relation> getRelationships() {
+//		return relationships;
+//	}
+//
+//	public void setRelationships(Set<Relation> relationships) {
+//		this.relationships = relationships;
+//	}
+//	
+//	public void addRelationship(Relation relation)
+//	{
+//		if(this.relationships == null)
+//		{
+//			this.relationships = new HashSet<Relation>();
+//		}
+//		this.relationships.add(relation);
+//	}
 
 }
