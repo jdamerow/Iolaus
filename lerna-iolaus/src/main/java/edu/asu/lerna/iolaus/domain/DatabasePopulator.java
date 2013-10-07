@@ -12,49 +12,71 @@ public class DatabasePopulator {
 	@Transactional
 	public void populateDatabase() {
 	
-	Node newNode1=new Node();
+	Node person=new Node();
 	DynamicProperties properties=new DynamicPropertiesContainer();
 	properties.setProperty("First Name","John");
 	properties.setProperty("Last Name","Maclean");
 	
-	newNode1.setId(1L);
-	newNode1.setDataset("Marine Biology");
-	newNode1.setType("Person");
-	newNode1.setLabel("John");
-	newNode1.setProperties(properties);
-	template.save(newNode1);
+	person.setId(1L);
+	person.setDataset("Marine Biology");
+	person.setType("Person");
+	person.setLabel("John");
+	person.setProperties(properties);
 	
-	Node newNode2=new Node();
-	newNode2.setId(2L);
-	newNode2.setDataset("Marine Biology");
-	newNode2.setType("Institute");
-	newNode2.setLabel("Clark University");
-	template.save(newNode2);
+	Node institute=new Node();
+	institute.setId(2L);
+	institute.setDataset("Marine Biology");
+	institute.setType("Institute");
+	institute.setLabel("Clark University");
 	
-	Node newNode3=new Node();
-	DynamicProperties properties2=new DynamicPropertiesContainer();
-	properties2.setProperty("City","Tempe");
-	properties2.setProperty("State","Arizona");
-	newNode3.setId(3L);
-	newNode3.setDataset("Marine Biology");
-	newNode3.setType("Location");
-	newNode3.setLabel("Tempe");
-	newNode3.setProperties(properties2);
-	template.save(newNode3);
+	Node location=new Node();
+	properties=new DynamicPropertiesContainer();
+	properties.setProperty("City","Tempe");
+	properties.setProperty("State","Arizona");
+	location.setId(3L);
+	location.setDataset("Marine Biology");
+	location.setType("Location");
+	location.setLabel("Tempe");
+	location.setProperties(properties);
 	
-	Node newNode4=new Node();
-	newNode4.setId(4L);
-	newNode4.setDataset("Marine Biology");
-	newNode4.setType("Series");
-	newNode4.setLabel("Botany");
-	template.save(newNode4);
+	Node series=new Node();
+	series.setId(4L);
+	series.setDataset("Marine Biology");
+	series.setType("Series");
+	series.setLabel("Botany");
+
 	
-	Relation rel=new Relation(newNode1,newNode2,"AffiliatedTo");
+	Relation rel=new Relation(person,institute,"AffiliatedTo");
 	rel.setId(1L);
-	DynamicProperties properties3=new DynamicPropertiesContainer();
-	properties3.setProperty("Year",1991);
-	rel.setProperties(properties3);
-	newNode1.addRelationship(rel);
-	template.save(newNode1);
+	properties=new DynamicPropertiesContainer();
+	properties.setProperty("Role","Chairman");
+	properties.setProperty("Year", 1989);
+	rel.setProperties(properties);
+	person.addRelationship(rel);
+	
+	rel=new Relation(person, location, "StaysIn");
+	rel.setId(2L);
+	properties=new DynamicPropertiesContainer();
+	properties.setProperty("Year",1991);
+	rel.setProperties(properties);
+	person.addRelationship(rel);
+	
+	rel=new Relation(person,series,"Attends");
+	rel.setId(3L);
+	properties=new DynamicPropertiesContainer();
+	properties.setProperty("Role", "Instructor");
+	properties.setProperty("Year", 1989);
+	rel.setProperties(properties);
+	person.addRelationship(rel);
+	
+	template.save(person);
+	
+	rel=new Relation(institute, location, "LocatesAt");
+	rel.setId(4L);
+	properties=new DynamicPropertiesContainer();
+	properties.setProperty("Year", 1989);
+	
+	template.save(institute);
+	
 	}
 }
