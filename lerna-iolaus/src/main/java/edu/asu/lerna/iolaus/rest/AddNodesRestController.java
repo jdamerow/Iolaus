@@ -39,15 +39,6 @@ public class AddNodesRestController {
 	@Autowired
 	private INetworkManager networkManager;
 	
-
-//	@RequestMapping(value = "/", method = RequestMethod.GET)
-//	public String validUserHandle(ModelMap model, Principal principal) {
-//
-//		System.out.println("Inside home controller mapping.......");
-//		return "home";
-//
-//	}
-//	
 	
 	
 	/**
@@ -56,34 +47,46 @@ public class AddNodesRestController {
 	@RequestMapping(value = "/addnodes", method = RequestMethod.GET)
 	public String addNodes(Model model) {
 		
-		Node person = new Node();
 		
-		//node.setId( UUID.randomUUID().getMostSignificantBits());
-		person.setLabel("Lohith");
-		person.setDataset("Marine Biology");
-		person.setType("Person");
-		DynamicProperties properties = new DynamicPropertiesContainer();
-		properties.setProperty("firstName","Dwaraka");
-		properties.setProperty("lastName","Lohith");
-		person.setProperties(properties);
+		Node person = networkManager.checkGetPerson("Dwaraka","Lohith");
+		if(person ==null){
+			person = new Node();
+			//node.setId( UUID.randomUUID().getMostSignificantBits());
+			person.setLabel("Lohith");
+			person.setDataset("Marine Biology");
+			person.setType("Person");
+			DynamicProperties properties = new DynamicPropertiesContainer();
+			properties.setProperty("firstName","Dwaraka");
+			properties.setProperty("lastName","Lohith");
+			person.setProperties(properties);
+			networkManager.saveNode(person);
+		}else{
+			logger.info("Person Already exist ");
+		}
 		
-		Node location=new Node();
-		properties=new DynamicPropertiesContainer();
-		properties.setProperty("City","Tempe");
-		properties.setProperty("State","Arizona");
-		location.setDataset("Marine Biology");
-		location.setType("Location");
-		location.setLabel("Tempe");
-		location.setProperties(properties);
 		
+		Node location = networkManager.checkGetLocation("Tempe", "Arizona");
+		if(location == null){
+			location=new Node();
+			DynamicProperties properties = new DynamicPropertiesContainer();
+			properties=new DynamicPropertiesContainer();
+			properties.setProperty("city","Tempe");
+			properties.setProperty("state","Arizona");
+			location.setDataset("Marine Biology");
+			location.setType("Location");
+			location.setLabel("Tempe");
+			location.setProperties(properties);
+			networkManager.saveNode(location);
+		}else{
+			logger.info("Location Already exist ");
+		}
 		Relation rel=new Relation(person, location,"StaysIn");
+		DynamicProperties properties = new DynamicPropertiesContainer();
 		properties=new DynamicPropertiesContainer();
-		properties.setProperty("Year",1991);
+		properties.setProperty("Year",1992);
 		rel.setProperties(properties); 
 		
-		//person.addRelationship(rel);
-		networkManager.saveNode(person);
-		networkManager.saveNode(location);
+		
 		networkManager.saveRelation(rel);
 		return "home";
 	}
