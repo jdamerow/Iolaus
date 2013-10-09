@@ -33,7 +33,7 @@ public class Relation {
 		super();
 	}
 
-	public Relation(Node startNode, Node endNode, String relationshipType)
+	public Relation(Node startNode, Node endNode,String relationshipType)
 	{
 		super();
 		this.startNode = startNode;
@@ -56,6 +56,9 @@ public class Relation {
 	public Long getId(){
 		return id;
 	}
+	/*String getRelationshipType(){
+		return relationshipType;
+	}*/
 	
 	
 }
