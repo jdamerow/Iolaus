@@ -109,6 +109,7 @@ public class NetworkManager implements INetworkManager {
 			DynamicProperties properties =node.getProperties();
 			String citySample = (String) properties.getProperty("city");
 			String stateSample = (String) properties.getProperty("state");
+			logger.info( citySample+" , "+stateSample);
 			if((state.equals(stateSample))&&(city.equals(citySample))){
 				target=node;
 				return target;
