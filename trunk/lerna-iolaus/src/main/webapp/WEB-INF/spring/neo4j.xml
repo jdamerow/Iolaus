@@ -23,4 +23,16 @@
 	</bean>
 
 
+
+	<bean id="conversionService"
+		class="org.springframework.context.support.ConversionServiceFactoryBean">
+		<property name="converters">
+			<list>
+				<bean class="edu.asu.lerna.iolaus.converters.DynamicPropertyToStringConverter" />
+				<bean class="edu.asu.lerna.iolaus.converters.StringToDynamicPropertyConverter" />
+				
+
+			</list>
+		</property>
+	</bean>
 </beans>
