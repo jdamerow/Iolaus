@@ -18,7 +18,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import edu.asu.lerna.iolaus.domain.Node;
+import edu.asu.lerna.iolaus.domain.Relation;
 import edu.asu.lerna.iolaus.repository.NodeRepository;
+import edu.asu.lerna.iolaus.repository.RelationRepository;
 import edu.asu.lerna.iolaus.service.INetworkManager;
 
 
@@ -36,7 +38,7 @@ public class AddNodesRestController {
 	
 	@Autowired
 	private INetworkManager networkManager;
-
+	
 
 //	@RequestMapping(value = "/", method = RequestMethod.GET)
 //	public String validUserHandle(ModelMap model, Principal principal) {
@@ -54,17 +56,35 @@ public class AddNodesRestController {
 	@RequestMapping(value = "/addnodes", method = RequestMethod.GET)
 	public String addNodes(Model model) {
 		
-		Node node = new Node();
+		Node person = new Node();
 		
 		//node.setId( UUID.randomUUID().getMostSignificantBits());
-		node.setLabel("Lohith");
-		node.setDataset("Marine Biology");
-		node.setType("Person");
+		person.setLabel("Lohith");
+		person.setDataset("Marine Biology");
+		person.setType("Person");
 		DynamicProperties properties = new DynamicPropertiesContainer();
 		properties.setProperty("firstName","Dwaraka");
 		properties.setProperty("lastName","Lohith");
-		node.setProperties(properties);
-		networkManager.saveNode(node);
+		person.setProperties(properties);
+		
+		Node location=new Node();
+		properties=new DynamicPropertiesContainer();
+		properties.setProperty("City","Tempe");
+		properties.setProperty("State","Arizona");
+		location.setDataset("Marine Biology");
+		location.setType("Location");
+		location.setLabel("Tempe");
+		location.setProperties(properties);
+		
+		Relation rel=new Relation(person, location,"StaysIn");
+		properties=new DynamicPropertiesContainer();
+		properties.setProperty("Year",1991);
+		rel.setProperties(properties); 
+		
+		//person.addRelationship(rel);
+		networkManager.saveNode(person);
+		networkManager.saveNode(location);
+		networkManager.saveRelation(rel);
 		return "home";
 	}
 

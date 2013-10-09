@@ -3,6 +3,7 @@ package edu.asu.lerna.iolaus.domain;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.neo4j.graphdb.Direction;
 import org.springframework.data.neo4j.annotation.GraphId;
 import org.springframework.data.neo4j.annotation.GraphProperty;
 import org.springframework.data.neo4j.annotation.Indexed;
@@ -27,8 +28,8 @@ public class Node {
 	@GraphProperty
 	private DynamicProperties properties;
 	
-//	@RelatedToVia
-//	private Set<Relation> relationships;
+	@RelatedToVia(type="Default",direction=Direction.OUTGOING)
+	private Set<Relation> relationships;
 
 	//TODO: Add proper constructors and initialize the class objects
 	
@@ -72,21 +73,21 @@ public class Node {
 		this.properties = properties;
 	}
 
-//	public Set<Relation> getRelationships() {
-//		return relationships;
-//	}
-//
-//	public void setRelationships(Set<Relation> relationships) {
-//		this.relationships = relationships;
-//	}
-//	
-//	public void addRelationship(Relation relation)
-//	{
-//		if(this.relationships == null)
-//		{
-//			this.relationships = new HashSet<Relation>();
-//		}
-//		this.relationships.add(relation);
-//	}
+	/*public Set<Relation> getRelationships() {
+		return relationships;
+	}
+
+	public void setRelationships(Set<Relation> relationships) {
+		this.relationships = relationships;
+	}
+	
+	public void addRelationship(Relation relation)
+	{
+		if(this.relationships == null)
+		{
+			this.relationships = new HashSet<Relation>();
+		}
+		this.relationships.add(relation);
+	}*/
 
 }
