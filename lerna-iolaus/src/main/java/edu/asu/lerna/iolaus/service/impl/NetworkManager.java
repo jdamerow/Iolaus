@@ -5,22 +5,19 @@ import java.util.Iterator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 import org.springframework.data.neo4j.conversion.EndResult;
 import org.springframework.data.neo4j.fieldaccess.DynamicProperties;
-import org.springframework.data.neo4j.support.Neo4jTemplate;
+import org.springframework.stereotype.Service;
+
 import edu.asu.lerna.iolaus.domain.Node;
 import edu.asu.lerna.iolaus.domain.Relation;
 import edu.asu.lerna.iolaus.repository.NodeRepository;
 import edu.asu.lerna.iolaus.repository.RelationRepository;
-import edu.asu.lerna.iolaus.rest.AddNodesRestController;
 import edu.asu.lerna.iolaus.service.INetworkManager;
 
 @Service
 public class NetworkManager implements INetworkManager {
 
-	@Autowired
-	private Neo4jTemplate template;
 
 	private static final Logger logger = LoggerFactory
 			.getLogger(NetworkManager.class);
@@ -38,7 +35,6 @@ public class NetworkManager implements INetworkManager {
 
 	@Override
 	public void saveNode(Node n){
-		
 		nodeRepository.save(n);
 	}
 	
@@ -52,7 +48,11 @@ public class NetworkManager implements INetworkManager {
 			Node node = nodeIterator.next();
 			logger.info("dataset "+node.getDataset());
 			DynamicProperties properties =node.getProperties();
-			String firstNameSample = (String) properties.getProperty("firstName");
+			String firstNameSample="";
+			if(properties.hasProperty("firstName")){
+				firstNameSample = (String) properties.getProperty("firstName");
+			}
+			logger.info("firstNamee "+firstNameSample);
 			String lastNameSample = (String) properties.getProperty("lastName");
 			if((firstName.equals(firstNameSample))&&(lastName.equals(lastNameSample))){
 				target=node;

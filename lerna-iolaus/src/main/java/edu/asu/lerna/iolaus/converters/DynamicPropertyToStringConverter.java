@@ -16,7 +16,6 @@ public class DynamicPropertyToStringConverter implements Converter<DynamicProper
 
 	@Override
 	public String convert(DynamicProperties properties) {
-		
 		return properties.toString();
 	}
 
