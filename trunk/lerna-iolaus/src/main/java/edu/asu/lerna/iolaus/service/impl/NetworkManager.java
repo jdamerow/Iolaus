@@ -33,11 +33,23 @@ public class NetworkManager implements INetworkManager {
 		relationRepository.save(r);
 	}
 
+	/**
+	 * @author Lohith Dwaraka
+	 * 
+	 * Stores node into Neo4j DB through repository proxy 
+	 */
 	@Override
 	public void saveNode(Node n){
 		nodeRepository.save(n);
 	}
 	
+	/**
+	 *  @author Lohith Dwaraka
+	 *  
+	 *  Queries Neo4j for Node type - Person
+	 *  returns Node if found
+	 *  else returns null
+	 */
 	@Override
 	public Node checkGetPerson(String firstName, String lastName){
 		
@@ -46,13 +58,11 @@ public class NetworkManager implements INetworkManager {
 		Node target=null;
 		while(nodeIterator.hasNext()){
 			Node node = nodeIterator.next();
-			logger.info("dataset "+node.getDataset());
 			DynamicProperties properties =node.getProperties();
 			String firstNameSample="";
 			if(properties.hasProperty("firstName")){
 				firstNameSample = (String) properties.getProperty("firstName");
 			}
-			logger.info("firstNamee "+firstNameSample);
 			String lastNameSample = (String) properties.getProperty("lastName");
 			if((firstName.equals(firstNameSample))&&(lastName.equals(lastNameSample))){
 				target=node;
@@ -62,6 +72,13 @@ public class NetworkManager implements INetworkManager {
 		return target;
 	}
 	
+	/**
+	 *  @author Lohith Dwaraka
+	 *  
+	 *  Queries Neo4j for Node type - Institute
+	 *  returns Node if found
+	 *  else returns null
+	 */
 	@Override
 	public Node checkGetInstitute(String name){
 		
@@ -80,6 +97,13 @@ public class NetworkManager implements INetworkManager {
 		return target;
 	}
 	
+	/**
+	 *  @author Lohith Dwaraka
+	 *  
+	 *  Queries Neo4j for Node type - Series
+	 *  returns Node if found
+	 *  else returns null
+	 */
 	@Override
 	public Node checkGetSeries(String name){
 		
@@ -98,6 +122,13 @@ public class NetworkManager implements INetworkManager {
 		return target;
 	}
 	
+	/**
+	 *  @author Lohith Dwaraka
+	 *  
+	 *  Queries Neo4j for Node type - Location
+	 *  returns Node if found
+	 *  else returns null
+	 */
 	@Override
 	public Node checkGetLocation(String city, String state){
 		
@@ -109,7 +140,6 @@ public class NetworkManager implements INetworkManager {
 			DynamicProperties properties =node.getProperties();
 			String citySample = (String) properties.getProperty("city");
 			String stateSample = (String) properties.getProperty("state");
-			logger.info( citySample+" , "+stateSample);
 			if((state.equals(stateSample))&&(city.equals(citySample))){
 				target=node;
 				return target;
