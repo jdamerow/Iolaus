@@ -71,7 +71,7 @@ public class NetworkManager implements INetworkManager {
 		while(nodeIterator.hasNext()){
 			Node node = nodeIterator.next();
 			DynamicProperties properties =node.getProperties();
-			String nameSample = (String) properties.getProperty("name");
+			String nameSample = (String) properties.getProperty("instituteName");
 			if(name.equals(nameSample)){
 				target=node;
 				return target;
@@ -89,7 +89,7 @@ public class NetworkManager implements INetworkManager {
 		while(nodeIterator.hasNext()){
 			Node node = nodeIterator.next();
 			DynamicProperties properties =node.getProperties();
-			String nameSample = (String) properties.getProperty("name");
+			String nameSample = (String) properties.getProperty("seriesName");
 			if(name.equals(nameSample)){
 				target=node;
 				return target;
