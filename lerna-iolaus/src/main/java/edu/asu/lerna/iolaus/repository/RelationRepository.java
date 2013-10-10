@@ -5,6 +5,12 @@ import org.springframework.transaction.annotation.Transactional;
 
 import edu.asu.lerna.iolaus.domain.Relation;
 
+/**
+ * @author Lohith Dwaraka, Karan
+ * 
+ * Stores Node into the Neo4j through repository proxy  
+ *
+ */
 public interface RelationRepository extends GraphRepository<Relation>{
 
 	@Override
