@@ -17,6 +17,5 @@ public interface RelationRepository extends GraphRepository<Relation>{
 	@Transactional
 	public <U extends Relation> U save(U arg0);
 	
-	
 
 }

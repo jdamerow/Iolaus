@@ -35,19 +35,16 @@ public class AddNodesRestController {
 	
 	@Autowired
 	private INetworkManager networkManager;
-	
-	
-	
-	
-	
+
 	
 	/**
 	 * @author Lohith Dwaraka
 	 * 
 	 * Upload a file of MBL object into Neo4J
+	 * @throws IOException 
 	 */
 	@RequestMapping(value = "/uploadnodes", method = RequestMethod.POST)
-	public String addNodesFile(@RequestParam("file") MultipartFile file,Model model) {
+	public String addNodesFile(@RequestParam("file") MultipartFile file,Model model) throws IOException {
 		
         logger.info("file Name "+file.getOriginalFilename());
         BufferedReader  b=null;
@@ -65,6 +62,7 @@ public class AddNodesRestController {
 		} catch (IOException e) {
 			logger.error("IO Error, File not uploaded",e);
 		}
+        b.close();
 		
 		return "home";
 	}
@@ -106,7 +104,7 @@ public class AddNodesRestController {
 			person.setProperties(properties);
 			networkManager.saveNode(person);
 		}else{
-			logger.info("Person Already exist ");
+			logger.debug("Person Already exist ");
 		}
 		
 		
@@ -123,7 +121,7 @@ public class AddNodesRestController {
 			location.setProperties(properties);
 			networkManager.saveNode(location);
 		}else{
-			logger.info("Location Already exist ");
+			logger.debug("Location Already exist ");
 		}
 		
 		Node series = networkManager.checkGetSeries(seriesName);
@@ -138,7 +136,7 @@ public class AddNodesRestController {
 			series.setProperties(properties);
 			networkManager.saveNode(series);
 		}else{
-			logger.info("series Already exist ");
+			logger.debug("series Already exist ");
 		}
 		
 		
@@ -154,7 +152,7 @@ public class AddNodesRestController {
 			institute.setProperties(properties);
 			networkManager.saveNode(institute);
 		}else{
-			logger.info("institute Already exist ");
+			logger.debug("institute Already exist ");
 		}
 		
 		/**
