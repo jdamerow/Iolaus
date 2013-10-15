@@ -18,7 +18,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import edu.asu.lerna.iolaus.domain.Node;
 import edu.asu.lerna.iolaus.domain.Relation;
-import edu.asu.lerna.iolaus.service.INetworkManager;
+import edu.asu.lerna.iolaus.service.INodeManager;
 
 
 /**
@@ -34,7 +34,7 @@ public class AddNodesRestController {
 			.getLogger(AddNodesRestController.class);
 	
 	@Autowired
-	private INetworkManager networkManager;
+	private INodeManager nodeManager;
 
 	
 	/**
@@ -63,6 +63,7 @@ public class AddNodesRestController {
 			logger.error("IO Error, File not uploaded",e);
 		}
         b.close();
+        logger.info("Added all the nodes from the input");
 		
 		return "home";
 	}
@@ -91,7 +92,7 @@ public class AddNodesRestController {
 		
 		
 		
-		Node person = networkManager.checkGetPerson(firstName,lastName);
+		Node person = nodeManager.checkGetPerson(firstName,lastName);
 		if(person ==null){
 			person = new Node();
 			//node.setId( UUID.randomUUID().getMostSignificantBits());
@@ -102,13 +103,13 @@ public class AddNodesRestController {
 			properties.setProperty("firstName",firstName);
 			properties.setProperty("lastName",lastName);
 			person.setProperties(properties);
-			networkManager.saveNode(person);
+			nodeManager.saveNode(person);
 		}else{
 			logger.debug("Person Already exist ");
 		}
 		
 		
-		Node location = networkManager.checkGetLocation(locationCity, locationState);
+		Node location = nodeManager.checkGetLocation(locationCity, locationState);
 		if(location == null){
 			location=new Node();
 			DynamicProperties properties = new DynamicPropertiesContainer();
@@ -119,12 +120,12 @@ public class AddNodesRestController {
 			location.setType("Location");
 			location.setLabel(locationCity);
 			location.setProperties(properties);
-			networkManager.saveNode(location);
+			nodeManager.saveNode(location);
 		}else{
 			logger.debug("Location Already exist ");
 		}
 		
-		Node series = networkManager.checkGetSeries(seriesName);
+		Node series = nodeManager.checkGetSeries(seriesName);
 		if(series == null){
 			series=new Node();
 			DynamicProperties properties = new DynamicPropertiesContainer();
@@ -134,13 +135,13 @@ public class AddNodesRestController {
 			series.setType("Series");
 			series.setLabel(seriesName);
 			series.setProperties(properties);
-			networkManager.saveNode(series);
+			nodeManager.saveNode(series);
 		}else{
 			logger.debug("series Already exist ");
 		}
 		
 		
-		Node institute = networkManager.checkGetInstitute(instituteName);
+		Node institute = nodeManager.checkGetInstitute(instituteName);
 		if(institute == null){
 			institute=new Node();
 			DynamicProperties properties = new DynamicPropertiesContainer();
@@ -150,7 +151,7 @@ public class AddNodesRestController {
 			institute.setType("Institute");
 			institute.setLabel(instituteName);
 			institute.setProperties(properties);
-			networkManager.saveNode(institute);
+			nodeManager.saveNode(institute);
 		}else{
 			logger.debug("institute Already exist ");
 		}
@@ -166,7 +167,7 @@ public class AddNodesRestController {
 		staysIn.setLabel("StaysIn");
 		staysIn.setType("StaysIn");
 		staysIn.setProperties(properties); 
-		networkManager.saveRelation(staysIn);
+		nodeManager.saveRelation(staysIn);
 		
 		/**
 		 * Below part is for relation and node serving Institute <- StaysIn-> location
@@ -179,7 +180,7 @@ public class AddNodesRestController {
 		locatedAt.setLabel("LocatedAt");
 		locatedAt.setType("LocatedAt");
 		locatedAt.setProperties(properties); 
-		networkManager.saveRelation(locatedAt);
+		nodeManager.saveRelation(locatedAt);
 		
 		
 		/**
@@ -194,7 +195,7 @@ public class AddNodesRestController {
 		attends.setLabel("Attends");
 		attends.setType("Attends");
 		attends.setProperties(properties); 
-		networkManager.saveRelation(attends);
+		nodeManager.saveRelation(attends);
 		
 		
 		/**
@@ -209,7 +210,7 @@ public class AddNodesRestController {
 		affliates.setLabel("Affliates");
 		affliates.setType("Affliates");
 		affliates.setProperties(properties); 
-		networkManager.saveRelation(affliates);
+		nodeManager.saveRelation(affliates);
 	}
 
 	/**
@@ -234,7 +235,7 @@ public class AddNodesRestController {
 		
 		
 		
-		Node person = networkManager.checkGetPerson(firstName,lastName);
+		Node person = nodeManager.checkGetPerson(firstName,lastName);
 		if(person ==null){
 			person = new Node();
 			//node.setId( UUID.randomUUID().getMostSignificantBits());
@@ -245,13 +246,13 @@ public class AddNodesRestController {
 			properties.setProperty("firstName",firstName);
 			properties.setProperty("lastName",lastName);
 			person.setProperties(properties);
-			networkManager.saveNode(person);
+			nodeManager.saveNode(person);
 		}else{
 			logger.info("Person Already exist ");
 		}
 		
 		
-		Node location = networkManager.checkGetLocation(locationCity, locationState);
+		Node location = nodeManager.checkGetLocation(locationCity, locationState);
 		if(location == null){
 			location=new Node();
 			DynamicProperties properties = new DynamicPropertiesContainer();
@@ -262,12 +263,12 @@ public class AddNodesRestController {
 			location.setType("Location");
 			location.setLabel("Tempe");
 			location.setProperties(properties);
-			networkManager.saveNode(location);
+			nodeManager.saveNode(location);
 		}else{
 			logger.info("Location Already exist ");
 		}
 		
-		Node series = networkManager.checkGetSeries(seriesName);
+		Node series = nodeManager.checkGetSeries(seriesName);
 		if(series == null){
 			series=new Node();
 			DynamicProperties properties = new DynamicPropertiesContainer();
@@ -277,13 +278,13 @@ public class AddNodesRestController {
 			series.setType("Series");
 			series.setLabel(seriesName);
 			series.setProperties(properties);
-			networkManager.saveNode(series);
+			nodeManager.saveNode(series);
 		}else{
 			logger.info("series Already exist ");
 		}
 		
 		
-		Node institute = networkManager.checkGetInstitute(instituteName);
+		Node institute = nodeManager.checkGetInstitute(instituteName);
 		if(institute == null){
 			institute=new Node();
 			DynamicProperties properties = new DynamicPropertiesContainer();
@@ -293,7 +294,7 @@ public class AddNodesRestController {
 			institute.setType("Institute");
 			institute.setLabel(instituteName);
 			institute.setProperties(properties);
-			networkManager.saveNode(institute);
+			nodeManager.saveNode(institute);
 		}else{
 			logger.info("institute Already exist ");
 		}
@@ -309,7 +310,7 @@ public class AddNodesRestController {
 		staysIn.setLabel("StaysIn");
 		staysIn.setType("StaysIn");
 		staysIn.setProperties(properties); 
-		networkManager.saveRelation(staysIn);
+		nodeManager.saveRelation(staysIn);
 		
 		/**
 		 * Below part is for relation and node serving Institute <- StaysIn-> location
@@ -322,7 +323,7 @@ public class AddNodesRestController {
 		locatedAt.setLabel("LocatedAt");
 		locatedAt.setType("LocatedAt");
 		locatedAt.setProperties(properties); 
-		networkManager.saveRelation(locatedAt);
+		nodeManager.saveRelation(locatedAt);
 		
 		
 		/**
@@ -337,7 +338,7 @@ public class AddNodesRestController {
 		attends.setLabel("Attends");
 		attends.setType("Attends");
 		attends.setProperties(properties); 
-		networkManager.saveRelation(attends);
+		nodeManager.saveRelation(attends);
 		
 		
 		/**
@@ -352,7 +353,7 @@ public class AddNodesRestController {
 		affliates.setLabel("Affliates");
 		affliates.setType("Affliates");
 		affliates.setProperties(properties); 
-		networkManager.saveRelation(affliates);
+		nodeManager.saveRelation(affliates);
 		
 		
 		
