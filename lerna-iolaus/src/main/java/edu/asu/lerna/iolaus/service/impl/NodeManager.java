@@ -13,14 +13,14 @@ import edu.asu.lerna.iolaus.domain.Node;
 import edu.asu.lerna.iolaus.domain.Relation;
 import edu.asu.lerna.iolaus.repository.NodeRepository;
 import edu.asu.lerna.iolaus.repository.RelationRepository;
-import edu.asu.lerna.iolaus.service.INetworkManager;
+import edu.asu.lerna.iolaus.service.INodeManager;
 
 @Service
-public class NetworkManager implements INetworkManager {
+public class NodeManager implements INodeManager {
 
 
 	private static final Logger logger = LoggerFactory
-			.getLogger(NetworkManager.class);
+			.getLogger(NodeManager.class);
 	
 	@Autowired
 	private NodeRepository nodeRepository;
