@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns="http://www.w3.org/2001/XMLSchema" targetNamespace="http://www.example.org/Iolaus" xmlns:tns="http://www.example.org/Iolaus" elementFormDefault="qualified">
+
+    <element name="Query" type="tns:QueryType"></element>
+
+
+
+    <complexType name="DataBaseType">
+    	<attribute name="id" type="string"></attribute>
+    </complexType>
+    
+    <complexType name="DataSetType">
+    	<attribute name="name" type="string"></attribute>
+    </complexType>
+    
+
+    <complexType name="WhereType">
+    	<sequence>
+    		<element name="Clause" type="tns:ClauseType"
+    			maxOccurs="unbounded" minOccurs="1">
+    		</element>
+    	</sequence>
+    </complexType>
+    
+    <complexType name="ClauseType">
+    	<sequence>
+    		<element name="propertyList" type="tns:ClausePropertyList"
+    			maxOccurs="1" minOccurs="1">
+    		</element>
+    	</sequence>
+    	<attribute name="type" type="string"></attribute>
+    	<attribute name="objectType" type="string"></attribute>
+    	<attribute name="connectionOperator" type="string"></attribute>
+    </complexType>
+
+
+
+
+
+    <complexType name="SelectType">
+    	<sequence>
+    		<element name="properties" type="tns:SelectPropertyType"
+    			maxOccurs="1" minOccurs="1">
+    		</element>
+    	</sequence>
+    	<attribute name="type" type="string"></attribute>
+    	<attribute name="objectType" type="string"></attribute>
+    </complexType>
+
+    <complexType name="SelectPropertyType">
+    	<sequence>
+            <element name="propertyList" type="tns:Property" maxOccurs="unbounded" minOccurs="1">
+    				</element>
+        </sequence>
+    </complexType>
+
+    <complexType name="Property">
+    	<attribute name="name" type="string"></attribute>
+    </complexType>
+
+
+    <element name="QueryType" type="tns:QueryType"></element>
+    
+    <complexType name="QueryType">
+    	<sequence>
+    		<element name="Select" type="tns:SelectType" maxOccurs="1"
+    			minOccurs="1">
+    		</element>
+
+    		<element name="Where" type="tns:WhereType"
+    			maxOccurs="unbounded" minOccurs="0">
+    		</element>
+    		<element name="Database" type="tns:DataBaseType"
+    			maxOccurs="1" minOccurs="1">
+    		</element>
+    		<element name="DataSet" type="tns:DataSetType" maxOccurs="1"
+    			minOccurs="1">
+    		</element>
+    	</sequence>
+    </complexType>
+
+    <complexType name="ClauseProperty">
+    	<attribute name="name" type="string"></attribute>
+    	<attribute name="value" type="string"></attribute>
+    </complexType>
+
+    <complexType name="ClausePropertyList">
+    	<sequence>
+    		<element name="propertyList" type="tns:ClauseProperty"
+    			maxOccurs="1" minOccurs="1">
+    		</element>
+    	</sequence>
+    </complexType>
+
+</schema>
