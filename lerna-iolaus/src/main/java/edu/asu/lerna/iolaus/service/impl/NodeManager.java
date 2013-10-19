@@ -1,6 +1,11 @@
 package edu.asu.lerna.iolaus.service.impl;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,10 +20,21 @@ import edu.asu.lerna.iolaus.repository.NodeRepository;
 import edu.asu.lerna.iolaus.repository.RelationRepository;
 import edu.asu.lerna.iolaus.service.INodeManager;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+
+import org.apache.commons.io.FileUtils;
+import org.springframework.context.support.FileSystemXmlApplicationContext;
+
 @Service
 public class NodeManager implements INodeManager {
 
-
+	
+	
 	private static final Logger logger = LoggerFactory
 			.getLogger(NodeManager.class);
 	
@@ -32,15 +48,49 @@ public class NodeManager implements INodeManager {
 	public void saveRelation(Relation r){
 		relationRepository.save(r);
 	}
-
+	
+	
 	/**
 	 * @author Lohith Dwaraka
 	 * 
 	 * Stores node into Neo4j DB through repository proxy 
 	 */
 	@Override
-	public void saveNode(Node n){
-		nodeRepository.save(n);
+	public Node saveNode(Node n){
+		Node savedNode=nodeRepository.save(n);
+		return savedNode;
+	}
+	
+	/**
+	 *  @author Karan Kothari
+	 *  Initialize HashMaps for every single type
+	 */
+	@Override
+	public void initializeNodeTypeMap(int count){
+		for(int i=1;i<=count;i++)
+			nodeTypeList.add(new HashMap<String,List<Node>>());
+	}
+	
+	/**
+	 *  @author Karan Kothari
+	 *  First check if node is already in Hash Map
+	 *  If it is there then check those with the nodeList for that key
+	 *  if that node is not found then add it to the Hash Map
+	 */
+	
+	@Override
+	public void saveNodeInMap(int index,Node node,String key){
+		Map<String,List<Node>> nodeMap=nodeTypeList.get(index);
+		
+		if(nodeMap.containsKey(key)){
+			List<Node> nodeList=nodeMap.get(key);
+			nodeList.add(node);
+		}
+		else{
+			List<Node> nodeList=new ArrayList<Node>();
+			nodeList.add(node);
+			nodeMap.put(key, nodeList);	
+		}
 	}
 	
 	/**
@@ -50,21 +100,32 @@ public class NodeManager implements INodeManager {
 	 *  returns Node if found
 	 *  else returns null
 	 */
+	
+	/**
+	 *  @author Karan Kothari
+	 *  Compare key with the map and if key exists
+	 *  then compare it with all of the nodes for that key 
+	 *  otherwise return null
+	 */
 	@Override
 	public Node checkGetPerson(String firstName, String lastName){
 		
-		EndResult<Node> nodeList = nodeRepository.findAllByPropertyValue("type", "Person");
-		Iterator<Node> nodeIterator = nodeList.iterator();
+		Map<String,List<Node>> nodeMap=nodeTypeList.get(0);
 		Node target=null;
+		List<Node> nodeList;
+		if(nodeMap.containsKey(lastName))
+			nodeList=nodeMap.get(lastName);
+		else
+			return null;
+		Iterator<Node> nodeIterator = nodeList.iterator();
 		while(nodeIterator.hasNext()){
-			Node node = nodeIterator.next();
+			Node node=nodeIterator.next();
 			DynamicProperties properties =node.getProperties();
 			String firstNameSample="";
 			if(properties.hasProperty("firstName")){
 				firstNameSample = (String) properties.getProperty("firstName");
 			}
-			String lastNameSample = (String) properties.getProperty("lastName");
-			if((firstName.equals(firstNameSample))&&(lastName.equals(lastNameSample))){
+			if(firstName.equals(firstNameSample)){
 				target=node;
 				return target;
 			}
@@ -79,21 +140,20 @@ public class NodeManager implements INodeManager {
 	 *  returns Node if found
 	 *  else returns null
 	 */
+	/**
+	 *  @author Karan Kothari
+	 *  if key is there then return corresponding node
+	 *  otherwise return null
+	 */
 	@Override
 	public Node checkGetInstitute(String name){
 		
-		EndResult<Node> nodeList = nodeRepository.findAllByPropertyValue("type", "Institute");
-		Iterator<Node> nodeIterator = nodeList.iterator();
+		Map<String,List<Node>> nodeMap=nodeTypeList.get(1);
+		List<Node> nodeList=nodeMap.get(name);
+		/*EndResult<Node> nodeList = nodeRepository.findAllByPropertyValue("type", "Institute");*/
 		Node target=null;
-		while(nodeIterator.hasNext()){
-			Node node = nodeIterator.next();
-			DynamicProperties properties =node.getProperties();
-			String nameSample = (String) properties.getProperty("instituteName");
-			if(name.equals(nameSample)){
-				target=node;
-				return target;
-			}
-		}
+		if(nodeList!=null)
+			target=nodeList.get(0);
 		return target;
 	}
 	
@@ -104,21 +164,20 @@ public class NodeManager implements INodeManager {
 	 *  returns Node if found
 	 *  else returns null
 	 */
+	/**
+	 *  @author Karan Kothari
+	 *  if key is there then return corresponding node
+	 *  otherwise return null
+	 */
 	@Override
 	public Node checkGetSeries(String name){
 		
-		EndResult<Node> nodeList = nodeRepository.findAllByPropertyValue("type", "Series");
-		Iterator<Node> nodeIterator = nodeList.iterator();
+		Map<String,List<Node>> nodeMap=nodeTypeList.get(2);
+		List<Node> nodeList=nodeMap.get(name);
+		/*EndResult<Node> nodeList = nodeRepository.findAllByPropertyValue("type", "Series");*/
 		Node target=null;
-		while(nodeIterator.hasNext()){
-			Node node = nodeIterator.next();
-			DynamicProperties properties =node.getProperties();
-			String nameSample = (String) properties.getProperty("seriesName");
-			if(name.equals(nameSample)){
-				target=node;
-				return target;
-			}
-		}
+		if(nodeList!=null)
+			target=nodeList.get(0);
 		return target;
 	}
 	
@@ -129,20 +188,46 @@ public class NodeManager implements INodeManager {
 	 *  returns Node if found
 	 *  else returns null
 	 */
+	
+	/**
+	 *  @author Karan Kothari
+	 *  Compare key with the map and if key exists
+	 *  then compare it with all of the nodes for that key 
+	 *  otherwise return null
+	 */
 	@Override
-	public Node checkGetLocation(String city, String state){
+	public Node checkGetLocation(String address,String street,String city, String state,String country){
 		
-		EndResult<Node> nodeList = nodeRepository.findAllByPropertyValue("type", "Location");
-		Iterator<Node> nodeIterator = nodeList.iterator();
+		Map<String,List<Node>> nodeMap=nodeTypeList.get(3);
 		Node target=null;
+		List<Node> nodeList;
+		if(nodeMap.containsKey(city))
+			nodeList=nodeMap.get(city);
+		else
+			return null;
+		Iterator<Node> nodeIterator = nodeList.iterator();
 		while(nodeIterator.hasNext()){
-			Node node = nodeIterator.next();
+			Node node=nodeIterator.next();
 			DynamicProperties properties =node.getProperties();
-			String citySample = (String) properties.getProperty("city");
-			String stateSample = (String) properties.getProperty("state");
-			if((state.equals(stateSample))&&(city.equals(citySample))){
+			String addressSample="";
+			String streetSample="";
+			String stateSample="";
+			String countrySample="";
+			if(properties.hasProperty("address")){
+				addressSample=(String)properties.getProperty("address");
+			}
+			if(properties.hasProperty("street")){
+				streetSample=(String)properties.getProperty("street");
+			}
+			if(properties.hasProperty("state")){
+				stateSample = (String) properties.getProperty("state");
+			}
+			if(properties.hasProperty("country")){
+				countrySample=(String)properties.getProperty("country");
+			}
+			
+			if(address.equals(addressSample)&&street.equals(streetSample)&&state.equals(stateSample)&&country.equals(countrySample)){
 				target=node;
-				return target;
 			}
 		}
 		return target;
