@@ -4,6 +4,7 @@ import org.springframework.data.neo4j.annotation.EndNode;
 import org.springframework.data.neo4j.annotation.Fetch;
 import org.springframework.data.neo4j.annotation.GraphId;
 import org.springframework.data.neo4j.annotation.GraphProperty;
+import org.springframework.data.neo4j.annotation.Indexed;
 import org.springframework.data.neo4j.annotation.RelationshipEntity;
 import org.springframework.data.neo4j.annotation.RelationshipType;
 import org.springframework.data.neo4j.annotation.StartNode;
@@ -20,6 +21,12 @@ public class Relation {
 	
 	@Fetch @EndNode
 	private Node endNode;
+	
+	@Indexed(unique=false)
+	private String uri;
+	
+	@Indexed(unique=false)
+	private String serviceId;
 	
 	private String label;
 	
@@ -62,9 +69,26 @@ public class Relation {
 	public Long getId(){
 		return id;
 	}
-	/*String getRelationshipType(){
+	
+	public String getServiceId(){
+		return serviceId;
+	}
+	
+	public void setServiceId(String serviceId){
+		this.serviceId=serviceId;
+	}
+	
+	public String getUri(){
+		return uri;
+	}
+	
+	public void setUri(String uri){
+		this.uri=uri;
+	}
+	
+	public String getRelationshipType(){
 		return relationshipType;
-	}*/
+	}
 	
 	public String getType() {
 		return type;

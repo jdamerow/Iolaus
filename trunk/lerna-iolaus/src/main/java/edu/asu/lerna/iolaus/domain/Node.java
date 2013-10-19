@@ -23,13 +23,21 @@ public class Node {
 	@Indexed(unique=false)
 	private String label;
 
+	@Indexed(unique=false)
+	private String uri;
+	
+	@Indexed(unique=false)
+	private String serviceId;
+	
 	private String dataset;
+	
 
 	@GraphProperty
 	private DynamicProperties properties;
 	
 	@RelatedToVia(type="Default",direction=Direction.OUTGOING)
 	private Set<Relation> relationships;
+	
 
 	//TODO: Add proper constructors and initialize the class objects
 	
@@ -65,6 +73,22 @@ public class Node {
 		this.dataset = dataset;
 	}
 
+	public String getServiceId(){
+		return serviceId;
+	}
+	
+	public void setServiceId(String serviceId){
+		this.serviceId=serviceId;
+	}
+	
+	public String getUri(){
+		return uri;
+	}
+	
+	public void setUri(String uri){
+		this.uri=uri;
+	}
+	
 	public DynamicProperties getProperties() {
 		return properties;
 	}
