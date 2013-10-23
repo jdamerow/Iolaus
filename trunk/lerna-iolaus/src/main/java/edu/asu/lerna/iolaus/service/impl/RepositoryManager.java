@@ -9,6 +9,5 @@ import edu.asu.lerna.iolaus.service.IRepositoryManager;
 @Service
 public class RepositoryManager implements IRepositoryManager{
 
-	@Autowired
 	private ICacheManager cacheManager;
 }
