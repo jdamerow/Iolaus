@@ -14,7 +14,9 @@ import org.springframework.data.neo4j.conversion.EndResult;
 import org.springframework.data.neo4j.fieldaccess.DynamicProperties;
 import org.springframework.stereotype.Service;
 
+import edu.asu.lerna.iolaus.domain.LocationNode;
 import edu.asu.lerna.iolaus.domain.Node;
+import edu.asu.lerna.iolaus.domain.PersonNode;
 import edu.asu.lerna.iolaus.domain.Relation;
 import edu.asu.lerna.iolaus.repository.NodeRepository;
 import edu.asu.lerna.iolaus.repository.RelationRepository;
@@ -108,10 +110,10 @@ public class NodeManager implements INodeManager {
 	 *  otherwise return null
 	 */
 	@Override
-	public Node checkGetPerson(String firstName, String lastName){
+	public PersonNode checkGetPerson(String firstName, String lastName){
 		
 		Map<String,List<Node>> nodeMap=nodeTypeList.get(0);
-		Node target=null;
+		PersonNode target=null;
 		List<Node> nodeList;
 		if(nodeMap.containsKey(lastName))
 			nodeList=nodeMap.get(lastName);
@@ -119,13 +121,9 @@ public class NodeManager implements INodeManager {
 			return null;
 		Iterator<Node> nodeIterator = nodeList.iterator();
 		while(nodeIterator.hasNext()){
-			Node node=nodeIterator.next();
-			DynamicProperties properties =node.getProperties();
-			String firstNameSample="";
-			if(properties.hasProperty("firstName")){
-				firstNameSample = (String) properties.getProperty("firstName");
-			}
-			if(firstName.equals(firstNameSample)){
+			PersonNode node=(PersonNode)nodeIterator.next();
+			String lastNameSample=node.getLastName();
+			if(lastName.equals(lastNameSample)){
 				target=node;
 				return target;
 			}
@@ -196,10 +194,10 @@ public class NodeManager implements INodeManager {
 	 *  otherwise return null
 	 */
 	@Override
-	public Node checkGetLocation(String address,String street,String city, String state,String country){
+	public LocationNode checkGetLocation(String address,String street,String city, String state,String country){
 		
 		Map<String,List<Node>> nodeMap=nodeTypeList.get(3);
-		Node target=null;
+		LocationNode target=null;
 		List<Node> nodeList;
 		if(nodeMap.containsKey(city))
 			nodeList=nodeMap.get(city);
@@ -207,24 +205,11 @@ public class NodeManager implements INodeManager {
 			return null;
 		Iterator<Node> nodeIterator = nodeList.iterator();
 		while(nodeIterator.hasNext()){
-			Node node=nodeIterator.next();
-			DynamicProperties properties =node.getProperties();
-			String addressSample="";
-			String streetSample="";
-			String stateSample="";
-			String countrySample="";
-			if(properties.hasProperty("address")){
-				addressSample=(String)properties.getProperty("address");
-			}
-			if(properties.hasProperty("street")){
-				streetSample=(String)properties.getProperty("street");
-			}
-			if(properties.hasProperty("state")){
-				stateSample = (String) properties.getProperty("state");
-			}
-			if(properties.hasProperty("country")){
-				countrySample=(String)properties.getProperty("country");
-			}
+			LocationNode node=(LocationNode)nodeIterator.next();
+			String addressSample=node.getAddress();
+			String streetSample=node.getStreet();
+			String stateSample=node.getState();
+			String countrySample=node.getCountry();
 			
 			if(address.equals(addressSample)&&street.equals(streetSample)&&state.equals(stateSample)&&country.equals(countrySample)){
 				target=node;

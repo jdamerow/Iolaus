@@ -16,7 +16,12 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
+import edu.asu.lerna.iolaus.domain.AffiliatedWithRelation;
+import edu.asu.lerna.iolaus.domain.AttendedRelation;
+import edu.asu.lerna.iolaus.domain.HasLocationRelation;
+import edu.asu.lerna.iolaus.domain.LocationNode;
 import edu.asu.lerna.iolaus.domain.Node;
+import edu.asu.lerna.iolaus.domain.PersonNode;
 import edu.asu.lerna.iolaus.domain.Relation;
 import edu.asu.lerna.iolaus.service.INodeManager;
 
@@ -84,7 +89,7 @@ public class AddNodesRestController {
 	 */
 	public void createMBLObject(String singleData){
 		String data [] = singleData.split(",");
-		String year=data[0];
+		int year=Integer.parseInt(data[0]);
 		String firstName=data[1];
 		String lastName=data[2];
 		String instituteName=data[3];
@@ -101,43 +106,38 @@ public class AddNodesRestController {
 		
 		
 		
-		Node person = nodeManager.checkGetPerson(firstName,lastName);
+		PersonNode person = nodeManager.checkGetPerson(firstName,lastName);
 		if(person ==null){
-			person = new Node();
+			person = new PersonNode();
 			//node.setId( UUID.randomUUID().getMostSignificantBits());
-			person.setLabel(lastName);
+			person.setLabel(firstName);
 			person.setDataset(dataset);
 			person.setServiceId(" ");
 			person.setUri(" ");
 			person.setType("Person");
-			DynamicProperties properties = new DynamicPropertiesContainer();
-			properties.setProperty("firstName",firstName);
-			properties.setProperty("lastName",lastName);
-			person.setProperties(properties);
-			person=nodeManager.saveNode(person);
-			nodeManager.saveNodeInMap(0, person,lastName);
+			person.setFirstName(firstName);
+			person.setLastName(lastName);
+			person=(PersonNode) nodeManager.saveNode(person);
+			nodeManager.saveNodeInMap(0, person,firstName);
 		}else{
 			logger.info("Person Already exist ");
 		}
 		
 		
-		Node location = nodeManager.checkGetLocation(locationAddress, locationStreet,locationCity,locationState,locationCountry);
+		LocationNode location = nodeManager.checkGetLocation(locationAddress, locationStreet,locationCity,locationState,locationCountry);
 		if(location == null){
-			location=new Node();
+			location=new LocationNode();
 			location.setServiceId(" ");
 			location.setUri(" ");
-			DynamicProperties properties = new DynamicPropertiesContainer();
-			properties=new DynamicPropertiesContainer();
-			properties.setProperty("address",locationAddress);
-			properties.setProperty("street",locationStreet);
-			properties.setProperty("city",locationCity);
-			properties.setProperty("state",locationState);
-			properties.setProperty("country",locationCountry);
+			location.setAddress(locationAddress);
+			location.setStreet(locationStreet);
+			location.setCity(locationCity);
+			location.setState(locationState);
+			location.setCountry(locationCountry);
 			location.setDataset(dataset);
 			location.setType("Location");
 			location.setLabel(locationCity);
-			location.setProperties(properties);
-			location=nodeManager.saveNode(location);
+			location=(LocationNode)nodeManager.saveNode(location);
 			nodeManager.saveNodeInMap(3, location,locationCity);
 		}else{
 			logger.info("Location Already exist ");
@@ -150,11 +150,9 @@ public class AddNodesRestController {
 			series.setUri(" ");
 			DynamicProperties properties = new DynamicPropertiesContainer();
 			properties=new DynamicPropertiesContainer();
-			properties.setProperty("seriesName",seriesName);
 			series.setDataset(dataset);
 			series.setType("Series");
 			series.setLabel(seriesName);
-			series.setProperties(properties);
 			series=nodeManager.saveNode(series);
 			nodeManager.saveNodeInMap(2, series,seriesName);
 		}else{
@@ -167,13 +165,9 @@ public class AddNodesRestController {
 			institute=new Node();
 			institute.setServiceId(" ");
 			institute.setUri(" ");
-			DynamicProperties properties = new DynamicPropertiesContainer();
-			properties=new DynamicPropertiesContainer();
-			properties.setProperty("instituteName",instituteName);
 			institute.setDataset(dataset);
 			institute.setType("Institute");
 			institute.setLabel(instituteName);
-			institute.setProperties(properties);
 			institute=nodeManager.saveNode(institute);
 			nodeManager.saveNodeInMap(1, institute,instituteName);
 		}else{
@@ -183,66 +177,50 @@ public class AddNodesRestController {
 		/**
 		 * Below part is for relation and node serving Person <- StaysIn-> location
 		 */
-		Relation staysIn=new Relation(person, location,"hasLocation");
-		staysIn.setServiceId(" ");
-		staysIn.setUri(" ");
-		DynamicProperties properties = new DynamicPropertiesContainer();
-		properties=new DynamicPropertiesContainer();
-		properties.setProperty("Year",year);
-		staysIn.setDataset(dataset);
-		staysIn.setLabel("hasLocation");
-		staysIn.setType("hasLocation");
-		staysIn.setProperties(properties); 
-		nodeManager.saveRelation(staysIn);
+		HasLocationRelation hasLocation=new HasLocationRelation(person, location);
+		hasLocation.setServiceId(" ");
+		hasLocation.setUri(" ");
+		hasLocation.setYear(year);
+		hasLocation.setDataset(dataset);
+		hasLocation.setLabel("hasLocation");
+		nodeManager.saveRelation(hasLocation);
 		
 		/**
 		 * Below part is for relation and node serving Institute <- StaysIn-> location
 		 */
-		Relation locatedAt=new Relation(institute, location,"hasLocation");
+		HasLocationRelation locatedAt=new HasLocationRelation(institute, location);
 		locatedAt.setServiceId(" ");
 		locatedAt.setUri(" ");
-		properties = new DynamicPropertiesContainer();
-		properties=new DynamicPropertiesContainer();
-		properties.setProperty("Year",year);
 		locatedAt.setDataset(dataset);
 		locatedAt.setLabel("hasLocation");
-		locatedAt.setType("hasLocation");
-		locatedAt.setProperties(properties); 
+		locatedAt.setYear(year); 
 		nodeManager.saveRelation(locatedAt);
 		
 		
 		/**
 		 * Below part is for relation and node serving Person <- attends-> Series
 		 */
-		Relation attends=new Relation(person, series,"Attended");
-		attends.setServiceId(" ");
-		attends.setUri(" ");
-		properties = new DynamicPropertiesContainer();
-		properties=new DynamicPropertiesContainer();
-		properties.setProperty("role",seriesRole);
-		properties.setProperty("Year",year);
-		attends.setDataset(dataset);
-		attends.setLabel("Attented");
-		attends.setType("Attented");
-		attends.setProperties(properties); 
-		nodeManager.saveRelation(attends);
+		AttendedRelation attended=new AttendedRelation(person, series);
+		attended.setServiceId(" ");
+		attended.setUri(" ");
+		attended.setDataset(dataset);
+		attended.setLabel("Attented");
+		attended.setRole(seriesRole);
+		attended.setYear(year);
+		nodeManager.saveRelation(attended);
 		
 		
 		/**
 		 * Below part is for relation and node serving Person <- Affliates-> Institute
 		 */
-		Relation affliates=new Relation(person, institute,"affiliatedWith");
-		affliates.setServiceId(" ");
-		affliates.setUri(" ");
-		properties = new DynamicPropertiesContainer();
-		properties=new DynamicPropertiesContainer();
-		properties.setProperty("role",instituteRole);
-		properties.setProperty("Year",year);
-		affliates.setDataset(dataset);
-		affliates.setLabel("affiliatedWith");
-		affliates.setType("affiliatedWith");
-		affliates.setProperties(properties); 
-		nodeManager.saveRelation(affliates);
+		AffiliatedWithRelation affiliatedWith=new AffiliatedWithRelation(person, institute);
+		affiliatedWith.setServiceId(" ");
+		affiliatedWith.setUri(" ");
+		affiliatedWith.setRole(instituteRole);
+		affiliatedWith.setYear(year);
+		affiliatedWith.setDataset(dataset);
+		affiliatedWith.setLabel("affiliatedWith"); 
+		nodeManager.saveRelation(affiliatedWith);
 	}
 
 	/**

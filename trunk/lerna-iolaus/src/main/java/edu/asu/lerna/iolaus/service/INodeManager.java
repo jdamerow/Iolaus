@@ -4,7 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import edu.asu.lerna.iolaus.domain.LocationNode;
 import edu.asu.lerna.iolaus.domain.Node;
+import edu.asu.lerna.iolaus.domain.PersonNode;
 import edu.asu.lerna.iolaus.domain.Relation;
 
 public interface INodeManager {
@@ -15,7 +17,7 @@ public interface INodeManager {
 
 	public void initializeNodeTypeMap(int count);
 
-	public Node checkGetPerson(String firstName, String lastName);
+	public PersonNode checkGetPerson(String firstName, String lastName);
 	
 	public void saveNodeInMap(int index,Node node,String key);
 
@@ -23,7 +25,7 @@ public interface INodeManager {
 
 	public Node checkGetSeries(String name);
 
-	public Node checkGetLocation(String address, String street, String city,
+	public LocationNode checkGetLocation(String address, String street, String city,
 			String state, String country);
 
 	void saveRelation(Relation r);
