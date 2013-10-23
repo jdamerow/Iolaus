@@ -32,20 +32,18 @@ public class Relation {
 	
 	private String dataset;
 	
-	private String type;
 	
 	//TODO: Check if DynamicProperties work for Relationship too ! As per javadocs it works with @NodeEntity
-	@GraphProperty
-	private DynamicProperties properties;
+	/*@GraphProperty
+	private DynamicProperties properties;*/
 	
 	@RelationshipType
 	private String relationshipType;
 	
-	public Relation()
-	{
+	public Relation(){
 		super();
 	}
-
+	
 	public Relation(Node startNode, Node endNode,String relationshipType)
 	{
 		super();
@@ -54,13 +52,13 @@ public class Relation {
 		this.relationshipType = relationshipType;
 	}
 	
-	public void setProperties(DynamicProperties properties){
+	/*public void setProperties(DynamicProperties properties){
 		this.properties=properties;
 	}
 	
 	public DynamicProperties getProperties(){
 		return properties;
-	}
+	}*/
 	
 	public void setId(Long id){
 		this.id=id;
@@ -90,13 +88,13 @@ public class Relation {
 		return relationshipType;
 	}
 	
-	public String getType() {
+	/*public String getType() {
 		return type;
 	}
 
 	public void setType(String type) {
 		this.type = type;
-	}
+	}*/
 
 	public String getLabel() {
 		return label;

@@ -32,8 +32,8 @@ public class Node {
 	private String dataset;
 	
 
-	@GraphProperty
-	private DynamicProperties properties;
+	/*@GraphProperty
+	private DynamicProperties properties;*/
 	
 	@RelatedToVia(type="Default",direction=Direction.OUTGOING)
 	private Set<Relation> relationships;
@@ -89,13 +89,13 @@ public class Node {
 		this.uri=uri;
 	}
 	
-	public DynamicProperties getProperties() {
+	/*public DynamicProperties getProperties() {
 		return properties;
 	}
 
 	public void setProperties(DynamicProperties properties) {
 		this.properties = properties;
-	}
+	}*/
 
 	/*public Set<Relation> getRelationships() {
 		return relationships;
