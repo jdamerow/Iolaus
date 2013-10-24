@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<xs:schema xmlns="http://digitalhps.org/lerna-query-model" xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="http://digitalhps.org/lerna-query-model" elementFormDefault="qualified">
+
+    <xs:element name="query">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref="database" minOccurs="0" maxOccurs="1"/>
+                <xs:element ref="dataset" minOccurs="0" maxOccurs="1"/>
+                <xs:element ref="node" minOccurs="0" maxOccurs="1"/>
+                <xs:element ref="relationship" minOccurs="0" maxOccurs="1"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="database">
+        <xs:complexType>
+            <xs:attribute name="id" type="xs:string" use="required"/>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="dataset">
+        <xs:complexType>
+            <xs:attribute name="id" type="xs:string" use="required"/>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="property">
+        <xs:complexType>
+            <xs:attribute name="name" type="xs:string"/>
+            <xs:attribute name="type" type="xs:string"/>
+            <xs:attribute name="value" type="xs:string"/>
+            <xs:attribute name="start" type="xs:integer"/>
+            <xs:attribute name="end" type="xs:integer"/>            
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="node">
+        <xs:complexType>
+            <xs:choice maxOccurs="unbounded">
+                <xs:element ref="property" minOccurs="0"/>
+                <xs:element ref="relationship" minOccurs="0"/>
+                <xs:element ref="and" minOccurs="0"/>
+                <xs:element ref="or" minOccurs="0"/>
+            </xs:choice>
+            <xs:attribute name="return" type="xs:boolean" />
+        </xs:complexType>
+    </xs:element>
+    
+    <xs:element name="relationship">
+        <xs:complexType>
+            <xs:choice maxOccurs="unbounded">
+                <xs:element ref="source" minOccurs="0" maxOccurs="1"/>
+                <xs:element ref="target" minOccurs="0" maxOccurs="1"/>
+                <xs:element ref="property" minOccurs="0"/>
+                <xs:element ref="and" minOccurs="0"/>
+                <xs:element ref="or" minOccurs="0"/>
+            </xs:choice>
+            <xs:attribute name="return" type="xs:boolean" />
+        </xs:complexType>
+    </xs:element>
+    
+    <xs:element name="source" type="rel_node"/>
+    <xs:element name="target" type="rel_node"/>
+    
+    <xs:complexType name="rel_node">
+        <xs:sequence>
+            <xs:element ref="node"/>
+        </xs:sequence>
+    </xs:complexType>
+    
+    <xs:element name="and" type="operator"/>
+    <xs:element name="or" type="operator"/>
+
+    <xs:complexType name="operator">
+        <xs:choice maxOccurs="unbounded">
+            <xs:element ref="source" minOccurs="0" maxOccurs="1"/>
+            <xs:element ref="target" minOccurs="0" maxOccurs="1"/>
+            <xs:element ref="property" minOccurs="0"/>
+            <xs:element ref="relationship" minOccurs="0"/>
+            <xs:element ref="and" minOccurs="0"/>
+            <xs:element ref="or" minOccurs="0"/>
+        </xs:choice>
+    </xs:complexType>
+</xs:schema>
