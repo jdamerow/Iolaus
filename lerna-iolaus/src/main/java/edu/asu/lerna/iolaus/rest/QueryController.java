@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import edu.asu.lerna.iolaus.domain.queryobject.Query;
 import edu.asu.lerna.iolaus.service.IQueryManager;
@@ -42,6 +43,7 @@ public class QueryController {
 	 * @return
 	 * @throws JAXBException
 	 */
+	@ResponseBody
 	@RequestMapping(value = "/queryiolaus", method = RequestMethod.POST)
 	public String queryIolaus(HttpServletRequest request,
 			HttpServletResponse response,@RequestBody String res,@RequestHeader("Accept") String accept) throws JAXBException {
