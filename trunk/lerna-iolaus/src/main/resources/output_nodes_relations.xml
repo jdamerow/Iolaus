@@ -1,5 +1,22 @@
 <?xml version="1.0" encoding="ISO-8859-1" ?>
 <resultset>
+	<nodes>
+		<node id="http://www.diging.asu.edu/lerna/mblcourses/nodes/13123">
+			<property name="type" value="Person" />
+			<property name="firstname" value="Jennie C. R." />
+			<property name="lastname" value="Smith" />
+		</node>
+		<node id="http://www.diging.asu.edu/lerna/mblcourses/nodes/13124">
+			<property name="type" value="Person" />
+			<property name="firstname" value="John H." />
+			<property name="lastname" value="Northrup" />
+		</node>
+		<node id="http://www.diging.asu.edu/lerna/mblcourses/nodes/13125">
+			<property name="type" value="Person" />
+			<property name="firstname" value="Joseph C." />
+			<property name="lastname" value="Herrick" />
+		</node>
+	</nodes>
 	<relations>
 		<relation id="http://www.diging.asu.edu/lerna/mblcourses/relations/9120">
 			<property name="sourcetype" value="Person" />
