@@ -7,8 +7,8 @@
     <node return="true">
         <and>
             <property name="type" value="Person" />        
-            <relationship return="false">
-                <property name="type" value="hasLocation" />
+            <relationship return="true">
+                <property name="type" value="Location" />
                 <property name="date" type="range" start="1900" end="1920" />
                 <or>
                     <target>
