@@ -1,8 +1,16 @@
 package edu.asu.lerna.iolaus.rest;
 
 import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
+
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBElement;
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.Unmarshaller;
+import javax.xml.transform.stream.StreamSource;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,6 +19,7 @@ import org.springframework.data.neo4j.fieldaccess.DynamicProperties;
 import org.springframework.data.neo4j.fieldaccess.DynamicPropertiesContainer;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -23,6 +32,7 @@ import edu.asu.lerna.iolaus.domain.LocationNode;
 import edu.asu.lerna.iolaus.domain.Node;
 import edu.asu.lerna.iolaus.domain.PersonNode;
 import edu.asu.lerna.iolaus.domain.Relation;
+import edu.asu.lerna.iolaus.domain.queryobject.Query;
 import edu.asu.lerna.iolaus.service.INodeManager;
 
 
@@ -369,4 +379,26 @@ public class AddNodesRestController {
 		
 	}
 	
+	
+	/**
+	 * Hard coded data in the rest API for testing
+	 * @throws JAXBException 
+	 */
+	@RequestMapping(value = "/testXML", method = RequestMethod.POST)
+	public String testQueryXML(Model model,@RequestBody String res) throws JAXBException {
+		logger.info(" testing ");
+		JAXBContext context = JAXBContext.newInstance(Query.class);
+		Unmarshaller unmarshaller = context.createUnmarshaller();
+		unmarshaller.setEventHandler(new javax.xml.bind.helpers.DefaultValidationEventHandler());
+		InputStream is = new ByteArrayInputStream(res.getBytes());
+		JAXBElement<Query> response1 =  unmarshaller.unmarshal(new StreamSource(is), Query.class);
+		if(response1 == null){
+			logger.info("response is null");
+		}
+		
+		
+		return "success";
+	}
+	
 }
+

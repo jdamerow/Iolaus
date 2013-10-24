@@ -11,12 +11,5 @@ import edu.asu.lerna.iolaus.service.IXMLtoCypherConverter;
 @Service
 public class QueryManager implements IQueryManager {
 
-	@Autowired
-	private IRepositoryManager repositoryManager;
-	
-	@Autowired
-	private IXMLtoCypherConverter xmlToCypherConverter;
-	
-	@Autowired
-	private IObjecttoXMLConverter objectToXMLConverter;
+
 }
