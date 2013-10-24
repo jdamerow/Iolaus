@@ -1,0 +1,19 @@
+<resultset>
+	<nodes>
+		<node>
+			<property name="type" value="Person" />
+			<property name="firstname" value="Jennie C. R." />
+			<property name="lastname" value="Smith" />
+		</node>
+		<node>
+			<property name="type" value="Person" />
+			<property name="firstname" value="John H." />
+			<property name="lastname" value="Northrup" />
+		</node>
+		<node>
+			<property name="type" value="Person" />
+			<property name="firstname" value="Joseph C." />
+			<property name="lastname" value="Herrick" />
+		</node>
+	</nodes>
+</resultset>
