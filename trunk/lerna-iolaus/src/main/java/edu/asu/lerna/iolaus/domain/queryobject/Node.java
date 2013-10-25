@@ -9,7 +9,10 @@
 package edu.asu.lerna.iolaus.domain.queryobject;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
+
+import javax.swing.text.html.HTMLDocument.HTMLReader.IsindexAction;
 import javax.xml.bind.JAXBElement;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -18,6 +21,13 @@ import javax.xml.bind.annotation.XmlElementRef;
 import javax.xml.bind.annotation.XmlElementRefs;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
+
+import org.aspectj.weaver.ast.Instanceof;
+import org.hamcrest.core.IsInstanceOf;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import edu.asu.lerna.iolaus.rest.QueryController;
 
 
 /**
@@ -51,6 +61,9 @@ import javax.xml.bind.annotation.XmlType;
 @XmlRootElement(name = "node")
 public class Node {
 
+	private static final Logger logger = LoggerFactory
+			.getLogger(Node.class);
+	
     @XmlElementRefs({
         @XmlElementRef(name = "or", namespace = "http://digitalhps.org/lerna-query-model", type = JAXBElement.class, required = false),
         @XmlElementRef(name = "and", namespace = "http://digitalhps.org/lerna-query-model", type = JAXBElement.class, required = false),
@@ -141,6 +154,37 @@ public class Node {
      */
     public void setId(String value) {
         this.id = value;
+    }
+    
+    
+    /**
+     * Gets the details of the node.
+     * 
+     * @return
+     *     possible object in
+     *     {@link Node }
+     *     
+     */
+    public void getNodeDetails(edu.asu.lerna.iolaus.domain.queryobject.Node node){
+    	List<Object> nodeDetails = node.propertyOrRelationshipOrAnd;
+    	Iterator<Object> nodeDetailsIterator = nodeDetails.iterator();
+    	int count =0;
+    	while(nodeDetailsIterator.hasNext()){
+    		Object o= nodeDetailsIterator.next();
+    		if(o instanceof Operator ){
+    			Operator r = (Operator) o;
+    			logger.info("The object is operator");
+    		}else if(o instanceof Property ){
+    			logger.info("The object is property");
+    		}else if(o instanceof Relationship ){
+    			logger.info("The object is Relationship");
+    		}else{
+    			logger.info("The object is :"+ o.getClass());
+    		}
+    		
+    		count++;
+    	}
+    	
     }
 
 }
