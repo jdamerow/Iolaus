@@ -181,7 +181,11 @@ public class Node {
 				logger.info("We have a OR operator");
 				Operator opOr = (Operator) element.getValue();
 				opOr.parseOperator(opOr);
-			}
+			}else if(element.getName().toString().contains("}Property")){
+    			logger.info("Property element : "+element.getClass());
+    			Property prop = (Property) element.getValue();
+    			prop.parseProperty(prop);
+    		}
 
 			count++;
 		}

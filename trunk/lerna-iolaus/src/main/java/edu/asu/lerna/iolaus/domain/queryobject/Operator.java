@@ -111,6 +111,26 @@ public class Operator {
     			prop.parseProperty(prop);
     		}else if(element instanceof Relationship){
     			logger.info("Relationship element : "+element.getClass());
+    			Relationship rel = (Relationship) element;
+    			rel.getRelationDetails(rel);
+    		}else if(element instanceof JAXBElement<?>) {
+    			logger.info("Unknown element : "+element.getClass());
+    			JAXBElement<?> element1 = (JAXBElement<?>) element;
+    			if(element1.getName().toString().contains("}target")){
+    				logger.info("Operator element class type : "+element1.getValue().toString());
+        			logger.info("Operator element name : "+element1.getName().toString());
+        			RelNode relNode = (RelNode) element1.getValue();
+        			relNode.parseRelNode(relNode);
+    			}
+    			
+    			if(element1.getName().toString().contains("}source")){
+    				logger.info("Operator element class type : "+element1.getValue().toString());
+        			logger.info("Operator element name : "+element1.getName().toString());
+        			RelNode relNode = (RelNode) element1.getValue();
+        			relNode.parseRelNode(relNode);
+    			}
+    			
+    			
     		}
     	}
     }

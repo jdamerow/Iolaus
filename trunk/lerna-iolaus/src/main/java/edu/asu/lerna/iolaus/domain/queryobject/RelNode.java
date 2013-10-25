@@ -8,10 +8,16 @@
 
 package edu.asu.lerna.iolaus.domain.queryobject;
 
+import java.util.Iterator;
+import java.util.List;
+
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -38,6 +44,9 @@ import javax.xml.bind.annotation.XmlType;
     "node"
 })
 public class RelNode {
+	
+	private static final Logger logger = LoggerFactory
+			.getLogger(RelNode.class);
 
     @XmlElement(required = true)
     protected Node node;
@@ -64,6 +73,22 @@ public class RelNode {
      */
     public void setNode(Node value) {
         this.node = value;
+    }
+    
+    public void parseRelNode(RelNode relNode){
+    	Node node = relNode.getNode();
+    	
+    	logger.info("Rel node class :"+node.getClass());
+    	List <Object> nodeObjectList = node.getPropertyOrRelationshipOrAnd();
+    	Iterator<Object> nodeObjectIterator= nodeObjectList.iterator();
+    	while(nodeObjectIterator.hasNext()){
+    		Object o = nodeObjectIterator.next();
+    		if(o instanceof Property){
+    			Property prop = (Property) o;
+    			prop.parseProperty(prop);
+    		}
+    		
+    	}
     }
 
 }

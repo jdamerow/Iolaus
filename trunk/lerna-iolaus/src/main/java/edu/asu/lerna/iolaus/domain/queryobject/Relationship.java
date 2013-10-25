@@ -9,6 +9,7 @@
 package edu.asu.lerna.iolaus.domain.queryobject;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import javax.xml.bind.JAXBElement;
 import javax.xml.bind.annotation.XmlAccessType;
@@ -18,6 +19,9 @@ import javax.xml.bind.annotation.XmlElementRef;
 import javax.xml.bind.annotation.XmlElementRefs;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -52,6 +56,10 @@ import javax.xml.bind.annotation.XmlType;
 @XmlRootElement(name = "relationship")
 public class Relationship {
 
+
+	private static final Logger logger = LoggerFactory
+			.getLogger(Relationship.class);
+	
     @XmlElementRefs({
         @XmlElementRef(name = "source", namespace = "http://digitalhps.org/lerna-query-model", type = JAXBElement.class, required = false),
         @XmlElementRef(name = "or", namespace = "http://digitalhps.org/lerna-query-model", type = JAXBElement.class, required = false),
@@ -146,4 +154,37 @@ public class Relationship {
         this.id = value;
     }
 
+	/**
+	 * Gets the details of the node.
+	 * 
+	 * @return
+	 *     possible object in
+	 *     {@link Node }
+	 *     
+	 */
+	public void getRelationDetails(edu.asu.lerna.iolaus.domain.queryobject.Relationship relationship){
+		logger.info("Relationship return status : "+_return);
+		List<Object> relationshipDetails = relationship.getSourceOrTargetOrProperty();
+		Iterator<Object> relationshipDetailsIterator = relationshipDetails.iterator();
+		int count =0;
+		while(relationshipDetailsIterator.hasNext()){
+
+			Object element =relationshipDetailsIterator.next();
+    		if(element instanceof Property){
+    			Property prop = (Property) element;
+    			prop.parseProperty(prop);
+    		}else if(element instanceof JAXBElement<?>){
+    			JAXBElement<?> element1 = (JAXBElement<?>) element;
+    			if(element1.getName().toString().contains("}or")){
+    				logger.info("We have a OR operator");
+    				Operator opOr = (Operator) element1.getValue();
+    				opOr.parseOperator(opOr);
+    			}
+    		}
+			count++;
+		}
+		logger.info("Count : "+count);
+
+	}
+	
 }
