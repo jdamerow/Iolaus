@@ -1,15 +1,9 @@
 package edu.asu.lerna.iolaus.rest;
 
-import java.io.ByteArrayInputStream;
-import java.io.InputStream;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
-import javax.xml.bind.Unmarshaller;
-import javax.xml.transform.stream.StreamSource;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -46,11 +40,8 @@ public class QueryController {
 	@RequestMapping(value = "/queryiolaus", method = RequestMethod.POST)
 	public String queryIolaus(HttpServletRequest request,
 			HttpServletResponse response,@RequestBody String res,@RequestHeader("Accept") String accept) throws JAXBException {
-		JAXBContext context = JAXBContext.newInstance(Query.class);
-		Unmarshaller unmarshaller = context.createUnmarshaller();
-		unmarshaller.setEventHandler(new javax.xml.bind.helpers.DefaultValidationEventHandler());
-		InputStream is = new ByteArrayInputStream(res.getBytes());
-		JAXBElement<Query> response1 =  unmarshaller.unmarshal(new StreamSource(is), Query.class);
+
+		JAXBElement<Query> response1 =  queryManager.xmlToQueryObject(res);
 		if(response1 == null){
 			response.setStatus(400);
 			return "failure";

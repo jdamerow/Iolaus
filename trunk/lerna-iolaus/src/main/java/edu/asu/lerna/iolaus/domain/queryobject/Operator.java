@@ -9,6 +9,7 @@
 package edu.asu.lerna.iolaus.domain.queryobject;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import javax.xml.bind.JAXBElement;
 import javax.xml.bind.annotation.XmlAccessType;
@@ -16,6 +17,9 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElementRef;
 import javax.xml.bind.annotation.XmlElementRefs;
 import javax.xml.bind.annotation.XmlType;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -47,6 +51,10 @@ import javax.xml.bind.annotation.XmlType;
     "sourceOrTargetOrProperty"
 })
 public class Operator {
+	
+
+	private static final Logger logger = LoggerFactory
+			.getLogger(Operator.class);
 
     @XmlElementRefs({
         @XmlElementRef(name = "source", namespace = "http://digitalhps.org/lerna-query-model", type = JAXBElement.class, required = false),
@@ -92,4 +100,18 @@ public class Operator {
         return this.sourceOrTargetOrProperty;
     }
 
+    public void parseOperator(Operator op){
+    	List<Object> objectList = op.getSourceOrTargetOrProperty();
+    	Iterator<Object> operatorIterator = objectList.iterator();
+    	while(operatorIterator.hasNext()){
+    		Object element =operatorIterator.next();
+    		if(element instanceof Property){
+    			logger.info("Property element : "+element.getClass());
+    			Property prop = (Property) element;
+    			prop.parseProperty(prop);
+    		}else if(element instanceof Relationship){
+    			logger.info("Relationship element : "+element.getClass());
+    		}
+    	}
+    }
 }

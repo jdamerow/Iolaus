@@ -15,6 +15,9 @@ import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 
 /**
  * <p>Java class for anonymous complex type.
@@ -43,6 +46,10 @@ import javax.xml.bind.annotation.XmlType;
 @XmlRootElement(name = "property")
 public class Property {
 
+
+	private static final Logger logger = LoggerFactory
+			.getLogger(Property.class);
+	
     @XmlAttribute(name = "id")
     protected String id;
     @XmlAttribute(name = "name")
@@ -200,4 +207,26 @@ public class Property {
         this.end = value;
     }
 
+    
+    public void parseProperty(Property prop){
+    	if(prop.getEnd()!=null){
+    		logger.info("Property End : "+prop.getEnd() );
+    	}
+    	if(prop.getId()!=null){
+    		logger.info("Property ID : "+prop.getId() );
+    	}
+    	if(prop.getName()!=null){
+    		logger.info("Property Name : "+prop.getName() );
+    	}
+    	if(prop.getType()!=null){
+    		logger.info("Property Type : "+prop.getType() );
+    	}
+    	if(prop.getStart()!=null){
+    		logger.info("Property Start : "+prop.getStart() );
+    	}
+    	if(prop.getValue()!=null){
+    		logger.info("Property Value : "+prop.getValue() );
+    	}
+
+    }
 }

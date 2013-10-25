@@ -56,135 +56,137 @@ import edu.asu.lerna.iolaus.rest.QueryController;
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "", propOrder = {
-    "propertyOrRelationshipOrAnd"
+		"propertyOrRelationshipOrAnd"
 })
 @XmlRootElement(name = "node")
 public class Node {
 
 	private static final Logger logger = LoggerFactory
 			.getLogger(Node.class);
-	
-    @XmlElementRefs({
-        @XmlElementRef(name = "or", namespace = "http://digitalhps.org/lerna-query-model", type = JAXBElement.class, required = false),
-        @XmlElementRef(name = "and", namespace = "http://digitalhps.org/lerna-query-model", type = JAXBElement.class, required = false),
-        @XmlElementRef(name = "relationship", namespace = "http://digitalhps.org/lerna-query-model", type = Relationship.class, required = false),
-        @XmlElementRef(name = "property", namespace = "http://digitalhps.org/lerna-query-model", type = Property.class, required = false)
-    })
-    protected List<Object> propertyOrRelationshipOrAnd;
-    @XmlAttribute(name = "return")
-    protected Boolean _return;
-    @XmlAttribute(name = "id")
-    protected String id;
 
-    /**
-     * Gets the value of the propertyOrRelationshipOrAnd property.
-     * 
-     * <p>
-     * This accessor method returns a reference to the live list,
-     * not a snapshot. Therefore any modification you make to the
-     * returned list will be present inside the JAXB object.
-     * This is why there is not a <CODE>set</CODE> method for the propertyOrRelationshipOrAnd property.
-     * 
-     * <p>
-     * For example, to add a new item, do as follows:
-     * <pre>
-     *    getPropertyOrRelationshipOrAnd().add(newItem);
-     * </pre>
-     * 
-     * 
-     * <p>
-     * Objects of the following type(s) are allowed in the list
-     * {@link Relationship }
-     * {@link JAXBElement }{@code <}{@link Operator }{@code >}
-     * {@link JAXBElement }{@code <}{@link Operator }{@code >}
-     * {@link Property }
-     * 
-     * 
-     */
-    public List<Object> getPropertyOrRelationshipOrAnd() {
-        if (propertyOrRelationshipOrAnd == null) {
-            propertyOrRelationshipOrAnd = new ArrayList<Object>();
-        }
-        return this.propertyOrRelationshipOrAnd;
-    }
+	@XmlElementRefs({
+		@XmlElementRef(name = "or", namespace = "http://digitalhps.org/lerna-query-model", type = JAXBElement.class, required = false),
+		@XmlElementRef(name = "and", namespace = "http://digitalhps.org/lerna-query-model", type = JAXBElement.class, required = false),
+		@XmlElementRef(name = "relationship", namespace = "http://digitalhps.org/lerna-query-model", type = Relationship.class, required = false),
+		@XmlElementRef(name = "property", namespace = "http://digitalhps.org/lerna-query-model", type = Property.class, required = false)
+	})
+	protected List<Object> propertyOrRelationshipOrAnd;
+	@XmlAttribute(name = "return")
+	protected Boolean _return;
+	@XmlAttribute(name = "id")
+	protected String id;
 
-    /**
-     * Gets the value of the return property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link Boolean }
-     *     
-     */
-    public Boolean isReturn() {
-        return _return;
-    }
+	/**
+	 * Gets the value of the propertyOrRelationshipOrAnd property.
+	 * 
+	 * <p>
+	 * This accessor method returns a reference to the live list,
+	 * not a snapshot. Therefore any modification you make to the
+	 * returned list will be present inside the JAXB object.
+	 * This is why there is not a <CODE>set</CODE> method for the propertyOrRelationshipOrAnd property.
+	 * 
+	 * <p>
+	 * For example, to add a new item, do as follows:
+	 * <pre>
+	 *    getPropertyOrRelationshipOrAnd().add(newItem);
+	 * </pre>
+	 * 
+	 * 
+	 * <p>
+	 * Objects of the following type(s) are allowed in the list
+	 * {@link Relationship }
+	 * {@link JAXBElement }{@code <}{@link Operator }{@code >}
+	 * {@link JAXBElement }{@code <}{@link Operator }{@code >}
+	 * {@link Property }
+	 * 
+	 * 
+	 */
+	public List<Object> getPropertyOrRelationshipOrAnd() {
+		if (propertyOrRelationshipOrAnd == null) {
+			propertyOrRelationshipOrAnd = new ArrayList<Object>();
+		}
+		return this.propertyOrRelationshipOrAnd;
+	}
 
-    /**
-     * Sets the value of the return property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link Boolean }
-     *     
-     */
-    public void setReturn(Boolean value) {
-        this._return = value;
-    }
+	/**
+	 * Gets the value of the return property.
+	 * 
+	 * @return
+	 *     possible object is
+	 *     {@link Boolean }
+	 *     
+	 */
+	public Boolean isReturn() {
+		return _return;
+	}
 
-    /**
-     * Gets the value of the id property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
-     */
-    public String getId() {
-        return id;
-    }
+	/**
+	 * Sets the value of the return property.
+	 * 
+	 * @param value
+	 *     allowed object is
+	 *     {@link Boolean }
+	 *     
+	 */
+	public void setReturn(Boolean value) {
+		this._return = value;
+	}
 
-    /**
-     * Sets the value of the id property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
-     */
-    public void setId(String value) {
-        this.id = value;
-    }
-    
-    
-    /**
-     * Gets the details of the node.
-     * 
-     * @return
-     *     possible object in
-     *     {@link Node }
-     *     
-     */
-    public void getNodeDetails(edu.asu.lerna.iolaus.domain.queryobject.Node node){
-    	List<Object> nodeDetails = node.propertyOrRelationshipOrAnd;
-    	Iterator<Object> nodeDetailsIterator = nodeDetails.iterator();
-    	int count =0;
-    	while(nodeDetailsIterator.hasNext()){
-    		Object o= nodeDetailsIterator.next();
-    		if(o instanceof Operator ){
-    			Operator r = (Operator) o;
-    			logger.info("The object is operator");
-    		}else if(o instanceof Property ){
-    			logger.info("The object is property");
-    		}else if(o instanceof Relationship ){
-    			logger.info("The object is Relationship");
-    		}else{
-    			logger.info("The object is :"+ o.getClass());
-    		}
-    		
-    		count++;
-    	}
-    	
-    }
+	/**
+	 * Gets the value of the id property.
+	 * 
+	 * @return
+	 *     possible object is
+	 *     {@link String }
+	 *     
+	 */
+	public String getId() {
+		return id;
+	}
+
+	/**
+	 * Sets the value of the id property.
+	 * 
+	 * @param value
+	 *     allowed object is
+	 *     {@link String }
+	 *     
+	 */
+	public void setId(String value) {
+		this.id = value;
+	}
+
+
+	/**
+	 * Gets the details of the node.
+	 * 
+	 * @return
+	 *     possible object in
+	 *     {@link Node }
+	 *     
+	 */
+	public void getNodeDetails(edu.asu.lerna.iolaus.domain.queryobject.Node node){
+		logger.info("Node return status : "+_return);
+		List<Object> nodeDetails = node.propertyOrRelationshipOrAnd;
+		Iterator<Object> nodeDetailsIterator = nodeDetails.iterator();
+		int count =0;
+		while(nodeDetailsIterator.hasNext()){
+			JAXBElement<?> element = (JAXBElement<Object>) nodeDetailsIterator.next();
+
+			if(element.getName().toString().contains("}and")){
+				logger.info("We have a AND operator");
+				Operator opAnd = (Operator) element.getValue();
+				opAnd.parseOperator(opAnd);
+			}else if(element.getName().toString().contains("}or")){
+				logger.info("We have a OR operator");
+				Operator opOr = (Operator) element.getValue();
+				opOr.parseOperator(opOr);
+			}
+
+			count++;
+		}
+		logger.info("Count : "+count);
+
+	}
 
 }
