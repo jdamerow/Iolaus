@@ -115,8 +115,8 @@ public class NodeManager implements INodeManager {
 		Map<String,List<Node>> nodeMap=nodeTypeList.get(0);
 		PersonNode target=null;
 		List<Node> nodeList;
-		if(nodeMap.containsKey(lastName))
-			nodeList=nodeMap.get(lastName);
+		if(nodeMap.containsKey(firstName))
+			nodeList=nodeMap.get(firstName);
 		else
 			return null;
 		Iterator<Node> nodeIterator = nodeList.iterator();
