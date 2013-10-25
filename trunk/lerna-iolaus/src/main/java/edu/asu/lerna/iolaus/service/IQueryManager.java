@@ -11,4 +11,6 @@ public interface IQueryManager {
 
 	JAXBElement<Query> xmlToQueryObject(String res) throws JAXBException;
 
+	String getRESTOutput();
+
 }
