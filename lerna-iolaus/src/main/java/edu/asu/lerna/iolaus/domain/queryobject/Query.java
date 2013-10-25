@@ -147,4 +147,41 @@ public class Query {
         this.relationship = value;
     }
 
+    
+    /**
+     * Gets the value of the database ID.
+     * 
+     * @return
+     *     possible object is
+     *     {@link Database }
+     *     
+     */
+    public String getDatabaseId(Database db){
+    	return db.getId();
+    }
+    
+    
+    /**
+     * Gets the value of the dataset name.
+     * 
+     * @return
+     *     possible object is
+     *     {@link Dataset }
+     *     
+     */
+    public String getDatasetName(Dataset ds){
+    	return ds.getId();
+    }
+    
+    /**
+     * Gets the value of the dataset name.
+     * 
+     * @return
+     *     possible object is
+     *     {@link Dataset }
+     *     
+     */
+    public void getNodeDetails(Node node){
+    	node.getNodeDetails(node);
+    }
 }
