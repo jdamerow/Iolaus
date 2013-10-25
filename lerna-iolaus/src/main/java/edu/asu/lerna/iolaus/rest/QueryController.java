@@ -38,8 +38,7 @@ public class QueryController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "/queryiolaus", method = RequestMethod.POST)
-	public String queryIolaus(HttpServletRequest request,
-			HttpServletResponse response,@RequestBody String res,@RequestHeader("Accept") String accept) throws JAXBException {
+	public String queryIolaus(HttpServletRequest request,	HttpServletResponse response,@RequestBody String res,@RequestHeader("Accept") String accept) throws JAXBException {
 
 		JAXBElement<Query> response1 =  queryManager.xmlToQueryObject(res);
 		if(response1 == null){
@@ -49,6 +48,6 @@ public class QueryController {
 		queryManager.parseQuery(response1);
 		logger.info("Success");
 		response.setStatus(200);
-		return "success";
+		return queryManager.getRESTOutput();
 	}
 }
