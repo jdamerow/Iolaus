@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema targetNamespace="http://www.example.org/IolausOutputSchema" elementFormDefault="qualified" xmlns="http://www.w3.org/2001/XMLSchema" xmlns:xs="http://www.example.org/IolausOutputSchema">
+
+
+    <element name="ResultSet" type="xs:ResultSet"></element>
+    
+
+    <complexType name="ResultSet">
+    	<choice maxOccurs="1" minOccurs="1">
+    		<element name="Node" type="xs:Node"></element>
+    		<element name="Relation" type="xs:Relationship"></element>
+    	</choice>
+    </complexType>
+
+    <complexType name="Node">
+    	<sequence>
+    		<element name="Property" type="xs:Property" maxOccurs="unbounded" minOccurs="0"></element>
+    	</sequence>
+    </complexType>
+    
+    <complexType name="Relationship">
+    	<sequence maxOccurs="unbounded" minOccurs="0">
+    		<element name="Source" type="xs:Node"></element>
+    		<element name="Property" type="xs:Property"></element>
+    		<element name="Target" type="xs:Node"></element>
+    	</sequence>
+    </complexType>
+    
+    <complexType name="Property">
+    	<sequence>
+    		<element name="Name" type="string"></element>
+    		<element name="Value" type="string"></element>
+    	</sequence>
+    </complexType>
+</schema>
