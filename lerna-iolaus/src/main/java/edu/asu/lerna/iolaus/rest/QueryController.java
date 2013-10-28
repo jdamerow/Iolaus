@@ -39,7 +39,11 @@ public class QueryController {
 	@ResponseBody
 	@RequestMapping(value = "/queryiolaus", method = RequestMethod.POST)
 	public String queryIolaus(HttpServletRequest request,	HttpServletResponse response,@RequestBody String res,@RequestHeader("Accept") String accept) throws JAXBException {
-
+		
+		if(res == null || res.isEmpty()){
+			response.setStatus(400);
+			return "Query XML is empty";
+		}
 		JAXBElement<Query> response1 =  queryManager.xmlToQueryObject(res);
 		if(response1 == null){
 			response.setStatus(400);
