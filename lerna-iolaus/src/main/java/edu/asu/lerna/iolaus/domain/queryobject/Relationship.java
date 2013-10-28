@@ -171,6 +171,7 @@ public class Relationship {
 
 			Object element =relationshipDetailsIterator.next();
     		if(element instanceof Property){
+    			logger.info("Found Property here : ");
     			Property prop = (Property) element;
     			prop.parseProperty(prop);
     		}else if(element instanceof JAXBElement<?>){

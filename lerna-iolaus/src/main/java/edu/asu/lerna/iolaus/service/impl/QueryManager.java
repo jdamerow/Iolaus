@@ -33,6 +33,8 @@ public class QueryManager implements IQueryManager {
 	}
 	
 	/**
+	 * Use Unmarshaller to unmarshal the XMl into Query object
+	 * @param res
 	 * @author Lohith Dwaraka
 	 */
 	@Override

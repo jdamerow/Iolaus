@@ -106,27 +106,24 @@ public class Operator {
     	while(operatorIterator.hasNext()){
     		Object element =operatorIterator.next();
     		if(element instanceof Property){
-    			logger.info("Property element : "+element.getClass());
+    			logger.info("Found property object");
     			Property prop = (Property) element;
     			prop.parseProperty(prop);
     		}else if(element instanceof Relationship){
-    			logger.info("Relationship element : "+element.getClass());
+    			logger.info("Found Relationship object ");
     			Relationship rel = (Relationship) element;
     			rel.getRelationDetails(rel);
     		}else if(element instanceof JAXBElement<?>) {
-    			logger.info("Unknown element : "+element.getClass());
     			JAXBElement<?> element1 = (JAXBElement<?>) element;
     			if(element1.getName().toString().contains("}target")){
-    				logger.info("Operator element class type : "+element1.getValue().toString());
-        			logger.info("Operator element name : "+element1.getName().toString());
         			RelNode relNode = (RelNode) element1.getValue();
+        			logger.info("Found Target rel_node object ");
         			relNode.parseRelNode(relNode);
     			}
     			
     			if(element1.getName().toString().contains("}source")){
-    				logger.info("Operator element class type : "+element1.getValue().toString());
-        			logger.info("Operator element name : "+element1.getName().toString());
         			RelNode relNode = (RelNode) element1.getValue();
+        			logger.info("Found Source rel_node object ");
         			relNode.parseRelNode(relNode);
     			}
     			

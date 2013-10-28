@@ -21,6 +21,9 @@ public class XMLtoCypherConverter implements IXMLtoCypherConverter{
 		Query q = response.getValue();
 		logger.info("Database ID : "+q.getDatabaseId(q.getDatabase()));
 		logger.info("Dataset Name : "+q.getDatasetName(q.getDataset()));
-		q.getNodeDetails(q.getNode());
+		if(q.getNode()!=null){
+			logger.info("Found a Node, Following are node details");
+			q.getNodeDetails(q.getNode());
+		}
 	}
 }
