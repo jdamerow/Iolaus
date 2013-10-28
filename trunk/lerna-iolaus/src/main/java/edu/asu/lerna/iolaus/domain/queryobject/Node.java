@@ -166,6 +166,7 @@ public class Node {
 	 *     
 	 */
 	public void getNodeDetails(edu.asu.lerna.iolaus.domain.queryobject.Node node){
+		
 		logger.info("Node return status : "+_return);
 		List<Object> nodeDetails = node.propertyOrRelationshipOrAnd;
 		Iterator<Object> nodeDetailsIterator = nodeDetails.iterator();
@@ -182,6 +183,7 @@ public class Node {
 				Operator opOr = (Operator) element.getValue();
 				opOr.parseOperator(opOr);
 			}else if(element.getName().toString().contains("}Property")){
+				logger.info("Found property object");
     			logger.info("Property element : "+element.getClass());
     			Property prop = (Property) element.getValue();
     			prop.parseProperty(prop);

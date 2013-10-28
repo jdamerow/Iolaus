@@ -50,7 +50,6 @@ public class QueryController {
 			return "failure";
 		}
 		queryManager.parseQuery(response1);
-		logger.info("Success");
 		response.setStatus(200);
 		return queryManager.getRESTOutput();
 	}

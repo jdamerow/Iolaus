@@ -78,12 +78,12 @@ public class RelNode {
     public void parseRelNode(RelNode relNode){
     	Node node = relNode.getNode();
     	
-    	logger.info("Rel node class :"+node.getClass());
     	List <Object> nodeObjectList = node.getPropertyOrRelationshipOrAnd();
     	Iterator<Object> nodeObjectIterator= nodeObjectList.iterator();
     	while(nodeObjectIterator.hasNext()){
     		Object o = nodeObjectIterator.next();
     		if(o instanceof Property){
+    			logger.info("Found Property Object :");
     			Property prop = (Property) o;
     			prop.parseProperty(prop);
     		}
