@@ -28,8 +28,8 @@ public class QueryManager implements IQueryManager {
 			.getLogger(QueryManager.class);
 	
 	@Override
-	public void parseQuery(JAXBElement<Query> response){
-		xmlToCypherConverter.parseQuery(response);
+	public void parseQuery(Query q){
+		xmlToCypherConverter.parseQuery(q);
 	}
 	
 	/**
@@ -38,13 +38,14 @@ public class QueryManager implements IQueryManager {
 	 * @author Lohith Dwaraka
 	 */
 	@Override
-	public JAXBElement<Query> xmlToQueryObject(String res) throws JAXBException{
+	public Query xmlToQueryObject(String res) throws JAXBException{
 		JAXBContext context = JAXBContext.newInstance(Query.class);
 		Unmarshaller unmarshaller = context.createUnmarshaller();
 		unmarshaller.setEventHandler(new javax.xml.bind.helpers.DefaultValidationEventHandler());
 		InputStream is = new ByteArrayInputStream(res.getBytes());
 		JAXBElement<Query> response1 =  unmarshaller.unmarshal(new StreamSource(is), Query.class);
-		return response1;
+		Query q = response1.getValue();
+		return q;
 	}
 	
 	@Override
