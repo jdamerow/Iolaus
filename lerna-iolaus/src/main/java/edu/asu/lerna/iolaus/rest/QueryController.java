@@ -2,7 +2,6 @@ package edu.asu.lerna.iolaus.rest;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
 
 import org.slf4j.Logger;
@@ -44,12 +43,12 @@ public class QueryController {
 			response.setStatus(400);
 			return "Query XML is empty";
 		}
-		JAXBElement<Query> response1 =  queryManager.xmlToQueryObject(res);
-		if(response1 == null){
+		Query q =  queryManager.xmlToQueryObject(res);
+		if(q == null){
 			response.setStatus(400);
 			return "failure";
 		}
-		queryManager.parseQuery(response1);
+		queryManager.parseQuery(q);
 		response.setStatus(200);
 		return queryManager.getRESTOutput();
 	}

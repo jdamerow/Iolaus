@@ -1,7 +1,5 @@
 package edu.asu.lerna.iolaus.service.impl;
 
-import javax.xml.bind.JAXBElement;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -16,9 +14,8 @@ public class XMLtoCypherConverter implements IXMLtoCypherConverter{
 			.getLogger(XMLtoCypherConverter.class);
 	
 	@Override
-	public void parseQuery(JAXBElement<Query> response){
+	public void parseQuery(Query q){
 		
-		Query q = response.getValue();
 		logger.info("Database ID : "+q.getDatabaseId(q.getDatabase()));
 		logger.info("Dataset Name : "+q.getDatasetName(q.getDataset()));
 		if(q.getNode()!=null){
