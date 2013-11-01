@@ -1,6 +1,7 @@
 package edu.asu.lerna.iolaus.rest;
 
 import javax.servlet.http.HttpServletRequest;
+import edu.asu.lerna.iolaus.domain.queryobject.CypherQuery;
 import javax.servlet.http.HttpServletResponse;
 import javax.xml.bind.JAXBException;
 
@@ -25,7 +26,6 @@ public class QueryController {
 	
 	private static final Logger logger = LoggerFactory
 			.getLogger(QueryController.class);
-	
 	/**
 	 * 
 	 * @param request
@@ -50,6 +50,7 @@ public class QueryController {
 		}
 		queryManager.parseQuery(q);
 		response.setStatus(200);
+		logger.info(CypherQuery.where);
 		return queryManager.getRESTOutput();
 	}
 }

@@ -165,28 +165,31 @@ public class Node {
 	 *     {@link Node }
 	 *     
 	 */
-	public void getNodeDetails(edu.asu.lerna.iolaus.domain.queryobject.Node node){
+	public void getNodeDetails(edu.asu.lerna.iolaus.domain.queryobject.Node node,PropertyOf propertyOf){
 		
 		logger.info("Node return status : "+_return);
 		List<Object> nodeDetails = node.propertyOrRelationshipOrAnd;
 		Iterator<Object> nodeDetailsIterator = nodeDetails.iterator();
 		int count =0;
+		//CypherQuery.where+="( ";
 		while(nodeDetailsIterator.hasNext()){
 			JAXBElement<?> element = (JAXBElement<Object>) nodeDetailsIterator.next();
 
 			if(element.getName().toString().contains("}and")){
 				logger.info("We have a AND operator");
 				Operator opAnd = (Operator) element.getValue();
-				opAnd.parseOperator(opAnd);
+				CypherQuery.currentOperator="and";
+				opAnd.parseOperator(opAnd,propertyOf);
 			}else if(element.getName().toString().contains("}or")){
 				logger.info("We have a OR operator");
 				Operator opOr = (Operator) element.getValue();
-				opOr.parseOperator(opOr);
+				CypherQuery.currentOperator="or";
+				opOr.parseOperator(opOr,propertyOf);
 			}else if(element.getName().toString().contains("}Property")){
 				logger.info("Found property object");
     			logger.info("Property element : "+element.getClass());
     			Property prop = (Property) element.getValue();
-    			prop.parseProperty(prop);
+    			prop.parseProperty(prop,propertyOf);
     		}
 
 			count++;

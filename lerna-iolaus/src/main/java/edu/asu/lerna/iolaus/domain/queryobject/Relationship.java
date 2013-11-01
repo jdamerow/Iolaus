@@ -173,13 +173,20 @@ public class Relationship {
     		if(element instanceof Property){
     			logger.info("Found Property here : ");
     			Property prop = (Property) element;
-    			prop.parseProperty(prop);
+    			prop.parseProperty(prop,PropertyOf.RELATION);
     		}else if(element instanceof JAXBElement<?>){
     			JAXBElement<?> element1 = (JAXBElement<?>) element;
     			if(element1.getName().toString().contains("}or")){
     				logger.info("We have a OR operator");
+    				CypherQuery.currentOperator="or";
     				Operator opOr = (Operator) element1.getValue();
-    				opOr.parseOperator(opOr);
+    				opOr.parseOperator(opOr,PropertyOf.RELATION);
+    			}
+    			else if(element1.getName().toString().contains("}and")){
+    				logger.info("We have a AND operator");
+    				CypherQuery.currentOperator="and";
+    				Operator opAnd = (Operator) element1.getValue();
+    				opAnd.parseOperator(opAnd,PropertyOf.RELATION);
     			}
     		}
 			count++;

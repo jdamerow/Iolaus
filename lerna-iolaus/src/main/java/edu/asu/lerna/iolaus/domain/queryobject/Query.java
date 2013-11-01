@@ -182,6 +182,11 @@ public class Query {
      *     
      */
     public void getNodeDetails(Node node){
-    	node.getNodeDetails(node);
+    	node.getNodeDetails(node,PropertyOf.SOURCE);
     }
+
+	public void getRelationshipDetails(Relationship relationship) {
+		// TODO Auto-generated method stub
+		relationship.getRelationDetails(relationship);
+	}
 }

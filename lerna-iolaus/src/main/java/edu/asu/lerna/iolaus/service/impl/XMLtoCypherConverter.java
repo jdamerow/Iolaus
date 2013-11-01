@@ -22,5 +22,9 @@ public class XMLtoCypherConverter implements IXMLtoCypherConverter{
 			logger.info("Found a Node, Following are node details");
 			q.getNodeDetails(q.getNode());
 		}
+		if(q.getRelationship()!=null){
+			logger.info("Found a Relationship, Following are Relationship details");
+			q.getRelationshipDetails(q.getRelationship());
+		}
 	}
 }

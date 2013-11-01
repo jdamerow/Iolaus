@@ -17,7 +17,7 @@ public class Node {
 	@GraphId 
 	private Long id;
 
-	@Indexed(unique=false)
+	@Indexed(indexName="type")
 	private String type;
 
 	@Indexed(unique=false)
