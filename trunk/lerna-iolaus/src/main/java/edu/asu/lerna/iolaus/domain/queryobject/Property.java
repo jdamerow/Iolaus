@@ -208,25 +208,59 @@ public class Property {
     }
 
     
-    public void parseProperty(Property prop){
-    	if(prop.getEnd()!=null){
-    		logger.info("Property End : "+prop.getEnd() );
+    public void parseProperty(Property prop,PropertyOf propertyOf){
+    	String value=propertyOf.toString();
+    	if((!propertyOf.equals(PropertyOf.RELATION))&&(!CypherQuery.nodeRel.containsKey(value))){
+    		CypherQuery.nodeRel.put(propertyOf, value);
     	}
+    	
+    	String op="and";
+    	
+    	if(!CypherQuery.operator.empty()){
+    		//CypherQuery.where+=") ";
+    		//op=CypherQuery.operator.pop()+" ( ";
+    		op=CypherQuery.operator.pop();
+    		logger.info("Operator in property:"+op);
+    	}
+    	
+    	if(prop.getValue()!=null){
+    		//logger.info("Property Name : "+prop.getName() );
+        	if(CypherQuery.where.equals("where "))
+        		CypherQuery.where+=value+"."+prop.getName()+"="+prop.getValue()+" ";
+       		else
+       			CypherQuery.where+=op+" "+value+"."+prop.getName()+"="+prop.getValue()+" ";
+       		/*if(op.contains("(")){
+       			op.replaceAll("( ", "");
+       		}*/
+       		logger.info("Property Value : "+prop.getValue() );
+    	} 
+    	else{
+    		
+    		if(prop.getType()!=null){
+	    		logger.info("Property Type : "+prop.getType() );
+	    		if(prop.getStart()!=null){
+	        		if(CypherQuery.where.equals("where "))
+	        			CypherQuery.where+=value+"."+prop.getName()+">="+prop.getStart()+" ";
+	        		else
+	        			CypherQuery.where+=op+" "+value+"."+prop.getName()+">="+prop.getStart()+" ";
+	        		/*if(op.contains("(")){
+	           			op.replaceAll("( ", "");
+	        		}*/
+	        		logger.info("Property Start : "+prop.getStart() );
+	    		}
+    		}
+    		if(prop.getEnd()!=null){
+        		if(CypherQuery.where.equals("where "))
+        			CypherQuery.where+=" "+value+"."+prop.getName()+"<="+prop.getEnd()+" ";
+        		else
+        			CypherQuery.where+=op+" "+value+"."+prop.getName()+"<="+prop.getEnd()+" ";
+        		logger.info("Property End : "+prop.getEnd() );
+    		}
+    	}
+    	
     	if(prop.getId()!=null){
     		logger.info("Property ID : "+prop.getId() );
-    	}
-    	if(prop.getName()!=null){
-    		logger.info("Property Name : "+prop.getName() );
-    	}
-    	if(prop.getType()!=null){
-    		logger.info("Property Type : "+prop.getType() );
-    	}
-    	if(prop.getStart()!=null){
-    		logger.info("Property Start : "+prop.getStart() );
-    	}
-    	if(prop.getValue()!=null){
-    		logger.info("Property Value : "+prop.getValue() );
-    	}
-
+    	}	
+    	
     }
 }

@@ -100,34 +100,37 @@ public class Operator {
         return this.sourceOrTargetOrProperty;
     }
 
-    public void parseOperator(Operator op){
+    public void parseOperator(Operator op,PropertyOf propertyOf){
     	List<Object> objectList = op.getSourceOrTargetOrProperty();
     	Iterator<Object> operatorIterator = objectList.iterator();
+    	boolean flag=false;
     	while(operatorIterator.hasNext()){
     		Object element =operatorIterator.next();
     		if(element instanceof Property){
+    			flag=true;
     			logger.info("Found property object");
     			Property prop = (Property) element;
-    			prop.parseProperty(prop);
+    			prop.parseProperty(prop,propertyOf);
     		}else if(element instanceof Relationship){
     			logger.info("Found Relationship object ");
     			Relationship rel = (Relationship) element;
-    			rel.getRelationDetails(rel);
+    			if(flag){
+    				CypherQuery.operator.push(CypherQuery.currentOperator);
+    			}
+    			rel.getRelationDetails(rel); 
     		}else if(element instanceof JAXBElement<?>) {
     			JAXBElement<?> element1 = (JAXBElement<?>) element;
     			if(element1.getName().toString().contains("}target")){
         			RelNode relNode = (RelNode) element1.getValue();
         			logger.info("Found Target rel_node object ");
-        			relNode.parseRelNode(relNode);
+        			relNode.parseRelNode(relNode,PropertyOf.TARGET);
     			}
-    			
     			if(element1.getName().toString().contains("}source")){
         			RelNode relNode = (RelNode) element1.getValue();
         			logger.info("Found Source rel_node object ");
-        			relNode.parseRelNode(relNode);
-    			}
-    			
-    			
+        			relNode.parseRelNode(relNode,PropertyOf.SOURCE);
+    			}	
+        		CypherQuery.operator.push(CypherQuery.currentOperator);
     		}
     	}
     }

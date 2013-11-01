@@ -5,7 +5,6 @@
 // Generated on: 2013.10.25 at 09:21:19 AM MST 
 //
 
-
 package edu.asu.lerna.iolaus.domain.queryobject;
 
 import java.util.Iterator;
@@ -19,11 +18,13 @@ import javax.xml.bind.annotation.XmlType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-
 /**
- * <p>Java class for rel_node complex type.
+ * <p>
+ * Java class for rel_node complex type.
  * 
- * <p>The following schema fragment specifies the expected content contained within this class.
+ * <p>
+ * The following schema fragment specifies the expected content contained within
+ * this class.
  * 
  * <pre>
  * &lt;complexType name="rel_node">
@@ -40,55 +41,51 @@ import org.slf4j.LoggerFactory;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "rel_node", propOrder = {
-    "node"
-})
+@XmlType(name = "rel_node", propOrder = { "node" })
 public class RelNode {
-	
-	private static final Logger logger = LoggerFactory
-			.getLogger(RelNode.class);
 
-    @XmlElement(required = true)
-    protected Node node;
+	private static final Logger logger = LoggerFactory.getLogger(RelNode.class);
 
-    /**
-     * Gets the value of the node property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link Node }
-     *     
-     */
-    public Node getNode() {
-        return node;
-    }
+	@XmlElement(required = true)
+	protected Node node;
 
-    /**
-     * Sets the value of the node property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link Node }
-     *     
-     */
-    public void setNode(Node value) {
-        this.node = value;
-    }
-    
-    public void parseRelNode(RelNode relNode){
-    	Node node = relNode.getNode();
-    	
-    	List <Object> nodeObjectList = node.getPropertyOrRelationshipOrAnd();
-    	Iterator<Object> nodeObjectIterator= nodeObjectList.iterator();
-    	while(nodeObjectIterator.hasNext()){
-    		Object o = nodeObjectIterator.next();
-    		if(o instanceof Property){
-    			logger.info("Found Property Object :");
-    			Property prop = (Property) o;
-    			prop.parseProperty(prop);
-    		}
-    		
-    	}
-    }
+	/**
+	 * Gets the value of the node property.
+	 * 
+	 * @return possible object is {@link Node }
+	 * 
+	 */
+	public Node getNode() {
+		return node;
+	}
+
+	/**
+	 * Sets the value of the node property.
+	 * 
+	 * @param value
+	 *            allowed object is {@link Node }
+	 * 
+	 */
+	public void setNode(Node value) {
+		this.node = value;
+	}
+
+	public void parseRelNode(RelNode relNode, PropertyOf propertyOf) {
+		Node node = relNode.getNode();
+
+		List<Object> nodeObjectList = node.getPropertyOrRelationshipOrAnd();
+		Iterator<Object> nodeObjectIterator = nodeObjectList.iterator();
+		
+		while (nodeObjectIterator.hasNext()) {
+			Object o = nodeObjectIterator.next();
+			if (o instanceof Property) {
+				logger.info("Found Property Object :");
+				Property prop = (Property) o;
+				prop.parseProperty(prop, propertyOf);
+			}
+
+		}
+		//CypherQuery.where+=") ";
+	}
 
 }
