@@ -2,31 +2,31 @@
 <resultset>
 	<relations>
 		<relation id="http://www.diging.asu.edu/lerna/mblcourses/relations/9120">
-			<property name="sourcetype" value="Person" />
-			<property name="targettype" value="Location" />
-			<property name="sourceid" value="http://www.diging.asu.edu/lerna/mblcourses/nodes/13123" />
-			<property name="targetid" value="http://www.diging.asu.edu/lerna/mblcourses/nodes/234" />
+			<property name="sourceType" value="Person" />
+			<property name="targetType" value="Location" />
+			<property name="sourceId" value="http://www.diging.asu.edu/lerna/mblcourses/nodes/13123" />
+			<property name="targetId" value="http://www.diging.asu.edu/lerna/mblcourses/nodes/234" />
 			<property name="year" value ="1902" />
 		</relation>
 		<relation id="http://www.diging.asu.edu/lerna/mblcourses/relations/9121">
-			<property name="sourcetype" value="Person" />
-			<property name="targettype" value="Location" />
-			<property name="sourceid" value="http://www.diging.asu.edu/lerna/mblcourses/nodes/13124" />
-			<property name="targetid" value="http://www.diging.asu.edu/lerna/mblcourses/nodes/234" />
+			<property name="sourceType" value="Person" />
+			<property name="targetType" value="Location" />
+			<property name="sourceId" value="http://www.diging.asu.edu/lerna/mblcourses/nodes/13124" />
+			<property name="targetId" value="http://www.diging.asu.edu/lerna/mblcourses/nodes/234" />
 			<property name="year" value ="1911" />
 		</relation>
 		<relation id="http://www.diging.asu.edu/lerna/mblcourses/relations/9122">
-			<property name="sourcetype" value="Person" />
-			<property name="targettype" value="Location" />
-			<property name="sourceid" value="http://www.diging.asu.edu/lerna/mblcourses/nodes/13125" />
-			<property name="targetid" value="http://www.diging.asu.edu/lerna/mblcourses/nodes/234" />
+			<property name="sourceType" value="Person" />
+			<property name="targetType" value="Location" />
+			<property name="sourceId" value="http://www.diging.asu.edu/lerna/mblcourses/nodes/13125" />
+			<property name="targetId" value="http://www.diging.asu.edu/lerna/mblcourses/nodes/234" />
 			<property name="year" value ="1914" />
 		</relation>
 		<relation id="http://www.diging.asu.edu/lerna/mblcourses/relations/9123">
-			<property name="sourcetype" value="Person" />
-			<property name="targettype" value="Location" />
-			<property name="sourceid" value="http://www.diging.asu.edu/lerna/mblcourses/nodes/13125" />
-			<property name="targetid" value="http://www.diging.asu.edu/lerna/mblcourses/nodes/234" />
+			<property name="sourceType" value="Person" />
+			<property name="targetType" value="Location" />
+			<property name="sourceId" value="http://www.diging.asu.edu/lerna/mblcourses/nodes/13125" />
+			<property name="targetId" value="http://www.diging.asu.edu/lerna/mblcourses/nodes/234" />
 			<property name="year" value ="1915" />
 		</relation>
 	</relations>
