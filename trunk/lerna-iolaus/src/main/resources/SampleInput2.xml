@@ -1,0 +1,22 @@
+<!-- What courses did person [A] attend? (between years [Y] and [Z]?) -->
+<query 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+		xmlns="http://digitalhps.org/lerna-query-model" 
+		xsi:schemaLocation="http://digitalhps.org/lerna-query-model query-schema.xsd">
+    <database id="2"/>
+    <dataset id = "mblcourses" />
+    <node return="true">
+        <and>
+            <property name="type" value="Series" />              
+            <relationship return="true">
+                <property name="type" value="attended" />
+                <property name="year" type="range" start="1900" end="1920" />
+                    <source>
+                        <node>
+                            <property name="FirstName" value="W.A." />  
+	    		    		<property name="LastName" value="Rankin" /> 
+                        </node>
+                    </source>
+            </relationship>
+        </and>
+    </node>      
+</query>
