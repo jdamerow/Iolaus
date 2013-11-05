@@ -10,6 +10,6 @@ public interface IQueryManager {
 
 	Query xmlToQueryObject(String res) throws JAXBException;
 
-	String getRESTOutput();
+	String getRESTOutput(Query q, boolean wantNodes, boolean wantRelations);
 
 }

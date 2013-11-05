@@ -43,14 +43,40 @@ public class QueryController {
 			response.setStatus(400);
 			return "Query XML is empty";
 		}
-		Query q =  queryManager.xmlToQueryObject(res);
-		if(q == null){
-			response.setStatus(400);
-			return "failure";
+//		Query q =  queryManager.xmlToQueryObject(res);
+//		if(q == null){
+//			response.setStatus(400);
+//			return "failure";
+//		}
+//		queryManager.parseQuery(q);
+//		response.setStatus(200);
+//		logger.info(CypherQuery.where);
+		
+		String outputXml = null;
+		Query q = null;
+		
+		/**
+		 * TODO:Remove the if conditions after complete implementation
+		 * as this check will be done in getRESTOutput method based on q 
+		 */
+		if(res.contains("node return=\"true\"") && res.contains("relationship return=\"true\""))
+		{
+			outputXml = queryManager.getRESTOutput(q,true,true);
 		}
-		queryManager.parseQuery(q);
-		response.setStatus(200);
-		logger.info(CypherQuery.where);
-		return queryManager.getRESTOutput();
+		else if(res.contains("node return=\"true\""))
+		{
+			outputXml = queryManager.getRESTOutput(q,true,false);
+		}
+		else if(res.contains("relationship return=\"true\""))
+		{
+			outputXml = queryManager.getRESTOutput(q,false,true);
+		}
+		else
+		{
+			outputXml = queryManager.getRESTOutput(q,false,false);
+		}
+		
+		
+		return outputXml;
 	}
 }
