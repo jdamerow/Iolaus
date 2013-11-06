@@ -15,19 +15,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 import javax.xml.bind.JAXBElement;
-import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementDecl;
 import javax.xml.bind.annotation.XmlRegistry;
 import javax.xml.namespace.QName;
 
-import edu.asu.lerna.iolaus.domain.queryobject.IDatabase;
-import edu.asu.lerna.iolaus.domain.queryobject.IDataset;
-import edu.asu.lerna.iolaus.domain.queryobject.INode;
-import edu.asu.lerna.iolaus.domain.queryobject.IOperator;
-import edu.asu.lerna.iolaus.domain.queryobject.IProperty;
-import edu.asu.lerna.iolaus.domain.queryobject.IQuery;
-import edu.asu.lerna.iolaus.domain.queryobject.IRelNode;
-import edu.asu.lerna.iolaus.domain.queryobject.IRelationship;
 
 
 /**
@@ -52,85 +43,6 @@ public class ObjectFactory {
     private final static QName _Or_QNAME = new QName("http://digitalhps.org/lerna-query-model", "or");
     private final static QName _Source_QNAME = new QName("http://digitalhps.org/lerna-query-model", "source");
 
-    /**
-     * Create a new ObjectFactory that can be used to create new instances of schema derived classes for package: org.digitalhps.lerna_query_model
-     * 
-     */
-    public ObjectFactory() {
-    }
-
-    /**
-     * Create an instance of {@link Relationship }
-     * 
-     */
-    @XmlElement(type=Relationship.class)
-    public IRelationship createRelationship() {
-        return new Relationship();
-    }
-
-    /**
-     * Create an instance of {@link RelNode }
-     * 
-     */
-    @XmlElement(type=RelNode.class)
-    public IRelNode createRelNode() {
-        return new RelNode();
-    }
-
-    /**
-     * Create an instance of {@link Property }
-     * 
-     */
-    @XmlElement(type=Property.class)
-    public IProperty createProperty() {
-        return new Property();
-    }
-
-    /**
-     * Create an instance of {@link Operator }
-     * 
-     */
-    @XmlElement(type=Operator.class)
-    public IOperator createOperator() {
-        return new Operator();
-    }
-
-    /**
-     * Create an instance of {@link Node }
-     * 
-     */
-    @XmlElement(type=Node.class)
-    public INode createNode() {
-    	INode node = new Node();
-        return node;
-    }
-
-    /**
-     * Create an instance of {@link Dataset }
-     * 
-     */
-    @XmlElement(type=Dataset.class)
-    public IDataset createDataset() {
-        return new Dataset();
-    }
-
-    /**
-     * Create an instance of {@link Query }
-     * 
-     */
-    @XmlElement(type=Query.class)
-    public IQuery createQuery() {
-        return new Query();
-    }
-
-    /**
-     * Create an instance of {@link Database }
-     * 
-     */
-    @XmlElement(type=Database.class)
-    public IDatabase createDatabase() {
-        return new Database();
-    }
 
     /**
      * Create an instance of {@link JAXBElement }{@code <}{@link RelNode }{@code >}}
