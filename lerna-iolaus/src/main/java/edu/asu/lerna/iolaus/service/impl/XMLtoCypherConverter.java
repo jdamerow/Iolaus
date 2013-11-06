@@ -4,7 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-import edu.asu.lerna.iolaus.domain.queryobject.Query;
+import edu.asu.lerna.iolaus.domain.queryobject.IQuery;
 import edu.asu.lerna.iolaus.service.IXMLtoCypherConverter;
 
 @Service
@@ -14,7 +14,7 @@ public class XMLtoCypherConverter implements IXMLtoCypherConverter{
 			.getLogger(XMLtoCypherConverter.class);
 	
 	@Override
-	public void parseQuery(Query q){
+	public void parseQuery(IQuery q){
 		
 		logger.info("Database ID : "+q.getDatabaseId(q.getDatabase()));
 		logger.info("Dataset Name : "+q.getDatasetName(q.getDataset()));
@@ -24,7 +24,7 @@ public class XMLtoCypherConverter implements IXMLtoCypherConverter{
 		}
 		if(q.getRelationship()!=null){
 			logger.info("Found a Relationship, Following are Relationship details");
-			q.getRelationshipDetails(q.getRelationship());
+			//q.getRelationshipDetails(q.getRelationship());
 		}
 	}
 }

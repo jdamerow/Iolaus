@@ -66,10 +66,10 @@ public class Node implements INode {
 			.getLogger(Node.class);
 
 	@XmlElementRefs({
-		@XmlElementRef(name = "or", namespace = "http://digitalhps.org/lerna-query-model", type = JAXBElement.class, required = false),
-		@XmlElementRef(name = "and", namespace = "http://digitalhps.org/lerna-query-model", type = JAXBElement.class, required = false),
-		@XmlElementRef(name = "relationship", namespace = "http://digitalhps.org/lerna-query-model", type = Relationship.class, required = false),
-		@XmlElementRef(name = "property", namespace = "http://digitalhps.org/lerna-query-model", type = Property.class, required = false)
+		@XmlElementRef(name = "or", namespace = "http://digitalhps.org/lerna-query-model", type = JAXBElement.class),
+		@XmlElementRef(name = "and", namespace = "http://digitalhps.org/lerna-query-model", type = JAXBElement.class),
+		@XmlElementRef(name = "relationship", namespace = "http://digitalhps.org/lerna-query-model", type = Relationship.class),
+		@XmlElementRef(name = "property", namespace = "http://digitalhps.org/lerna-query-model", type = Property.class)
 	})
 	protected List<Object> propertyOrRelationshipOrAnd;
 	@XmlAttribute(name = "return")

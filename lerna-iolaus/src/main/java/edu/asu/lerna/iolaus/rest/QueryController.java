@@ -1,7 +1,6 @@
 package edu.asu.lerna.iolaus.rest;
 
 import javax.servlet.http.HttpServletRequest;
-import edu.asu.lerna.iolaus.domain.queryobject.CypherQuery;
 import javax.servlet.http.HttpServletResponse;
 import javax.xml.bind.JAXBException;
 
@@ -15,9 +14,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import edu.asu.lerna.iolaus.domain.queryobject.Query;
+import edu.asu.lerna.iolaus.domain.queryobject.CypherQuery;
 import edu.asu.lerna.iolaus.service.IQueryManager;
 
+//@Controller
 public class QueryController {
 
 	@Autowired

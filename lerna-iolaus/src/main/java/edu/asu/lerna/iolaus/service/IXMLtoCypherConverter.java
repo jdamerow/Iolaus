@@ -1,9 +1,9 @@
 package edu.asu.lerna.iolaus.service;
 
-import edu.asu.lerna.iolaus.domain.queryobject.Query;
+import edu.asu.lerna.iolaus.domain.queryobject.IQuery;
 
 public interface IXMLtoCypherConverter {
 
-	void parseQuery(Query q);
+	void parseQuery(IQuery q);
 
 }

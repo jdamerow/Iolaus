@@ -67,11 +67,11 @@ public class Relationship implements IRelationship {
 			.getLogger(Relationship.class);
 	
     @XmlElementRefs({
-        @XmlElementRef(name = "source", namespace = "http://digitalhps.org/lerna-query-model", type = JAXBElement.class, required = false),
-        @XmlElementRef(name = "or", namespace = "http://digitalhps.org/lerna-query-model", type = JAXBElement.class, required = false),
-        @XmlElementRef(name = "and", namespace = "http://digitalhps.org/lerna-query-model", type = JAXBElement.class, required = false),
-        @XmlElementRef(name = "property", namespace = "http://digitalhps.org/lerna-query-model", type = Property.class, required = false),
-        @XmlElementRef(name = "target", namespace = "http://digitalhps.org/lerna-query-model", type = JAXBElement.class, required = false)
+        @XmlElementRef(name = "source", namespace = "http://digitalhps.org/lerna-query-model", type = JAXBElement.class),
+        @XmlElementRef(name = "or", namespace = "http://digitalhps.org/lerna-query-model", type = JAXBElement.class),
+        @XmlElementRef(name = "and", namespace = "http://digitalhps.org/lerna-query-model", type = JAXBElement.class),
+        @XmlElementRef(name = "property", namespace = "http://digitalhps.org/lerna-query-model", type = Property.class),
+        @XmlElementRef(name = "target", namespace = "http://digitalhps.org/lerna-query-model", type = JAXBElement.class)
     })
     protected List<Object> sourceOrTargetOrProperty;
     @XmlAttribute(name = "return")
