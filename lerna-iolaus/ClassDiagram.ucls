@@ -4,7 +4,7 @@
   <interface id="1" language="java" name="edu.asu.lerna.iolaus.service.IQueryManager" project="lerna-iolaus" 
     file="/lerna-iolaus/src/main/java/edu/asu/lerna/iolaus/service/IQueryManager.java" binary="false" 
     corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="675" y="160"/>    
+    <position height="-1" width="-1" x="606" y="157"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
       visibility="true">      
       <attributes public="true" package="true" protected="true" private="true" static="true"/>      
@@ -14,7 +14,7 @@
   <class id="2" language="java" name="edu.asu.lerna.iolaus.service.impl.ObjecttoXmlConverter" project="lerna-iolaus" 
     file="/lerna-iolaus/src/main/java/edu/asu/lerna/iolaus/service/impl/ObjecttoXmlConverter.java" binary="false" 
     corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="554" y="515"/>    
+    <position height="-1" width="-1" x="1040" y="631"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
       visibility="true">      
       <attributes public="true" package="true" protected="true" private="true" static="true"/>      
@@ -24,7 +24,7 @@
   <interface id="3" language="java" name="edu.asu.lerna.iolaus.service.IObjecttoXMLConverter" project="lerna-iolaus" 
     file="/lerna-iolaus/src/main/java/edu/asu/lerna/iolaus/service/IObjecttoXMLConverter.java" binary="false" 
     corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="609" y="382"/>    
+    <position height="-1" width="-1" x="1040" y="469"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
       visibility="true">      
       <attributes public="true" package="true" protected="true" private="true" static="true"/>      
@@ -34,7 +34,7 @@
   <class id="4" language="java" name="edu.asu.lerna.iolaus.rest.QueryController" project="lerna-iolaus" 
     file="/lerna-iolaus/src/main/java/edu/asu/lerna/iolaus/rest/QueryController.java" binary="false" 
     corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="663" y="40"/>    
+    <position height="-1" width="-1" x="625" y="-13"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
       visibility="true">      
       <attributes public="true" package="true" protected="true" private="true" static="true"/>      
@@ -44,7 +44,7 @@
   <class id="5" language="java" name="edu.asu.lerna.iolaus.service.impl.RepositoryHandler" project="lerna-iolaus" 
     file="/lerna-iolaus/src/main/java/edu/asu/lerna/iolaus/service/impl/RepositoryHandler.java" binary="false" 
     corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="833" y="974"/>    
+    <position height="-1" width="-1" x="637" y="1315"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
       visibility="true">      
       <attributes public="true" package="true" protected="true" private="true" static="true"/>      
@@ -54,7 +54,7 @@
   <class id="6" language="java" name="edu.asu.lerna.iolaus.service.impl.QueryManager" project="lerna-iolaus" 
     file="/lerna-iolaus/src/main/java/edu/asu/lerna/iolaus/service/impl/QueryManager.java" binary="false" 
     corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="685" y="278"/>    
+    <position height="-1" width="-1" x="637" y="365"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
       visibility="true">      
       <attributes public="true" package="true" protected="true" private="true" static="true"/>      
@@ -64,7 +64,7 @@
   <interface id="7" language="java" name="edu.asu.lerna.iolaus.service.IRepositoryManager" project="lerna-iolaus" 
     file="/lerna-iolaus/src/main/java/edu/asu/lerna/iolaus/service/IRepositoryManager.java" binary="false" 
     corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="801" y="394"/>    
+    <position height="-1" width="-1" x="631" y="553"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
       visibility="true">      
       <attributes public="true" package="true" protected="true" private="true" static="true"/>      
@@ -74,7 +74,7 @@
   <interface id="8" language="java" name="edu.asu.lerna.iolaus.service.IXMLtoCypherConverter" project="lerna-iolaus" 
     file="/lerna-iolaus/src/main/java/edu/asu/lerna/iolaus/service/IXMLtoCypherConverter.java" binary="false" 
     corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="1030" y="387"/>    
+    <position height="-1" width="-1" x="180" y="467"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
       visibility="true">      
       <attributes public="true" package="true" protected="true" private="true" static="true"/>      
@@ -84,7 +84,7 @@
   <class id="9" language="java" name="edu.asu.lerna.iolaus.service.impl.RepositoryManager" project="lerna-iolaus" 
     file="/lerna-iolaus/src/main/java/edu/asu/lerna/iolaus/service/impl/RepositoryManager.java" binary="false" 
     corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="806" y="519"/>    
+    <position height="-1" width="-1" x="636" y="723"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
       visibility="true">      
       <attributes public="true" package="true" protected="true" private="true" static="true"/>      
@@ -94,7 +94,7 @@
   <interface id="10" language="java" name="edu.asu.lerna.iolaus.service.ICacheManager" project="lerna-iolaus" 
     file="/lerna-iolaus/src/main/java/edu/asu/lerna/iolaus/service/ICacheManager.java" binary="false" 
     corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="809" y="622"/>    
+    <position height="-1" width="-1" x="636" y="899"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
       visibility="true">      
       <attributes public="true" package="true" protected="true" private="true" static="true"/>      
@@ -104,7 +104,7 @@
   <class id="11" language="java" name="edu.asu.lerna.iolaus.service.impl.CacheManager" project="lerna-iolaus" 
     file="/lerna-iolaus/src/main/java/edu/asu/lerna/iolaus/service/impl/CacheManager.java" binary="false" 
     corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="825" y="723"/>    
+    <position height="-1" width="-1" x="637" y="1040"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
       visibility="true">      
       <attributes public="true" package="true" protected="true" private="true" static="true"/>      
@@ -114,7 +114,7 @@
   <class id="12" language="java" name="edu.asu.lerna.iolaus.service.impl.XMLtoCypherConverter" project="lerna-iolaus" 
     file="/lerna-iolaus/src/main/java/edu/asu/lerna/iolaus/service/impl/XMLtoCypherConverter.java" binary="false" 
     corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="1217" y="451"/>    
+    <position height="-1" width="-1" x="167" y="645"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
       visibility="true">      
       <attributes public="true" package="true" protected="true" private="true" static="true"/>      
@@ -124,84 +124,84 @@
   <interface id="13" language="java" name="edu.asu.lerna.iolaus.service.IRepositoryHandler" project="lerna-iolaus" 
     file="/lerna-iolaus/src/main/java/edu/asu/lerna/iolaus/service/IRepositoryHandler.java" binary="false" 
     corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="823" y="856"/>    
+    <position height="-1" width="-1" x="637" y="1188"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
       visibility="true">      
       <attributes public="true" package="true" protected="true" private="true" static="true"/>      
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </interface>  
-  <association id="14">    
-    <end type="SOURCE" refId="4" navigable="false">      
-      <attribute id="15" name="queryManager"/>      
-      <multiplicity id="16" minimum="0" maximum="1"/>    
-    </end>    
-    <end type="TARGET" refId="1" navigable="true"/>    
-    <display labels="true" multiplicity="true"/>  
-  </association>  
-  <realization id="17">    
-    <end type="SOURCE" refId="6"/>    
-    <end type="TARGET" refId="1"/>  
+  <realization id="14">    
+    <end type="SOURCE" refId="12"/>    
+    <end type="TARGET" refId="8"/>  
   </realization>  
-  <association id="18">    
-    <end type="SOURCE" refId="6" navigable="false">      
-      <attribute id="19" name="repositoryManager"/>      
-      <multiplicity id="20" minimum="0" maximum="1"/>    
-    </end>    
-    <end type="TARGET" refId="7" navigable="true"/>    
-    <display labels="true" multiplicity="true"/>  
-  </association>  
-  <realization id="21">    
+  <realization id="15">    
     <end type="SOURCE" refId="5"/>    
     <end type="TARGET" refId="13"/>  
   </realization>  
-  <association id="22">    
-    <end type="SOURCE" refId="11" navigable="false">      
-      <attribute id="23" name="repoHanlders"/>      
-      <multiplicity id="24" minimum="0" maximum="2147483647"/>    
-    </end>    
-    <end type="TARGET" refId="13" navigable="true"/>    
-    <display labels="true" multiplicity="true"/>  
-  </association>  
-  <realization id="25">    
+  <realization id="16">    
     <end type="SOURCE" refId="11"/>    
     <end type="TARGET" refId="10"/>  
   </realization>  
-  <realization id="26">    
-    <end type="SOURCE" refId="2"/>    
-    <end type="TARGET" refId="3"/>  
-  </realization>  
-  <association id="27">    
+  <association id="17">    
     <end type="SOURCE" refId="9" navigable="false">      
-      <attribute id="28" name="cacheManager"/>      
-      <multiplicity id="29" minimum="0" maximum="1"/>    
+      <attribute id="18" name="cacheManager"/>      
+      <multiplicity id="19" minimum="0" maximum="1"/>    
     </end>    
     <end type="TARGET" refId="10" navigable="true"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
-  <realization id="30">    
-    <end type="SOURCE" refId="9"/>    
-    <end type="TARGET" refId="7"/>  
-  </realization>  
-  <association id="31">    
+  <association id="20">    
     <end type="SOURCE" refId="6" navigable="false">      
-      <attribute id="32" name="xmlToCypherConverter"/>      
-      <multiplicity id="33" minimum="0" maximum="1"/>    
+      <attribute id="21" name="repositoryManager"/>      
+      <multiplicity id="22" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="7" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="23">    
+    <end type="SOURCE" refId="4" navigable="false">      
+      <attribute id="24" name="queryManager"/>      
+      <multiplicity id="25" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="1" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="26">    
+    <end type="SOURCE" refId="6" navigable="false">      
+      <attribute id="27" name="xmlToCypherConverter"/>      
+      <multiplicity id="28" minimum="0" maximum="1"/>    
     </end>    
     <end type="TARGET" refId="8" navigable="true"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
-  <association id="34">    
+  <association id="29">    
     <end type="SOURCE" refId="6" navigable="false">      
-      <attribute id="35" name="objectToXMLConverter"/>      
-      <multiplicity id="36" minimum="0" maximum="1"/>    
+      <attribute id="30" name="objectToXMLConverter"/>      
+      <multiplicity id="31" minimum="0" maximum="1"/>    
     </end>    
     <end type="TARGET" refId="3" navigable="true"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
+  <realization id="32">    
+    <end type="SOURCE" refId="6"/>    
+    <end type="TARGET" refId="1"/>  
+  </realization>  
+  <realization id="33">    
+    <end type="SOURCE" refId="2"/>    
+    <end type="TARGET" refId="3"/>  
+  </realization>  
+  <association id="34">    
+    <end type="SOURCE" refId="11" navigable="false">      
+      <attribute id="35" name="repoHanlders"/>      
+      <multiplicity id="36" minimum="0" maximum="2147483647"/>    
+    </end>    
+    <end type="TARGET" refId="13" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
   <realization id="37">    
-    <end type="SOURCE" refId="12"/>    
-    <end type="TARGET" refId="8"/>  
+    <end type="SOURCE" refId="9"/>    
+    <end type="TARGET" refId="7"/>  
   </realization>  
   <classifier-display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
     accessors="true" visibility="true">    

@@ -18,7 +18,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import edu.asu.lerna.iolaus.domain.queryobject.Query;
 import edu.asu.lerna.iolaus.service.IQueryManager;
 
-public class QueryController {
+@Controller
+public class DummyQueryController {
 
 	@Autowired
 	private IQueryManager queryManager;
@@ -43,17 +44,29 @@ public class QueryController {
 			return "Query XML is empty";
 		}
 		
+		String outputXml = null;
+		Query q = null;
 		
 		/**
-		 * Controller does not know the internals of QueryManager. It only receives
-		 * the input xml and uses query manager to produce the xml output.
+		 * TODO:Remove the if conditions after complete implementation
+		 * as this check will be done in getRESTOutput method based on q 
 		 */
-		
-		//Execute the input request and fetch outputxml from QueryManager
-		String outputXml = queryManager.executeQuery(res);
-		
-		response.setStatus(200);
-		logger.info(CypherQuery.where);
+		if(res.contains("node return=\"true\"") && res.contains("relationship return=\"true\""))
+		{
+			outputXml = queryManager.getRESTOutput(q,true,true);
+		}
+		else if(res.contains("node return=\"true\""))
+		{
+			outputXml = queryManager.getRESTOutput(q,true,false);
+		}
+		else if(res.contains("relationship return=\"true\""))
+		{
+			outputXml = queryManager.getRESTOutput(q,false,true);
+		}
+		else
+		{
+			outputXml = queryManager.getRESTOutput(q,false,false);
+		}
 		
 		
 		return outputXml;
