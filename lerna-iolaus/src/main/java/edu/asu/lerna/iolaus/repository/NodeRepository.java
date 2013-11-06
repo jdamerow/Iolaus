@@ -1,7 +1,10 @@
 package edu.asu.lerna.iolaus.repository;
 
+import java.util.Map;
+
 import org.springframework.data.neo4j.conversion.EndResult;
 import org.springframework.data.neo4j.repository.GraphRepository;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import edu.asu.lerna.iolaus.domain.Node;
@@ -11,6 +14,7 @@ import edu.asu.lerna.iolaus.domain.Node;
  * Stores Node into the Neo4j through repository proxy  
  *
  */
+@Service
 public interface NodeRepository extends GraphRepository<Node>{
 
 	Node findById(long id);
@@ -21,4 +25,8 @@ public interface NodeRepository extends GraphRepository<Node>{
 	@Override
 	@Transactional
 	public <U extends Node> U save(U arg0);
+	
+	
+	@Override
+	public EndResult<Node> query(String arg0, Map<String, Object> arg1);
 }
