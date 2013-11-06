@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import edu.asu.lerna.iolaus.domain.queryobject.impl.Query;
 import edu.asu.lerna.iolaus.service.IQueryManager;
 
-@Controller
+//@Controller
 public class DummyQueryController {
 
 	@Autowired

@@ -6,8 +6,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
@@ -22,7 +20,6 @@ import org.springframework.data.neo4j.fieldaccess.DynamicPropertiesContainer;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -34,8 +31,7 @@ import edu.asu.lerna.iolaus.domain.HasLocationRelation;
 import edu.asu.lerna.iolaus.domain.LocationNode;
 import edu.asu.lerna.iolaus.domain.Node;
 import edu.asu.lerna.iolaus.domain.PersonNode;
-import edu.asu.lerna.iolaus.domain.Relation;
-import edu.asu.lerna.iolaus.domain.queryobject.Query;
+import edu.asu.lerna.iolaus.domain.queryobject.impl.Query;
 import edu.asu.lerna.iolaus.service.INodeManager;
 
 

@@ -47,18 +47,15 @@ public class QueryManager implements IQueryManager {
 		}
 		
 		//Parse the query generated from the xml and get node, relation objects
-		this.parseQuery(q);
+		xmlToCypherConverter.parseQuery(q);	
+		repositoryManager.executeQuery(q);
+		
+		
 		
 		//TODO: Make a decision to send nodes or relations or both in xml
 		//TODO: call this.getRESTOutput with the decision
 		
 		return "test";
-	}
-	
-	
-	@Override
-	public void parseQuery(IQuery q){
-		xmlToCypherConverter.parseQuery(q);
 	}
 	
 	

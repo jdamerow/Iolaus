@@ -16,8 +16,6 @@ public interface IQueryManager {
 	 * @author Ram Kumar Kumaresan
 	 */
 	public abstract String executeQuery(String inputXML) throws JAXBException;
-	
-	public abstract void parseQuery(IQuery q);
 
 	public abstract IQuery xmlToQueryObject(String res) throws JAXBException;
 
