@@ -15,6 +15,7 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 import javax.xml.bind.annotation.adapters.XmlAdapter;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 import edu.asu.lerna.iolaus.domain.queryobject.IDatabase;
 import edu.asu.lerna.iolaus.domain.queryobject.IDataset;
@@ -56,14 +57,11 @@ import edu.asu.lerna.iolaus.domain.queryobject.IRelationship;
 @XmlRootElement(name = "query")
 public class Query implements IQuery {
 
-	@XmlElement(type=Database.class)
-    protected IDatabase database;
-	@XmlElement(type=Dataset.class)
-    protected IDataset dataset;
-	@XmlElement(type=Node.class)
-    protected INode node;
-	@XmlElement(type=Relationship.class)
-    protected IRelationship relationship;
+	@XmlJavaTypeAdapter(Database.Adapter.class) protected IDatabase database;
+	@XmlJavaTypeAdapter(Dataset.Adapter.class) protected IDataset dataset;
+	@XmlJavaTypeAdapter(Node.Adapter.class) protected INode node;
+	@XmlJavaTypeAdapter(RelNode.Adapter.class) protected IRelationship relationship;
+	
 
     /* (non-Javadoc)
 	 * @see edu.asu.lerna.iolaus.domain.queryobject.impl.IQuery#getDatabase()
@@ -85,7 +83,7 @@ public class Query implements IQuery {
 	 * @see edu.asu.lerna.iolaus.domain.queryobject.impl.IQuery#getDataset()
 	 */
     @Override
-	public IDataset getDataset() {
+    public IDataset getDataset() {
         return dataset;
     }
 

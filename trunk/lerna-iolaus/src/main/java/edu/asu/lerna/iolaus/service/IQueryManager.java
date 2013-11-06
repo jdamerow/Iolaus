@@ -2,7 +2,7 @@ package edu.asu.lerna.iolaus.service;
 
 import javax.xml.bind.JAXBException;
 
-import edu.asu.lerna.iolaus.domain.queryobject.Query;
+import edu.asu.lerna.iolaus.domain.queryobject.IQuery;
 
 public interface IQueryManager {
 
@@ -17,11 +17,11 @@ public interface IQueryManager {
 	 */
 	public abstract String executeQuery(String inputXML) throws JAXBException;
 	
-	public abstract void parseQuery(Query q);
+	public abstract void parseQuery(IQuery q);
 
-	public abstract Query xmlToQueryObject(String res) throws JAXBException;
+	public abstract IQuery xmlToQueryObject(String res) throws JAXBException;
 
-	public abstract String getRESTOutput(Query q, boolean wantNodes, boolean wantRelations);
+	public abstract String getRESTOutput(IQuery q, boolean wantNodes, boolean wantRelations);
 
 
 }

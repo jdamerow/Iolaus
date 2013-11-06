@@ -1,6 +1,5 @@
 package edu.asu.lerna.iolaus.domain.queryobject;
 
-import javax.xml.bind.annotation.XmlSeeAlso;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 import edu.asu.lerna.iolaus.domain.queryobject.impl.Database;
@@ -10,7 +9,6 @@ import edu.asu.lerna.iolaus.domain.queryobject.impl.Query;
 import edu.asu.lerna.iolaus.domain.queryobject.impl.Relationship;
 
 @XmlJavaTypeAdapter(Query.Adapter.class)
-@XmlSeeAlso(Query.class)
 public interface IQuery {
 
 	/**

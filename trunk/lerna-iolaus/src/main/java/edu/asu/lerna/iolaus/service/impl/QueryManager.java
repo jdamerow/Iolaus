@@ -14,7 +14,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import edu.asu.lerna.iolaus.domain.queryobject.Query;
+import edu.asu.lerna.iolaus.domain.queryobject.IQuery;
+import edu.asu.lerna.iolaus.domain.queryobject.impl.Query;
 import edu.asu.lerna.iolaus.service.IObjecttoXMLConverter;
 import edu.asu.lerna.iolaus.service.IQueryManager;
 import edu.asu.lerna.iolaus.service.IRepositoryManager;
@@ -40,7 +41,7 @@ public class QueryManager implements IQueryManager {
 	public String executeQuery(String inputXML) throws JAXBException
 	{
 		//Parse the xml and generate the query object from it
-		Query q =  this.xmlToQueryObject(inputXML);
+		IQuery q =  this.xmlToQueryObject(inputXML);
 		if(q == null){
 			return "failure";
 		}
@@ -51,12 +52,12 @@ public class QueryManager implements IQueryManager {
 		//TODO: Make a decision to send nodes or relations or both in xml
 		//TODO: call this.getRESTOutput with the decision
 		
-		return null;
+		return "test";
 	}
 	
 	
 	@Override
-	public void parseQuery(Query q){
+	public void parseQuery(IQuery q){
 		xmlToCypherConverter.parseQuery(q);
 	}
 	
@@ -67,20 +68,20 @@ public class QueryManager implements IQueryManager {
 	 * @author Lohith Dwaraka
 	 */
 	@Override
-	public Query xmlToQueryObject(String res) throws JAXBException{
+	public IQuery xmlToQueryObject(String res) throws JAXBException{
 		JAXBContext context = JAXBContext.newInstance(Query.class);
 		Unmarshaller unmarshaller = context.createUnmarshaller();
 		unmarshaller.setEventHandler(new javax.xml.bind.helpers.DefaultValidationEventHandler());
 		InputStream is = new ByteArrayInputStream(res.getBytes());
 		JAXBElement<Query> response1 =  unmarshaller.unmarshal(new StreamSource(is), Query.class);
-		Query q = response1.getValue();
+		IQuery q = response1.getValue();
 		return q;
 	}
 	
 	
 	
 	@Override
-	public String getRESTOutput(Query q, boolean wantNodes, boolean wantRelations)
+	public String getRESTOutput(IQuery q, boolean wantNodes, boolean wantRelations)
 	{
 		if(wantNodes && wantRelations)
 		{
