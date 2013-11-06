@@ -15,22 +15,51 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import edu.asu.lerna.iolaus.domain.queryobject.Query;
+import edu.asu.lerna.iolaus.service.IObjecttoXMLConverter;
 import edu.asu.lerna.iolaus.service.IQueryManager;
+import edu.asu.lerna.iolaus.service.IRepositoryManager;
 import edu.asu.lerna.iolaus.service.IXMLtoCypherConverter;
 
 @Service
 public class QueryManager implements IQueryManager {
 
 	@Autowired
-	public IXMLtoCypherConverter xmlToCypherConverter;
+	private IXMLtoCypherConverter xmlToCypherConverter;
+	
+	@Autowired
+	private IObjecttoXMLConverter objectToXMLConverter;
+	
+	@Autowired
+	private IRepositoryManager repositoryManager;
 	
 	private static final Logger logger = LoggerFactory
 			.getLogger(QueryManager.class);
+	
+	
+	@Override
+	public String executeQuery(String inputXML) throws JAXBException
+	{
+		//Parse the xml and generate the query object from it
+		Query q =  this.xmlToQueryObject(inputXML);
+		if(q == null){
+			return "failure";
+		}
+		
+		//Parse the query generated from the xml and get node, relation objects
+		this.parseQuery(q);
+		
+		//TODO: Make a decision to send nodes or relations or both in xml
+		//TODO: call this.getRESTOutput with the decision
+		
+		return null;
+	}
+	
 	
 	@Override
 	public void parseQuery(Query q){
 		xmlToCypherConverter.parseQuery(q);
 	}
+	
 	
 	/**
 	 * Use Unmarshaller to unmarshal the XMl into Query object
@@ -47,6 +76,8 @@ public class QueryManager implements IQueryManager {
 		Query q = response1.getValue();
 		return q;
 	}
+	
+	
 	
 	@Override
 	public String getRESTOutput(Query q, boolean wantNodes, boolean wantRelations)
