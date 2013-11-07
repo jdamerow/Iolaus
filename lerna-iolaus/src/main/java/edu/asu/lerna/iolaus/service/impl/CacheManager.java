@@ -21,11 +21,11 @@ public class CacheManager implements ICacheManager {
 	}
 	
 	@Override
-	public void executeQuery(String cypher)
+	public void executeQuery(String json)
 	{
 		//TODO: Iterate through each repository and for each repository fetch the result.
-		cypher = "start n=node(*) return n";
-		repoHandler.executeQuery(cypher);
+		json = "start n=node(*) return n";
+		repoHandler.executeQuery(json);
 		//TODO: Add the result to the resultList	
 		
 		

@@ -19,11 +19,10 @@ public class RepositoryHandler implements IRepositoryHandler {
 	private NodeRepository nodeRepository;
 	
 	@Override
-	public void executeQuery(String cypher)
+	public void executeQuery(String json)
 	{
-		//TODO: Change from Node to INode
 		List<Node> nodeList = new ArrayList<Node>();
-		EndResult<Node> nodeResult = nodeRepository.query(cypher,null);
+		EndResult<Node> nodeResult = nodeRepository.query(json,null);
 		Iterator<Node> iterator = nodeResult.iterator();
 
 		while (iterator.hasNext()) {
@@ -31,5 +30,12 @@ public class RepositoryHandler implements IRepositoryHandler {
 		}
 		
 		System.out.println("Size of nodes fetched from database: "+nodeList.size());
+		for(Node node: nodeList)
+		{
+			System.out.println("_________________________________________");
+			System.out.println(node.getType());
+			System.out.println(node.getDataset());
+			System.out.println(node.getLabel());
+		}
 	}
 }
