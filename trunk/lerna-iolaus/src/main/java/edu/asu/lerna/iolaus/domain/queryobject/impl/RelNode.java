@@ -23,7 +23,6 @@ import org.slf4j.LoggerFactory;
 import edu.asu.lerna.iolaus.domain.queryobject.INode;
 import edu.asu.lerna.iolaus.domain.queryobject.IProperty;
 import edu.asu.lerna.iolaus.domain.queryobject.IRelNode;
-import edu.asu.lerna.iolaus.domain.queryobject.IRelationship;
 
 
 /**
@@ -88,6 +87,24 @@ public class RelNode implements IRelNode {
     			logger.info("Found Property Object :");
     			IProperty prop = (IProperty) o;
     			prop.parseProperty(prop);
+    		}
+    		
+    	}
+    }
+    
+    @Override
+	public void parseRelNodeRel(IRelNode relNode){
+    	INode node = relNode.getNode();
+    	
+    	List <Object> nodeObjectList = node.getPropertyOrRelationshipOrAnd();
+    	Iterator<Object> nodeObjectIterator= nodeObjectList.iterator();
+    	while(nodeObjectIterator.hasNext()){
+    		Object o = nodeObjectIterator.next();
+    		if(o instanceof Property){
+
+    		}else if(o instanceof Relationship){
+    			logger.info("the parent object of this object should  be sent to Karan");
+    			
     		}
     		
     	}
