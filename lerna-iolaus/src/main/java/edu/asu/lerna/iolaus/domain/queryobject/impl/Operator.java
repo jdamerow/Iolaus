@@ -11,6 +11,7 @@ package edu.asu.lerna.iolaus.domain.queryobject.impl;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+
 import javax.xml.bind.JAXBElement;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -22,13 +23,10 @@ import javax.xml.bind.annotation.adapters.XmlAdapter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import edu.asu.lerna.iolaus.domain.queryobject.IDatabase;
 import edu.asu.lerna.iolaus.domain.queryobject.IOperator;
 import edu.asu.lerna.iolaus.domain.queryobject.IProperty;
 import edu.asu.lerna.iolaus.domain.queryobject.IRelNode;
 import edu.asu.lerna.iolaus.domain.queryobject.IRelationship;
-import edu.asu.lerna.iolaus.domain.queryobject.impl.Property;
-import edu.asu.lerna.iolaus.domain.queryobject.impl.Relationship;
 
 
 /**
@@ -57,74 +55,104 @@ import edu.asu.lerna.iolaus.domain.queryobject.impl.Relationship;
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "operator", propOrder = {
-    "sourceOrTargetOrProperty"
+		"sourceOrTargetOrProperty"
 })
 public class Operator implements IOperator {
-	
+
 
 	private static final Logger logger = LoggerFactory
 			.getLogger(Operator.class);
 
-    @XmlElementRefs({
-        @XmlElementRef(name = "source", namespace = "http://digitalhps.org/lerna-query-model", type = JAXBElement.class),
-        @XmlElementRef(name = "or", namespace = "http://digitalhps.org/lerna-query-model", type = JAXBElement.class),
-        @XmlElementRef(name = "and", namespace = "http://digitalhps.org/lerna-query-model", type = JAXBElement.class),
-        @XmlElementRef(name = "relationship", namespace = "http://digitalhps.org/lerna-query-model", type = Relationship.class),
-        @XmlElementRef(name = "property", namespace = "http://digitalhps.org/lerna-query-model", type = Property.class),
-        @XmlElementRef(name = "target", namespace = "http://digitalhps.org/lerna-query-model", type = JAXBElement.class)
-    })
-    protected List<Object> sourceOrTargetOrProperty;
+	@XmlElementRefs({
+		@XmlElementRef(name = "source", namespace = "http://digitalhps.org/lerna-query-model", type = JAXBElement.class),
+		@XmlElementRef(name = "or", namespace = "http://digitalhps.org/lerna-query-model", type = JAXBElement.class),
+		@XmlElementRef(name = "and", namespace = "http://digitalhps.org/lerna-query-model", type = JAXBElement.class),
+		@XmlElementRef(name = "relationship", namespace = "http://digitalhps.org/lerna-query-model", type = Relationship.class),
+		@XmlElementRef(name = "property", namespace = "http://digitalhps.org/lerna-query-model", type = Property.class),
+		@XmlElementRef(name = "target", namespace = "http://digitalhps.org/lerna-query-model", type = JAXBElement.class)
+	})
+	protected List<Object> sourceOrTargetOrProperty;
 
-    /* (non-Javadoc)
+	/* (non-Javadoc)
 	 * @see edu.asu.lerna.iolaus.domain.queryobject.impl.IOperator#getSourceOrTargetOrProperty()
 	 */
-    @Override
+	@Override
 	public List<Object> getSourceOrTargetOrProperty() {
-        if (sourceOrTargetOrProperty == null) {
-            sourceOrTargetOrProperty = new ArrayList<Object>();
-        }
-        return this.sourceOrTargetOrProperty;
-    }
+		if (sourceOrTargetOrProperty == null) {
+			sourceOrTargetOrProperty = new ArrayList<Object>();
+		}
+		return this.sourceOrTargetOrProperty;
+	}
 
-    /* (non-Javadoc)
+	/* (non-Javadoc)
 	 * @see edu.asu.lerna.iolaus.domain.queryobject.impl.IOperator#parseOperator(edu.asu.lerna.iolaus.domain.queryobject.impl.IOperator)
 	 */
-    @Override
+	@Override
 	public void parseOperator(IOperator op){
-    	List<Object> objectList = op.getSourceOrTargetOrProperty();
-    	Iterator<Object> operatorIterator = objectList.iterator();
-    	while(operatorIterator.hasNext()){
-    		Object element =operatorIterator.next();
-    		if(element instanceof Property){
-    			logger.info("Found property object");
-    			IProperty prop = (IProperty) element;
-    			prop.parseProperty(prop);
-    		}else if(element instanceof Relationship){
-    			logger.info("Found Relationship object ");
-    			IRelationship rel = (IRelationship) element;
-    			rel.getRelationDetails(rel);
-    		}else if(element instanceof JAXBElement<?>) {
-    			JAXBElement<?> element1 = (JAXBElement<?>) element;
-    			if(element1.getName().toString().contains("}target")){
-        			IRelNode relNode = (IRelNode) element1.getValue();
-        			logger.info("Found Target rel_node object ");
-        			relNode.parseRelNode(relNode);
-    			}
-    			
-    			if(element1.getName().toString().contains("}source")){
-        			IRelNode relNode = (IRelNode) element1.getValue();
-        			logger.info("Found Source rel_node object ");
-        			relNode.parseRelNode(relNode);
-    			}
-    			
-    			
-    		}
-    	}
-    }
-    
-    public static class Adapter extends XmlAdapter<Operator,IOperator> {
-    	public IOperator unmarshal(Operator v) { return v; }
-    	public Operator marshal(IOperator v) { return (Operator)v; }
+		List<Object> objectList = op.getSourceOrTargetOrProperty();
+		Iterator<Object> operatorIterator = objectList.iterator();
+		while(operatorIterator.hasNext()){
+			Object element =operatorIterator.next();
+			if(element instanceof Property){
+				logger.info("Found property object");
+				IProperty prop = (IProperty) element;
+				prop.parseProperty(prop);
+			}else if(element instanceof Relationship){
+				logger.info("Found Relationship object ");
+				IRelationship rel = (IRelationship) element;
+				rel.getRelationDetails(rel);
+			}else if(element instanceof JAXBElement<?>) {
+				JAXBElement<?> element1 = (JAXBElement<?>) element;
+				if(element1.getName().toString().contains("}target")){
+					IRelNode relNode = (IRelNode) element1.getValue();
+					logger.info("Found Target rel_node object ");
+					relNode.parseRelNode(relNode);
+				}
 
-     }
+				if(element1.getName().toString().contains("}source")){
+					IRelNode relNode = (IRelNode) element1.getValue();
+					logger.info("Found Source rel_node object ");
+					relNode.parseRelNode(relNode);
+				}
+
+
+			}
+		}
+	}
+
+
+	@Override
+	public void parseOperatorRel(IOperator op){
+		List<Object> objectList = op.getSourceOrTargetOrProperty();
+		Iterator<Object> operatorIterator = objectList.iterator();
+		while(operatorIterator.hasNext()){
+			Object element =operatorIterator.next();
+			if(element instanceof Relationship){
+				logger.info("Found Relationship object ");
+				IRelationship rel = (IRelationship) element;
+				rel.getRelationDetailsRel(rel);
+			}else if(element instanceof JAXBElement<?>) {
+				JAXBElement<?> element1 = (JAXBElement<?>) element;
+				if(element1.getName().toString().contains("}target")){
+					IRelNode relNode = (IRelNode) element1.getValue();
+					logger.info("Found Target rel_node object ");
+					relNode.parseRelNodeRel(relNode);
+				}
+
+				if(element1.getName().toString().contains("}source")){
+					IRelNode relNode = (IRelNode) element1.getValue();
+					logger.info("Found Source rel_node object ");
+					relNode.parseRelNodeRel(relNode);
+				}
+
+
+			}
+		}
+	}
+
+	public static class Adapter extends XmlAdapter<Operator,IOperator> {
+		public IOperator unmarshal(Operator v) { return v; }
+		public Operator marshal(IOperator v) { return (Operator)v; }
+
+	}
 }
