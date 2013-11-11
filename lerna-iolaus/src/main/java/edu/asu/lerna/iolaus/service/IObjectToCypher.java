@@ -15,6 +15,7 @@ import edu.asu.lerna.iolaus.domain.queryobject.PropertyOf;
 public interface IObjectToCypher {
 	
 	public String objectToCypher(INode node);
+	//public String objectToCypher(IRelNode node);
 	public void nodeObject(INode node,PropertyOf propertyOf);
 	public void relationshipObject(IRelationship relationship);
 	public void operatorObject(IOperator op,PropertyOf propertyOf);
@@ -35,4 +36,6 @@ public interface IObjectToCypher {
 	public String getSourceOperator();
 	public void setTargetOperator(String op);
 	public String getTargetOperator();
+	public void resetClassVariables();
+	//void nestedRelNodeObject(IRelNode node, PropertyOf propertyOf);
 }
