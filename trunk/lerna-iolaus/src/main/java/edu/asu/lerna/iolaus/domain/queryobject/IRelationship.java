@@ -95,6 +95,5 @@ public interface IRelationship {
 	public abstract void getRelationDetails(
 			IRelationship relationship);
 
-	void getRelationDetailsRel(IRelationship relationship);
 
 }

@@ -92,23 +92,6 @@ public class RelNode implements IRelNode {
     	}
     }
     
-    @Override
-	public void parseRelNodeRel(IRelNode relNode){
-    	INode node = relNode.getNode();
-    	
-    	List <Object> nodeObjectList = node.getPropertyOrRelationshipOrAnd();
-    	Iterator<Object> nodeObjectIterator= nodeObjectList.iterator();
-    	while(nodeObjectIterator.hasNext()){
-    		Object o = nodeObjectIterator.next();
-    		if(o instanceof Property){
-
-    		}else if(o instanceof Relationship){
-    			logger.info("the parent object of this object should  be sent to Karan");
-    			
-    		}
-    		
-    	}
-    }
 
     public static class Adapter extends XmlAdapter<RelNode,IRelNode> {
     	public IRelNode unmarshal(RelNode v) { return v; }

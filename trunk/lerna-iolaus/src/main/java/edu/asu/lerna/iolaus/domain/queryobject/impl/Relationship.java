@@ -153,28 +153,7 @@ public class Relationship implements IRelationship {
 	}
 	
 	
-	@Override
-	public void getRelationDetailsRel(IRelationship relationship){
-		logger.info("Relationship return status : "+_return);
-		List<Object> relationshipDetails = relationship.getSourceOrTargetOrProperty();
-		Iterator<Object> relationshipDetailsIterator = relationshipDetails.iterator();
-		int count =0;
-		while(relationshipDetailsIterator.hasNext()){
 
-			Object element =relationshipDetailsIterator.next();
-			if(element instanceof JAXBElement<?>){
-    			JAXBElement<?> element1 = (JAXBElement<?>) element;
-    			if(element1.getName().toString().contains("}or")){
-    				logger.info("We have a OR operator");
-    				IOperator opOr = (IOperator) element1.getValue();
-    				opOr.parseOperatorRel(opOr);
-    			}
-    		}
-			count++;
-		}
-		logger.info("Count : "+count);
-
-	}
 	
     public static class Adapter extends XmlAdapter<Relationship,IRelationship> {
     	public IRelationship unmarshal(Relationship v) { return v; }

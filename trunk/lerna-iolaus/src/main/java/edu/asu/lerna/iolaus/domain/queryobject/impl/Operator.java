@@ -10,6 +10,7 @@ package edu.asu.lerna.iolaus.domain.queryobject.impl;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
 
 import javax.xml.bind.JAXBElement;
@@ -121,34 +122,7 @@ public class Operator implements IOperator {
 	}
 
 
-	@Override
-	public void parseOperatorRel(IOperator op){
-		List<Object> objectList = op.getSourceOrTargetOrProperty();
-		Iterator<Object> operatorIterator = objectList.iterator();
-		while(operatorIterator.hasNext()){
-			Object element =operatorIterator.next();
-			if(element instanceof Relationship){
-				logger.info("Found Relationship object ");
-				IRelationship rel = (IRelationship) element;
-				rel.getRelationDetailsRel(rel);
-			}else if(element instanceof JAXBElement<?>) {
-				JAXBElement<?> element1 = (JAXBElement<?>) element;
-				if(element1.getName().toString().contains("}target")){
-					IRelNode relNode = (IRelNode) element1.getValue();
-					logger.info("Found Target rel_node object ");
-					relNode.parseRelNodeRel(relNode);
-				}
 
-				if(element1.getName().toString().contains("}source")){
-					IRelNode relNode = (IRelNode) element1.getValue();
-					logger.info("Found Source rel_node object ");
-					relNode.parseRelNodeRel(relNode);
-				}
-
-
-			}
-		}
-	}
 
 	public static class Adapter extends XmlAdapter<Operator,IOperator> {
 		public IOperator unmarshal(Operator v) { return v; }

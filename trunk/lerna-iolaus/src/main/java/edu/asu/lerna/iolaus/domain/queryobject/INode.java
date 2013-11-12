@@ -93,6 +93,5 @@ public interface INode {
 	public abstract void getNodeDetails(
 			edu.asu.lerna.iolaus.domain.queryobject.INode node);
 
-	void getNodeRel(INode node);
 
 }

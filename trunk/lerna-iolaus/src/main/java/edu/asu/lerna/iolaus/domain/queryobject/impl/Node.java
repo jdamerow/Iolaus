@@ -25,7 +25,6 @@ import javax.xml.bind.annotation.adapters.XmlAdapter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import edu.asu.lerna.iolaus.domain.queryobject.IDataset;
 import edu.asu.lerna.iolaus.domain.queryobject.INode;
 import edu.asu.lerna.iolaus.domain.queryobject.IOperator;
 import edu.asu.lerna.iolaus.domain.queryobject.IProperty;
@@ -156,27 +155,7 @@ public class Node implements INode {
 	}
 
 	
-	@Override
-	public void getNodeRel(edu.asu.lerna.iolaus.domain.queryobject.INode node){
-		
-		logger.info("Node return status : "+_return);
-		List<Object> nodeDetails = node.getPropertyOrRelationshipOrAnd();
-		Iterator<Object> nodeDetailsIterator = nodeDetails.iterator();
-		while(nodeDetailsIterator.hasNext()){
-			JAXBElement<?> element = ((JAXBElement<Object>) nodeDetailsIterator.next());
-
-			if(element.getName().toString().contains("}and")){
-				logger.info("We have a AND operator");
-				IOperator opAnd = (IOperator) element.getValue();
-				opAnd.parseOperatorRel(opAnd);
-			}else if(element.getName().toString().contains("}or")){
-				logger.info("We have a OR operator");
-				IOperator opOr = (IOperator) element.getValue();
-				opOr.parseOperatorRel(opOr);
-			}
-		}
-
-	}
+	
 	
     public static class Adapter extends XmlAdapter<Node,INode> {
     	public INode unmarshal(Node v) { return v; }

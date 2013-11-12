@@ -34,6 +34,5 @@ public interface IRelNode {
 
 	public abstract void parseRelNode(IRelNode relNode);
 
-	void parseRelNodeRel(IRelNode relNode);
 
 }
