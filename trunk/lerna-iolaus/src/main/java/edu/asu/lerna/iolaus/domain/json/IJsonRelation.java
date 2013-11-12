@@ -16,4 +16,14 @@ public interface IJsonRelation {
 
 	public abstract String getId();
 
+	public abstract void addData(String key, String value);
+
+	public abstract void setStartNode(String startNode);
+
+	public abstract String getStartNode();
+
+	public abstract void setEndNode(String endNode);
+
+	public abstract String getEndNode();
+
 }
