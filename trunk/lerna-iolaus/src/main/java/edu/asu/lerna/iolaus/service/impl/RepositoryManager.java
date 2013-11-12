@@ -43,6 +43,7 @@ public class RepositoryManager implements IRepositoryManager{
 	{
 		IRelNodeFinder rnf = new RelNodeFinder();
 		INode n = q.getNode();
+		//TODO call karan's Node function 
 		if(n!=null){
 			//TODO: Call Karan's mapping code here
 			LinkedHashMap<String, IRelNode> nodeList = new LinkedHashMap<String, IRelNode>();
@@ -55,6 +56,7 @@ public class RepositoryManager implements IRepositoryManager{
 			logger.info("Node List "+rnfd.getNodeList().size());
 			for (final String key : nodeList.keySet()) {
 				IRelNode rn= nodeList.get(key);
+				//TODO: call karan's mapping code for RELNODE
 				if(rn!=null){
 					logger.info("IRelNode is not empty");
 				}
