@@ -47,6 +47,5 @@ public interface IOperator {
 
 	public abstract void parseOperator(IOperator op);
 
-	void parseOperatorRel(IOperator op);
 
 }
