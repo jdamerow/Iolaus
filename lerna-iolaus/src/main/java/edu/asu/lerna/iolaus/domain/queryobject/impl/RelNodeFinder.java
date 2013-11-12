@@ -21,11 +21,11 @@ public class RelNodeFinder implements IRelNodeFinder {
 
 	private static final Logger logger = LoggerFactory
 			.getLogger(RelNodeFinder.class);
-	
+
 
 	@Override
 	public IRelNodeFinderData getNodeRel(edu.asu.lerna.iolaus.domain.queryobject.INode node,IRelNodeFinderData rnfd){
-		
+
 		List<Object> nodeDetails = node.getPropertyOrRelationshipOrAnd();
 		Iterator<Object> nodeDetailsIterator = nodeDetails.iterator();
 		String path = rnfd.getPath();
@@ -34,33 +34,33 @@ public class RelNodeFinder implements IRelNodeFinder {
 			String path1=path;
 			if( o instanceof JAXBElement<?>){
 				logger.info("o is instance of JAXBElement<?>");
-			}
-			JAXBElement<?> element = ((JAXBElement<Object>) o);
+				JAXBElement<?> element = ((JAXBElement<Object>) o);
 
-			if(element.getName().toString().contains("}and")){
-				path1 = path1 +" -> AND";
-				logger.info("We have a AND operator");
-				IOperator opAnd = (IOperator) element.getValue();
-				IRelNodeFinder rnf = new RelNodeFinder();
-				IRelNodeFinderData rnfd1 = new RelNodeFinderData();
-				rnfd1.setNodeList(rnfd.getNodeList());
-				rnfd1.setPath(path1);
-				rnfd= rnf.parseOperatorRel(opAnd,rnfd1);
-			}else if(element.getName().toString().contains("}or")){
-				path1 = path1 +" -> OR";
-				logger.info("We have a OR operator");
-				IOperator opOr = (IOperator) element.getValue();
-				IRelNodeFinder rnf = new RelNodeFinder();
-				IRelNodeFinderData rnfd1 = new RelNodeFinderData();
-				rnfd1.setNodeList(rnfd.getNodeList());
-				rnfd1.setPath(path1);
-				rnfd = rnf.parseOperatorRel(opOr,rnfd1);
+				if(element.getName().toString().contains("}and")){
+					path1 = path1 +" -> AND";
+					logger.info("We have a AND operator");
+					IOperator opAnd = (IOperator) element.getValue();
+					IRelNodeFinder rnf = new RelNodeFinder();
+					IRelNodeFinderData rnfd1 = new RelNodeFinderData();
+					rnfd1.setNodeList(rnfd.getNodeList());
+					rnfd1.setPath(path1);
+					rnfd= rnf.parseOperatorRel(opAnd,rnfd1);
+				}else if(element.getName().toString().contains("}or")){
+					path1 = path1 +" -> OR";
+					logger.info("We have a OR operator");
+					IOperator opOr = (IOperator) element.getValue();
+					IRelNodeFinder rnf = new RelNodeFinder();
+					IRelNodeFinderData rnfd1 = new RelNodeFinderData();
+					rnfd1.setNodeList(rnfd.getNodeList());
+					rnfd1.setPath(path1);
+					rnfd = rnf.parseOperatorRel(opOr,rnfd1);
+				}
 			}
 		}
 
 		return rnfd;
 	}
-	
+
 
 	@Override 
 	public IRelNodeFinderData  parseOperatorRel(IOperator op,IRelNodeFinderData rnfd){
@@ -79,7 +79,7 @@ public class RelNodeFinder implements IRelNodeFinder {
 				rnfd1.setNodeList(rnfd.getNodeList());
 				rnfd1.setPath(path1);
 				rnfd = rn.getRelationDetailsRel(rel,rnfd1);
-				
+
 			}else if(element instanceof JAXBElement<?>) {
 				JAXBElement<?> element1 = (JAXBElement<?>) element;
 				if(element1.getName().toString().contains("}target")){
@@ -109,8 +109,8 @@ public class RelNodeFinder implements IRelNodeFinder {
 		}
 		return rnfd;
 	}
-	
-	
+
+
 	@Override 
 	public IRelNodeFinderData getRelationDetailsRel(IRelationship relationship,IRelNodeFinderData rnfd){
 		List<Object> relationshipDetails = relationship.getSourceOrTargetOrProperty();
@@ -120,41 +120,41 @@ public class RelNodeFinder implements IRelNodeFinder {
 			String path1=path;
 			Object element =relationshipDetailsIterator.next();
 			if(element instanceof JAXBElement<?>){
-    			JAXBElement<?> element1 = (JAXBElement<?>) element;
-    			if(element1.getName().toString().contains("}or")){
-    				path1 = path1 +" -> OR";
-    				logger.info("We have a OR operator");
-    				IOperator opOr = (IOperator) element1.getValue();
-    				IRelNodeFinder rnf = new RelNodeFinder();
+				JAXBElement<?> element1 = (JAXBElement<?>) element;
+				if(element1.getName().toString().contains("}or")){
+					path1 = path1 +" -> OR";
+					logger.info("We have a OR operator");
+					IOperator opOr = (IOperator) element1.getValue();
+					IRelNodeFinder rnf = new RelNodeFinder();
 					IRelNodeFinderData rnfd1 = new RelNodeFinderData();
 					rnfd1.setNodeList(rnfd.getNodeList());
 					rnfd1.setPath(path1);
-    				rnfd = rnf.parseOperatorRel(opOr,rnfd1);
-    			}
-    		}
+					rnfd = rnf.parseOperatorRel(opOr,rnfd1);
+				}
+			}
 		}
 		return rnfd;
 	}
-	
+
 	@Override 
 	public IRelNodeFinderData parseRelNodeRel(IRelNode relNode,IRelNodeFinderData rnfd){
-		
-    	INode node = relNode.getNode();
-    	
-    	List <Object> nodeObjectList = node.getPropertyOrRelationshipOrAnd();
-    	Iterator<Object> nodeObjectIterator= nodeObjectList.iterator();
-    	while(nodeObjectIterator.hasNext()){
-    		Object o = nodeObjectIterator.next();
-    		if(o instanceof Property){
 
-    		}else if(o instanceof Relationship){
-    			rnfd.setPath(rnfd.getPath()+" -> Node(Relation)");
-    			logger.info("the parent object of this object should  be sent to Karan");
-    			UUID random = UUID.randomUUID();
-    			rnfd.getNodeList().put(rnfd.getPath()+random,relNode);
-    		}
-    		
-    	}
-    	return rnfd;
-    }
+		INode node = relNode.getNode();
+
+		List <Object> nodeObjectList = node.getPropertyOrRelationshipOrAnd();
+		Iterator<Object> nodeObjectIterator= nodeObjectList.iterator();
+		while(nodeObjectIterator.hasNext()){
+			Object o = nodeObjectIterator.next();
+			if(o instanceof Property){
+
+			}else if(o instanceof Relationship){
+				rnfd.setPath(rnfd.getPath()+" -> Node(Relation)");
+				logger.info("the parent object of this object should  be sent to Karan");
+				UUID random = UUID.randomUUID();
+				rnfd.getNodeList().put(rnfd.getPath()+random,relNode);
+			}
+
+		}
+		return rnfd;
+	}
 }
