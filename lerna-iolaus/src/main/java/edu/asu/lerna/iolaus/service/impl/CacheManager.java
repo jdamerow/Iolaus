@@ -30,14 +30,14 @@ public class CacheManager implements ICacheManager {
 	{
 		//TODO: Iterate through each repository and for each repository fetch the result.
 		
-		System.out.println("\n\n");
-		json = "http://localhost:7474/db/data/node/4237";
-		HashMap<String, List> listOfNodesAndRelations = repoHandler.executeQuery(json);
-		printList(listOfNodesAndRelations);
+//		System.out.println("\n\n");
+//		json = "http://localhost:7474/db/data/node/4237";
+//		HashMap<String, List> listOfNodesAndRelations = repoHandler.executeQuery(json);
+//		printList(listOfNodesAndRelations);
 		
 		System.out.println("\n\n");
 		json = "http://localhost:7474/db/data/node/4237/relationships/all";
-		listOfNodesAndRelations = repoHandler.executeQuery(json);
+		HashMap<String, List> listOfNodesAndRelations = repoHandler.executeQuery(json);
 		printList(listOfNodesAndRelations);
 		
 		//TODO: Add the result to the resultList	

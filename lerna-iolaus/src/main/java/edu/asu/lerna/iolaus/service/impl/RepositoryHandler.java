@@ -15,6 +15,7 @@ import edu.asu.lerna.iolaus.domain.json.IJsonNode;
 import edu.asu.lerna.iolaus.domain.json.IJsonRelation;
 import edu.asu.lerna.iolaus.domain.json.impl.JsonNode;
 import edu.asu.lerna.iolaus.domain.json.impl.JsonRelation;
+import edu.asu.lerna.iolaus.json.parser.library.JSONArray;
 import edu.asu.lerna.iolaus.repository.NodeRepository;
 import edu.asu.lerna.iolaus.service.IRepositoryHandler;
 
@@ -175,67 +176,14 @@ public class RepositoryHandler implements IRepositoryHandler {
 			List<String> jsonObjectList = new ArrayList<String>();
 			int openBracesCount = 0;
 			StringBuilder oneSingleJsonObject = new StringBuilder();
+			
 
 			while ((output = br.readLine()) != null) {
-
-				//Found start of a object
-				if(output.contains("{") && !output.contains("}"))
-				{					
-					openBracesCount ++;
-					if(output.contains("["))
-					{
-						output = output.replace("[ ", "");					
-					}
-
-					//Add the line to the object
-					oneSingleJsonObject.append(output);
-					oneSingleJsonObject.append("\n");
-				}
-				//Found end of object
-				else if(output.contains("}") && (output.contains("}, {") || !output.contains("{")))
-				{
-					openBracesCount --;
-					if(output.contains("]"))
-					{
-						output = output.replace("]", "");					
-					}
-					else if(output.contains("}, {"))
-					{
-						oneSingleJsonObject.append("}");
-						jsonObjectList.add(oneSingleJsonObject.toString());
-						oneSingleJsonObject.append("\n");
-
-						//Start new object
-						oneSingleJsonObject = new StringBuilder();
-						openBracesCount = 1;
-						output = "{";						
-					}
-
-					//Add the line to the object
-					oneSingleJsonObject.append(output);
-					oneSingleJsonObject.append("\n");
-				}
-				else
-				{
-					//Add the line to the object
-					oneSingleJsonObject.append(output);
-					oneSingleJsonObject.append("\n");
-				}
-
-
-
-				//End of the json object. Add to the list and reset the string buffer
-				if(openBracesCount == 0)
-				{
-					jsonObjectList.add(oneSingleJsonObject.toString());
-					oneSingleJsonObject = new StringBuilder();
-				}				
-
+				oneSingleJsonObject.append(output);
+				oneSingleJsonObject.append("\n");
 			}
-			conn.disconnect();
-
-			//Parse the individual objects and generate Node, Relation classes
-			return getListOfNodesAndRelations(jsonObjectList);
+			JSONArray jsonArray = new JSONArray(oneSingleJsonObject.toString());
+			System.out.println(jsonArray.length());
 
 		} catch (Exception e){
 
