@@ -16,26 +16,36 @@ public interface IObjectToCypher {
 	
 	public String objectToCypher(INode node);
 	//public String objectToCypher(IRelNode node);
-	public void nodeObject(INode node,PropertyOf propertyOf);
-	public void relationshipObject(IRelationship relationship);
-	public void operatorObject(IOperator op,PropertyOf propertyOf);
-	public void propertyObject(IProperty prop,PropertyOf propertyOf);
-	public void relNodeObject(IRelNode relNode,PropertyOf propertyOf);
-	public void incrementTarget();
-	public void incrementRelationship();
+
 	/**
 	 * direction=true for outgoing
 	 * direction=false for incoming
 	**/
-	public void addRelationToMatch(String node1,String node2,String relation,boolean direction);
-	public void addToStart(String label,String prop);
-	public Map<String,String> getStartMap();
-	public Map<String,List<String>> getWhereMap();
-	public Set<String> getMatchSet();
-	public void setSourceOperator(String op);
-	public String getSourceOperator();
-	public void setTargetOperator(String op);
-	public String getTargetOperator();
-	public void resetClassVariables();
+	public void addToStart(Map<String,String> startMap,String label,String prop);
 	//void nestedRelNodeObject(IRelNode node, PropertyOf propertyOf);
+	
+	void propertyObject(IProperty prop, PropertyOf propertyOf,
+			Map<String, String> startMap, Map<String, List<String>> whereMap,
+			int currentTarget, int currentRelationship);
+	
+	void addRelationToMatch(String node1, String node2, String relation,
+			boolean direction, Map<String, String> matchMap);
+
+	String nodeObject(INode node, PropertyOf propertyOf,
+			Map<String, String> startMap, Map<String, List<String>> whereMap,
+			Map<String, String> matchMap);
+
+	List<Integer> operatorObject(IOperator op, PropertyOf propertyOf,
+			Map<String, String> startMap, Map<String, List<String>> whereMap,
+			Map<String, String> matchMap, int currentTarget,
+			int currentRelationship);
+
+	List<Integer> relationshipObject(IRelationship relationship,
+			Map<String, String> startMap, Map<String, List<String>> whereMap,
+			Map<String, String> matchMap, int currentTarget,
+			int currentRelationship);
+
+	void relNodeObject(IRelNode relNode, PropertyOf propertyOf,
+			Map<String, String> startMap, Map<String, List<String>> whereMap,
+			int currentTarget, int currentRelationship, String targetOperator);
 }
