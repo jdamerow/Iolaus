@@ -51,9 +51,7 @@ public class QueryController {
 		
 		//Execute the input request and fetch outputxml from QueryManager
 		String outputXml = queryManager.executeQuery(res);
-		
 		response.setStatus(200);
-		logger.info(CypherQuery.where);
 		
 		
 		return outputXml;

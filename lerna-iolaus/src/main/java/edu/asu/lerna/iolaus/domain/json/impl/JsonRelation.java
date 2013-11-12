@@ -17,15 +17,19 @@ public class JsonRelation implements IJsonRelation {
 		data = new HashMap<String, String>();
 	}
 	
+	@Override
 	public String getEndNode() {
 		return endNode;
 	}
+	@Override
 	public void setEndNode(String endNode) {
 		this.endNode = endNode;
 	}
+	@Override
 	public String getStartNode() {
 		return startNode;
 	}
+	@Override
 	public void setStartNode(String startNode) {
 		this.startNode = startNode;
 	}
@@ -52,6 +56,12 @@ public class JsonRelation implements IJsonRelation {
 	@Override
 	public void setData(HashMap<String, String> data) {
 		this.data = data;
+	}
+	@Override
+	public void addData(String key, String value){
+		if(this.data == null)
+			this.data = new HashMap<String, String>();
+		this.data.put(key, value);
 	}
 
 }
