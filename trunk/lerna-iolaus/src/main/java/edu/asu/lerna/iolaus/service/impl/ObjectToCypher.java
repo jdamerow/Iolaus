@@ -325,8 +325,13 @@ public class ObjectToCypher implements IObjectToCypher {
 		}
 		
 		boolean flag=true;
+		
 		if(prop.getValue()!=null){
-			String p=prop.getName()+"="+prop.getValue();
+			String value=prop.getValue();
+			if(!value.matches("(\\d*)")){
+				value="\""+prop.getValue()+"\"";
+			}
+			String p=prop.getName()+"="+value;
 			if(!propertyOf.equals(PropertyOf.RELATION)){
 				if(!startMap.containsKey(element)){
 					addToStart(startMap,element, p);
