@@ -1,7 +1,10 @@
 package edu.asu.lerna.iolaus.service.impl;
 
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -38,6 +41,7 @@ public class CacheManager implements ICacheManager {
 		System.out.println("\n\n");
 		json = "http://localhost:7474/db/data/node/4237/relationships/all";
 		HashMap<String, List> listOfNodesAndRelations = repoHandler.executeQuery(json);
+		listOfNodesAndRelations = repoHandler.executeQuery(json);
 		printList(listOfNodesAndRelations);
 		
 		//TODO: Add the result to the resultList	
@@ -63,11 +67,18 @@ public class CacheManager implements ICacheManager {
 			if(relationList != null)
 				for(IJsonRelation jsonRelation: relationList)
 				{
-					System.out.println(jsonRelation.getId());
-					System.out.println(jsonRelation.getStartNode());
-					System.out.println(jsonRelation.getEndNode());
-					System.out.println(jsonRelation.getType());
-					System.out.println(jsonRelation.getData().size());
+					System.out.println("Id: "+jsonRelation.getId());
+					System.out.println("Start: "+jsonRelation.getStartNode());
+					System.out.println("End: "+jsonRelation.getEndNode());
+					System.out.println("Type: "+jsonRelation.getType());
+					System.out.println("Data size: "+jsonRelation.getData().size());
+					Iterator<Entry<String, String>> iterator = jsonRelation.getData().entrySet().iterator();
+					while(iterator.hasNext())
+					{
+						Map.Entry dataEntry = (Map.Entry) iterator.next();
+						System.out.println(dataEntry.getKey()+" : "+dataEntry.getValue());
+					}
+					System.out.println();
 				}
 		}
 	}
