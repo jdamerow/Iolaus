@@ -37,7 +37,6 @@ public class ObjectToCypher implements IObjectToCypher {
 
 	@Autowired
 	IProperty newProperty;
-	final private String dataSet="mblCourses";
 	
 	/*String sourceOperator="";
 	String targetOperator="";*/
@@ -48,7 +47,9 @@ public class ObjectToCypher implements IObjectToCypher {
 		Map<String,String> startMap = new LinkedHashMap<String,String>();
 		Map<String,String> matchMap = new LinkedHashMap<String,String>();
 		Map<String,List<String>> whereMap=new LinkedHashMap<String,List<String>>();
-		String sourceOperator=nodeObject(node,PropertyOf.SOURCE,startMap,whereMap,matchMap);
+		Map<String,Object> labelToObjectMap=new LinkedHashMap<String,Object>();
+		String dataSet="mblCourses";
+		String sourceOperator=nodeObject(node,PropertyOf.SOURCE,startMap,whereMap,matchMap,labelToObjectMap,dataSet);
 		String start="Start ";
 		String match="Match ";
 		String where="Where ";
@@ -56,9 +57,12 @@ public class ObjectToCypher implements IObjectToCypher {
 		start=buildStartClause(startMap,start);
 		match=buildMatchClause(matchMap,match);
 		where=buildWhereClause(whereMap,where,sourceOperator);
-		ret=buildReturnClause(whereMap.keySet(),ret);
+		ret=buildReturnClause(whereMap.keySet(),startMap.keySet(),ret);
 		String query=buildQuery(start,match,where,ret);
 		logger.info(query);
+		/*for(String temp:labelToObjectMap.keySet()){
+			logger.info(temp);
+		}*/
 		return query;
 	}
 
@@ -96,8 +100,20 @@ public class ObjectToCypher implements IObjectToCypher {
 		return query;
 	}
 
-	private String buildReturnClause(Set<String> keySet,String ret) {
+	private String buildReturnClause(Set<String> keySet,Set<String> startSet, String ret) {
+		
+		List<String> allVariable=new ArrayList<String>();
+		for(String returnElement:startSet){
+			if(!allVariable.contains(returnElement)){
+				allVariable.add(returnElement);
+			}
+		}
 		for(String returnElement:keySet){
+			if(!allVariable.contains(returnElement)){
+				allVariable.add(returnElement);
+			}
+		}
+		for(String returnElement:allVariable){
 			if(!ret.equals("return "))
 				ret+=", ";
 			ret+=returnElement;
@@ -150,18 +166,11 @@ public class ObjectToCypher implements IObjectToCypher {
 		return where;
 	}
 
-	/*private void printWhere() {
-		Map<String,List<String>> whereMap=getWhereMap();
-		for (Entry<String, List<String>> entry : whereMap.entrySet()) {
-			
-		    logger.info(entry.getKey()+"----"+entry.getValue());
-		}
-	}*/
 
 	@Override
-	public String nodeObject(INode node,PropertyOf propertyOf,Map<String,String> startMap,Map<String,List<String>> whereMap, Map<String, String> matchMap) {
+	public String nodeObject(INode node,PropertyOf propertyOf,Map<String,String> startMap,Map<String,List<String>> whereMap, Map<String, String> matchMap, Map<String, Object> labelToObjectMap, String dataSet) {
 	
-		
+		labelToObjectMap.put("source", node);
 		int currentTarget=1;
 		int currentRelationship=1;
 		String sourceOperator="";
@@ -174,38 +183,41 @@ public class ObjectToCypher implements IObjectToCypher {
 			if(o instanceof Property ){
 				IProperty prop = (IProperty) o;
     			propertyObject(prop,propertyOf,startMap,whereMap,currentTarget,currentRelationship);
-			}
-			if(propertyOf.equals(PropertyOf.SOURCE)&&flag){
-    			newProperty.setName("dataset");
-    			newProperty.setValue(dataSet);
-    			propertyObject(newProperty,propertyOf,startMap,whereMap,currentTarget,currentRelationship);
-    			flag=false;
+    			flag=true;
 			} else{
-				JAXBElement<?> element = (JAXBElement<Object>) nodeDetailsIterator.next();
+				flag=false;
+				JAXBElement<?> element = (JAXBElement<Object>) o;
 				if(element.getName().toString().contains("}and")){
 					sourceOperator="and";
 					IOperator opAnd = (IOperator) element.getValue();
-					operatorObject(opAnd,propertyOf,startMap,whereMap,matchMap,currentTarget,currentRelationship);
+					operatorObject(opAnd,propertyOf,startMap,whereMap,matchMap,labelToObjectMap,currentTarget,currentRelationship,dataSet);
 					
 				}else if(element.getName().toString().contains("}or")){
 					sourceOperator="or";
 					IOperator opOr = (IOperator) element.getValue();
-					List<Integer> list=operatorObject(opOr,propertyOf,startMap,whereMap,matchMap,currentTarget,currentRelationship);
+					List<Integer> list=operatorObject(opOr,propertyOf,startMap,whereMap,matchMap,labelToObjectMap,currentTarget,currentRelationship,dataSet);
 					currentTarget=list.get(0);
 					currentRelationship=list.get(1);
 				}
 			}
 		}
+		if(flag==true){
+			newProperty.setName("dataset");
+			newProperty.setValue(dataSet);
+			propertyObject(newProperty,propertyOf,startMap,whereMap,currentTarget,currentRelationship);
+		}
 		return sourceOperator;
 	}
 
 	@Override
-	public List<Integer> relationshipObject(IRelationship relationship,Map<String,String> startMap,Map<String,List<String>> whereMap,Map<String, String> matchMap, int currentTarget,int currentRelationship) {
+	public List<Integer> relationshipObject(IRelationship relationship,Map<String,String> startMap,Map<String,List<String>> whereMap,Map<String, String> matchMap, Map<String, Object> labelToObjectMap, int currentTarget,int currentRelationship,String dataSet) {
 		
 		logger.info("Relationship return status : "+relationship.isReturn());
+		
 		String targetOperator="";
 		currentTarget=increment(currentTarget);
 		currentRelationship=increment(currentRelationship);
+		labelToObjectMap.put(PropertyOf.RELATION.toString()+currentRelationship, relationship);
 		List<Object> relationshipDetails = relationship.getSourceOrTargetOrProperty();
 		Iterator<Object> relationshipDetailsIterator = relationshipDetails.iterator();
 		while(relationshipDetailsIterator.hasNext()){
@@ -219,27 +231,28 @@ public class ObjectToCypher implements IObjectToCypher {
     			if(element1.getName().toString().contains("}or")){
     				targetOperator="or";
     				IOperator opOr = (IOperator) element1.getValue();
-    				List<Integer> list=operatorObject(opOr,PropertyOf.RELATION,startMap,whereMap,matchMap,currentTarget,currentRelationship);
+    				List<Integer> list=operatorObject(opOr,PropertyOf.RELATION,startMap,whereMap,matchMap,labelToObjectMap,currentTarget,currentRelationship,dataSet);
     				currentTarget=list.get(0);
     				currentRelationship=list.get(1);
+    			}else{
+    				labelToObjectMap.put(PropertyOf.TARGET.toString()+currentTarget, element1);
+	    			String node1=(PropertyOf.SOURCE).toString();
+	    			String node2=(PropertyOf.TARGET).toString()+currentTarget;
+	    			String relation=(PropertyOf.RELATION).toString()+currentRelationship;
+	    			if(element1.getName().toString().contains("}target")){
+	    				boolean direction=true;
+	    				addRelationToMatch(node1, node2, relation, direction,matchMap);
+	        			IRelNode relNode = (IRelNode) element1.getValue();
+	        			relNodeObject(relNode,PropertyOf.TARGET,startMap,whereMap,currentTarget,currentRelationship,targetOperator,dataSet); 
+	    			}
+	    			
+	    			if(element1.getName().toString().contains("}source")){
+	    				boolean direction=false;
+	    				addRelationToMatch(node1, node2, relation, direction,matchMap);
+	        			IRelNode relNode = (IRelNode) element1.getValue();
+	        			relNodeObject(relNode,PropertyOf.TARGET,startMap,whereMap,currentTarget,currentRelationship,targetOperator,dataSet);
+	    			}	
     			}
-    			
-    			String node1=(PropertyOf.SOURCE).toString();
-    			String node2=(PropertyOf.TARGET).toString()+currentTarget;
-    			String relation=(PropertyOf.RELATION).toString()+currentRelationship;
-    			if(element1.getName().toString().contains("}target")){
-    				boolean direction=true;
-    				addRelationToMatch(node1, node2, relation, direction,matchMap);
-        			IRelNode relNode = (IRelNode) element1.getValue();
-        			relNodeObject(relNode,PropertyOf.TARGET,startMap,whereMap,currentTarget,currentRelationship,targetOperator); 
-    			}
-    			
-    			if(element1.getName().toString().contains("}source")){
-    				boolean direction=false;
-    				addRelationToMatch(node1, node2, relation, direction,matchMap);
-        			IRelNode relNode = (IRelNode) element1.getValue();
-        			relNodeObject(relNode,PropertyOf.TARGET,startMap,whereMap,currentTarget,currentRelationship,targetOperator);
-    			}	
     		}
 		}	
 		List<Integer> _returnList=new ArrayList<Integer>();
@@ -253,8 +266,9 @@ public class ObjectToCypher implements IObjectToCypher {
 	}
 
 	@Override 
-	public List<Integer> operatorObject(IOperator op,PropertyOf propertyOf,Map<String,String> startMap,Map<String,List<String>> whereMap,Map<String, String> matchMap, int currentTarget,int currentRelationship) {
-    	List<Object> objectList = op.getSourceOrTargetOrProperty();
+	public List<Integer> operatorObject(IOperator op,PropertyOf propertyOf,Map<String,String> startMap,Map<String,List<String>> whereMap,Map<String, String> matchMap, Map<String, Object> labelToObjectMap, int currentTarget,int currentRelationship, String dataSet) {
+    	
+		List<Object> objectList = op.getSourceOrTargetOrProperty();
     	Iterator<Object> operatorIterator = objectList.iterator();
     	boolean flag=true;
     	while(operatorIterator.hasNext()){
@@ -271,8 +285,9 @@ public class ObjectToCypher implements IObjectToCypher {
 			} 
     		if(element instanceof Relationship){
     			IRelationship rel = (IRelationship) element;
-    			relationshipObject(rel,startMap,whereMap,matchMap,currentTarget,currentRelationship);
+    			relationshipObject(rel,startMap,whereMap,matchMap,labelToObjectMap,currentTarget,currentRelationship,dataSet);
     		}else if(element instanceof JAXBElement<?>) {
+    			labelToObjectMap.put(PropertyOf.TARGET.toString()+currentTarget, element);
     			JAXBElement<?> element1 = (JAXBElement<?>) element;
     			String node1=(PropertyOf.SOURCE).toString();
     			String node2=(PropertyOf.TARGET).toString()+currentTarget;
@@ -281,12 +296,12 @@ public class ObjectToCypher implements IObjectToCypher {
     				boolean direction=true;
     				addRelationToMatch(node1, node2, relation, direction,matchMap);
         			IRelNode relNode = (IRelNode) element1.getValue();
-        			relNodeObject(relNode,PropertyOf.TARGET,startMap,whereMap,currentTarget,currentRelationship,"");
+        			relNodeObject(relNode,PropertyOf.TARGET,startMap,whereMap,currentTarget,currentRelationship,"",dataSet);
     			}else if(element1.getName().toString().contains("}source")){
     				boolean direction=false;
     				addRelationToMatch(node1, node2, relation, direction,matchMap);
         			IRelNode relNode = (IRelNode) element1.getValue();
-        			relNodeObject(relNode,PropertyOf.TARGET,startMap,whereMap,currentTarget,currentRelationship,"");
+        			relNodeObject(relNode,PropertyOf.TARGET,startMap,whereMap,currentTarget,currentRelationship,"",dataSet);
     			}	
     		}
     	}	
@@ -378,7 +393,7 @@ public class ObjectToCypher implements IObjectToCypher {
 	}
 	
 	@Override
-	public void relNodeObject(IRelNode relNode,PropertyOf propertyOf,Map<String,String> startMap,Map<String,List<String>> whereMap,int currentTarget,int currentRelationship, String targetOperator) {
+	public void relNodeObject(IRelNode relNode,PropertyOf propertyOf,Map<String,String> startMap,Map<String,List<String>> whereMap,int currentTarget,int currentRelationship, String targetOperator, String dataSet) {
 
     	INode node = relNode.getNode();
     	List <Object> nodeObjectList = node.getPropertyOrRelationshipOrAnd();
@@ -442,68 +457,68 @@ public class ObjectToCypher implements IObjectToCypher {
 		startMap.put(label, prop);
 	}
 
-	
-	
-	
-	/*@Override
-	public void setSourceOperator(String op) {
-		sourceOperator=op;
-	}
-
 	@Override
-	public String getSourceOperator() {
-		return sourceOperator;
-	}
-
-	@Override
-	public void setTargetOperator(String op) {
-		targetOperator=op;
-	}
-
-	@Override
-	public String getTargetOperator() {
-		return targetOperator;
-	}
-*/
-
-	
-	
-
-	/*@Override
 	public String objectToCypher(IRelNode node) {
-		resetClassVariables();
-		nodeObject(node,PropertyOf.SOURCE);
-//		printWhere();
-		buildWhereClause();
-		buildReturnClause();
-		String query=buildQuery();
+		
+		Map<String,String> startMap = new LinkedHashMap<String,String>();
+		Map<String,String> matchMap = new LinkedHashMap<String,String>();
+		Map<String,List<String>> whereMap=new LinkedHashMap<String,List<String>>();
+		Map<String,Object> labelToObjectMap=new LinkedHashMap<String,Object>();
+		String dataSet="mblCourses";
+		String sourceOperator=nestedRelNodeObject(node,PropertyOf.SOURCE,startMap,whereMap,matchMap,labelToObjectMap,dataSet);
+		String start="Start ";
+		String match="Match ";
+		String where="Where ";
+		String ret="return ";
+		start=buildStartClause(startMap,start);
+		match=buildMatchClause(matchMap,match);
+		where=buildWhereClause(whereMap,where,sourceOperator);
+		ret=buildReturnClause(whereMap.keySet(),startMap.keySet(),ret);
+		String query=buildQuery(start,match,where,ret);
 		logger.info(query);
 		return query;
 	}
 	
 	@Override
-	public void nestedRelNodeObject(IRelNode node,PropertyOf propertyOf) {
-		
+	public String nestedRelNodeObject(IRelNode relNode,PropertyOf propertyOf, Map<String, String> startMap, Map<String, List<String>> whereMap, Map<String, String> matchMap,Map<String, Object> labelToObjectMap, String dataSet) {
+	
+		INode node=relNode.getNode();
+		labelToObjectMap.put(PropertyOf.SOURCE.toString(), relNode);
+		int currentTarget=1;
+		int currentRelationship=1;
+		String sourceOperator="";
 		logger.info("Node return status : "+node.isReturn());
 		List<Object> nodeDetails = node.getPropertyOrRelationshipOrAnd();
 		Iterator<Object> nodeDetailsIterator = nodeDetails.iterator();
+		boolean flag=true;
 		while(nodeDetailsIterator.hasNext()){
-			JAXBElement<?> element = (JAXBElement<Object>) nodeDetailsIterator.next();
-
-			if(element.getName().toString().contains("}and")){
-				setSourceOperator("and");
-				IOperator opAnd = (IOperator) element.getValue();
-				operatorObject(opAnd,propertyOf);
-				
-			}else if(element.getName().toString().contains("}or")){
-				setSourceOperator("or");
-				IOperator opOr = (IOperator) element.getValue();
-				operatorObject(opOr,propertyOf);
-			}else if(element.getName().toString().contains("}Property")){
-    			IProperty prop = (IProperty) element.getValue();
-    			propertyObject(prop,propertyOf);
-    		}
+			Object o=nodeDetailsIterator.next();
+			if(o instanceof Property ){
+				IProperty prop = (IProperty) o;
+    			propertyObject(prop,propertyOf,startMap,whereMap,currentTarget,currentRelationship);
+			} else{
+				flag=false;
+				JAXBElement<?> element = (JAXBElement<Object>) o;
+				if(element.getName().toString().contains("}and")){
+					sourceOperator="and";
+					IOperator opAnd = (IOperator) element.getValue();
+					operatorObject(opAnd,propertyOf,startMap,whereMap,matchMap,labelToObjectMap,currentTarget,currentRelationship,dataSet);
+					
+				}else if(element.getName().toString().contains("}or")){
+					sourceOperator="or";
+					IOperator opOr = (IOperator) element.getValue();
+					List<Integer> list=operatorObject(opOr,propertyOf,startMap,whereMap,matchMap,labelToObjectMap,currentTarget,currentRelationship,dataSet);
+					currentTarget=list.get(0);
+					currentRelationship=list.get(1);
+				}
+			}
 		}
-	}*/
+		if(flag==true){
+			newProperty.setName("dataset");
+			newProperty.setValue(dataSet);
+			propertyObject(newProperty,propertyOf,startMap,whereMap,currentTarget,currentRelationship);
+		}
+		return sourceOperator;
+	}
 
 }
