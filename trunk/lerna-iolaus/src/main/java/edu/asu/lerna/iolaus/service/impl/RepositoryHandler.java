@@ -6,6 +6,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +17,7 @@ import edu.asu.lerna.iolaus.domain.json.IJsonRelation;
 import edu.asu.lerna.iolaus.domain.json.impl.JsonNode;
 import edu.asu.lerna.iolaus.domain.json.impl.JsonRelation;
 import edu.asu.lerna.iolaus.json.parser.library.JSONArray;
+import edu.asu.lerna.iolaus.json.parser.library.JSONObject;
 import edu.asu.lerna.iolaus.repository.NodeRepository;
 import edu.asu.lerna.iolaus.service.IRepositoryHandler;
 
@@ -26,15 +28,16 @@ public class RepositoryHandler implements IRepositoryHandler {
 	private NodeRepository nodeRepository;
 
 
-	private HashMap<String, List> getListOfNodesAndRelations(List<String> jsonObjectList)
+
+	private HashMap<String, List> getListOfNodesAndRelations_outdated(List<String> jsonObjectList)
 	{
 		List<IJsonNode> nodeList = null;
 		List<IJsonRelation> relationList = null;
 		IJsonNode node = null;
 		IJsonRelation relation = null;
 		HashMap<String, List> listOfNodesAndRelations = new HashMap<String, List>();
-		
-		
+
+
 
 		for(String jsonObject: jsonObjectList)
 		{
@@ -176,18 +179,95 @@ public class RepositoryHandler implements IRepositoryHandler {
 			List<String> jsonObjectList = new ArrayList<String>();
 			int openBracesCount = 0;
 			StringBuilder oneSingleJsonObject = new StringBuilder();
-			
+
 
 			while ((output = br.readLine()) != null) {
 				oneSingleJsonObject.append(output);
 				oneSingleJsonObject.append("\n");
 			}
+			
+			if(!oneSingleJsonObject.toString().contains("["))
+			{
+				oneSingleJsonObject = new StringBuilder("["+oneSingleJsonObject+"]");
+				System.out.println(oneSingleJsonObject.toString());
+			}
+			
+			
 			JSONArray jsonArray = new JSONArray(oneSingleJsonObject.toString());
-			System.out.println(jsonArray.length());
+			return getListOfNodesAndRelations(jsonArray);
+
 
 		} catch (Exception e){
+			e.printStackTrace();
 
 		}
 		return null;
+	}
+
+	private HashMap<String, List> getListOfNodesAndRelations(JSONArray jsonArray)
+	{
+		List<IJsonNode> nodeList = null;
+		List<IJsonRelation> relationList = null;
+		IJsonNode node = null;
+		IJsonRelation relation = null;
+		HashMap<String, List> listOfNodesAndRelations = new HashMap<String, List>();
+
+
+		System.out.println("Total number of json objects fetched: "+jsonArray.length());
+		for(int i=0;i<jsonArray.length();i++)
+		{
+			JSONObject jsonObject = jsonArray.getJSONObject(i);
+			if(jsonObject.has("start") && jsonObject.has("end"))
+			{
+				//Found a relation object
+				if(relationList == null)
+					relationList = new ArrayList<IJsonRelation>();
+				relation = new JsonRelation();
+
+				Iterator<String> keysIterator = jsonObject.keys();
+				while(keysIterator.hasNext())
+				{
+					String key = keysIterator.next();
+					if(key.equals("data"))
+					{
+						JSONObject objectData = jsonObject.getJSONObject(key);
+						Iterator<String> dataIterator = objectData.keys();
+						while(dataIterator.hasNext())
+						{
+							String dataKey = dataIterator.next(); 							
+							relation.addData(dataKey, objectData.optString(dataKey));							
+						}
+					}
+					else if(key.equals("start"))
+					{
+						relation.setStartNode(jsonObject.getString(key));
+					}
+					else if(key.equals("end"))
+					{
+						relation.setEndNode(jsonObject.getString(key));
+					}
+					else if(key.equals("type"))
+					{
+						relation.setType(jsonObject.getString(key));
+					}
+					else if(key.equals("self"))
+					{
+						relation.setId(jsonObject.getString(key));
+					}
+
+				}
+				relationList.add(relation);
+			}
+			else
+			{
+				//Found a node object 
+			}
+		}
+
+//		System.out.println("Number of relations: "+relationList.size());
+		listOfNodesAndRelations.put("nodesList", nodeList);
+		listOfNodesAndRelations.put("relationList",relationList);
+		return listOfNodesAndRelations;
+
 	}
 }
