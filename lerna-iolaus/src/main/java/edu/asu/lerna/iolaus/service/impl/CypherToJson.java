@@ -35,7 +35,7 @@ public class CypherToJson implements ICypherToJson {
 				 temp=temp.replaceAll(matcher.group(),replacement );
 			 }
 		 }
-		 query="\""+temp+"\"";
+		 query+="\""+temp+"\"";
 		 String params="\"params\":{";
 		 for(Entry<String, String> entry:paramMap.entrySet()){
 			 if(!params.equals("\"params\":{")){
