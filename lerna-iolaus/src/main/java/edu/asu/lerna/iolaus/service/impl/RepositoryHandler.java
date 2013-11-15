@@ -185,14 +185,14 @@ public class RepositoryHandler implements IRepositoryHandler {
 				oneSingleJsonObject.append(output);
 				oneSingleJsonObject.append("\n");
 			}
-			
+
 			if(!oneSingleJsonObject.toString().contains("["))
 			{
 				oneSingleJsonObject = new StringBuilder("["+oneSingleJsonObject+"]");
 				System.out.println(oneSingleJsonObject.toString());
 			}
-			
-			
+
+
 			JSONArray jsonArray = new JSONArray(oneSingleJsonObject.toString());
 			return getListOfNodesAndRelations(jsonArray);
 
@@ -260,11 +260,38 @@ public class RepositoryHandler implements IRepositoryHandler {
 			}
 			else
 			{
-				//Found a node object 
+				//Found a node object
+				if(nodeList == null)
+					nodeList = new ArrayList<IJsonNode>();
+				node = new JsonNode();
+
+				Iterator<String> keysIterator = jsonObject.keys();
+				while(keysIterator.hasNext())
+				{
+					String key = keysIterator.next();
+					if(key.equals("data"))
+					{
+						JSONObject objectData = jsonObject.getJSONObject(key);
+						Iterator<String> dataIterator = objectData.keys();
+						while(dataIterator.hasNext())
+						{
+							String dataKey = dataIterator.next();
+							if(dataKey.equals("type"))
+								node.setType(objectData.optString(dataKey));
+							else
+								node.addData(dataKey, objectData.optString(dataKey));							
+						}
+					}
+					else if(key.equals("self"))
+					{
+						node.setId(jsonObject.getString(key));
+					}
+				}
+				nodeList.add(node);
 			}
 		}
 
-//		System.out.println("Number of relations: "+relationList.size());
+		//		System.out.println("Number of relations: "+relationList.size());
 		listOfNodesAndRelations.put("nodesList", nodeList);
 		listOfNodesAndRelations.put("relationList",relationList);
 		return listOfNodesAndRelations;
