@@ -63,9 +63,7 @@ public class ObjectToCypher implements IObjectToCypher {
 		where=buildWhereClause(whereMap,where,sourceOperator);
 		ret=buildReturnClause(whereMap.keySet(),startMap.keySet(),ret);
 		String query=buildQuery(start,match,where,ret);
-		logger.info(query);
 		String json=cypherToJson.cypherToJson(query);
-		logger.info(json);
 		_returnList.add(json);
 		_returnList.add(labelToObjectMap);
 		/*for(String temp:labelToObjectMap.keySet()){
@@ -182,7 +180,6 @@ public class ObjectToCypher implements IObjectToCypher {
 		int currentTarget=1;
 		int currentRelationship=1;
 		String sourceOperator="";
-		logger.info("Node return status : "+node.isReturn());
 		List<Object> nodeDetails = node.getPropertyOrRelationshipOrAnd();
 		Iterator<Object> nodeDetailsIterator = nodeDetails.iterator();
 		boolean flag=true;
@@ -219,8 +216,6 @@ public class ObjectToCypher implements IObjectToCypher {
 
 	@Override
 	public List<Integer> relationshipObject(IRelationship relationship,Map<String,String> startMap,Map<String,List<String>> whereMap,Map<String, String> matchMap, Map<String, Object> labelToObjectMap, int currentTarget,int currentRelationship,String dataSet) {
-		
-		logger.info("Relationship return status : "+relationship.isReturn());
 		
 		String targetOperator="";
 		currentTarget=increment(currentTarget);
@@ -414,7 +409,6 @@ public class ObjectToCypher implements IObjectToCypher {
     	int count=0;
     	while(nodeObjectIterator.hasNext()){
     		Object o = nodeObjectIterator.next();
-    		logger.info(""+o.getClass());
     		if(o instanceof Property){
     			IProperty prop = (IProperty) o;
     			propertyObject(prop,propertyOf,startMap,whereMap,currentTarget,currentRelationship);
@@ -489,9 +483,7 @@ public class ObjectToCypher implements IObjectToCypher {
 		where=buildWhereClause(whereMap,where,sourceOperator);
 		ret=buildReturnClause(whereMap.keySet(),startMap.keySet(),ret);
 		String query=buildQuery(start,match,where,ret);
-		logger.info(query);
 		String json=cypherToJson.cypherToJson(query);
-		logger.info(json);
 		_returnList.add(json);
 		_returnList.add(labelToObjectMap);
 		return _returnList;
@@ -505,7 +497,6 @@ public class ObjectToCypher implements IObjectToCypher {
 		int currentTarget=1;
 		int currentRelationship=1;
 		String sourceOperator="";
-		logger.info("Node return status : "+node.isReturn());
 		List<Object> nodeDetails = node.getPropertyOrRelationshipOrAnd();
 		Iterator<Object> nodeDetailsIterator = nodeDetails.iterator();
 		boolean flag=true;
