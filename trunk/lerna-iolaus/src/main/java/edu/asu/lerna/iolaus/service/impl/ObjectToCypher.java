@@ -514,7 +514,7 @@ public class ObjectToCypher implements IObjectToCypher {
 			if(o instanceof Property ){
 				IProperty prop = (IProperty) o;
     			propertyObject(prop,propertyOf,startMap,whereMap,currentTarget,currentRelationship);
-			} else{
+			} else if(o instanceof JAXBElement){
 				flag=false;
 				JAXBElement<?> element = (JAXBElement<Object>) o;
 				if(element.getName().toString().contains("}and")){
