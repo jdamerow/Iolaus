@@ -1,6 +1,8 @@
 package edu.asu.lerna.iolaus.service.impl;
 
 import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.lang.NotImplementedException;
 import org.slf4j.Logger;
@@ -16,6 +18,7 @@ import edu.asu.lerna.iolaus.domain.queryobject.IRelNodeFinderData;
 import edu.asu.lerna.iolaus.domain.queryobject.impl.RelNodeFinder;
 import edu.asu.lerna.iolaus.domain.queryobject.impl.RelNodeFinderData;
 import edu.asu.lerna.iolaus.service.ICacheManager;
+import edu.asu.lerna.iolaus.service.IObjectToCypher;
 import edu.asu.lerna.iolaus.service.IRepositoryManager;
 
 @Service
@@ -23,6 +26,9 @@ public class RepositoryManager implements IRepositoryManager{
 
 	@Autowired
 	private ICacheManager cacheManager;
+	
+	@Autowired
+	private IObjectToCypher objectToCypher; 
 
 	private static final Logger logger = LoggerFactory
 			.getLogger(RepositoryManager.class);
@@ -46,6 +52,8 @@ public class RepositoryManager implements IRepositoryManager{
 		//TODO call karan's Node function 
 		if(n!=null){
 			//TODO: Call Karan's mapping code here
+			List<Object> nodeListObject = objectToCypher.objectToCypher(n);
+			parseNodeListObject(nodeListObject);
 			LinkedHashMap<String, IRelNode> nodeList = new LinkedHashMap<String, IRelNode>();
 			IRelNodeFinderData rnfd = new RelNodeFinderData();
 			rnfd.setNodeList(nodeList);
@@ -57,6 +65,8 @@ public class RepositoryManager implements IRepositoryManager{
 			for (final String key : nodeList.keySet()) {
 				IRelNode rn= nodeList.get(key);
 				//TODO: call karan's mapping code for RELNODE
+				List<Object> nodeListObject1 = objectToCypher.objectToCypher(rn);
+				parseNodeListObject(nodeListObject1);
 				if(rn!=null){
 					logger.info("IRelNode is not empty");
 				}
@@ -68,6 +78,17 @@ public class RepositoryManager implements IRepositoryManager{
 			logger.info("Node is null");
 		}
 		//throw new NotImplementedException("Not yet implemented");
+	}
+	
+	public void parseNodeListObject(List<Object> nodeListObject){
+		logger.info("Printing the node to label from Karan");
+		String jsonQuery = (String) nodeListObject.get(0);
+		Map<String, Object> labelToObjectMap = (LinkedHashMap<String, Object>) nodeListObject.get(1);
+		logger.info("Json Query : "+jsonQuery);
+		for (Map.Entry<String, Object> entry : labelToObjectMap.entrySet())
+		{
+		    System.out.println(entry.getKey() + "             " + entry.getValue().getClass());
+		}
 	}
 	
 	@Override
