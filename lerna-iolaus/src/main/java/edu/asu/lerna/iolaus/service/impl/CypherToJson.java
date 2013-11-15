@@ -42,7 +42,7 @@ public class CypherToJson implements ICypherToJson {
 			 params+=entry.getKey()+":"+entry.getValue();
 		 }
 		 params+="}";
-		 json="{"+query+","+params+"}";
+		 json="{"+query+",\n"+params+"}";
 		return json;
 	}
 }

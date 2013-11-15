@@ -14,7 +14,8 @@ import edu.asu.lerna.iolaus.domain.queryobject.PropertyOf;
 
 public interface IObjectToCypher {
 	
-	public String objectToCypher(INode node);
+	public List<Object> objectToCypher(INode node);
+	List<Object> objectToCypher(IRelNode node);
 	//public String objectToCypher(IRelNode node);
 
 	/**
@@ -35,7 +36,7 @@ public interface IObjectToCypher {
 			Map<String, String> startMap, Map<String, List<String>> whereMap,
 			int currentTarget, int currentRelationship, String targetOperator,String dataSet);
 
-	String objectToCypher(IRelNode node);
+
 
 
 	
