@@ -32,15 +32,13 @@ public class CacheManager implements ICacheManager {
 	public void executeQuery(String json)
 	{
 		//TODO: Iterate through each repository and for each repository fetch the result.
-		
-//		System.out.println("\n\n");
-//		json = "http://localhost:7474/db/data/node/4237";
-//		HashMap<String, List> listOfNodesAndRelations = repoHandler.executeQuery(json);
-//		printList(listOfNodesAndRelations);
-		
 		System.out.println("\n\n");
-		json = "http://localhost:7474/db/data/node/4237/relationships/all";
+		json = "http://localhost:7474/db/data/node/4237";
 		HashMap<String, List> listOfNodesAndRelations = repoHandler.executeQuery(json);
+		printList(listOfNodesAndRelations);
+		
+		json = "http://localhost:7474/db/data/node/4237/relationships/all";
+		listOfNodesAndRelations = repoHandler.executeQuery(json);
 		listOfNodesAndRelations = repoHandler.executeQuery(json);
 		printList(listOfNodesAndRelations);
 		
@@ -58,9 +56,16 @@ public class CacheManager implements ICacheManager {
 			if(nodeList != null)
 				for(IJsonNode jsonNode: nodeList)
 				{
-					System.out.println(jsonNode.getId());
-					System.out.println(jsonNode.getType());
-					System.out.println(jsonNode.getData().size());
+					System.out.println("Id: "+jsonNode.getId());
+					System.out.println("Type: "+jsonNode.getType());
+					System.out.println("Data size: "+jsonNode.getData().size());
+					Iterator<Entry<String, String>> iterator = jsonNode.getData().entrySet().iterator();
+					while(iterator.hasNext())
+					{
+						Map.Entry dataEntry = (Map.Entry) iterator.next();
+						System.out.println(dataEntry.getKey()+" : "+dataEntry.getValue());
+					}
+					System.out.println();
 				}
 
 			List<IJsonRelation> relationList = listOfNodesAndRelations.get("relationList");
