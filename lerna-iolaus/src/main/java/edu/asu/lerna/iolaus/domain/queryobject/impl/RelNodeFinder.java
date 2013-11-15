@@ -130,6 +130,15 @@ public class RelNodeFinder implements IRelNodeFinder {
 					rnfd1.setNodeList(rnfd.getNodeList());
 					rnfd1.setPath(path1);
 					rnfd = rnf.parseOperatorRel(opOr,rnfd1);
+				}else if (element1.getName().toString().contains("}and")){
+					path1 = path1 +" -> AND";
+					logger.info("We have a AND operator");
+					IOperator opAnd = (IOperator) element1.getValue();
+					IRelNodeFinder rnf = new RelNodeFinder();
+					IRelNodeFinderData rnfd1 = new RelNodeFinderData();
+					rnfd1.setNodeList(rnfd.getNodeList());
+					rnfd1.setPath(path1);
+					rnfd = rnf.parseOperatorRel(opAnd,rnfd1);
 				}
 			}
 		}
@@ -139,8 +148,55 @@ public class RelNodeFinder implements IRelNodeFinder {
 	@Override 
 	public IRelNodeFinderData parseRelNodeRel(IRelNode relNode,IRelNodeFinderData rnfd){
 
+		String path = rnfd.getPath();
+		
+		if(checkForRelationship(relNode)){
+			rnfd.setPath(rnfd.getPath()+" -> Node(Relation)");
+			logger.info("the parent object of this object should  be sent to Karan");
+			UUID random = UUID.randomUUID();
+			rnfd.getNodeList().put(rnfd.getPath()+random,relNode);
+		}
 		INode node = relNode.getNode();
+		List <Object> nodeObjectList = node.getPropertyOrRelationshipOrAnd();
+		Iterator<Object> nodeObjectIterator= nodeObjectList.iterator();
+		while(nodeObjectIterator.hasNext()){
+			String path1=path;
+			Object o = nodeObjectIterator.next();
+			if(o instanceof Property){
 
+			}else if(o instanceof Relationship){
+				
+			}else if(o instanceof JAXBElement<?>){
+				JAXBElement<?> element1 = (JAXBElement<?>) o;
+				if(element1.getName().toString().contains("}or")){
+					path1 = path1 +" -> OR";
+					logger.info("We have a OR operator");
+					IOperator opOr = (IOperator) element1.getValue();
+					IRelNodeFinder rnf = new RelNodeFinder();
+					IRelNodeFinderData rnfd1 = new RelNodeFinderData();
+					rnfd1.setNodeList(rnfd.getNodeList());
+					rnfd1.setPath(path1);
+					rnfd = rnf.parseOperatorRel(opOr,rnfd1);
+				}else if (element1.getName().toString().contains("}and")){
+					path1 = path1 +" -> AND";
+					logger.info("We have a AND operator");
+					IOperator opAnd = (IOperator) element1.getValue();
+					IRelNodeFinder rnf = new RelNodeFinder();
+					IRelNodeFinderData rnfd1 = new RelNodeFinderData();
+					rnfd1.setNodeList(rnfd.getNodeList());
+					rnfd1.setPath(path1);
+					rnfd = rnf.parseOperatorRel(opAnd,rnfd1);
+				}
+			}else{
+				logger.info(o.getClass()+"-----------");
+			}
+
+		}
+		return rnfd;
+	}
+	
+	public boolean checkForRelationship(IRelNode relNode){
+		INode node = relNode.getNode();
 		List <Object> nodeObjectList = node.getPropertyOrRelationshipOrAnd();
 		Iterator<Object> nodeObjectIterator= nodeObjectList.iterator();
 		while(nodeObjectIterator.hasNext()){
@@ -148,13 +204,34 @@ public class RelNodeFinder implements IRelNodeFinder {
 			if(o instanceof Property){
 
 			}else if(o instanceof Relationship){
-				rnfd.setPath(rnfd.getPath()+" -> Node(Relation)");
-				logger.info("the parent object of this object should  be sent to Karan");
-				UUID random = UUID.randomUUID();
-				rnfd.getNodeList().put(rnfd.getPath()+random,relNode);
+				return true;
+			}else if(o instanceof JAXBElement<?>){
+				JAXBElement<?> element1 = (JAXBElement<?>) o;
+				if(element1.getName().toString().contains("}or")){
+					logger.info("We have a OR operator");
+					IOperator opOr = (IOperator) element1.getValue();
+					return parseOperatorFromIRelNode(opOr);
+				}else if (element1.getName().toString().contains("}and")){
+					logger.info("We have a AND operator");
+					IOperator opAnd = (IOperator) element1.getValue();
+					return parseOperatorFromIRelNode(opAnd);
+				}
 			}
 
 		}
-		return rnfd;
+		return false;
+	}
+	
+	
+	public boolean  parseOperatorFromIRelNode(IOperator op){
+		List<Object> objectList = op.getSourceOrTargetOrProperty();
+		Iterator<Object> operatorIterator = objectList.iterator();
+		while(operatorIterator.hasNext()){
+			Object element =operatorIterator.next();
+			if(element instanceof Relationship){
+				return true;
+			}
+		}
+		return false;
 	}
 }
