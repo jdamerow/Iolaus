@@ -419,7 +419,7 @@ public class ObjectToCypher implements IObjectToCypher {
     			IProperty prop = (IProperty) o;
     			propertyObject(prop,propertyOf,startMap,whereMap,currentTarget,currentRelationship);
     			count++;
-    		} else {
+    		} else if(o instanceof JAXBElement){
     			JAXBElement<?> element1 = (JAXBElement<?>) o;
     			if(element1.getName().toString().contains("}or")||element1.getName().toString().contains("}and")){
 					IOperator op = (IOperator) element1.getValue();
