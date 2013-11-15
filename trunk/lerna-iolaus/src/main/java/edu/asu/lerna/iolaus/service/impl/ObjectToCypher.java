@@ -28,6 +28,7 @@ import edu.asu.lerna.iolaus.domain.queryobject.impl.Node;
 import edu.asu.lerna.iolaus.domain.queryobject.impl.Operator;
 import edu.asu.lerna.iolaus.domain.queryobject.impl.Property;
 import edu.asu.lerna.iolaus.domain.queryobject.impl.Relationship;
+import edu.asu.lerna.iolaus.service.ICypherToJson;
 import edu.asu.lerna.iolaus.service.IObjectToCypher;
 @Service
 public class ObjectToCypher implements IObjectToCypher {
@@ -36,19 +37,22 @@ public class ObjectToCypher implements IObjectToCypher {
 			.getLogger(Node.class);
 
 	@Autowired
-	IProperty newProperty;
+	private IProperty newProperty;
+	@Autowired
+	private ICypherToJson cypherToJson;
 	
 	/*String sourceOperator="";
 	String targetOperator="";*/
 	
 	@Override
-	public String objectToCypher(INode node) {
+	public List<Object> objectToCypher(INode node) {
 		
 		Map<String,String> startMap = new LinkedHashMap<String,String>();
 		Map<String,String> matchMap = new LinkedHashMap<String,String>();
 		Map<String,List<String>> whereMap=new LinkedHashMap<String,List<String>>();
 		Map<String,Object> labelToObjectMap=new LinkedHashMap<String,Object>();
 		String dataSet="mblCourses";
+		List<Object> _returnList=new ArrayList<Object>();
 		String sourceOperator=nodeObject(node,PropertyOf.SOURCE,startMap,whereMap,matchMap,labelToObjectMap,dataSet);
 		String start="Start ";
 		String match="Match ";
@@ -60,10 +64,14 @@ public class ObjectToCypher implements IObjectToCypher {
 		ret=buildReturnClause(whereMap.keySet(),startMap.keySet(),ret);
 		String query=buildQuery(start,match,where,ret);
 		logger.info(query);
+		String json=cypherToJson.cypherToJson(query);
+		logger.info(json);
+		_returnList.add(json);
+		_returnList.add(labelToObjectMap);
 		/*for(String temp:labelToObjectMap.keySet()){
 			logger.info(temp);
 		}*/
-		return query;
+		return _returnList;
 	}
 
 	private String buildMatchClause(Map<String, String> matchMap, String match) {
@@ -463,13 +471,14 @@ public class ObjectToCypher implements IObjectToCypher {
 	}
 
 	@Override
-	public String objectToCypher(IRelNode node) {
+	public List<Object> objectToCypher(IRelNode node) {
 		
 		Map<String,String> startMap = new LinkedHashMap<String,String>();
 		Map<String,String> matchMap = new LinkedHashMap<String,String>();
 		Map<String,List<String>> whereMap=new LinkedHashMap<String,List<String>>();
 		Map<String,Object> labelToObjectMap=new LinkedHashMap<String,Object>();
 		String dataSet="mblCourses";
+		List<Object> _returnList=new ArrayList<>();
 		String sourceOperator=nestedRelNodeObject(node,PropertyOf.SOURCE,startMap,whereMap,matchMap,labelToObjectMap,dataSet);
 		String start="Start ";
 		String match="Match ";
@@ -481,7 +490,11 @@ public class ObjectToCypher implements IObjectToCypher {
 		ret=buildReturnClause(whereMap.keySet(),startMap.keySet(),ret);
 		String query=buildQuery(start,match,where,ret);
 		logger.info(query);
-		return query;
+		String json=cypherToJson.cypherToJson(query);
+		logger.info(json);
+		_returnList.add(json);
+		_returnList.add(labelToObjectMap);
+		return _returnList;
 	}
 	
 	@Override
