@@ -28,10 +28,12 @@ public class CypherToJson implements ICypherToJson {
 		int counter=0;
 		String temp=cypher;
 		 while (matcher.find()) {
-			 counter++;
-			 String replacement="{"+p+counter+"}";
-			 paramMap.put("\""+p+counter+"\"", matcher.group());
-			 temp=temp.replaceAll(matcher.group(),replacement );
+			 if(!paramMap.containsValue(matcher.group())){
+				 counter++;
+				 String replacement="{"+p+counter+"}";
+				 paramMap.put("\""+p+counter+"\"", matcher.group());
+				 temp=temp.replaceAll(matcher.group(),replacement );
+			 }
 		 }
 		 query="\""+temp+"\"";
 		 String params="\"params\":{";
