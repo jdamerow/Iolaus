@@ -58,12 +58,14 @@ public class RepositoryManager implements IRepositoryManager{
 			List<Object> nodeListObject = objectToCypher.objectToCypher(n);
 			parseNodeListObject(nodeListObject,allElements,parsedElements);
 			IRelNode relNode=null;
-			while((relNode=allElements.get(counter++))!=null){
-				nodeListObject = objectToCypher.objectToCypher(relNode);
-				parsedElements.add(relNode);
-				parseNodeListObject(nodeListObject,allElements,parsedElements);
-				if(counter==allElements.size()){
-					break;
+			if(allElements.size()!=0){
+				while((relNode=allElements.get(counter++))!=null){
+					nodeListObject = objectToCypher.objectToCypher(relNode);
+					parsedElements.add(relNode);
+					parseNodeListObject(nodeListObject,allElements,parsedElements);
+					if(counter==allElements.size()){
+						break;
+					}
 				}
 			}
 			/*LinkedHashMap<String, IRelNode> nodeList = new LinkedHashMap<String, IRelNode>();
