@@ -13,13 +13,14 @@ import edu.asu.lerna.iolaus.service.ICypherToJson;
 public class CypherToJson implements ICypherToJson {
 	@Override
 	public String cypherToJson(String cypher){
+		System.out.println("***********************************\nCypher Query : "+cypher+"\n***********************************\n");
 		String json="";
 		/*{
 			  "query" : "START x  = node(353) MATCH x -[r]-> n RETURN type(r), n.name, n.age",
 			  "params" : {
 			  }
 			}*/
-		String query="\"query\":"+"\"";
+		String query="\"query\":";
 		String regx="(\")([a-zA-Z0-9_.]*)(\")";
 		Pattern pattern = Pattern.compile(regx);
 		Matcher matcher = pattern.matcher(cypher);

@@ -36,27 +36,22 @@ public interface IObjectToCypher {
 			Map<String, String> startMap, Map<String, List<String>> whereMap,
 			int currentTarget, int currentRelationship, String targetOperator,String dataSet);
 
-
-
-
-	
-	String nestedRelNodeObject(IRelNode relNode, PropertyOf propertyOf,
-			Map<String, String> startMap, Map<String, List<String>> whereMap,
-			Map<String, String> matchMap, Map<String, Object> labelToObjectMap,
-			String dataSet);
-
-	List<Integer> operatorObject(IOperator op, PropertyOf propertyOf,
-			Map<String, String> startMap, Map<String, List<String>> whereMap,
-			Map<String, String> matchMap, Map<String, Object> labelToObjectMap,
-			int currentTarget, int currentRelationship, String dataSet);
-
-	List<Integer> relationshipObject(IRelationship relationship,
-			Map<String, String> startMap, Map<String, List<String>> whereMap,
-			Map<String, String> matchMap, Map<String, Object> labelToObjectMap,
-			int currentTarget, int currentRelationship, String dataSet);
-
 	String nodeObject(INode node, PropertyOf propertyOf,
 			Map<String, String> startMap, Map<String, List<String>> whereMap,
-			Map<String, String> matchMap, Map<String, Object> labelToObjectMap,
+			Map<String, String> matchMap, Map<Object, String> objectToLabelMap,
+			String dataSet);
+	
+	List<Integer> relationshipObject(IRelationship relationship,
+			Map<String, String> startMap, Map<String, List<String>> whereMap,
+			Map<String, String> matchMap, Map<Object, String> objectToLabelMap,
+			int currentTarget, int currentRelationship, String dataSet);
+	String nestedRelNodeObject(IRelNode relNode, PropertyOf propertyOf,
+			Map<String, String> startMap, Map<String, List<String>> whereMap,
+			Map<String, String> matchMap, Map<Object, String> objectToLabelMap,
+			String dataSet);
+	List<Integer> operatorObject(IOperator op, PropertyOf propertyOf,
+			Map<String, String> startMap, Map<String, List<String>> whereMap,
+			Map<String, String> matchMap, Map<Object, String> objectToLabelMap,
+			String targetOperator, int currentTarget, int currentRelationship,
 			String dataSet);
 }
