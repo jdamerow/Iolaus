@@ -46,7 +46,6 @@ import edu.asu.lerna.iolaus.domain.queryobject.IProperty;
  * 
  * 
  */
-@Component
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "")
 @XmlRootElement(name = "property")
