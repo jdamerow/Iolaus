@@ -34,7 +34,7 @@ import edu.asu.lerna.iolaus.service.IObjectToCypher;
 public class ObjectToCypher implements IObjectToCypher {
 	
 	private static final Logger logger = LoggerFactory
-			.getLogger(Node.class);
+			.getLogger(ObjectToCypher.class);
 
 	
 	/*String sourceOperator="";
