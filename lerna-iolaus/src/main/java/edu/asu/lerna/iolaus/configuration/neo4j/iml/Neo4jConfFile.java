@@ -26,4 +26,21 @@ public class Neo4jConfFile {
 	{
 		this.path = path;
 	}
+	
+	public String getDescription()
+	{
+		return description;
+	}
+	public String getHost()
+	{
+		return host;
+	}
+	public String getPath()
+	{
+		return path;
+	}
+	public String getTitle()
+	{
+		return title;
+	}
 }
