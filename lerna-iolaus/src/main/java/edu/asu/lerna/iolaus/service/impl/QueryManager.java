@@ -57,7 +57,20 @@ public class QueryManager implements IQueryManager {
 		//TODO: Make a decision to send nodes or relations or both in xml
 		//TODO: call this.getRESTOutput with the decision
 		
-		return "test";
+		if(inputXML.contains("<node return=\"true\">") && inputXML.contains("<relationship return=\"true\">"))
+		{
+			return getRESTOutput(null, true, true);
+		}
+		else if(inputXML.contains("<node return=\"true\">"))
+		{
+			return getRESTOutput(null, true, false);
+		}
+		else if(inputXML.contains("<relationship return=\"true\">"))
+		{
+			return getRESTOutput(null, false, true);
+		}
+			
+		return getRESTOutput(null, false, false);
 	}
 	
 	
