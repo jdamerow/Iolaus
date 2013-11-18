@@ -2,6 +2,7 @@ package edu.asu.lerna.iolaus.configuration.neo4j.iml;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Iterator;
 
 import javax.annotation.PostConstruct;
 
@@ -17,4 +18,13 @@ public class Neo4jRegistry {
 		fileList = fileReader.getNeo4jConfFiles();
 	}
 	
+	void print (ArrayList<Neo4jConfFile> filelist)
+	{
+		Iterator<Neo4jConfFile> it = filelist.iterator();
+		while(it.hasNext())
+		{
+			Neo4jConfFile fileelement = it.next();
+			System.out.println("File details:" +fileelement.getDescription()+ "\n" + fileelement.getTitle());
+		}
+	}
 }
