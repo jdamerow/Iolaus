@@ -10,12 +10,19 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 public class Neo4jRegistry {
 
-	@Autowired Neo4jConfFileReader fileReader;
+	@Autowired 
+	Neo4jConfFileReader fileReader;
+	@Autowired
 	ArrayList<Neo4jConfFile> fileList;
 	
 	@PostConstruct void init() throws IOException
 	{
 		fileList = fileReader.getNeo4jConfFiles();
+	}
+	
+	public ArrayList<Neo4jConfFile> getfileList()
+	{
+		return this.fileList;
 	}
 	
 	void print (ArrayList<Neo4jConfFile> filelist)
