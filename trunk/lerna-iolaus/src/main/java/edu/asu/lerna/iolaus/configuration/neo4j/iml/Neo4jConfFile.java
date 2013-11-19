@@ -1,5 +1,8 @@
 package edu.asu.lerna.iolaus.configuration.neo4j.iml;
 
+import org.springframework.stereotype.Service;
+
+@Service
 public class Neo4jConfFile {
 
 	private String title;
