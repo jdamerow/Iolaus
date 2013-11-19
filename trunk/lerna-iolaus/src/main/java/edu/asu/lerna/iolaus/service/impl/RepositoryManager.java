@@ -1,10 +1,12 @@
 package edu.asu.lerna.iolaus.service.impl;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.xml.bind.JAXBElement;
 
@@ -17,6 +19,8 @@ import org.springframework.stereotype.Service;
 import edu.asu.lerna.iolaus.domain.queryobject.INode;
 import edu.asu.lerna.iolaus.domain.queryobject.IQuery;
 import edu.asu.lerna.iolaus.domain.queryobject.IRelNode;
+import edu.asu.lerna.iolaus.domain.queryobject.PropertyOf;
+import edu.asu.lerna.iolaus.domain.queryobject.impl.Node;
 import edu.asu.lerna.iolaus.domain.queryobject.impl.RelNode;
 import edu.asu.lerna.iolaus.service.ICacheManager;
 import edu.asu.lerna.iolaus.service.IObjectToCypher;
@@ -49,20 +53,25 @@ public class RepositoryManager implements IRepositoryManager{
 	public void breakdownQuery(IQuery q)
 	{
 		INode n = q.getNode();
-		//TODO call karan's Node function 
-		List<IRelNode> parsedElements=new ArrayList<IRelNode>();
-		List<IRelNode> allElements=new ArrayList<IRelNode>();
+		Map<IRelNode,String> parsedElements=new LinkedHashMap<IRelNode,String>();
+		Map<IRelNode,String> allElements=new LinkedHashMap<IRelNode,String>();
+		Map<String,List<List<String>>> nestedProblemMap=new HashMap<String, List<List<String>>>();
+		Map<String,String> targetJsonMap=new HashMap<String,String>();
+		int targetCounter=1;
 		int counter=0;
+		String source="";
+		List<IRelNode> keyElements=new ArrayList<IRelNode>();
 		if(n!=null){
-			//TODO: Call Karan's mapping code here
 			List<Object> nodeListObject = objectToCypher.objectToCypher(n);
-			parseNodeListObject(nodeListObject,allElements,parsedElements);
+			source=PropertyOf.SOURCE.toString();
+			targetCounter=parseNodeListObject(nodeListObject,allElements,parsedElements,nestedProblemMap,targetJsonMap,targetCounter,keyElements,source);
 			IRelNode relNode=null;
-			if(allElements.size()!=0){
-				while((relNode=allElements.get(counter++))!=null){
+			if(keyElements.size()!=0){
+				while((relNode=keyElements.get(counter++))!=null){
 					nodeListObject = objectToCypher.objectToCypher(relNode);
-					parsedElements.add(relNode);
-					parseNodeListObject(nodeListObject,allElements,parsedElements);
+					source=allElements.get(relNode);
+					parsedElements.put(relNode,source);
+					targetCounter=parseNodeListObject(nodeListObject,allElements,parsedElements,nestedProblemMap,targetJsonMap,targetCounter,keyElements,source);
 					if(counter==allElements.size()){
 						break;
 					}
@@ -78,7 +87,7 @@ public class RepositoryManager implements IRepositoryManager{
 			logger.info("Node List "+rnfd.getNodeList().size());
 			for (final String key : nodeList.keySet()) {
 				IRelNode rn= nodeList.get(key);
-				//TODO: call karan's mapping code for RELNODE
+				//
 				List<Object> nodeListObject1 = objectToCypher.objectToCypher(rn);
 				parseNodeListObject(nodeListObject1);
 				if(rn!=null){
@@ -94,15 +103,25 @@ public class RepositoryManager implements IRepositoryManager{
 		//throw new NotImplementedException("Not yet implemented");
 	}
 	
-	public void parseNodeListObject(List<Object> nodeListObject, List<IRelNode> allElements, List<IRelNode> parsedElements){
+	public int parseNodeListObject(List<Object> nodeListObject, Map<IRelNode, String> allElements, Map<IRelNode, String> parsedElements, Map<String, List<List<String>>> nestedProblemMap, Map<String, String> targetJsonMap, int targetCounter, List<IRelNode> keyElements, String source){
 		String jsonQuery = (String) nodeListObject.get(0);
-		Map<Object,String> labelToObjectMap = (LinkedHashMap<Object,String>) nodeListObject.get(1);
+		Map<Object,String> objectToLabelMap = (LinkedHashMap<Object,String>) nodeListObject.get(1);
+		targetJsonMap.put(source, jsonQuery);
 		logger.info("***********************************\nJson Query : "+jsonQuery+"\n***********************************\n");
-		for (Map.Entry<Object, String> entry : labelToObjectMap.entrySet()){
+		List<String> subProblemList=new ArrayList<String>();
+		List<List<String>> problemList=new ArrayList<List<String>>();
+		String lastTarget="";
+		for (Map.Entry<Object, String> entry : objectToLabelMap.entrySet()){
 		    Object obj=entry.getKey();
-			if(obj instanceof RelNode){
+		    if(obj instanceof RelNode){
 				IRelNode relNode=(IRelNode)obj;
-		    	if(!parsedElements.contains(relNode)){
+		    	if(!parsedElements.containsKey(relNode)){
+		    		if(!objectToLabelMap.get(relNode).equals(lastTarget)){
+		    			subProblemList=new ArrayList<String>();
+		    			problemList.add(subProblemList);
+		    		}
+		    		subProblemList.add(PropertyOf.TARGET.toString()+targetCounter);
+		    		System.out.println(PropertyOf.TARGET.toString()+"->"+targetCounter+objectToLabelMap.get(relNode));
 		    		INode node=relNode.getNode();
 		    		List<Object> nodeDetails = node.getPropertyOrRelationshipOrAnd();
 		    		Iterator<Object> nodeDetailsIterator = nodeDetails.iterator();
@@ -111,15 +130,19 @@ public class RepositoryManager implements IRepositoryManager{
 		    			if(o instanceof JAXBElement){
 		    				JAXBElement<?> element = (JAXBElement<Object>) o;
 		    				if(element.getName().toString().contains("}and")||element.getName().toString().contains("}or")){
-		    					allElements.add(relNode);
+		    					allElements.put(relNode,PropertyOf.TARGET.toString()+targetCounter);
+		    					keyElements.add(relNode);
 		    					break;
 		    				}
 		    			}	
 		    		}
+		    		targetCounter+=1;
+		    		lastTarget=objectToLabelMap.get(relNode);
 		    	}
-				
 			}
 		}
+		nestedProblemMap.put(source, problemList);
+		return targetCounter;
 	}
 	
 	@Override
