@@ -9,6 +9,8 @@ import java.util.Map.Entry;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import edu.asu.lerna.iolaus.configuration.neo4j.iml.Neo4jConfFile;
+import edu.asu.lerna.iolaus.configuration.neo4j.iml.Neo4jRegistry;
 import edu.asu.lerna.iolaus.domain.json.IJsonNode;
 import edu.asu.lerna.iolaus.domain.json.IJsonRelation;
 import edu.asu.lerna.iolaus.service.ICacheManager;
@@ -21,6 +23,8 @@ public class CacheManager implements ICacheManager {
 //	private List<IRepositoryHandler> repoHanlders;
 	@Autowired
 	private IRepositoryHandler repoHandler;
+	@Autowired
+	private Neo4jRegistry neo4jInstances;
 
 	public CacheManager()
 	{
@@ -33,7 +37,11 @@ public class CacheManager implements ICacheManager {
 	{
 		//TODO: Iterate through each repository and for each repository fetch the result.
 		System.out.println("\n\n");
-		json = "http://localhost:7474/db/data/node/4237";
+		Iterator<Neo4jConfFile> fileIterator = neo4jInstances.getfileList().iterator();
+		while(fileIterator.hasNext())
+		{
+
+		json = fileIterator.next().getPath();
 		HashMap<String, List> listOfNodesAndRelations = repoHandler.executeQuery(json);
 		printList(listOfNodesAndRelations);
 		
@@ -43,7 +51,7 @@ public class CacheManager implements ICacheManager {
 		printList(listOfNodesAndRelations);
 		
 		//TODO: Add the result to the resultList	
-		
+		}
 				
 	}
 	

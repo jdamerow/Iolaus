@@ -7,12 +7,14 @@ import java.util.Iterator;
 import javax.annotation.PostConstruct;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
+@Service
 public class Neo4jRegistry {
 
 	@Autowired 
 	Neo4jConfFileReader fileReader;
-	@Autowired
+	
 	ArrayList<Neo4jConfFile> fileList;
 	
 	@PostConstruct void init() throws IOException
