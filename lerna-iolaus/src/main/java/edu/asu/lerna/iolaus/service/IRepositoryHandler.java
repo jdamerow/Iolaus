@@ -5,6 +5,6 @@ import java.util.List;
 
 public interface IRepositoryHandler {
 
-	public abstract HashMap<String, List> executeQuery(String json);
+	public abstract List<List> executeQuery(String json);
 
 }

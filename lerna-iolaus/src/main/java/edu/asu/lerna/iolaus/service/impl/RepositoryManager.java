@@ -42,7 +42,7 @@ public class RepositoryManager implements IRepositoryManager{
 	public void executeQuery(IQuery q)
 	{
 		List<Object> treeStructure=breakdownQuery(q);
-		
+		cacheManager.executeQuery(null);
 		//TODO: Execute cypher by calling the cache manager
 		//cacheManager.executeQuery("");
 	}
