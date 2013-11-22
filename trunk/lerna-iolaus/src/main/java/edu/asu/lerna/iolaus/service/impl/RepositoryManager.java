@@ -6,7 +6,9 @@ import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
+import java.util.Stack;
 
 import javax.xml.bind.JAXBElement;
 
@@ -42,9 +44,89 @@ public class RepositoryManager implements IRepositoryManager{
 	public void executeQuery(IQuery q)
 	{
 		List<Object> treeStructure=breakdownQuery(q);
-		cacheManager.executeQuery(null);
+		postOrderTreeTraversal(treeStructure);
+		//cacheManager.executeQuery(null);
 		//TODO: Execute cypher by calling the cache manager
 		//cacheManager.executeQuery("");
+	}
+	@SuppressWarnings("unchecked")
+	private void postOrderTreeTraversal(List<Object> treeStructure) {
+		Map<String,List<List<String>>> nestedProblemMap=(Map<String, List<List<String>>>) treeStructure.get(0);
+		Map<String,String> targetJsonMap=(Map<String, String>) treeStructure.get(1);
+		Map<String,String> oldLabelToNewLabelMap=(Map<String, String>) treeStructure.get(2);
+		Map<String,List<Integer>> currentChildMap=new HashMap<String, List<Integer>>();
+		initializeCurrentChildCounter(currentChildMap,nestedProblemMap);
+		Stack<String> stack=new Stack<String>();
+		String source=PropertyOf.SOURCE.toString();
+		String root=source;
+		System.out.println(nestedProblemMap);
+		int outerCount=0;
+		int innerCount=0;
+		boolean flag=true;
+		do{
+			while(flag){
+				if(!nestedProblemMap.containsKey(root)){
+					System.out.println("***"+root);
+					break;
+				}
+				innerCount=currentChildMap.get(root).get(1);
+				outerCount=currentChildMap.get(root).get(0);
+				int i=0;
+				for(List<String >childList:nestedProblemMap.get(root)){
+					int j=0;
+					for(String siblings:childList){
+						if(i!=outerCount){
+							if(nestedProblemMap.containsKey(siblings)){
+								stack.push(siblings);
+							}
+						}else{
+							if(i!=innerCount){
+								if(nestedProblemMap.containsKey(siblings)){
+									stack.push(siblings);
+								}
+							}
+						}
+						j++;
+					}
+					i++;
+				}
+				if(nestedProblemMap.get(root).get(outerCount).size()-1>=innerCount+1){
+					currentChildMap.get(root).set(1, innerCount+1);
+				}
+				else if(nestedProblemMap.get(root).size()-1>outerCount+1) {
+					currentChildMap.get(root).set(0, outerCount+1);
+					currentChildMap.get(root).set(1, 0);
+				}else{
+					currentChildMap.get(root).set(0, -1);
+					currentChildMap.get(root).set(1, -1);
+				}
+				stack.push(root);
+				root=nestedProblemMap.get(root).get(outerCount).get(innerCount);
+			}
+			root=stack.pop();
+			if(currentChildMap.get(root).get(0)!=-1){
+				String parent=root;
+				root=stack.pop();
+				stack.push(parent);
+				flag=true;
+			}else{
+				System.out.println(root);
+				flag=false;
+			}
+		}while(!stack.isEmpty());
+	}
+	
+	
+	
+	private void initializeCurrentChildCounter(Map<String, List<Integer>> currentChildMap,
+			Map<String, List<List<String>>> nestedProblemMap) {
+		
+		for(Entry<String, List<List<String>>> entry:nestedProblemMap.entrySet()){
+			List<Integer> currentCountList=new ArrayList<Integer>();
+			currentCountList.add(0);
+			currentCountList.add(0);
+			currentChildMap.put(entry.getKey(), currentCountList);
+		}
 	}
 	/**
 	 * @author Karan
