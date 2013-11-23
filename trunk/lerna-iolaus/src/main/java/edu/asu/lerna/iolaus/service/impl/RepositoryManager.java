@@ -18,6 +18,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import scala.sys.Prop;
+
+import edu.asu.lerna.iolaus.domain.json.IJsonNode;
+import edu.asu.lerna.iolaus.domain.json.IJsonRelation;
 import edu.asu.lerna.iolaus.domain.queryobject.INode;
 import edu.asu.lerna.iolaus.domain.queryobject.IQuery;
 import edu.asu.lerna.iolaus.domain.queryobject.IRelNode;
@@ -45,9 +49,62 @@ public class RepositoryManager implements IRepositoryManager{
 	{
 		List<Object> treeStructure=breakdownQuery(q);
 		postOrderTreeTraversal(treeStructure);
-		//cacheManager.executeQuery(null);
+		
 		//TODO: Execute cypher by calling the cache manager
 		//cacheManager.executeQuery("");
+	}
+	@SuppressWarnings("rawtypes")
+	private Map<String, Map<String, Object>> processResults(List<List> results) {
+		Map<String, Map<String, Object>> processedResults=new LinkedHashMap<String,Map<String,Object>>();
+		String target="_t";
+		String rel="_r";
+		Map<String,Object> column;
+		if(results != null)
+		{
+			for(List rowList: results)
+			{
+				//System.out.println("--------------------------------------------");
+				int i=0;
+				for(Object obj: rowList)
+				{
+					
+					if(obj instanceof IJsonNode)
+					{
+						IJsonNode jsonNode = (IJsonNode) obj;
+						String current;
+						if(i==0){
+							current=PropertyOf.SOURCE.toString();
+						}else{
+							current=target+i;
+						}
+						if(!processedResults.containsKey(current)){
+							column=new LinkedHashMap<String,Object>();
+							processedResults.put(current, column);
+						}
+						else{
+							column=processedResults.get(current);
+						}
+						column.put(jsonNode.getId(),jsonNode);
+					}
+					else if(obj instanceof IJsonRelation)
+					{
+						IJsonRelation jsonRelation = (IJsonRelation) obj;
+						if(!processedResults.containsKey(rel+i)){
+							column=new LinkedHashMap<String,Object>();
+							processedResults.put(rel+i, column);
+						}
+						else{
+							column=processedResults.get(rel+i);
+						}
+						column.put(jsonRelation.getId(),jsonRelation);
+					}
+					i++;
+				}
+				//System.out.println("--------------------------------------------");
+			}
+		}
+	
+		return processedResults;
 	}
 	@SuppressWarnings("unchecked")
 	private void postOrderTreeTraversal(List<Object> treeStructure) {
@@ -55,6 +112,7 @@ public class RepositoryManager implements IRepositoryManager{
 		Map<String,String> targetJsonMap=(Map<String, String>) treeStructure.get(1);
 		Map<String,String> oldLabelToNewLabelMap=(Map<String, String>) treeStructure.get(2);
 		Map<String,List<Integer>> currentChildMap=new HashMap<String, List<Integer>>();
+		Map<String,Map<String,Map<String,Object>>>aggregateResults=new HashMap<String, Map<String,Map<String,Object>>>();
 		initializeCurrentChildCounter(currentChildMap,nestedProblemMap);
 		Stack<String> stack=new Stack<String>();
 		String source=PropertyOf.SOURCE.toString();
@@ -110,6 +168,9 @@ public class RepositoryManager implements IRepositoryManager{
 				stack.push(parent);
 				flag=true;
 			}else{
+				/*List<List> results=cacheManager.executeQuery(null);
+				Map<String,Map<String,Object>> processedResults=processResults(results);
+				aggregateResults(aggregateResults,processedResults,nestedProblemMap,root);*/
 				System.out.println(root);
 				flag=false;
 			}
@@ -118,6 +179,68 @@ public class RepositoryManager implements IRepositoryManager{
 	
 	
 	
+	private void aggregateResults(
+			Map<String, Map<String, Map<String, Object>>> aggregateResults,
+			Map<String, Map<String, Object>> processedResults,
+			Map<String, List<List<String>>> nestedProblemMap, String root) {
+			
+			Map<Integer,Map<String,Map<String,Object>>> tempResults=new LinkedHashMap<Integer,Map<String, Map<String,Object>>>();
+			int outerForCounter=0;
+			for(List<String> childs:nestedProblemMap.get(root)){
+				for(String sibling:childs){
+					if(nestedProblemMap.containsKey(sibling)){
+						unionOfResults(aggregateResults,tempResults,outerForCounter,sibling);
+					}	
+				}
+			}
+			
+			
+	}
+	private void unionOfResults(
+			Map<String, Map<String, Map<String, Object>>> aggregateResults,
+			Map<Integer, Map<String, Map<String, Object>>> tempResults,
+			int outerForCounter, String sibling) {
+		
+		Map<String, Map<String, Object>> childResult;
+		if(!tempResults.containsKey(outerForCounter)){
+			tempResults.put(outerForCounter, aggregateResults.get(sibling));
+		}else{
+			childResult=tempResults.get(outerForCounter);
+			Map<String,Map<String,Object>> siblingResult=aggregateResults.get(sibling);
+			String source=PropertyOf.SOURCE.toString();
+			Iterator<Entry<String, Map<String, Object>>> itr = siblingResult.entrySet().iterator();
+			Iterator<Entry<String,Object>>[] iterator=new Iterator[siblingResult.size()];
+			String[] labels=new String[siblingResult.size()];
+			int i=0;
+			while(itr.hasNext()){
+				 Map.Entry pairs = (Map.Entry)itr.next();
+				 Map<String,Object> column=(Map<String, Object>) pairs.getValue();
+				 labels[i]=(String)pairs.getKey();
+				 iterator[i++]=column.entrySet().iterator();
+			}
+			Map<String,Object> sourceColumn;
+			while(iterator[0].hasNext()){
+				boolean flag=false;
+				for(i=0;i<siblingResult.size();i++){
+					sourceColumn=childResult.get(labels[i]);
+					Map.Entry pairs = (Map.Entry)iterator[i].next();
+					String key=(String)pairs.getKey();
+					 Object value=pairs.getValue();
+					 if(i==0){
+						if(!sourceColumn.containsKey(key)){
+							 sourceColumn.put(key, value);
+							 flag=true;
+						 }
+					 }
+					 if(flag){
+						 sourceColumn.put(key, value);
+					 }
+				 }
+			}
+		}
+		
+			
+	}
 	private void initializeCurrentChildCounter(Map<String, List<Integer>> currentChildMap,
 			Map<String, List<List<String>>> nestedProblemMap) {
 		
