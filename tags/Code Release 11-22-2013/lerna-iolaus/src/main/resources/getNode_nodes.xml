@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<query 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+		xmlns="http://digitalhps.org/lerna-query-model" 
+		xsi:schemaLocation="http://digitalhps.org/lerna-query-model query-schema.xsd">
+    <database id="2"/>
+    <dataset id = "mblcourses" />
+    <node return="true">
+        <and>
+            <property name="type" value="Person" />        
+            <relationship return="true">
+                <property name="type" value="hasLocation" />
+                <property name="date" type="range" start="1900" end="1920" />
+                <or>
+                    <target>
+                        <node>
+                            <property name="type" value="Location" />
+                            <property name="city" value="Alberta" />
+                        </node>
+                    </target>
+                    <target>
+                        <node>
+                            <property name="type" value="Location" />
+                            <property name="city" value="Yonkers" />
+                        </node>
+                    </target>
+                </or>
+            </relationship>
+        </and>
+    </node>      
+</query>
