@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -22,6 +23,7 @@ import scala.sys.Prop;
 
 import edu.asu.lerna.iolaus.domain.json.IJsonNode;
 import edu.asu.lerna.iolaus.domain.json.IJsonRelation;
+import edu.asu.lerna.iolaus.domain.json.impl.JsonNode;
 import edu.asu.lerna.iolaus.domain.queryobject.INode;
 import edu.asu.lerna.iolaus.domain.queryobject.IQuery;
 import edu.asu.lerna.iolaus.domain.queryobject.IRelNode;
@@ -54,17 +56,19 @@ public class RepositoryManager implements IRepositoryManager{
 		//cacheManager.executeQuery("");
 	}
 	@SuppressWarnings("rawtypes")
-	private Map<String, Map<String, Object>> processResults(List<List> results) {
-		Map<String, Map<String, Object>> processedResults=new LinkedHashMap<String,Map<String,Object>>();
-		String target="_t";
-		String rel="_r";
-		Map<String,Object> column;
+	private Map<String, List<Object>> processResults(List<List> results) {
+		Map<String, List<Object>> processedResults=new LinkedHashMap<String,List<Object>>();
+		String target=PropertyOf.TARGET.toString();
+		String rel=PropertyOf.RELATION.toString();
+		List<Object> column;
 		if(results != null)
 		{
 			for(List rowList: results)
 			{
 				//System.out.println("--------------------------------------------");
-				int i=0;
+				int targetCount=1;
+				int relationshipCount=1;
+				boolean flag=true;
 				for(Object obj: rowList)
 				{
 					
@@ -72,33 +76,35 @@ public class RepositoryManager implements IRepositoryManager{
 					{
 						IJsonNode jsonNode = (IJsonNode) obj;
 						String current;
-						if(i==0){
+						if(flag){
 							current=PropertyOf.SOURCE.toString();
+							flag=false;
 						}else{
-							current=target+i;
+							current=target+targetCount;
+							targetCount++;
 						}
 						if(!processedResults.containsKey(current)){
-							column=new LinkedHashMap<String,Object>();
+							column=new LinkedList<Object>();
 							processedResults.put(current, column);
 						}
 						else{
 							column=processedResults.get(current);
 						}
-						column.put(jsonNode.getId(),jsonNode);
+						column.add(jsonNode);
 					}
 					else if(obj instanceof IJsonRelation)
 					{
 						IJsonRelation jsonRelation = (IJsonRelation) obj;
-						if(!processedResults.containsKey(rel+i)){
-							column=new LinkedHashMap<String,Object>();
-							processedResults.put(rel+i, column);
+						if(!processedResults.containsKey(rel+relationshipCount)){
+							column=new LinkedList<Object>();
+							processedResults.put(rel+relationshipCount, column);
 						}
 						else{
-							column=processedResults.get(rel+i);
+							column=processedResults.get(rel+relationshipCount);
 						}
-						column.put(jsonRelation.getId(),jsonRelation);
+						column.add(jsonRelation);
+						relationshipCount++;
 					}
-					i++;
 				}
 				//System.out.println("--------------------------------------------");
 			}
@@ -112,7 +118,7 @@ public class RepositoryManager implements IRepositoryManager{
 		Map<String,String> targetJsonMap=(Map<String, String>) treeStructure.get(1);
 		Map<String,String> oldLabelToNewLabelMap=(Map<String, String>) treeStructure.get(2);
 		Map<String,List<Integer>> currentChildMap=new HashMap<String, List<Integer>>();
-		Map<String,Map<String,Map<String,Object>>>aggregateResults=new HashMap<String, Map<String,Map<String,Object>>>();
+		Map<String,Map<String,List<Object>>>aggregateResults=new HashMap<String, Map<String,List<Object>>>();
 		initializeCurrentChildCounter(currentChildMap,nestedProblemMap);
 		Stack<String> stack=new Stack<String>();
 		String source=PropertyOf.SOURCE.toString();
@@ -168,9 +174,9 @@ public class RepositoryManager implements IRepositoryManager{
 				stack.push(parent);
 				flag=true;
 			}else{
-				/*List<List> results=cacheManager.executeQuery(null);
-				Map<String,Map<String,Object>> processedResults=processResults(results);
-				aggregateResults(aggregateResults,processedResults,nestedProblemMap,root);*/
+				List<List> results=cacheManager.executeQuery(null);
+				Map<String,List<Object>> processedResults=processResults(results);
+				aggregateResults(aggregateResults,processedResults,nestedProblemMap,root);
 				System.out.println(root);
 				flag=false;
 			}
@@ -180,11 +186,10 @@ public class RepositoryManager implements IRepositoryManager{
 	
 	
 	private void aggregateResults(
-			Map<String, Map<String, Map<String, Object>>> aggregateResults,
-			Map<String, Map<String, Object>> processedResults,
+			Map<String, Map<String, List<Object>>> aggregateResults,
+			Map<String, List<Object>> processedResults,
 			Map<String, List<List<String>>> nestedProblemMap, String root) {
-			
-			Map<Integer,Map<String,Map<String,Object>>> tempResults=new LinkedHashMap<Integer,Map<String, Map<String,Object>>>();
+			Map<Integer,Map<String,List<Object>>> tempResults=new LinkedHashMap<Integer,Map<String, List<Object>>>();
 			int outerForCounter=0;
 			for(List<String> childs:nestedProblemMap.get(root)){
 				for(String sibling:childs){
@@ -192,55 +197,131 @@ public class RepositoryManager implements IRepositoryManager{
 						unionOfResults(aggregateResults,tempResults,outerForCounter,sibling);
 					}	
 				}
+				outerForCounter++;
 			}
-			
+			Map<String, List<Object>> parentResult=new LinkedHashMap<String, List<Object>>();
+			intersectionWithParent(parentResult,processedResults,tempResults);
 			
 	}
+	private void intersectionWithParent(
+			Map<String, List<Object>> parentResult,
+			Map<String, List<Object>> processedResults,
+			Map<Integer, Map<String, List<Object>>> childResults) {
+		
+		int targetCount=1;
+		int relationshipCount=1;
+		Map<String, List<Object>> intermediateResults=new LinkedHashMap<String, List<Object>>();
+		Iterator<Entry<String, List<Object>>> processedResultsIterator = processedResults.entrySet().iterator();
+		Iterator<Entry<String, List<Object>>> tempResultsIterator = childResults.get(0).entrySet().iterator();
+		Map<Integer,Iterator<Object>> iterator=new HashMap<Integer,Iterator<Object>>();
+		String[] labels=new String[processedResults.size()];
+		int i=0;
+		boolean flag=true;
+		while(processedResultsIterator.hasNext()){
+			 Map.Entry<String,List<Object>> pairs = (Map.Entry<String,List<Object>>)processedResultsIterator.next();
+			 List<Object> column=(List<Object>) pairs.getValue();
+			 String label="";
+			 if(column.get(0) instanceof JsonNode){
+				 if(flag){
+					 flag=false;
+					 label=PropertyOf.SOURCE.toString();
+				 }else{
+					 label=PropertyOf.TARGET.toString()+targetCount;
+					 targetCount++;
+				 }
+			 }else{
+				 label=PropertyOf.RELATION.toString()+relationshipCount;
+				 relationshipCount++;
+			 }
+			 labels[i]=label;
+			 iterator.put(i++, column.iterator());
+		}
+		int startOfTempResults=i;
+		
+		while(tempResultsIterator.hasNext()){
+			 Map.Entry<String,List<Object>> pairs = (Map.Entry<String,List<Object>>)tempResultsIterator.next();
+			 List<Object> column=(List<Object>) pairs.getValue();
+			 String label="";
+			 if(column.get(0) instanceof JsonNode){
+				 if(flag){
+					 flag=false;
+					 label=PropertyOf.SOURCE.toString();
+				 }else{
+					 label=PropertyOf.TARGET.toString()+targetCount;
+					 targetCount++;
+				 }
+			 }else{
+				 label=PropertyOf.RELATION.toString()+relationshipCount;
+				 relationshipCount++;
+			 }
+			 labels[i]=label;
+			 iterator.put(i++, column.iterator());
+		}
+		List<Object> row;
+		while(iterator.get(0).hasNext()){
+			row=new LinkedList<Object>();
+			for(i=0;i<startOfTempResults;i++){
+				row.add(iterator.get(i).next());
+			}
+			JsonNode node=(JsonNode)row.get(0);
+			String id=node.getId();
+			Map<Integer,List<Object>> matchedRows = new LinkedHashMap<Integer, List<Object>>();
+			int rowCount=0;
+			while(iterator.get(startOfTempResults).hasNext()){
+				JsonNode n=(JsonNode) iterator.get(startOfTempResults).next();
+				List<Object> _newRow=null;
+				flag=false;
+				if(n.getId().equals(id)){
+					_newRow=new LinkedList<Object>();
+					flag=true;
+				}	
+				for(int j=startOfTempResults+1;j<labels.length;j++){
+					Object obj=iterator.get(j).next();
+					if(flag){
+						matchedRows.put(rowCount++, _newRow);
+						_newRow.add(obj);
+					}
+				}
+			}
+			if(rowCount!=0){
+				//TODO:Take cartesian product of row with matchedRows 
+			}
+		}
+		
+		
+	}
 	private void unionOfResults(
-			Map<String, Map<String, Map<String, Object>>> aggregateResults,
-			Map<Integer, Map<String, Map<String, Object>>> tempResults,
+			Map<String, Map<String, List<Object>>> aggregateResults,
+			Map<Integer, Map<String, List<Object>>> tempResults,
 			int outerForCounter, String sibling) {
 		
-		Map<String, Map<String, Object>> childResult;
+		Map<String, List<Object>> childResult;
 		if(!tempResults.containsKey(outerForCounter)){
 			tempResults.put(outerForCounter, aggregateResults.get(sibling));
 		}else{
 			childResult=tempResults.get(outerForCounter);
-			Map<String,Map<String,Object>> siblingResult=aggregateResults.get(sibling);
-			String source=PropertyOf.SOURCE.toString();
-			Iterator<Entry<String, Map<String, Object>>> itr = siblingResult.entrySet().iterator();
-			Iterator<Entry<String,Object>>[] iterator=new Iterator[siblingResult.size()];
+			Map<String,List<Object>> siblingResult=aggregateResults.get(sibling);
+			Iterator<Entry<String, List<Object>>> itr = siblingResult.entrySet().iterator();
+			Map<Integer,Iterator<Object>> iterator=new HashMap<Integer,Iterator<Object>>();
 			String[] labels=new String[siblingResult.size()];
 			int i=0;
 			while(itr.hasNext()){
-				 Map.Entry pairs = (Map.Entry)itr.next();
-				 Map<String,Object> column=(Map<String, Object>) pairs.getValue();
-				 labels[i]=(String)pairs.getKey();
-				 iterator[i++]=column.entrySet().iterator();
+				 Map.Entry<String,List<Object>> pairs = (Map.Entry<String,List<Object>>)itr.next();
+				 List<Object> column=(List<Object>) pairs.getValue();
+				 labels[i]=pairs.getKey();
+				 iterator.put(i++, column.iterator());
 			}
-			Map<String,Object> sourceColumn;
-			while(iterator[0].hasNext()){
-				boolean flag=false;
+			List<Object> sourceColumn;
+			while(iterator.get(0).hasNext()){
 				for(i=0;i<siblingResult.size();i++){
 					sourceColumn=childResult.get(labels[i]);
-					Map.Entry pairs = (Map.Entry)iterator[i].next();
-					String key=(String)pairs.getKey();
-					 Object value=pairs.getValue();
-					 if(i==0){
-						if(!sourceColumn.containsKey(key)){
-							 sourceColumn.put(key, value);
-							 flag=true;
-						 }
-					 }
-					 if(flag){
-						 sourceColumn.put(key, value);
-					 }
+					Object value = iterator.get(i).next();
+					sourceColumn.add(value);
 				 }
 			}
-		}
-		
-			
+		}	
 	}
+	
 	private void initializeCurrentChildCounter(Map<String, List<Integer>> currentChildMap,
 			Map<String, List<List<String>>> nestedProblemMap) {
 		
