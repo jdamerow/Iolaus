@@ -2,29 +2,39 @@ package edu.asu.lerna.iolaus.configuration.neo4j.iml;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Iterator;
+import java.util.List;
 
 import javax.annotation.PostConstruct;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+/**
+ * @author Veena Borannagowda
+ * 
+ * Returns the configuration details of all the registered neo4j instances   
+ *
+ */
+
 @Service
 public class Neo4jRegistry {
 
 	@Autowired 
-	Neo4jConfFileReader fileReader;
+	private Neo4jConfFileReader fileReader;
 	
-	ArrayList<Neo4jConfFile> fileList;
+	private List<Neo4jConfFile> fileList;
 	
 	@PostConstruct void init() throws IOException
 	{
 		fileList = fileReader.getNeo4jConfFiles();
 	}
 	
-	public ArrayList<Neo4jConfFile> getfileList()
+	public List<Neo4jConfFile> getfileList()
 	{
-		return this.fileList;
+		return Collections.unmodifiableList(this.fileList);
 	}
 	
 	void print (ArrayList<Neo4jConfFile> filelist)

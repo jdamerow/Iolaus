@@ -30,12 +30,13 @@ public class RepositoryHandler implements IRepositoryHandler {
 
 
 	@Override
-	public List<List> executeQuery(String jsonTraverserPayload)
+	public List<List> executeQuery(String jsonTraverserPayload, String neo4jInstance)
 	{
 		URI traverserUri = null;
 
 		try {
 			traverserUri = new URI( "http://localhost:7474/db/data/cypher" );
+			//traverserUri = new URI( neo4jInstance );
 		} catch (URISyntaxException e1) {
 			e1.printStackTrace();
 		}
