@@ -35,7 +35,7 @@ public class CacheManager implements ICacheManager {
 	}
 
 	@Override
-	public void executeQuery(String json)
+	public List<List> executeQuery(String json)
 	{
 		//TODO: Iterate through each repository and for each repository fetch the result.
 		System.out.println("\n\n");
@@ -49,6 +49,8 @@ public class CacheManager implements ICacheManager {
 
 			//TODO: Add the result to the resultList	
 		}
+		
+		return null;
 
 	}
 

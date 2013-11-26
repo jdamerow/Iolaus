@@ -1,7 +1,9 @@
 package edu.asu.lerna.iolaus.service;
 
+import java.util.List;
+
 public interface ICacheManager {
 
-	public abstract void executeQuery(String json);
+	public abstract List<List> executeQuery(String json);
 
 }
