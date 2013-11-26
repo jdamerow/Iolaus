@@ -176,7 +176,7 @@ public class RepositoryManager implements IRepositoryManager{
 			}else{
 				List<List> results=cacheManager.executeQuery(null);
 				Map<String,List<Object>> processedResults=processResults(results);
-				aggregateResults(aggregateResults,processedResults,nestedProblemMap,root);
+				aggregateResults(aggregateResults,processedResults,nestedProblemMap,oldLabelToNewLabelMap,root);
 				System.out.println(root);
 				flag=false;
 			}
@@ -186,109 +186,163 @@ public class RepositoryManager implements IRepositoryManager{
 	
 	
 	private void aggregateResults(
-			Map<String, Map<String, List<Object>>> aggregateResults,
+			Map<String, Map<String, List<Object>>> aggregatedResults,
 			Map<String, List<Object>> processedResults,
-			Map<String, List<List<String>>> nestedProblemMap, String root) {
-			Map<Integer,Map<String,List<Object>>> tempResults=new LinkedHashMap<Integer,Map<String, List<Object>>>();
+			Map<String, List<List<String>>> nestedLabelMap, Map<String, String> oldLabelToNewLabelMap, String root) {
+		
+			Map<Integer,Map<String,List<Object>>> resultsOfTargets=new LinkedHashMap<Integer,Map<String, List<Object>>>();
 			int outerForCounter=0;
-			for(List<String> childs:nestedProblemMap.get(root)){
-				for(String sibling:childs){
-					if(nestedProblemMap.containsKey(sibling)){
-						unionOfResults(aggregateResults,tempResults,outerForCounter,sibling);
+			for(List<String> targetsOfSameSource:nestedLabelMap.get(root)){
+				for(String sameTargets:targetsOfSameSource){
+					if(nestedLabelMap.containsKey(sameTargets)){
+						unionOfResults(aggregatedResults,resultsOfTargets,outerForCounter,sameTargets);
 					}	
 				}
 				outerForCounter++;
 			}
-			Map<String, List<Object>> parentResult=new LinkedHashMap<String, List<Object>>();
-			intersectionWithParent(parentResult,processedResults,tempResults);
-			
+			Map<String, List<Object>> sourceQueryResults=new LinkedHashMap<String, List<Object>>();
+			intersectionOfResultsWithSourceQuery(sourceQueryResults,processedResults,resultsOfTargets,oldLabelToNewLabelMap,nestedLabelMap,root);	
 	}
-	private void intersectionWithParent(
-			Map<String, List<Object>> parentResult,
-			Map<String, List<Object>> processedResults,
-			Map<Integer, Map<String, List<Object>>> childResults) {
+	
+	private void intersectionOfResultsWithSourceQuery(
+			Map<String, List<Object>> sourceQueryResults,Map<String, List<Object>> processedResults,Map<Integer, Map<String, List<Object>>> resultsOfTargets,
+			Map<String, String> oldLabelToNewLabelMap, Map<String, List<List<String>>> nestedLabelMap, String root) {
 		
-		int targetCount=1;
-		int relationshipCount=1;
-		Map<String, List<Object>> intermediateResults=new LinkedHashMap<String, List<Object>>();
-		Iterator<Entry<String, List<Object>>> processedResultsIterator = processedResults.entrySet().iterator();
-		Iterator<Entry<String, List<Object>>> tempResultsIterator = childResults.get(0).entrySet().iterator();
-		Map<Integer,Iterator<Object>> iterator=new HashMap<Integer,Iterator<Object>>();
-		String[] labels=new String[processedResults.size()];
-		int i=0;
-		boolean flag=true;
-		while(processedResultsIterator.hasNext()){
-			 Map.Entry<String,List<Object>> pairs = (Map.Entry<String,List<Object>>)processedResultsIterator.next();
-			 List<Object> column=(List<Object>) pairs.getValue();
-			 String label="";
-			 if(column.get(0) instanceof JsonNode){
-				 if(flag){
-					 flag=false;
-					 label=PropertyOf.SOURCE.toString();
-				 }else{
-					 label=PropertyOf.TARGET.toString()+targetCount;
-					 targetCount++;
-				 }
-			 }else{
-				 label=PropertyOf.RELATION.toString()+relationshipCount;
-				 relationshipCount++;
-			 }
-			 labels[i]=label;
-			 iterator.put(i++, column.iterator());
-		}
-		int startOfTempResults=i;
 		
-		while(tempResultsIterator.hasNext()){
-			 Map.Entry<String,List<Object>> pairs = (Map.Entry<String,List<Object>>)tempResultsIterator.next();
-			 List<Object> column=(List<Object>) pairs.getValue();
-			 String label="";
-			 if(column.get(0) instanceof JsonNode){
-				 if(flag){
-					 flag=false;
-					 label=PropertyOf.SOURCE.toString();
+		Map<Integer,Map<String, List<Object>>>intermediateResults=new LinkedHashMap<Integer,Map<String, List<Object>>>();
+		intermediateResults.put(0, processedResults);
+		
+		for(int loopCounter=0;loopCounter<resultsOfTargets.size();loopCounter++){
+			
+			Map<String,List<Object>> currentIterationResults=new LinkedHashMap<String,List<Object>>();
+			intermediateResults.put(loopCounter+1, currentIterationResults);
+			Iterator<Entry<String, List<Object>>> intermediateResultsIterator = intermediateResults.get(loopCounter).entrySet().iterator();
+			Iterator<Entry<String, List<Object>>> tempResultsIterator = resultsOfTargets.get(loopCounter).entrySet().iterator();
+			Map<Integer,Iterator<Object>> iterator=new HashMap<Integer,Iterator<Object>>();
+			int targetCount=1;
+			int relationshipCount=1;
+			String[] labels=new String[intermediateResults.get(loopCounter).size()];	
+			int i=0;
+			boolean flag=true;
+			String targetNode=nestedLabelMap.get(root).get(loopCounter).get(0);
+			String oldTargetMapping=oldLabelToNewLabelMap.get(targetNode);
+			int targetId=0;
+			//This loop creates labels for the results of source query
+			while(intermediateResultsIterator.hasNext()){
+				 Map.Entry<String,List<Object>> pairs = (Map.Entry<String,List<Object>>)intermediateResultsIterator.next();
+				 List<Object> column=(List<Object>) pairs.getValue();
+				 String label="";
+				 if(column.get(0) instanceof JsonNode){
+					 if(flag){
+						 flag=false;
+						 label=PropertyOf.SOURCE.toString();
+					 }else{
+						 label=PropertyOf.TARGET.toString()+targetCount;
+						 if(label.equals(oldTargetMapping)){
+							 targetId=i;
+						 }
+						 targetCount++;
+					 }
 				 }else{
-					 label=PropertyOf.TARGET.toString()+targetCount;
-					 targetCount++;
+					 label=PropertyOf.RELATION.toString()+relationshipCount;
+					 relationshipCount++;
 				 }
-			 }else{
-				 label=PropertyOf.RELATION.toString()+relationshipCount;
-				 relationshipCount++;
-			 }
-			 labels[i]=label;
-			 iterator.put(i++, column.iterator());
-		}
-		List<Object> row;
-		while(iterator.get(0).hasNext()){
-			row=new LinkedList<Object>();
-			for(i=0;i<startOfTempResults;i++){
-				row.add(iterator.get(i).next());
+				 labels[i]=label;
+				 currentIterationResults.put(label, new LinkedList<Object>());
+				 iterator.put(i++, column.iterator());
 			}
-			JsonNode node=(JsonNode)row.get(0);
-			String id=node.getId();
-			Map<Integer,List<Object>> matchedRows = new LinkedHashMap<Integer, List<Object>>();
-			int rowCount=0;
-			while(iterator.get(startOfTempResults).hasNext()){
-				JsonNode n=(JsonNode) iterator.get(startOfTempResults).next();
-				List<Object> _newRow=null;
-				flag=false;
-				if(n.getId().equals(id)){
-					_newRow=new LinkedList<Object>();
-					flag=true;
-				}	
-				for(int j=startOfTempResults+1;j<labels.length;j++){
-					Object obj=iterator.get(j).next();
-					if(flag){
-						matchedRows.put(rowCount++, _newRow);
-						_newRow.add(obj);
-					}
+			
+			int startOfTempResults=i;
+	
+			//This loop creates labels for the results of Target query
+			while(tempResultsIterator.hasNext()){
+				 Map.Entry<String,List<Object>> pairs = (Map.Entry<String,List<Object>>)tempResultsIterator.next();
+				 List<Object> column=(List<Object>) pairs.getValue();
+				 String label="";
+				 if(column.get(0) instanceof JsonNode){
+					 if(flag){
+						 flag=false;
+						 label=PropertyOf.SOURCE.toString();
+					 }else{
+						 label=PropertyOf.TARGET.toString()+targetCount;
+						 currentIterationResults.put(label, new LinkedList<Object>());
+						 targetCount++;
+					 }
+				 }else{
+					 label=PropertyOf.RELATION.toString()+relationshipCount;
+					 currentIterationResults.put(label, new LinkedList<Object>());
+					 relationshipCount++;
+				 }
+				 labels[i]=label;
+				 iterator.put(i++, column.iterator());
+			}
+			
+			List<Object> row;
+			while(iterator.get(targetId).hasNext()){
+				row=new LinkedList<Object>();
+				createRow(row,iterator,startOfTempResults);
+				JsonNode node=(JsonNode)row.get(targetId);
+				String id=node.getId();
+				Map<Integer,List<Object>> matchedRows = new LinkedHashMap<Integer, List<Object>>();
+				getMatchedRows(matchedRows,iterator,id,startOfTempResults,labels);
+				reinitializeIterators(iterator,resultsOfTargets.get(loopCounter),startOfTempResults);
+				cartesianProduct(row,matchedRows,startOfTempResults,currentIterationResults,labels);	
+			}
+		}
+		
+	}
+	
+	private void createRow(List<Object> row,
+			Map<Integer, Iterator<Object>> iterator, int startOfTempResults) {
+		for(int i=0;i<startOfTempResults;i++){
+			row.add(iterator.get(i).next());
+		}
+	}
+	private void getMatchedRows(Map<Integer, List<Object>> matchedRows,
+			Map<Integer, Iterator<Object>> iterator, String id,
+			int startOfTempResults, String[] labels) {
+		int rowCount=0;
+		while(iterator.get(startOfTempResults).hasNext()){
+			JsonNode node=(JsonNode) iterator.get(startOfTempResults).next();
+			List<Object> newRow=null;
+			boolean flag=false;
+			if(node.getId().equals(id)){
+				newRow=new LinkedList<Object>();
+				matchedRows.put(rowCount++, newRow);
+				flag=true;
+			}	
+			for(int j=startOfTempResults+1;j<labels.length;j++){
+				Object obj=iterator.get(j).next();
+				if(flag){
+					newRow.add(obj);
 				}
 			}
-			if(rowCount!=0){
-				//TODO:Take cartesian product of row with matchedRows 
-			}
 		}
-		
-		
+	}
+	
+	private void cartesianProduct(List<Object> row,
+			Map<Integer, List<Object>> matchedRows, int startOfTempResults,
+			Map<String, List<Object>> currentResults, String[] labels) {
+		if(matchedRows.size()!=0){
+			for(int x=0;x<matchedRows.size();x++){
+				int j=0;
+				for(;j<startOfTempResults;j++){
+					currentResults.get(labels[j]).add(row.get(j));
+				}
+				j=startOfTempResults+1;
+				for(Object obj:matchedRows.get(x)){
+					currentResults.get(labels[j++]).add(obj);	
+				}
+			}
+		}	
+	}
+	
+	private void reinitializeIterators(
+			Map<Integer, Iterator<Object>> iterator,
+			Map<String, List<Object>> map, int startOfTempResults) {
+		for(Entry<String, List<Object>> entry:map.entrySet()){
+			iterator.put(startOfTempResults++, entry.getValue().iterator());
+		}
 	}
 	private void unionOfResults(
 			Map<String, Map<String, List<Object>>> aggregateResults,
