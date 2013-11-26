@@ -50,7 +50,7 @@ public class RepositoryManager implements IRepositoryManager{
 	public void executeQuery(IQuery q)
 	{
 		List<Object> treeStructure=breakdownQuery(q);
-		postOrderTreeTraversal(treeStructure);
+		traverseTreeInPostOrder(treeStructure);
 		
 		//TODO: Execute cypher by calling the cache manager
 		//cacheManager.executeQuery("");
@@ -113,7 +113,7 @@ public class RepositoryManager implements IRepositoryManager{
 		return processedResults;
 	}
 	@SuppressWarnings("unchecked")
-	private void postOrderTreeTraversal(List<Object> treeStructure) {
+	private void traverseTreeInPostOrder(List<Object> treeStructure) {
 		Map<String,List<List<String>>> nestedProblemMap=(Map<String, List<List<String>>>) treeStructure.get(0);
 		Map<String,String> targetJsonMap=(Map<String, String>) treeStructure.get(1);
 		Map<String,String> oldLabelToNewLabelMap=(Map<String, String>) treeStructure.get(2);
