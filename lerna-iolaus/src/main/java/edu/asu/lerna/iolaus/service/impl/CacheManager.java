@@ -1,5 +1,6 @@
 package edu.asu.lerna.iolaus.service.impl;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -35,23 +36,37 @@ public class CacheManager implements ICacheManager {
 	}
 
 	@Override
-	public List<List> executeQuery(String json)
+	public List<List> executeQuery(String json, List<String> dbInstances)
 	{
 		//TODO: Iterate through each repository and for each repository fetch the result.
 		System.out.println("\n\n");
-		json = "{\"query\":\"Start source=node:node_auto_index(type={param1}) match source-[r]->(target) Where (( source.dataset={param3} )) return source, r, target\", \"params\":{\"param1\":\"Person\",\"param3\":\"mblcourses\"}}";
-		List<List> listOfNodesAndRelations = repoHandler.executeQuery(json);
-		printList(listOfNodesAndRelations);
+		//json = "{\"query\":\"Start source=node:node_auto_index(type={param1}) match source-[r]->(target) Where (( source.dataset={param3} )) return source, r, target\", \"params\":{\"param1\":\"Person\",\"param3\":\"mblcourses\"}}";
 
-		Iterator<Neo4jConfFile> fileIterator = neo4jInstances.getfileList().iterator();
-		while(fileIterator.hasNext())
+		List<List> listOfNodesAndRelations = null;
+		
+		List<String> instanceUrl = new ArrayList<>();
+		Iterator<String> iterator = dbInstances.iterator();
+		while(iterator.hasNext())
 		{
-
-			//TODO: Add the result to the resultList	
+			String dbName = iterator.next();
+			Iterator<Neo4jConfFile> fileIterator = neo4jInstances.getfileList().iterator();
+			while(fileIterator.hasNext())
+			{
+				Neo4jConfFile dbFile = fileIterator.next();
+				if (dbName.equals(dbFile.getTitle()))
+				{
+					instanceUrl.add(dbFile.getPath());
+				}
+			}
 		}
 		
-		return null;
-
+		for (String instance: instanceUrl)
+		{
+			listOfNodesAndRelations = repoHandler.executeQuery(json, instance);
+			printList(listOfNodesAndRelations);
+		}
+		
+		return listOfNodesAndRelations;
 	}
 
 	//TODO:Remove this method

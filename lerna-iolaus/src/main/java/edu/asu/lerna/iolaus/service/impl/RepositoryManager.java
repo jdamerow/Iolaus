@@ -174,7 +174,8 @@ public class RepositoryManager implements IRepositoryManager{
 				stack.push(parent);
 				flag=true;
 			}else{
-				List<List> results=cacheManager.executeQuery(null);
+				String json=null;
+				List<List> results=cacheManager.executeQuery(json, null);
 				Map<String,List<Object>> processedResults=processResults(results);
 				aggregateResults(aggregateResults,processedResults,nestedProblemMap,oldLabelToNewLabelMap,root);
 				System.out.println(root);

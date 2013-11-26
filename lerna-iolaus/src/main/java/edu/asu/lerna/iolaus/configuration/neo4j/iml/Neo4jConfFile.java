@@ -2,6 +2,13 @@ package edu.asu.lerna.iolaus.configuration.neo4j.iml;
 
 import org.springframework.stereotype.Service;
 
+/**
+ * @author Veena Borannagowda
+ * 
+ * Attributes of the  configuration files of Neo4j   
+ *
+ */
+
 @Service
 public class Neo4jConfFile {
 

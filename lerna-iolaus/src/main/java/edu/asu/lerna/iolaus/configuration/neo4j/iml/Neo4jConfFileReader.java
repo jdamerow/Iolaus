@@ -6,15 +6,29 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Properties;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.PropertySource;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 
+/**
+ * @author Veena Borannagowda
+ * 
+ * Reads the configuration files for neo4j from the local system   
+ *
+ */
+
+@PropertySource(value="classpath:/lerna.properties")
 @Service
 public class Neo4jConfFileReader {
+	
+	@Autowired	
+	private Environment env;
 
 	public ArrayList<Neo4jConfFile> getNeo4jConfFiles() throws IOException
 	{
 		ArrayList<Neo4jConfFile> listOfFiles = new ArrayList<>();
-		File folder = new File("G:\\ASU\\DIGING\\Neo4j_Configuration");
+		File folder = new File(env.getProperty("LOCAL_PATH_FOR_NEO4JCONFIGURATION"));
 
 		for(final File fileEntry : folder.listFiles())
 		{
