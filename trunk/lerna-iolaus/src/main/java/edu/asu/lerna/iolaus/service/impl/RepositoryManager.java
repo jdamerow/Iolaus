@@ -24,6 +24,8 @@ import scala.sys.Prop;
 import edu.asu.lerna.iolaus.domain.json.IJsonNode;
 import edu.asu.lerna.iolaus.domain.json.IJsonRelation;
 import edu.asu.lerna.iolaus.domain.json.impl.JsonNode;
+import edu.asu.lerna.iolaus.domain.misc.ReturnElementsOfOTC;
+import edu.asu.lerna.iolaus.domain.misc.Tree;
 import edu.asu.lerna.iolaus.domain.queryobject.INode;
 import edu.asu.lerna.iolaus.domain.queryobject.IQuery;
 import edu.asu.lerna.iolaus.domain.queryobject.IRelNode;
@@ -49,8 +51,8 @@ public class RepositoryManager implements IRepositoryManager{
 	@Override
 	public void executeQuery(IQuery q)
 	{
-		List<Object> treeStructure=breakdownQuery(q);
-		traverseTreeInPostOrder(treeStructure);
+		Tree tree=breakdownQuery(q);
+		//traverseTreeInPostOrder(tree);
 		
 		//TODO: Execute cypher by calling the cache manager
 		//cacheManager.executeQuery("");
@@ -112,40 +114,39 @@ public class RepositoryManager implements IRepositoryManager{
 	
 		return processedResults;
 	}
-	@SuppressWarnings("unchecked")
-	private void traverseTreeInPostOrder(List<Object> treeStructure) {
-		Map<String,List<List<String>>> nestedProblemMap=(Map<String, List<List<String>>>) treeStructure.get(0);
-		Map<String,String> targetJsonMap=(Map<String, String>) treeStructure.get(1);
-		Map<String,String> oldLabelToNewLabelMap=(Map<String, String>) treeStructure.get(2);
+
+	private void traverseTreeInPostOrder(Tree tree) {
+		Map<String,List<List<String>>> sourceToTargetLabelMap=tree.getSourceToTargetLabelMap();
+		Map<String,String> targetJsonMap=tree.getTargetJsonMap();
+		Map<String,String> oldLabelToNewLabelMap=tree.getOldLabelToNewLabelMap();
 		Map<String,List<Integer>> currentChildMap=new HashMap<String, List<Integer>>();
 		Map<String,Map<String,List<Object>>>aggregateResults=new HashMap<String, Map<String,List<Object>>>();
-		initializeCurrentChildCounter(currentChildMap,nestedProblemMap);
+		initializeCurrentChildCounter(currentChildMap,sourceToTargetLabelMap);
 		Stack<String> stack=new Stack<String>();
-		String source=PropertyOf.SOURCE.toString();
-		String root=source;
-		System.out.println(nestedProblemMap);
+		String sourceLabel=PropertyOf.SOURCE.toString();
+		System.out.println(sourceToTargetLabelMap);
 		int outerCount=0;
 		int innerCount=0;
 		boolean flag=true;
 		do{
 			while(flag){
-				if(!nestedProblemMap.containsKey(root)){
-					System.out.println("***"+root);
+				if(!sourceToTargetLabelMap.containsKey(sourceLabel)){
+					System.out.println("***"+sourceLabel);
 					break;
 				}
-				innerCount=currentChildMap.get(root).get(1);
-				outerCount=currentChildMap.get(root).get(0);
+				innerCount=currentChildMap.get(sourceLabel).get(1);
+				outerCount=currentChildMap.get(sourceLabel).get(0);
 				int i=0;
-				for(List<String >childList:nestedProblemMap.get(root)){
+				for(List<String >childList:sourceToTargetLabelMap.get(sourceLabel)){
 					int j=0;
 					for(String siblings:childList){
 						if(i!=outerCount){
-							if(nestedProblemMap.containsKey(siblings)){
+							if(sourceToTargetLabelMap.containsKey(siblings)){
 								stack.push(siblings);
 							}
 						}else{
 							if(i!=innerCount){
-								if(nestedProblemMap.containsKey(siblings)){
+								if(sourceToTargetLabelMap.containsKey(siblings)){
 									stack.push(siblings);
 								}
 							}
@@ -154,31 +155,31 @@ public class RepositoryManager implements IRepositoryManager{
 					}
 					i++;
 				}
-				if(nestedProblemMap.get(root).get(outerCount).size()-1>=innerCount+1){
-					currentChildMap.get(root).set(1, innerCount+1);
+				if(sourceToTargetLabelMap.get(sourceLabel).get(outerCount).size()-1>=innerCount+1){
+					currentChildMap.get(sourceLabel).set(1, innerCount+1);
 				}
-				else if(nestedProblemMap.get(root).size()-1>outerCount+1) {
-					currentChildMap.get(root).set(0, outerCount+1);
-					currentChildMap.get(root).set(1, 0);
+				else if(sourceToTargetLabelMap.get(sourceLabel).size()-1>outerCount+1) {
+					currentChildMap.get(sourceLabel).set(0, outerCount+1);
+					currentChildMap.get(sourceLabel).set(1, 0);
 				}else{
-					currentChildMap.get(root).set(0, -1);
-					currentChildMap.get(root).set(1, -1);
+					currentChildMap.get(sourceLabel).set(0, -1);
+					currentChildMap.get(sourceLabel).set(1, -1);
 				}
-				stack.push(root);
-				root=nestedProblemMap.get(root).get(outerCount).get(innerCount);
+				stack.push(sourceLabel);
+				sourceLabel=sourceToTargetLabelMap.get(sourceLabel).get(outerCount).get(innerCount);
 			}
-			root=stack.pop();
-			if(currentChildMap.get(root).get(0)!=-1){
-				String parent=root;
-				root=stack.pop();
+			sourceLabel=stack.pop();
+			if(currentChildMap.get(sourceLabel).get(0)!=-1){
+				String parent=sourceLabel;
+				sourceLabel=stack.pop();
 				stack.push(parent);
 				flag=true;
 			}else{
 				String json=null;
 				List<List> results=cacheManager.executeQuery(json, null);
 				Map<String,List<Object>> processedResults=processResults(results);
-				aggregateResults(aggregateResults,processedResults,nestedProblemMap,oldLabelToNewLabelMap,root);
-				System.out.println(root);
+				aggregateResults(aggregateResults,processedResults,sourceToTargetLabelMap,oldLabelToNewLabelMap,sourceLabel);
+				System.out.println(sourceLabel);
 				flag=false;
 			}
 		}while(!stack.isEmpty());
@@ -396,30 +397,31 @@ public class RepositoryManager implements IRepositoryManager{
 	 * It returns tree structure which is required for the aggregating results.
 	 **/
 	@Override
-	public List<Object> breakdownQuery(IQuery q){
+	public Tree breakdownQuery(IQuery q){
 		INode n = q.getNode();
-		Map<IRelNode,String> parsedElements=new LinkedHashMap<IRelNode,String>();
-		Map<IRelNode,String> allElements=new LinkedHashMap<IRelNode,String>();
-		Map<String,List<List<String>>> nestedProblemMap=new LinkedHashMap<String, List<List<String>>>();
+		Map<IRelNode,String> parsedNodeToLabelMap=new LinkedHashMap<IRelNode,String>();
+		Map<IRelNode,String> allNodeToLabelMap=new LinkedHashMap<IRelNode,String>();
+		Map<String,List<List<String>>> sourceToTargetLabelMap=new LinkedHashMap<String, List<List<String>>>();
 		Map<String,String> targetJsonMap=new LinkedHashMap<String,String>();
 		Map<String,String> oldLabelToNewLabelMap=new LinkedHashMap<String,String>();
-		List<Object> treeStructure=new ArrayList<Object>();
+		
+		Tree tree=new Tree();
 		int targetCounter=1;
 		int counter=0;
 		String source="";
 		List<IRelNode> keyElements=new ArrayList<IRelNode>();
 		if(n!=null){
-			List<Object> nodeListObject = objectToCypher.objectToCypher(n);
+			ReturnElementsOfOTC nodeListObject = objectToCypher.objectToCypher(n);
 			source=PropertyOf.SOURCE.toString();
-			targetCounter=parseNodeListObject(nodeListObject,allElements,parsedElements,nestedProblemMap,targetJsonMap,oldLabelToNewLabelMap,targetCounter,keyElements,source);
+			targetCounter=parseNodeListObject(nodeListObject,allNodeToLabelMap,parsedNodeToLabelMap,sourceToTargetLabelMap,targetJsonMap,oldLabelToNewLabelMap,targetCounter,keyElements,source);
 			IRelNode relNode=null;
 			if(keyElements.size()!=0){
 				while((relNode=keyElements.get(counter++))!=null){
 					nodeListObject = objectToCypher.objectToCypher(relNode);
-					source=allElements.get(relNode);
-					parsedElements.put(relNode,source);
-					targetCounter=parseNodeListObject(nodeListObject,allElements,parsedElements,nestedProblemMap,targetJsonMap,oldLabelToNewLabelMap,targetCounter,keyElements,source);
-					if(counter==allElements.size()){
+					source=allNodeToLabelMap.get(relNode);
+					parsedNodeToLabelMap.put(relNode,source);
+					targetCounter=parseNodeListObject(nodeListObject,allNodeToLabelMap,parsedNodeToLabelMap,sourceToTargetLabelMap,targetJsonMap,oldLabelToNewLabelMap,targetCounter,keyElements,source);
+					if(counter==allNodeToLabelMap.size()){
 						break;
 					}
 				}
@@ -427,10 +429,10 @@ public class RepositoryManager implements IRepositoryManager{
 		}else{
 			logger.info("Node is null");
 		}
-		treeStructure.add(nestedProblemMap);
-		treeStructure.add(targetJsonMap);
-		treeStructure.add(oldLabelToNewLabelMap);
-		return treeStructure;
+		tree.setSourceToTargetLabelMap(sourceToTargetLabelMap);
+		tree.setTargetJsonMap(targetJsonMap);
+		tree.setOldLabelToNewLabelMap(oldLabelToNewLabelMap);
+		return tree;
 	}
 	
 	
@@ -439,9 +441,9 @@ public class RepositoryManager implements IRepositoryManager{
 	 * This method parse the results of objectToCypher method. It returns the list of two elements. First is json and second is objectToLabelMap.
 	 * It just considers the entry with key of type IRelNode and ignores everything else
 	 **/
-	public int parseNodeListObject(List<Object> nodeListObject, Map<IRelNode, String> allElements, Map<IRelNode, String> parsedElements, Map<String, List<List<String>>> nestedProblemMap, Map<String, String> targetJsonMap, Map<String, String> oldLabelToNewLabelMap, int targetCounter, List<IRelNode> keyElements, String source){
-		String jsonQuery = (String) nodeListObject.get(0);
-		Map<Object,String> objectToLabelMap = (LinkedHashMap<Object,String>) nodeListObject.get(1);
+	public int parseNodeListObject(ReturnElementsOfOTC nodeListObject, Map<IRelNode, String> allElements, Map<IRelNode, String> parsedElements, Map<String, List<List<String>>> nestedProblemMap, Map<String, String> targetJsonMap, Map<String, String> oldLabelToNewLabelMap, int targetCounter, List<IRelNode> keyElements, String source){
+		String jsonQuery = nodeListObject.getJson();
+		Map<Object,String> objectToLabelMap = nodeListObject.getObjectToTargetLabelMap();
 		targetJsonMap.put(source, jsonQuery);
 		logger.info("***********************************\nJson Query : "+jsonQuery+"\n***********************************\n");
 		List<String> subProblemList=new ArrayList<String>();

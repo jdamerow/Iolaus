@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import edu.asu.lerna.iolaus.domain.misc.ReturnElementsOfOTC;
 import edu.asu.lerna.iolaus.domain.queryobject.INode;
 import edu.asu.lerna.iolaus.domain.queryobject.IOperator;
 import edu.asu.lerna.iolaus.domain.queryobject.IProperty;
@@ -14,15 +15,20 @@ import edu.asu.lerna.iolaus.domain.queryobject.PropertyOf;
 
 public interface IObjectToCypher {
 	
-	public List<Object> objectToCypher(INode node);
-	List<Object> objectToCypher(IRelNode node);
+	ReturnElementsOfOTC objectToCypher(INode node);
+	ReturnElementsOfOTC objectToCypher(IRelNode node);
 	//public String objectToCypher(IRelNode node);
+	
+	String s="Start ";
+	String m="Match ";
+	String w="Where ";
+	String r="return ";
 
 	/**
 	 * direction=true for outgoing
 	 * direction=false for incoming
-	**/
-	public void addToStart(Map<String,String> startMap,String label,String prop);
+	*/
+	/*void addToStart(Map<String,String> startMap,String label,String prop);
 	
 	void propertyObject(IProperty prop, PropertyOf propertyOf,
 			Map<String, String> startMap, Map<String, List<String>> whereMap,
@@ -53,5 +59,5 @@ public interface IObjectToCypher {
 			Map<String, String> startMap, Map<String, List<String>> whereMap,
 			Map<String, String> matchMap, Map<Object, String> objectToLabelMap,
 			String targetOperator, int currentTarget, int currentRelationship,
-			String dataSet);
+			String dataSet);*/
 }
