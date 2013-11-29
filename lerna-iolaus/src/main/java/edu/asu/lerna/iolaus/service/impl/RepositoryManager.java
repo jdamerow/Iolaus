@@ -25,17 +25,21 @@ import edu.asu.lerna.iolaus.domain.json.IJsonNode;
 import edu.asu.lerna.iolaus.domain.json.IJsonRelation;
 import edu.asu.lerna.iolaus.domain.json.impl.JsonNode;
 import edu.asu.lerna.iolaus.domain.misc.ReturnElementsOfOTC;
-import edu.asu.lerna.iolaus.domain.misc.Tree;
+import edu.asu.lerna.iolaus.domain.misc.LabelTree;
 import edu.asu.lerna.iolaus.domain.queryobject.INode;
 import edu.asu.lerna.iolaus.domain.queryobject.IQuery;
 import edu.asu.lerna.iolaus.domain.queryobject.IRelNode;
 import edu.asu.lerna.iolaus.domain.queryobject.PropertyOf;
-import edu.asu.lerna.iolaus.domain.queryobject.impl.Node;
 import edu.asu.lerna.iolaus.domain.queryobject.impl.RelNode;
 import edu.asu.lerna.iolaus.service.ICacheManager;
 import edu.asu.lerna.iolaus.service.IObjectToCypher;
 import edu.asu.lerna.iolaus.service.IRepositoryManager;
 
+/**
+ * 
+ * @author Karan Kothari
+ *
+ */
 @Service
 public class RepositoryManager implements IRepositoryManager{
 
@@ -48,17 +52,132 @@ public class RepositoryManager implements IRepositoryManager{
 	private static final Logger logger = LoggerFactory
 			.getLogger(RepositoryManager.class);
 	
+	
+	/**
+	 * This method takes the IQuery object and breaks it down into multiple queries. It traverse the labels and execute the queries corresponding to that label.
+	 * @param q is a instance of Query.
+	 */
 	@Override
 	public void executeQuery(IQuery q)
 	{
-		Tree tree=breakdownQuery(q);
-		//traverseTreeInPostOrder(tree);
-		
-		//TODO: Execute cypher by calling the cache manager
-		//cacheManager.executeQuery("");
+		LabelTree tree=breakdownQuery(q);
+		traverseLabelsAndExecute(tree);
 	}
+	
+	
+	/**
+	 * This method takes the IQuery object and breaks it down into multiple queries.
+	 * @param q is a instance of Query.
+	 * @return the tree which has object of sourceToTargetLabelMap, targetJsonMap and oldLabelToNewLabelMap.
+	 */
+	public LabelTree breakdownQuery(IQuery q){
+		INode n = q.getNode();
+		//It is the map with key=IRelNode object and value=label. It contains all the pairs which are parsed.
+		Map<IRelNode,String> parsedNodeToLabelMap=new LinkedHashMap<IRelNode,String>();
+		//It is the map with key=IRelNode object and value=label. It has all such pairs. 
+		Map<IRelNode,String> allNodeToLabelMap=new LinkedHashMap<IRelNode,String>();
+		//It is a map with key=label used as a source and value=list of list of the target labels .
+		Map<String,List<List<String>>> sourceToTargetLabelMap=new LinkedHashMap<String, List<List<String>>>();
+		//It is map with key=label and value=Json Query
+		Map<String,String> targetJsonMap=new LinkedHashMap<String,String>();
+		//It is map with key=new unique labels and value=old labels
+		Map<String,String> newLabelToOldLabelMap=new LinkedHashMap<String,String>();
+		
+		LabelTree tree=new LabelTree();
+		int targetCounter=1;
+		int counter=0;
+		String source="";
+		List<IRelNode> keyElements=new ArrayList<IRelNode>();
+		if(n!=null){
+			ReturnElementsOfOTC nodeListObject = objectToCypher.objectToCypher(n);
+			source=PropertyOf.SOURCE.toString();
+			targetCounter=parseNodeListObject(nodeListObject,allNodeToLabelMap,parsedNodeToLabelMap,sourceToTargetLabelMap,targetJsonMap,newLabelToOldLabelMap,targetCounter,keyElements,source);
+			IRelNode relNode=null;
+			if(keyElements.size()!=0){
+				while((relNode=keyElements.get(counter++))!=null){
+					nodeListObject = objectToCypher.objectToCypher(relNode);
+					source=allNodeToLabelMap.get(relNode);
+					parsedNodeToLabelMap.put(relNode,source);
+					targetCounter=parseNodeListObject(nodeListObject,allNodeToLabelMap,parsedNodeToLabelMap,sourceToTargetLabelMap,targetJsonMap,newLabelToOldLabelMap,targetCounter,keyElements,source);
+					if(counter==allNodeToLabelMap.size()){
+						break;
+					}
+				}
+			}
+		}else{
+			logger.info("Node is null");
+		}
+		tree.setSourceToTargetLabelMap(sourceToTargetLabelMap);
+		tree.setTargetJsonMap(targetJsonMap);
+		tree.setOldLabelToNewLabelMap(newLabelToOldLabelMap);
+		return tree;
+	}
+	
+	/**
+	 * This method parse the objectToTargetLabelMap (member of nodeListObject) and breaks it further if it has any object which has relationship.
+	 * @param nodeListObject is a object which has objectToTargetLabelMap and json query.
+	 * @param allNodesToLabelMap is the map with key=IRelNode object and value=label. It has all such pairs. 
+	 * @param parsedNodesToLabelMap is the map with key=IRelNode object and value=label. It contains all the pairs which are parsed.
+	 * @param sourceToTargetLabelMap is a map with key=label used as a source and value=list of list of the target labels.
+	 * @param targetJsonMap is map with key=label and value=Json Query.
+	 * @param oldLabelToNewLabelMap is map with key=new unique labels and value=old labels.
+	 * @param targetCounter is current value of target.
+	 * @param nodeList is the list of nodes which are to be break further.
+	 * @param source is the label of the source node.
+	 * @return the new value of the targetCounter.(When a new target label is found, it's value gets incremented).
+	 */
+	public int parseNodeListObject(ReturnElementsOfOTC nodeListObject, Map<IRelNode, String> allNodesToLabelMap, Map<IRelNode, String> parsedNodesToLabelMap, Map<String, List<List<String>>> sourceToTargetLabelMap, Map<String, String> targetJsonMap, Map<String, String> oldLabelToNewLabelMap, int targetCounter, List<IRelNode> nodeList, String source){
+		
+		String jsonQuery = nodeListObject.getJson();
+		Map<Object,String> objectToLabelMap = nodeListObject.getObjectToTargetLabelMap();
+		targetJsonMap.put(source, jsonQuery);
+		logger.info("***********************************\nJson Query : "+jsonQuery+"\n***********************************\n");
+		List<String> subProblemList=new ArrayList<String>();
+		List<List<String>> problemList=new ArrayList<List<String>>();
+		String lastTarget="";
+		for (Map.Entry<Object, String> entry : objectToLabelMap.entrySet()){
+		    Object obj=entry.getKey();
+		    if(obj instanceof RelNode){
+				IRelNode relNode=(IRelNode)obj;
+		    	if(!parsedNodesToLabelMap.containsKey(relNode)){
+		    		if(!objectToLabelMap.get(relNode).equals(lastTarget)){
+		    			subProblemList=new ArrayList<String>();
+		    			problemList.add(subProblemList);
+		    		}
+		    		String target=PropertyOf.TARGET.toString()+targetCounter;
+		    		subProblemList.add(target);
+		    		oldLabelToNewLabelMap.put(target, objectToLabelMap.get(relNode));
+		    		INode node=relNode.getNode();
+		    		List<Object> nodeDetails = node.getPropertyOrRelationshipOrAnd();
+		    		Iterator<Object> nodeDetailsIterator = nodeDetails.iterator();
+		    		while(nodeDetailsIterator.hasNext()){
+		    			Object o=nodeDetailsIterator.next();
+		    			if(o instanceof JAXBElement){
+		    				JAXBElement<?> element = (JAXBElement<Object>) o;
+		    				if(element.getName().toString().contains("}and")||element.getName().toString().contains("}or")){
+		    					allNodesToLabelMap.put(relNode,PropertyOf.TARGET.toString()+targetCounter);
+		    					nodeList.add(relNode);
+		    					break;
+		    				}
+		    			}	
+		    		}
+		    		targetCounter+=1;
+		    		lastTarget=objectToLabelMap.get(relNode);
+		    	}
+			}
+		}
+		sourceToTargetLabelMap.put(source, problemList);
+		return targetCounter;
+	}
+	
+	/**
+	 * 
+	 * @param results is the List of Rows sent by the executeQuery
+	 * @return the map whose key is label used in the query and value is the List of IJsonNode or IJsonRelation.
+	 */
 	@SuppressWarnings("rawtypes")
-	private Map<String, List<Object>> processResults(List<List> results) {
+	public Map<String, List<Object>> processResults(List<List> results) {
+		//key->label used in the query   value->List of IJsonNode or IJsonRelatoin
 		Map<String, List<Object>> processedResults=new LinkedHashMap<String,List<Object>>();
 		String target=PropertyOf.TARGET.toString();
 		String rel=PropertyOf.RELATION.toString();
@@ -67,7 +186,6 @@ public class RepositoryManager implements IRepositoryManager{
 		{
 			for(List rowList: results)
 			{
-				//System.out.println("--------------------------------------------");
 				int targetCount=1;
 				int relationshipCount=1;
 				boolean flag=true;
@@ -108,20 +226,26 @@ public class RepositoryManager implements IRepositoryManager{
 						relationshipCount++;
 					}
 				}
-				//System.out.println("--------------------------------------------");
 			}
 		}
 	
 		return processedResults;
 	}
 
-	private void traverseTreeInPostOrder(Tree tree) {
+	
+	/**
+	 * It is a method which traverse the labels in post order. Then, Executes the query associated with each label.
+	 * @param tree is a object of LabelTree which has three members 1. sourceToTargetLabelMap 2. targetToJsonMap 3. oldLabelToNewLabelMap
+	 */
+	public void traverseLabelsAndExecute(LabelTree tree) {
+		
 		Map<String,List<List<String>>> sourceToTargetLabelMap=tree.getSourceToTargetLabelMap();
-		Map<String,String> targetJsonMap=tree.getTargetJsonMap();
+		Map<String,String> targetLabelToJsonMap=tree.getTargetJsonMap();
 		Map<String,String> oldLabelToNewLabelMap=tree.getOldLabelToNewLabelMap();
-		Map<String,List<Integer>> currentChildMap=new HashMap<String, List<Integer>>();
-		Map<String,Map<String,List<Object>>>aggregateResults=new HashMap<String, Map<String,List<Object>>>();
-		initializeCurrentChildCounter(currentChildMap,sourceToTargetLabelMap);
+		
+		Map<String,List<Integer>> currentTargetLabelCounter=new HashMap<String, List<Integer>>();
+		Map<String,Map<String,List<Object>>>aggregatedResults=new HashMap<String, Map<String,List<Object>>>();
+		initializeCurrentTargetLabelCounter(currentTargetLabelCounter,sourceToTargetLabelMap);
 		Stack<String> stack=new Stack<String>();
 		String sourceLabel=PropertyOf.SOURCE.toString();
 		System.out.println(sourceToTargetLabelMap);
@@ -134,81 +258,197 @@ public class RepositoryManager implements IRepositoryManager{
 					System.out.println("***"+sourceLabel);
 					break;
 				}
-				innerCount=currentChildMap.get(sourceLabel).get(1);
-				outerCount=currentChildMap.get(sourceLabel).get(0);
-				int i=0;
-				for(List<String >childList:sourceToTargetLabelMap.get(sourceLabel)){
-					int j=0;
-					for(String siblings:childList){
-						if(i!=outerCount){
-							if(sourceToTargetLabelMap.containsKey(siblings)){
-								stack.push(siblings);
-							}
-						}else{
-							if(i!=innerCount){
-								if(sourceToTargetLabelMap.containsKey(siblings)){
-									stack.push(siblings);
-								}
-							}
-						}
-						j++;
-					}
-					i++;
-				}
-				if(sourceToTargetLabelMap.get(sourceLabel).get(outerCount).size()-1>=innerCount+1){
-					currentChildMap.get(sourceLabel).set(1, innerCount+1);
-				}
-				else if(sourceToTargetLabelMap.get(sourceLabel).size()-1>outerCount+1) {
-					currentChildMap.get(sourceLabel).set(0, outerCount+1);
-					currentChildMap.get(sourceLabel).set(1, 0);
-				}else{
-					currentChildMap.get(sourceLabel).set(0, -1);
-					currentChildMap.get(sourceLabel).set(1, -1);
-				}
+				innerCount=currentTargetLabelCounter.get(sourceLabel).get(1);
+				outerCount=currentTargetLabelCounter.get(sourceLabel).get(0);
+				
+				pushLabelsToStack(sourceToTargetLabelMap,sourceLabel,innerCount,outerCount,stack);
+				changeTargetLabelCounts(sourceToTargetLabelMap,currentTargetLabelCounter,sourceLabel,innerCount,outerCount);
+				
 				stack.push(sourceLabel);
 				sourceLabel=sourceToTargetLabelMap.get(sourceLabel).get(outerCount).get(innerCount);
 			}
 			sourceLabel=stack.pop();
-			if(currentChildMap.get(sourceLabel).get(0)!=-1){
+			if(areMoreLabels(currentTargetLabelCounter,sourceLabel)){
 				String parent=sourceLabel;
 				sourceLabel=stack.pop();
 				stack.push(parent);
 				flag=true;
 			}else{
-				String json=null;
+				String json=targetLabelToJsonMap.get(sourceLabel);
 				List<List> results=cacheManager.executeQuery(json, null);
 				Map<String,List<Object>> processedResults=processResults(results);
-				aggregateResults(aggregateResults,processedResults,sourceToTargetLabelMap,oldLabelToNewLabelMap,sourceLabel);
+				aggregateResults(aggregatedResults,processedResults,sourceToTargetLabelMap,oldLabelToNewLabelMap,sourceLabel);
 				System.out.println(sourceLabel);
 				flag=false;
 			}
 		}while(!stack.isEmpty());
 	}
 	
+	/**
+	 * This method initialize the list corresponding to keys of currentTargetLabelMap with 0. 
+	 * @param currentTargetLabelMap is a map with key=label(source of a query) and value is list of the counts of target labels.
+	 * @param sourceToTargetLabelMap is a map with key=label used as a source and value=list of list of the target labels.
+	 */
+	public void initializeCurrentTargetLabelCounter(Map<String, List<Integer>> currentTargetLabelMap,
+			Map<String, List<List<String>>> sourceToTargetLabelMap) {
+		
+		for(Entry<String, List<List<String>>> entry:sourceToTargetLabelMap.entrySet()){
+			List<Integer> currentCountList=new ArrayList<Integer>();
+			currentCountList.add(0);
+			currentCountList.add(0);
+			currentTargetLabelMap.put(entry.getKey(), currentCountList);
+		}
+	}
 	
+	/**
+	 * 
+	 * @param currentTargetLabelCounter is a map with key=label(source of a query) and value=list of the counts of target labels.
+	 * @param sourceLabel is the label of the source node in the query.
+	 * @return true if any label for the source is yet to be processed else return false. 
+	 */
+	public boolean areMoreLabels(
+			Map<String, List<Integer>> currentTargetLabelCounter,
+			String sourceLabel) {
+		return currentTargetLabelCounter.get(sourceLabel).get(0)!=-1;
+	}
+
+	/**
+	 * This method increment the value of the list corresponding to keys of currentTargetLabelMap by 1.
+	 * @param sourceToTargetLabelMap is a map whose key is label used as a source and value is list of the target labels.
+	 * @param currentTargetLabelCounter is a map whose key is label(source of a query) and value is list of the counts of target labels.
+	 * @param sourceLabel is the label of the source node in the query.
+	 * @param innerCount is count of the labels corresponding to same target.
+	 * @param outerCount is count of the target labels in a single query.
+	 */
+	public void changeTargetLabelCounts(Map<String, List<List<String>>> sourceToTargetLabelMap,Map<String, List<Integer>> currentTargetLabelCounter,
+			String sourceLabel, int innerCount, int outerCount) {
+		
+		if(sourceToTargetLabelMap.get(sourceLabel).get(outerCount).size()-1>=innerCount+1){
+			currentTargetLabelCounter.get(sourceLabel).set(1, innerCount+1);
+		}
+		else if(sourceToTargetLabelMap.get(sourceLabel).size()-1>outerCount+1) {
+			currentTargetLabelCounter.get(sourceLabel).set(0, outerCount+1);
+			currentTargetLabelCounter.get(sourceLabel).set(1, 0);
+		}else{
+			currentTargetLabelCounter.get(sourceLabel).set(0, -1);
+			currentTargetLabelCounter.get(sourceLabel).set(1, -1);
+		}
+		
+	}
 	
-	private void aggregateResults(
+	/**
+	 * This method pushes the labels into the stack.
+	 * @param sourceToTargetLabelMap is a map with key=label used as a source and value=list of list of the target labels. 
+	 * @param sourceLabel is the label of the source node in the query
+	 * @param innerCount is count of the labels corresponding to same target
+	 * @param outerCount is count of the target labels in a single query
+	 * @param stack is stack where labels are pushed.
+	 */
+	public void pushLabelsToStack(Map<String, List<List<String>>> sourceToTargetLabelMap,String sourceLabel, int innerCount, int outerCount,Stack<String> stack) {
+		
+		int i=0;
+		for(List<String >targetLabelList:sourceToTargetLabelMap.get(sourceLabel)){
+			int j=0;
+			for(String labelsOfSameTarget:targetLabelList){
+				if(i!=outerCount){
+					if(sourceToTargetLabelMap.containsKey(labelsOfSameTarget)){
+						stack.push(labelsOfSameTarget);
+					}
+				}else{
+					if(j!=innerCount){
+						if(sourceToTargetLabelMap.containsKey(labelsOfSameTarget)){
+							stack.push(labelsOfSameTarget);
+						}
+					}
+				}
+				j++;
+			}
+			i++;
+		}
+	}
+
+	/**
+	 * This method aggregates the results of a source label once we have results for all the target labels.
+	 * @param aggregatedResults is a map which stores the results for source labels in a query. Key is Label and 
+	 * 		  value is Map with key=label used in query and value=IJsonNode or IJsonRelation.
+	 * @param processedResults is a map which stores result for a sourceLabel. key=label used in query and value=IJsonNode or IJsonRelation.
+	 * @param sourceToTargetLabelMap is a map whose key is label used as a source and value is list of the target labels.
+	 * @param oldLabelToNewLabelMap is a map with key=new unique labels and value=labels used in query. 
+	 * @param sourceLabel is a label corresponding to the source label of the processedResults.
+	 */
+	public void aggregateResults(
 			Map<String, Map<String, List<Object>>> aggregatedResults,
 			Map<String, List<Object>> processedResults,
-			Map<String, List<List<String>>> nestedLabelMap, Map<String, String> oldLabelToNewLabelMap, String root) {
+			Map<String, List<List<String>>> sourceToTargetLabelMap, Map<String, String> oldLabelToNewLabelMap, String sourceLabel) {
 		
 			Map<Integer,Map<String,List<Object>>> resultsOfTargets=new LinkedHashMap<Integer,Map<String, List<Object>>>();
 			int outerForCounter=0;
-			for(List<String> targetsOfSameSource:nestedLabelMap.get(root)){
+			for(List<String> targetsOfSameSource:sourceToTargetLabelMap.get(sourceLabel)){
 				for(String sameTargets:targetsOfSameSource){
-					if(nestedLabelMap.containsKey(sameTargets)){
+					if(sourceToTargetLabelMap.containsKey(sameTargets)){
 						unionOfResults(aggregatedResults,resultsOfTargets,outerForCounter,sameTargets);
 					}	
 				}
 				outerForCounter++;
 			}
-			Map<String, List<Object>> sourceQueryResults=new LinkedHashMap<String, List<Object>>();
-			intersectionOfResultsWithSourceQuery(sourceQueryResults,processedResults,resultsOfTargets,oldLabelToNewLabelMap,nestedLabelMap,root);	
+			Map<String, List<Object>> sourceLabelResults=new LinkedHashMap<String, List<Object>>();
+			intersectionOfResultsWithSourceQuery(sourceLabelResults,processedResults,resultsOfTargets,oldLabelToNewLabelMap,sourceToTargetLabelMap,sourceLabel);	
 	}
 	
-	private void intersectionOfResultsWithSourceQuery(
+
+	/**
+	 * This methods takes the union of the results of the labels corresponding to same target label.
+	 * @param aggregateResults is a map which stores results for each label which has a relation. 
+	 * 		  key=unique label, value=Map(key=labels used in the query, value=List of IJsonNode or IJsonRelation.
+	 * @param tempResults is map with key= count of the target labels used in the query and value is the map with 
+	 * 		  key=unique label, value=Map(key=labels used in the query, value=List of IJsonNode or IJsonRelation.
+	 * @param currentTarget is the counter of the current target label.
+	 * @param targetLabel results of this label will take part the union.
+	 */
+	public void unionOfResults(
+			Map<String, Map<String, List<Object>>> aggregateResults,
+			Map<Integer, Map<String, List<Object>>> tempResults,
+			int currentTarget, String targetLabel) {
+		
+		Map<String, List<Object>> childResult;
+		if(!tempResults.containsKey(currentTarget)){
+			tempResults.put(currentTarget, aggregateResults.get(targetLabel));
+		}else{
+			childResult=tempResults.get(currentTarget);
+			Map<String,List<Object>> siblingResult=aggregateResults.get(targetLabel);
+			Iterator<Entry<String, List<Object>>> itr = siblingResult.entrySet().iterator();
+			Map<Integer,Iterator<Object>> iterator=new HashMap<Integer,Iterator<Object>>();
+			String[] labels=new String[siblingResult.size()];
+			int i=0;
+			while(itr.hasNext()){
+				 Map.Entry<String,List<Object>> pairs = (Map.Entry<String,List<Object>>)itr.next();
+				 List<Object> column=(List<Object>) pairs.getValue();
+				 labels[i]=pairs.getKey();
+				 iterator.put(i++, column.iterator());
+			}
+			List<Object> sourceColumn;
+			while(iterator.get(0).hasNext()){
+				for(i=0;i<siblingResult.size();i++){
+					sourceColumn=childResult.get(labels[i]);
+					Object value = iterator.get(i).next();
+					sourceColumn.add(value);
+				 }
+			}
+		}	
+	}
+	
+	/**
+	 * This method takes the intersection of the results of all the targets having relations with the processed results. 
+	 * @param sourceQueryResults is a map which has result of the intersection
+	 * @param processedResults is a map which has results of a sourceLabel. Its key=label used in query and value=IJsonNode or IJsonRelation.
+	 * @param resultsOfTargets is a map which is union of the results of all the target labels.
+	 * @param oldLabelToNewLabelMap is a map with key=new unique labels and value=labels used in query. 
+	 * @param sourceToTargetLabelMap is a map whose key is label used as a source and value is list of the target labels.
+	 * @param sourceLabel is a label corresponding to the source label of the processedResults
+	 */
+	public void intersectionOfResultsWithSourceQuery(
 			Map<String, List<Object>> sourceQueryResults,Map<String, List<Object>> processedResults,Map<Integer, Map<String, List<Object>>> resultsOfTargets,
-			Map<String, String> oldLabelToNewLabelMap, Map<String, List<List<String>>> nestedLabelMap, String root) {
+			Map<String, String> oldLabelToNewLabelMap, Map<String, List<List<String>>> sourceToTargetLabelMap, String sourceLabel) {
 		
 		
 		Map<Integer,Map<String, List<Object>>>intermediateResults=new LinkedHashMap<Integer,Map<String, List<Object>>>();
@@ -226,7 +466,7 @@ public class RepositoryManager implements IRepositoryManager{
 			String[] labels=new String[intermediateResults.get(loopCounter).size()];	
 			int i=0;
 			boolean flag=true;
-			String targetNode=nestedLabelMap.get(root).get(loopCounter).get(0);
+			String targetNode=sourceToTargetLabelMap.get(sourceLabel).get(loopCounter).get(0);
 			String oldTargetMapping=oldLabelToNewLabelMap.get(targetNode);
 			int targetId=0;
 			//This loop creates labels for the results of source query
@@ -294,13 +534,28 @@ public class RepositoryManager implements IRepositoryManager{
 		
 	}
 	
-	private void createRow(List<Object> row,
-			Map<Integer, Iterator<Object>> iterator, int startOfTempResults) {
-		for(int i=0;i<startOfTempResults;i++){
+	/**
+	 * This method create a single instance of the result by iterating from 0 to  startOfTempResults.
+	 * @param row is the single instance of the result.
+	 * @param iterator is the Iterator which iterates from 0 to startOfTempResults.  
+	 * @param lastColumn is the upper bound for the iterator to iterate.
+	 */
+	public void createRow(List<Object> row,
+			Map<Integer, Iterator<Object>> iterator, int lastColumn) {
+		for(int i=0;i<lastColumn;i++){
 			row.add(iterator.get(i).next());
 		}
 	}
-	private void getMatchedRows(Map<Integer, List<Object>> matchedRows,
+	
+	/**
+	 * This method stores all the instances into matchedRows which matches with the id.
+	 * @param matchedRows is the map of the rows matched with the id.
+	 * @param iterator is the Iterator which iterates from startOfTempResults to the size of the labels  
+	 * @param id is the node id of the IJsonNode
+	 * @param startOfTempResults is the lower bound for the iterator to iterate through.
+	 * @param labels is array of string(labels) which are unique labels
+	 */
+	public void getMatchedRows(Map<Integer, List<Object>> matchedRows,
 			Map<Integer, Iterator<Object>> iterator, String id,
 			int startOfTempResults, String[] labels) {
 		int rowCount=0;
@@ -322,16 +577,24 @@ public class RepositoryManager implements IRepositoryManager{
 		}
 	}
 	
-	private void cartesianProduct(List<Object> row,
-			Map<Integer, List<Object>> matchedRows, int startOfTempResults,
+	/**
+	 * This method takes the Cartesian product of the row with the matchedRows. 
+	 * @param row is a single instance of the result.
+	 * @param matchedRows is the map of the rows with key=counter(integer) and value=row.
+	 * @param lastColumn is the upper bound for the iteration.
+	 * @param currentResults is the result of inersection of current target with the processedResults. (Output of this method).
+	 * @param labels is array of string(labels) which are unique labels.
+	 */
+	public void cartesianProduct(List<Object> row,
+			Map<Integer, List<Object>> matchedRows, int lastColumn,
 			Map<String, List<Object>> currentResults, String[] labels) {
 		if(matchedRows.size()!=0){
 			for(int x=0;x<matchedRows.size();x++){
 				int j=0;
-				for(;j<startOfTempResults;j++){
+				for(;j<lastColumn;j++){
 					currentResults.get(labels[j]).add(row.get(j));
 				}
-				j=startOfTempResults+1;
+				j=lastColumn+1;
 				for(Object obj:matchedRows.get(x)){
 					currentResults.get(labels[j++]).add(obj);	
 				}
@@ -339,155 +602,18 @@ public class RepositoryManager implements IRepositoryManager{
 		}	
 	}
 	
-	private void reinitializeIterators(
+	/**
+	 * This method reinitialize the iterators
+	 * @param iterator is the Iterator which iterates from startOfTempResults to the size of the labels.
+	 * @param resultsOfTargets is a map which has the results of current target label. key=label used in query and value=IJsonNode or IJsonRelation 
+	 * @param startOfTempResults is the lower bound for the iterator to iterate through.
+	 */
+	public void reinitializeIterators(
 			Map<Integer, Iterator<Object>> iterator,
-			Map<String, List<Object>> map, int startOfTempResults) {
-		for(Entry<String, List<Object>> entry:map.entrySet()){
+			Map<String, List<Object>> resultsOfTargets, int startOfTempResults) {
+		for(Entry<String, List<Object>> entry:resultsOfTargets.entrySet()){
 			iterator.put(startOfTempResults++, entry.getValue().iterator());
 		}
 	}
-	private void unionOfResults(
-			Map<String, Map<String, List<Object>>> aggregateResults,
-			Map<Integer, Map<String, List<Object>>> tempResults,
-			int outerForCounter, String sibling) {
 		
-		Map<String, List<Object>> childResult;
-		if(!tempResults.containsKey(outerForCounter)){
-			tempResults.put(outerForCounter, aggregateResults.get(sibling));
-		}else{
-			childResult=tempResults.get(outerForCounter);
-			Map<String,List<Object>> siblingResult=aggregateResults.get(sibling);
-			Iterator<Entry<String, List<Object>>> itr = siblingResult.entrySet().iterator();
-			Map<Integer,Iterator<Object>> iterator=new HashMap<Integer,Iterator<Object>>();
-			String[] labels=new String[siblingResult.size()];
-			int i=0;
-			while(itr.hasNext()){
-				 Map.Entry<String,List<Object>> pairs = (Map.Entry<String,List<Object>>)itr.next();
-				 List<Object> column=(List<Object>) pairs.getValue();
-				 labels[i]=pairs.getKey();
-				 iterator.put(i++, column.iterator());
-			}
-			List<Object> sourceColumn;
-			while(iterator.get(0).hasNext()){
-				for(i=0;i<siblingResult.size();i++){
-					sourceColumn=childResult.get(labels[i]);
-					Object value = iterator.get(i).next();
-					sourceColumn.add(value);
-				 }
-			}
-		}	
-	}
-	
-	private void initializeCurrentChildCounter(Map<String, List<Integer>> currentChildMap,
-			Map<String, List<List<String>>> nestedProblemMap) {
-		
-		for(Entry<String, List<List<String>>> entry:nestedProblemMap.entrySet()){
-			List<Integer> currentCountList=new ArrayList<Integer>();
-			currentCountList.add(0);
-			currentCountList.add(0);
-			currentChildMap.put(entry.getKey(), currentCountList);
-		}
-	}
-	/**
-	 * @author Karan
-	 * It takes IQuery as a input parameter and breaks down a single queries in multiple queries.
-	 * targetJsonMap is a mapping of target label with its json query.
-	 * oldLabelToNewLableMap is a mapping of the labels used in the query with unique labels created by parseNodeListObject.
-	 * nestedProblemMap is mapping of target label with the targets of their nested jsons.
-	 * It returns tree structure which is required for the aggregating results.
-	 **/
-	@Override
-	public Tree breakdownQuery(IQuery q){
-		INode n = q.getNode();
-		Map<IRelNode,String> parsedNodeToLabelMap=new LinkedHashMap<IRelNode,String>();
-		Map<IRelNode,String> allNodeToLabelMap=new LinkedHashMap<IRelNode,String>();
-		Map<String,List<List<String>>> sourceToTargetLabelMap=new LinkedHashMap<String, List<List<String>>>();
-		Map<String,String> targetJsonMap=new LinkedHashMap<String,String>();
-		Map<String,String> oldLabelToNewLabelMap=new LinkedHashMap<String,String>();
-		
-		Tree tree=new Tree();
-		int targetCounter=1;
-		int counter=0;
-		String source="";
-		List<IRelNode> keyElements=new ArrayList<IRelNode>();
-		if(n!=null){
-			ReturnElementsOfOTC nodeListObject = objectToCypher.objectToCypher(n);
-			source=PropertyOf.SOURCE.toString();
-			targetCounter=parseNodeListObject(nodeListObject,allNodeToLabelMap,parsedNodeToLabelMap,sourceToTargetLabelMap,targetJsonMap,oldLabelToNewLabelMap,targetCounter,keyElements,source);
-			IRelNode relNode=null;
-			if(keyElements.size()!=0){
-				while((relNode=keyElements.get(counter++))!=null){
-					nodeListObject = objectToCypher.objectToCypher(relNode);
-					source=allNodeToLabelMap.get(relNode);
-					parsedNodeToLabelMap.put(relNode,source);
-					targetCounter=parseNodeListObject(nodeListObject,allNodeToLabelMap,parsedNodeToLabelMap,sourceToTargetLabelMap,targetJsonMap,oldLabelToNewLabelMap,targetCounter,keyElements,source);
-					if(counter==allNodeToLabelMap.size()){
-						break;
-					}
-				}
-			}
-		}else{
-			logger.info("Node is null");
-		}
-		tree.setSourceToTargetLabelMap(sourceToTargetLabelMap);
-		tree.setTargetJsonMap(targetJsonMap);
-		tree.setOldLabelToNewLabelMap(oldLabelToNewLabelMap);
-		return tree;
-	}
-	
-	
-	/**
-	 * @author Karan
-	 * This method parse the results of objectToCypher method. It returns the list of two elements. First is json and second is objectToLabelMap.
-	 * It just considers the entry with key of type IRelNode and ignores everything else
-	 **/
-	public int parseNodeListObject(ReturnElementsOfOTC nodeListObject, Map<IRelNode, String> allElements, Map<IRelNode, String> parsedElements, Map<String, List<List<String>>> nestedProblemMap, Map<String, String> targetJsonMap, Map<String, String> oldLabelToNewLabelMap, int targetCounter, List<IRelNode> keyElements, String source){
-		String jsonQuery = nodeListObject.getJson();
-		Map<Object,String> objectToLabelMap = nodeListObject.getObjectToTargetLabelMap();
-		targetJsonMap.put(source, jsonQuery);
-		logger.info("***********************************\nJson Query : "+jsonQuery+"\n***********************************\n");
-		List<String> subProblemList=new ArrayList<String>();
-		List<List<String>> problemList=new ArrayList<List<String>>();
-		String lastTarget="";
-		for (Map.Entry<Object, String> entry : objectToLabelMap.entrySet()){
-		    Object obj=entry.getKey();
-		    if(obj instanceof RelNode){
-				IRelNode relNode=(IRelNode)obj;
-		    	if(!parsedElements.containsKey(relNode)){
-		    		if(!objectToLabelMap.get(relNode).equals(lastTarget)){
-		    			subProblemList=new ArrayList<String>();
-		    			problemList.add(subProblemList);
-		    		}
-		    		String target=PropertyOf.TARGET.toString()+targetCounter;
-		    		subProblemList.add(target);
-		    		oldLabelToNewLabelMap.put(target, objectToLabelMap.get(relNode));
-		    		INode node=relNode.getNode();
-		    		List<Object> nodeDetails = node.getPropertyOrRelationshipOrAnd();
-		    		Iterator<Object> nodeDetailsIterator = nodeDetails.iterator();
-		    		while(nodeDetailsIterator.hasNext()){
-		    			Object o=nodeDetailsIterator.next();
-		    			if(o instanceof JAXBElement){
-		    				JAXBElement<?> element = (JAXBElement<Object>) o;
-		    				if(element.getName().toString().contains("}and")||element.getName().toString().contains("}or")){
-		    					allElements.put(relNode,PropertyOf.TARGET.toString()+targetCounter);
-		    					keyElements.add(relNode);
-		    					break;
-		    				}
-		    			}	
-		    		}
-		    		targetCounter+=1;
-		    		lastTarget=objectToLabelMap.get(relNode);
-		    	}
-			}
-		}
-		nestedProblemMap.put(source, problemList);
-		return targetCounter;
-	}
-	
-	@Override
-	public void queryToCypher(IQuery q)
-	{
-		throw new NotImplementedException("Not yet implemented");
-	}
-	
 }

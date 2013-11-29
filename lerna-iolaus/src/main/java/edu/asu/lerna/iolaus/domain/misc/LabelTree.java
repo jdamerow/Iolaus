@@ -3,7 +3,7 @@ package edu.asu.lerna.iolaus.domain.misc;
 import java.util.List;
 import java.util.Map;
 
-public class Tree {
+public class LabelTree {
 
 	Map<String,List<List<String>>> sourceToTargetLabelMap;
 	Map<String,String> targetJsonMap;

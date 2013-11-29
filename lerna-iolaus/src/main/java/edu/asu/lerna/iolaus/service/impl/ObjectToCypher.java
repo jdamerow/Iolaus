@@ -610,7 +610,7 @@ public class ObjectToCypher implements IObjectToCypher {
 	 * @param  o   is Object
 	 * @return     true if o is instance of the Property else return false
 	 */
-	private boolean isProperty(Object o) {
+	public boolean isProperty(Object o) {
 		return o instanceof Property;
 	}
 
@@ -618,7 +618,7 @@ public class ObjectToCypher implements IObjectToCypher {
 	 * @param  element   is JAXBElement
 	 * @return true      if element contains "}or" else return false
 	 */
-	private boolean isOrOperator(JAXBElement<?> element) {
+	public boolean isOrOperator(JAXBElement<?> element) {
 		return element.getName().toString().contains("}or");
 	}
 
@@ -626,7 +626,7 @@ public class ObjectToCypher implements IObjectToCypher {
 	 * @param  element   is JAXBElement
 	 * @return           true if element contains "}and" else return false
 	 */
-	private boolean isAndOperator(JAXBElement<?> element) {
+	public boolean isAndOperator(JAXBElement<?> element) {
 		return element.getName().toString().contains("}and");
 	}
 	
@@ -634,7 +634,7 @@ public class ObjectToCypher implements IObjectToCypher {
 	 * @param  element   is Object
 	 * @return           true if o is instance of the Relationship else return false
 	 */
-	private boolean isRelationship(Object element) {
+	public boolean isRelationship(Object element) {
 		return element instanceof Relationship;
 	}
 	
@@ -642,7 +642,7 @@ public class ObjectToCypher implements IObjectToCypher {
 	 * @param  element1   is JAXBElement
 	 * @return            true if element contains "}source" else return false
 	 */
-	private boolean isSourceNode(JAXBElement<?> element1) {
+	public boolean isSourceNode(JAXBElement<?> element1) {
 		return element1.getName().toString().contains("}source");
 	}
 
@@ -650,7 +650,7 @@ public class ObjectToCypher implements IObjectToCypher {
 	 * @param  element1   is JAXBElement
 	 * @return            true if element contains "}target" else return false
 	 */
-	private boolean isTargetNode(JAXBElement<?> element1) {
+	public boolean isTargetNode(JAXBElement<?> element1) {
 		return element1.getName().toString().contains("}target");
 	}
 
@@ -658,7 +658,7 @@ public class ObjectToCypher implements IObjectToCypher {
 	 * @param  element   is Object
 	 * @return           true if o is instance of the JAXBElement else return false
 	 */
-	private boolean isJAXBelement(Object element) {
+	public boolean isJAXBelement(Object element) {
 		return element instanceof JAXBElement<?>;
 	}
 	
@@ -666,7 +666,7 @@ public class ObjectToCypher implements IObjectToCypher {
 	 * @param  value   is a String
 	 * @return         true if it is Numeric else return false
 	 */
-	private boolean isNumeric(String value) {
+	public boolean isNumeric(String value) {
 		return value.matches("(\\d*)");
 	}
 	
@@ -674,7 +674,7 @@ public class ObjectToCypher implements IObjectToCypher {
 	 * @param  num   integer
 	 * @return       increment by 1
 	 */
-	private int increment(int num) {
+	public int increment(int num) {
 		return num+1;
 	}
 }
