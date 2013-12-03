@@ -10,8 +10,6 @@ import java.util.Set;
 
 import javax.xml.bind.JAXBElement;
 
-import org.apache.catalina.ant.jmx.Arg;
-import org.hamcrest.core.IsInstanceOf;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -58,7 +56,7 @@ public class ObjectToCypher implements IObjectToCypher {
 		Map<String,List<String>> whereMap=new LinkedHashMap<String,List<String>>();
 		//key is Object (Object corresponding to source and target labels) and value is label 
 		Map<Object,String> objectToLabelMap=new LinkedHashMap<Object,String>();
-		String dataSet="mblCourses";
+		String dataSet="mblcourses";
 		ArgumentsInOTC args=new ArgumentsInOTC();
 		args.setStartMap(startMap);
 		args.setWhereMap(whereMap);
@@ -136,7 +134,7 @@ public class ObjectToCypher implements IObjectToCypher {
 			if(!start.equals("Start ")){
 				start+=", ";
 			}
-			start+=entry.getKey()+"=node:myIndex("+entry.getValue()+") ";
+			start+=entry.getKey()+"=node:new_index("+entry.getValue()+") ";
 		}
 		return start;
 	}
@@ -477,8 +475,9 @@ public class ObjectToCypher implements IObjectToCypher {
 				value="\""+prop.getValue()+"\"";
 			}
 			
-			String p=prop.getName()+"="+value;
+			
 			if(!propertyOf.equals(PropertyOf.RELATION)){
+				String p=prop.getName()+"="+value;
 				if(!startMap.containsKey(element)){
 					addToStart(startMap,element, p);
 					flag=false;
@@ -490,6 +489,7 @@ public class ObjectToCypher implements IObjectToCypher {
 				
 			}
 			if(flag){
+				String p=prop.getName()+"=~"+value;
 				if(whereMap.containsKey(element)){
 					List<String> propertyList=whereMap.get(element);
 					propertyList.add(p);
@@ -588,9 +588,9 @@ public class ObjectToCypher implements IObjectToCypher {
 			
 			match=node1;
 			if(direction){
-				match+="-"+relation+"->";
+				match+="-["+relation+"]->";
 			}else{
-				match+="<-"+relation+"-";
+				match+="<-["+relation+"]-";
 			}
 			match+=node2;
 			matchMap.put(node2,match);

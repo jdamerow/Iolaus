@@ -39,7 +39,6 @@ public class Node {
 	private Set<Relation> relationships;
 	
 
-	//TODO: Add proper constructors and initialize the class objects
 	
 	public Long getId() {
 		return id;

@@ -27,7 +27,7 @@ public class Neo4jConfFileReader {
 
 	public ArrayList<Neo4jConfFile> getNeo4jConfFiles() throws IOException
 	{
-		ArrayList<Neo4jConfFile> listOfFiles = new ArrayList<>();
+		ArrayList<Neo4jConfFile> listOfFiles = new ArrayList<Neo4jConfFile>();
 		File folder = new File(env.getProperty("LOCAL_PATH_FOR_NEO4JCONFIGURATION"));
 
 		for(final File fileEntry : folder.listFiles())

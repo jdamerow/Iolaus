@@ -10,7 +10,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-import edu.asu.lerna.iolaus.domain.queryobject.impl.Node;
 import edu.asu.lerna.iolaus.service.ICypherToJson;
 @Service
 public class CypherToJson implements ICypherToJson {
@@ -26,19 +25,29 @@ public class CypherToJson implements ICypherToJson {
 			  }
 			}*/
 		String query="\"query\":";
-		String regx="(\")([a-zA-Z0-9_.]*)(\")";
+		String regx="(\")([a-zA-Z0-9_.\\s?*()]*)(\")";
 		Pattern pattern = Pattern.compile(regx);
 		Matcher matcher = pattern.matcher(cypher);
 		Map<String,String> paramMap=new LinkedHashMap<String,String>();
 		String p="param";
 		int counter=0;
 		String temp=cypher;
+		int indexCount=0;
+		if(cypher.contains("Where")){
+			indexCount=cypher.substring(0, cypher.indexOf("Where")).split("\"").length/2;
+		}
+		int x=1;
 		 while (matcher.find()) {
 			 if(!paramMap.containsValue(matcher.group())){
 				 counter++;
 				 String replacement="{"+p+counter+"}";
-				 paramMap.put("\""+p+counter+"\"", matcher.group());
+				 String property=matcher.group();
+				 if(x>indexCount)
+					 paramMap.put("\""+p+counter+"\"","\"(?i).*"+property.substring(1,property.length()-1)+".*\"");
+				 else
+					 paramMap.put("\""+p+counter+"\"", property);
 				 temp=temp.replaceAll(matcher.group(),replacement );
+				 x++;
 			 }
 		 }
 		 query+="\""+temp+"\"";

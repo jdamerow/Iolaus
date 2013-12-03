@@ -27,7 +27,7 @@ public class Neo4jRegistry {
 	
 	private List<Neo4jConfFile> fileList;
 	
-	@PostConstruct void init() throws IOException
+	/*@PostConstruct void init() throws IOException
 	{
 		fileList = fileReader.getNeo4jConfFiles();
 	}
@@ -45,5 +45,5 @@ public class Neo4jRegistry {
 			Neo4jConfFile fileelement = it.next();
 			System.out.println("File details:" +fileelement.getDescription()+ "\n" + fileelement.getTitle());
 		}
-	}
+	}*/
 }
