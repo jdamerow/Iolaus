@@ -213,7 +213,7 @@ public class AddNodesRestController {
 		attended.setServiceId(" ");
 		attended.setUri(" ");
 		attended.setDataset(dataset);
-		attended.setLabel("Attended");
+		attended.setLabel("attended");
 		attended.setRole(seriesRole);
 		attended.setYear(year);
 		nodeManager.saveRelation(attended);

@@ -44,9 +44,9 @@ public class CacheManager implements ICacheManager {
 
 		List<List> listOfNodesAndRelations = null;
 		
-		List<String> instanceUrl = new ArrayList<>();
-		Iterator<String> iterator = dbInstances.iterator();
-		while(iterator.hasNext())
+		List<String> instanceUrl = new ArrayList<String>();
+		//Iterator<String> iterator = dbInstances.iterator();
+		/*while(iterator.hasNext())
 		{
 			String dbName = iterator.next();
 			Iterator<Neo4jConfFile> fileIterator = neo4jInstances.getfileList().iterator();
@@ -65,18 +65,21 @@ public class CacheManager implements ICacheManager {
 			listOfNodesAndRelations = repoHandler.executeQuery(json, instance);
 			printList(listOfNodesAndRelations);
 		}
-		
+		*/
+		listOfNodesAndRelations = repoHandler.executeQuery(json,null);
+		printList(listOfNodesAndRelations);
 		return listOfNodesAndRelations;
 	}
 
 	//TODO:Remove this method
 	private void printList(List<List> listOfNodesAndRelations)
 	{
+		int count=0;
 		if(listOfNodesAndRelations != null)
 		{
 			for(List rowList: listOfNodesAndRelations)
 			{
-				System.out.println("--------------------------------------------");
+				System.out.println("--------------------------------------------"+count++);
 				for(Object obj: rowList)
 				{
 					if(obj instanceof IJsonNode)

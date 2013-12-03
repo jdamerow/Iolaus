@@ -38,7 +38,7 @@ public class Relation {
 	private DynamicProperties properties;*/
 	
 	@RelationshipType
-	private String relationshipType;
+	private String type;
 	
 	public Relation(){
 		super();
@@ -49,7 +49,7 @@ public class Relation {
 		super();
 		this.startNode = startNode;
 		this.endNode = endNode;
-		this.relationshipType = relationshipType;
+		this.type = relationshipType;
 	}
 	
 	/*public void setProperties(DynamicProperties properties){
@@ -85,7 +85,7 @@ public class Relation {
 	}
 	
 	public String getRelationshipType(){
-		return relationshipType;
+		return type;
 	}
 	
 	/*public String getType() {

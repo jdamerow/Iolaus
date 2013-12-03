@@ -61,7 +61,11 @@ public class RepositoryManager implements IRepositoryManager{
 	public void executeQuery(IQuery q)
 	{
 		LabelTree tree=breakdownQuery(q);
-		traverseLabelsAndExecute(tree);
+		if(tree.getSourceToTargetLabelMap().get(PropertyOf.SOURCE.toString()).size()!=0)
+			traverseLabelsAndExecute(tree);
+		else{ 
+			List<List> results=cacheManager.executeQuery(tree.getTargetJsonMap().get(PropertyOf.SOURCE.toString()), null);
+		}
 	}
 	
 	

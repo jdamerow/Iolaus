@@ -33,9 +33,9 @@ public class RepositoryHandler implements IRepositoryHandler {
 	public List<List> executeQuery(String jsonTraverserPayload, String neo4jInstance)
 	{
 		URI traverserUri = null;
-
+ 
 		try {
-			traverserUri = new URI( "http://localhost:7474/db/data/cypher" );
+			traverserUri = new URI( "http://localhost:7476/db/data/cypher" );
 			//traverserUri = new URI( neo4jInstance );
 		} catch (URISyntaxException e1) {
 			e1.printStackTrace();
@@ -61,7 +61,7 @@ public class RepositoryHandler implements IRepositoryHandler {
 		
 		JSONObject jsonResponseObject = new JSONObject(oneSingleJsonString);
 		JSONArray dataArray = jsonResponseObject.optJSONArray("data");
-
+		
 		for(int i=0;i<dataArray.length();i++)
 		{
 			List<Object> rowList = new ArrayList<Object>();
