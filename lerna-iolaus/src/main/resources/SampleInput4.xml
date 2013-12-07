@@ -1,0 +1,22 @@
+<!--Who held role [B] in course [X]?-->
+<query 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+		xmlns="http://digitalhps.org/lerna-query-model" 
+		xsi:schemaLocation="http://digitalhps.org/lerna-query-model query-schema.xsd">
+    <database id="2"/>
+    <dataset id = "mblcourses" />
+    <node return="true">
+        <and>
+            <property name="type" value="Person" />              
+            <relationship return="true">
+                <property name="type" value="attended" />
+                <property name="role" value="Instructor" />
+                    <target>
+                        <node>
+							<property name="type" value="Series"/>
+							<property name="label" value="Zool" /> 
+                        </node>
+                    </target>
+            </relationship>
+        </and>
+    </node>      
+</query>
