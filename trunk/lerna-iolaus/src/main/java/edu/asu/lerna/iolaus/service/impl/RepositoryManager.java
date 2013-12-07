@@ -231,6 +231,7 @@ public class RepositoryManager implements IRepositoryManager{
 					}
 				}
 			}
+			//System.out.println(processedResults.keySet());
 		}
 	
 		return processedResults;
@@ -282,7 +283,7 @@ public class RepositoryManager implements IRepositoryManager{
 				List<List> results=cacheManager.executeQuery(json, null);
 				Map<String,List<Object>> processedResults=processResults(results);
 				aggregateResults(aggregatedResults,processedResults,sourceToTargetLabelMap,oldLabelToNewLabelMap,sourceLabel);
-				System.out.println(sourceLabel);
+				//System.out.println(sourceLabel);
 				flag=false;
 			}
 		}while(!stack.isEmpty());
@@ -330,7 +331,7 @@ public class RepositoryManager implements IRepositoryManager{
 		if(sourceToTargetLabelMap.get(sourceLabel).get(outerCount).size()-1>=innerCount+1){
 			currentTargetLabelCounter.get(sourceLabel).set(1, innerCount+1);
 		}
-		else if(sourceToTargetLabelMap.get(sourceLabel).size()-1>outerCount+1) {
+		else if(sourceToTargetLabelMap.get(sourceLabel).size()-1>=outerCount+1) {
 			currentTargetLabelCounter.get(sourceLabel).set(0, outerCount+1);
 			currentTargetLabelCounter.get(sourceLabel).set(1, 0);
 		}else{
@@ -395,8 +396,14 @@ public class RepositoryManager implements IRepositoryManager{
 				}
 				outerForCounter++;
 			}
-			Map<String, List<Object>> sourceLabelResults=new LinkedHashMap<String, List<Object>>();
-			intersectionOfResultsWithSourceQuery(sourceLabelResults,processedResults,resultsOfTargets,oldLabelToNewLabelMap,sourceToTargetLabelMap,sourceLabel);	
+			System.out.println("Size="+processedResults.get("source").size());
+			if(resultsOfTargets.size()==0){
+				aggregatedResults.put(sourceLabel, processedResults);
+			}else{
+				Map<String, List<Object>> sourceLabelResults=intersectionOfResultsWithSourceQuery(processedResults,resultsOfTargets,oldLabelToNewLabelMap,sourceToTargetLabelMap,sourceLabel);	
+				System.out.println("Size="+sourceLabelResults.get("source").size());
+				aggregatedResults.put(sourceLabel, sourceLabelResults);
+			}
 	}
 	
 
@@ -443,34 +450,33 @@ public class RepositoryManager implements IRepositoryManager{
 	
 	/**
 	 * This method takes the intersection of the results of all the targets having relations with the processed results. 
-	 * @param sourceQueryResults is a map which has result of the intersection
 	 * @param processedResults is a map which has results of a sourceLabel. Its key=label used in query and value=IJsonNode or IJsonRelation.
 	 * @param resultsOfTargets is a map which is union of the results of all the target labels.
 	 * @param oldLabelToNewLabelMap is a map with key=new unique labels and value=labels used in query. 
 	 * @param sourceToTargetLabelMap is a map whose key is label used as a source and value is list of the target labels.
 	 * @param sourceLabel is a label corresponding to the source label of the processedResults
+	 * @return the result after intersection with source node
 	 */
-	public void intersectionOfResultsWithSourceQuery(
-			Map<String, List<Object>> sourceQueryResults,Map<String, List<Object>> processedResults,Map<Integer, Map<String, List<Object>>> resultsOfTargets,
+	public Map<String, List<Object>> intersectionOfResultsWithSourceQuery(Map<String, List<Object>> processedResults,Map<Integer, Map<String, List<Object>>> resultsOfTargets,
 			Map<String, String> oldLabelToNewLabelMap, Map<String, List<List<String>>> sourceToTargetLabelMap, String sourceLabel) {
 		
 		
 		Map<Integer,Map<String, List<Object>>>intermediateResults=new LinkedHashMap<Integer,Map<String, List<Object>>>();
 		intermediateResults.put(0, processedResults);
-		
-		for(int loopCounter=0;loopCounter<resultsOfTargets.size();loopCounter++){
+		int loopCounter;
+		for(loopCounter=0;loopCounter<resultsOfTargets.size();loopCounter++){
 			
 			Map<String,List<Object>> currentIterationResults=new LinkedHashMap<String,List<Object>>();
-			intermediateResults.put(loopCounter+1, currentIterationResults);
 			Iterator<Entry<String, List<Object>>> intermediateResultsIterator = intermediateResults.get(loopCounter).entrySet().iterator();
 			Iterator<Entry<String, List<Object>>> tempResultsIterator = resultsOfTargets.get(loopCounter).entrySet().iterator();
 			Map<Integer,Iterator<Object>> iterator=new HashMap<Integer,Iterator<Object>>();
 			int targetCount=1;
 			int relationshipCount=1;
-			String[] labels=new String[intermediateResults.get(loopCounter).size()];	
+			String[] labels=new String[intermediateResults.get(loopCounter).size()+resultsOfTargets.get(loopCounter).size()];	
 			int i=0;
 			boolean flag=true;
 			String targetNode=sourceToTargetLabelMap.get(sourceLabel).get(loopCounter).get(0);
+			System.out.println("Target Node:"+targetNode);
 			String oldTargetMapping=oldLabelToNewLabelMap.get(targetNode);
 			int targetId=0;
 			//This loop creates labels for the results of source query
@@ -499,7 +505,7 @@ public class RepositoryManager implements IRepositoryManager{
 			}
 			
 			int startOfTempResults=i;
-	
+			flag=true;
 			//This loop creates labels for the results of Target query
 			while(tempResultsIterator.hasNext()){
 				 Map.Entry<String,List<Object>> pairs = (Map.Entry<String,List<Object>>)tempResultsIterator.next();
@@ -522,9 +528,10 @@ public class RepositoryManager implements IRepositoryManager{
 				 labels[i]=label;
 				 iterator.put(i++, column.iterator());
 			}
-			
+			//int c=0;
 			List<Object> row;
 			while(iterator.get(targetId).hasNext()){
+				//System.out.println(c++);
 				row=new LinkedList<Object>();
 				createRow(row,iterator,startOfTempResults);
 				JsonNode node=(JsonNode)row.get(targetId);
@@ -534,8 +541,10 @@ public class RepositoryManager implements IRepositoryManager{
 				reinitializeIterators(iterator,resultsOfTargets.get(loopCounter),startOfTempResults);
 				cartesianProduct(row,matchedRows,startOfTempResults,currentIterationResults,labels);	
 			}
+			//System.out.println(currentIterationResults.get("source").size());
+			intermediateResults.put(loopCounter+1, currentIterationResults);
 		}
-		
+		return intermediateResults.get(loopCounter);
 	}
 	
 	/**
@@ -546,6 +555,7 @@ public class RepositoryManager implements IRepositoryManager{
 	 */
 	public void createRow(List<Object> row,
 			Map<Integer, Iterator<Object>> iterator, int lastColumn) {
+		
 		for(int i=0;i<lastColumn;i++){
 			row.add(iterator.get(i).next());
 		}
@@ -593,6 +603,7 @@ public class RepositoryManager implements IRepositoryManager{
 			Map<Integer, List<Object>> matchedRows, int lastColumn,
 			Map<String, List<Object>> currentResults, String[] labels) {
 		if(matchedRows.size()!=0){
+			//System.out.println("Here");
 			for(int x=0;x<matchedRows.size();x++){
 				int j=0;
 				for(;j<lastColumn;j++){

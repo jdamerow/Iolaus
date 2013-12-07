@@ -1,0 +1,31 @@
+<!--What courses did people from institution [I] attend?-->
+<query 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+		xmlns="http://digitalhps.org/lerna-query-model" 
+		xsi:schemaLocation="http://digitalhps.org/lerna-query-model query-schema.xsd">
+    <database id="2"/>
+    <dataset id = "mblcourses" />
+    <node return="true">
+        <and>
+            <property name="type" value="Series" />              
+            <relationship return="true">
+                <property name="type" value="attended" />
+                    <source>
+                        <node>
+							<and>
+								<property name="type" value="Person"/>
+								<relationship return="true">
+									<property name="type" value="affiliatedWith"/>
+									<target>
+										<node>
+											<property name="type" value="Institute"/>
+											<property name="label" value="Harvard"/>
+										</node>
+									</target>
+								</relationship>
+							</and>
+                        </node>
+                    </source>
+            </relationship>
+        </and>
+    </node>      
+</query>

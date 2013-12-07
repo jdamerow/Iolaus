@@ -1,0 +1,21 @@
+<!--Where was institution [I] located?-->
+<query 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+		xmlns="http://digitalhps.org/lerna-query-model" 
+		xsi:schemaLocation="http://digitalhps.org/lerna-query-model query-schema.xsd">
+    <database id="2"/>
+    <dataset id = "mblcourses" />
+    <node return="true">
+        <and>
+            <property name="type" value="Location" />   
+            <relationship return="true">
+				<property name="type" value="hasLocation" />
+				<source>
+					<node>
+                        <property name="type" value="Institute" />
+                        <property name="label" value="Harvard" />
+                    </node>
+                </source>
+            </relationship>
+        </and>
+    </node>      
+</query>

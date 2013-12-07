@@ -134,7 +134,7 @@ public class ObjectToCypher implements IObjectToCypher {
 			if(!start.equals("Start ")){
 				start+=", ";
 			}
-			start+=entry.getKey()+"=node:new_index("+entry.getValue()+") ";
+			start+=entry.getKey()+"=node:node_auto_index("+entry.getValue()+") ";
 		}
 		return start;
 	}
@@ -373,6 +373,7 @@ public class ObjectToCypher implements IObjectToCypher {
     				operatorObject(opOr,args);
     				
     			}else{
+    				args.setTargetOperator("");
     				objectToLabelMap.put(element1.getValue(),PropertyOf.TARGET.toString()+args.getCurrentTarget());
 	    			String node1=(PropertyOf.SOURCE).toString();
 	    			String node2=(PropertyOf.TARGET).toString()+args.getCurrentTarget();
@@ -489,7 +490,12 @@ public class ObjectToCypher implements IObjectToCypher {
 				
 			}
 			if(flag){
-				String p=prop.getName()+"=~"+value;
+				String p="";
+				if(!isNumeric(value))
+					p=prop.getName()+"=~"+value;
+				else{
+					p=prop.getName()+"="+value;
+				}
 				if(whereMap.containsKey(element)){
 					List<String> propertyList=whereMap.get(element);
 					propertyList.add(p);
