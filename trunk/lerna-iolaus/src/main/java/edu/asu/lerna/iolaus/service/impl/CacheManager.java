@@ -36,13 +36,13 @@ public class CacheManager implements ICacheManager {
 	}
 
 	@Override
-	public List<List> executeQuery(String json, List<String> dbInstances)
+	public List<List<Object>> executeQuery(String json, List<String> dbInstances)
 	{
 		//TODO: Iterate through each repository and for each repository fetch the result.
 		System.out.println("\n\n");
 		//json = "{\"query\":\"Start source=node:node_auto_index(type={param1}) match source-[r]->(target) Where (( source.dataset={param3} )) return source, r, target\", \"params\":{\"param1\":\"Person\",\"param3\":\"mblcourses\"}}";
 
-		List<List> listOfNodesAndRelations = null;
+		List<List<Object>> listOfNodesAndRelations = null;
 		
 		List<String> instanceUrl = new ArrayList<String>();
 		//Iterator<String> iterator = dbInstances.iterator();
@@ -67,17 +67,17 @@ public class CacheManager implements ICacheManager {
 		}
 		*/
 		listOfNodesAndRelations = repoHandler.executeQuery(json,null);
-		printList(listOfNodesAndRelations);
+		//printList(listOfNodesAndRelations);
 		return listOfNodesAndRelations;
 	}
 
 	//TODO:Remove this method
-	private void printList(List<List> listOfNodesAndRelations)
+	private void printList(List<List<Object>> listOfNodesAndRelations)
 	{
 		int count=0;
 		if(listOfNodesAndRelations != null)
 		{
-			for(List rowList: listOfNodesAndRelations)
+			for(List<Object> rowList: listOfNodesAndRelations)
 			{
 				System.out.println("--------------------------------------------"+count++);
 				for(Object obj: rowList)

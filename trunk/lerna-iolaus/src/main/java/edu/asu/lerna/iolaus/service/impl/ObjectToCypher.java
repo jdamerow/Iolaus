@@ -1,6 +1,7 @@
 package edu.asu.lerna.iolaus.service.impl;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -56,6 +57,8 @@ public class ObjectToCypher implements IObjectToCypher {
 		Map<String,List<String>> whereMap=new LinkedHashMap<String,List<String>>();
 		//key is Object (Object corresponding to source and target labels) and value is label 
 		Map<Object,String> objectToLabelMap=new LinkedHashMap<Object,String>();
+		//It is a map with key=Unique label and value=its return value
+		Map<String,Boolean> labelToIsReturnMap=new HashMap<String,Boolean>();
 		String dataSet="mblcourses";
 		ArgumentsInOTC args=new ArgumentsInOTC();
 		args.setStartMap(startMap);
@@ -64,6 +67,7 @@ public class ObjectToCypher implements IObjectToCypher {
 		args.setObjectToLabelMap(objectToLabelMap);
 		args.setDataSet(dataSet);
 		args.setPropertyOf(PropertyOf.SOURCE);
+		args.setLabelToIsReturnMap(labelToIsReturnMap);
 		ReturnElementsOfOTC returnObj=new ReturnElementsOfOTC();
 		String sourceOperator=nodeObject(node,args);
 		String start=s;
@@ -79,6 +83,7 @@ public class ObjectToCypher implements IObjectToCypher {
 		String json=cypherToJson.cypherToJson(query);
 		returnObj.setJson(json);
 		returnObj.setObjectToTargetLabelMap(objectToLabelMap);
+		returnObj.setLabelToIsReturnMap(labelToIsReturnMap);
 		return returnObj;
 	}
 
@@ -97,6 +102,8 @@ public class ObjectToCypher implements IObjectToCypher {
 		Map<String,List<String>> whereMap=new LinkedHashMap<String,List<String>>();
 		//key is Object (Object corresponding to source and target labels) and value is label 
 		Map<Object,String> objectToTargetLabelMap=new LinkedHashMap<Object,String>();
+		//It is a map with key=Unique label and value=its return value
+		Map<String,Boolean> labelToIsReturnMap=new HashMap<String,Boolean>();
 		String dataSet="mblcourses";
 		ArgumentsInOTC args=new ArgumentsInOTC();
 		args.setStartMap(startMap);
@@ -105,7 +112,8 @@ public class ObjectToCypher implements IObjectToCypher {
 		args.setObjectToLabelMap(objectToTargetLabelMap);
 		args.setDataSet(dataSet);
 		args.setPropertyOf(PropertyOf.SOURCE);
-		ReturnElementsOfOTC returnList=new ReturnElementsOfOTC();
+		args.setLabelToIsReturnMap(labelToIsReturnMap);
+		ReturnElementsOfOTC returnObj=new ReturnElementsOfOTC();
 		String sourceOperator=nestedRelNodeObject(node,args);
 		String start=s;
 		String match=m;
@@ -118,9 +126,10 @@ public class ObjectToCypher implements IObjectToCypher {
 		String query=buildQuery(start,match,where,ret);
 		ICypherToJson cypherToJson=new CypherToJson();
 		String json=cypherToJson.cypherToJson(query);
-		returnList.setJson(json);
-		returnList.setObjectToTargetLabelMap(objectToTargetLabelMap);
-		return returnList;
+		returnObj.setJson(json);
+		returnObj.setObjectToTargetLabelMap(objectToTargetLabelMap);
+		returnObj.setLabelToIsReturnMap(labelToIsReturnMap);
+		return returnObj;
 	}
 	
 	/**
@@ -351,9 +360,9 @@ public class ObjectToCypher implements IObjectToCypher {
 		
 		Map<String, String> matchMap=args.getMatchMap();
 		Map<Object, String> objectToLabelMap=args.getObjectToLabelMap();
-		
 		args.setCurrentTarget(increment(args.getCurrentTarget()));
 		args.setCurrentRelationship(increment(args.getCurrentRelationship()));
+		args.getLabelToIsReturnMap().put(PropertyOf.RELATION.toString()+args.getCurrentRelationship(), relationship.isReturn()==null?false:relationship.isReturn());
 		objectToLabelMap.put(relationship,PropertyOf.RELATION.toString()+args.getCurrentRelationship());
 		List<Object> relationshipDetails = relationship.getSourceOrTargetOrProperty();
 		Iterator<Object> relationshipDetailsIterator = relationshipDetails.iterator();
@@ -543,6 +552,7 @@ public class ObjectToCypher implements IObjectToCypher {
 		String dataSet=args.getDataSet();
 		
     	INode node = relNode.getNode();
+    	args.getLabelToIsReturnMap().put(PropertyOf.TARGET.toString()+args.getCurrentTarget(), node.isReturn()==null?false:node.isReturn());
     	List <Object> nodeObjectList = node.getPropertyOrRelationshipOrAnd();
     	Iterator<Object> nodeObjectIterator= nodeObjectList.iterator();
     	int count=0;

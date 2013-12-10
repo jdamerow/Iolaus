@@ -30,7 +30,7 @@ public class RepositoryHandler implements IRepositoryHandler {
 
 
 	@Override
-	public List<List> executeQuery(String jsonTraverserPayload, String neo4jInstance)
+	public List<List<Object>> executeQuery(String jsonTraverserPayload, String neo4jInstance)
 	{
 		URI traverserUri = null;
  
@@ -53,9 +53,9 @@ public class RepositoryHandler implements IRepositoryHandler {
 		return getListOfNodesAndRelations(oneSingleJsonString);
 	}
 
-	private List<List> getListOfNodesAndRelations(String oneSingleJsonString)
+	private List<List<Object>> getListOfNodesAndRelations(String oneSingleJsonString)
 	{
-		List<List> resultList = new ArrayList<List>();
+		List<List<Object>> resultList = new ArrayList<List<Object>>();
 		IJsonNode node = null;
 		IJsonRelation relation = null;
 		

@@ -1,34 +1,17 @@
 package edu.asu.lerna.iolaus.domain.queryobject;
 
 public enum PropertyOf {
-SOURCE,
-TARGET,
-RELATION;
+	SOURCE("source"), TARGET("target"), RELATION("r");
 
-@Override
-public String toString() {
+	private String value;
 
-    String value;
+	private PropertyOf(String value) {
+		this.value = value;
+	}
 
-    switch (this) {
+	@Override
+	public String toString() {
 
-        case SOURCE:
-            value = "source";
-            break;
-
-        case TARGET:
-            value = "target";
-            break;
-
-        case RELATION:
-            value = "r";
-            break;
-
-        default:
-            value = null;
-            break;
-    }
-
-    return value;
-}
+		return value;
+	}
 }

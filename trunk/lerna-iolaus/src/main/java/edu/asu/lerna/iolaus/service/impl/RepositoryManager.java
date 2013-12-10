@@ -61,11 +61,15 @@ public class RepositoryManager implements IRepositoryManager{
 	public void executeQuery(IQuery q)
 	{
 		LabelTree tree=breakdownQuery(q);
+		Map<String,List<Object>> resultSet;
 		if(tree.getSourceToTargetLabelMap().get(PropertyOf.SOURCE.toString()).size()!=0)
-			traverseLabelsAndExecute(tree);
+			resultSet=traverseLabelsAndExecute(tree);
 		else{ 
-			List<List> results=cacheManager.executeQuery(tree.getTargetJsonMap().get(PropertyOf.SOURCE.toString()), null);
+			List<List<Object>> results=cacheManager.executeQuery(tree.getTargetJsonMap().get(PropertyOf.SOURCE.toString()), null);
+			resultSet=processResults(results);
 		}
+		System.out.println("Total Number Of labels:"+resultSet.size());
+		System.out.println("Total Number of Rows:"+resultSet.get("source").size());
 	}
 	
 	
@@ -86,22 +90,53 @@ public class RepositoryManager implements IRepositoryManager{
 		Map<String,String> targetJsonMap=new LinkedHashMap<String,String>();
 		//It is map with key=new unique labels and value=old labels
 		Map<String,String> newLabelToOldLabelMap=new LinkedHashMap<String,String>();
+		//It is a map with key=Unique label and value=its return value
+		Map<String,Boolean> labelToIsReturnMap=new HashMap<String,Boolean>();
 		
 		LabelTree tree=new LabelTree();
 		int targetCounter=1;
+		int uniqueTargetCounter=1;
+		int relationshipCounter=1;
 		int counter=0;
 		String source="";
 		List<IRelNode> keyElements=new ArrayList<IRelNode>();
 		if(n!=null){
 			ReturnElementsOfOTC nodeListObject = objectToCypher.objectToCypher(n);
+			Map<String,Boolean> currentLabelIsReturnMap=nodeListObject.getLabelToIsReturnMap();
 			source=PropertyOf.SOURCE.toString();
+			labelToIsReturnMap.put(source, n.isReturn()==null?false:n.isReturn());
+			
+			for(Entry<String,Boolean> entry:currentLabelIsReturnMap.entrySet()){
+				String label=entry.getKey();
+				if(label.contains(PropertyOf.TARGET.toString())){
+					labelToIsReturnMap.put(PropertyOf.TARGET.toString()+uniqueTargetCounter, entry.getValue());
+					uniqueTargetCounter++;
+				}else{
+					labelToIsReturnMap.put(PropertyOf.RELATION.toString()+relationshipCounter, entry.getValue());
+					relationshipCounter++;
+				}
+			}
+			
 			targetCounter=parseNodeListObject(nodeListObject,allNodeToLabelMap,parsedNodeToLabelMap,sourceToTargetLabelMap,targetJsonMap,newLabelToOldLabelMap,targetCounter,keyElements,source);
 			IRelNode relNode=null;
 			if(keyElements.size()!=0){
 				while((relNode=keyElements.get(counter++))!=null){
 					nodeListObject = objectToCypher.objectToCypher(relNode);
+					currentLabelIsReturnMap=nodeListObject.getLabelToIsReturnMap();
 					source=allNodeToLabelMap.get(relNode);
 					parsedNodeToLabelMap.put(relNode,source);
+					
+					for(Entry<String,Boolean> entry:currentLabelIsReturnMap.entrySet()){
+						String label=entry.getKey();
+						if(label.contains(PropertyOf.TARGET.toString())){
+							labelToIsReturnMap.put(PropertyOf.TARGET.toString()+uniqueTargetCounter, entry.getValue());
+							uniqueTargetCounter++;
+						}else{
+							labelToIsReturnMap.put(PropertyOf.RELATION.toString()+relationshipCounter, entry.getValue());
+							relationshipCounter++;
+						}
+					}
+					
 					targetCounter=parseNodeListObject(nodeListObject,allNodeToLabelMap,parsedNodeToLabelMap,sourceToTargetLabelMap,targetJsonMap,newLabelToOldLabelMap,targetCounter,keyElements,source);
 					if(counter==allNodeToLabelMap.size()){
 						break;
@@ -114,6 +149,7 @@ public class RepositoryManager implements IRepositoryManager{
 		tree.setSourceToTargetLabelMap(sourceToTargetLabelMap);
 		tree.setTargetJsonMap(targetJsonMap);
 		tree.setOldLabelToNewLabelMap(newLabelToOldLabelMap);
+		tree.setLabelToIsReturnMap(labelToIsReturnMap);
 		return tree;
 	}
 	
@@ -136,20 +172,21 @@ public class RepositoryManager implements IRepositoryManager{
 		Map<Object,String> objectToLabelMap = nodeListObject.getObjectToTargetLabelMap();
 		targetJsonMap.put(source, jsonQuery);
 		logger.info("***********************************\nJson Query : "+jsonQuery+"\n***********************************\n");
-		List<String> subProblemList=new ArrayList<String>();
-		List<List<String>> problemList=new ArrayList<List<String>>();
+		List<String> targetLabelList=new ArrayList<String>();
+		List<List<String>> labelList=new ArrayList<List<String>>();
 		String lastTarget="";
 		for (Map.Entry<Object, String> entry : objectToLabelMap.entrySet()){
 		    Object obj=entry.getKey();
 		    if(obj instanceof RelNode){
 				IRelNode relNode=(IRelNode)obj;
+				
 		    	if(!parsedNodesToLabelMap.containsKey(relNode)){
 		    		if(!objectToLabelMap.get(relNode).equals(lastTarget)){
-		    			subProblemList=new ArrayList<String>();
-		    			problemList.add(subProblemList);
+		    			targetLabelList=new ArrayList<String>();
+		    			labelList.add(targetLabelList);
 		    		}
 		    		String target=PropertyOf.TARGET.toString()+targetCounter;
-		    		subProblemList.add(target);
+		    		targetLabelList.add(target);
 		    		oldLabelToNewLabelMap.put(target, objectToLabelMap.get(relNode));
 		    		INode node=relNode.getNode();
 		    		List<Object> nodeDetails = node.getPropertyOrRelationshipOrAnd();
@@ -170,7 +207,7 @@ public class RepositoryManager implements IRepositoryManager{
 		    	}
 			}
 		}
-		sourceToTargetLabelMap.put(source, problemList);
+		sourceToTargetLabelMap.put(source, labelList);
 		return targetCounter;
 	}
 	
@@ -180,7 +217,7 @@ public class RepositoryManager implements IRepositoryManager{
 	 * @return the map whose key is label used in the query and value is the List of IJsonNode or IJsonRelation.
 	 */
 	@SuppressWarnings("rawtypes")
-	public Map<String, List<Object>> processResults(List<List> results) {
+	public Map<String, List<Object>> processResults(List<List<Object>> results) {
 		//key->label used in the query   value->List of IJsonNode or IJsonRelatoin
 		Map<String, List<Object>> processedResults=new LinkedHashMap<String,List<Object>>();
 		String target=PropertyOf.TARGET.toString();
@@ -241,8 +278,9 @@ public class RepositoryManager implements IRepositoryManager{
 	/**
 	 * It is a method which traverse the labels in post order. Then, Executes the query associated with each label.
 	 * @param tree is a object of LabelTree which has three members 1. sourceToTargetLabelMap 2. targetToJsonMap 3. oldLabelToNewLabelMap
+	 * @return 
 	 */
-	public void traverseLabelsAndExecute(LabelTree tree) {
+	public Map<String, List<Object>> traverseLabelsAndExecute(LabelTree tree) {
 		
 		Map<String,List<List<String>>> sourceToTargetLabelMap=tree.getSourceToTargetLabelMap();
 		Map<String,String> targetLabelToJsonMap=tree.getTargetJsonMap();
@@ -280,15 +318,32 @@ public class RepositoryManager implements IRepositoryManager{
 				flag=true;
 			}else{
 				String json=targetLabelToJsonMap.get(sourceLabel);
-				List<List> results=cacheManager.executeQuery(json, null);
+				List<List<Object>> results=cacheManager.executeQuery(json, null);
 				Map<String,List<Object>> processedResults=processResults(results);
 				aggregateResults(aggregatedResults,processedResults,sourceToTargetLabelMap,oldLabelToNewLabelMap,sourceLabel);
 				//System.out.println(sourceLabel);
 				flag=false;
 			}
 		}while(!stack.isEmpty());
+		Map<String,List<Object>> finalResults=filterResults(aggregatedResults.get(PropertyOf.SOURCE.toString()),tree.getLabelToIsReturnMap());
+		return finalResults;
 	}
 	
+	private Map<String, List<Object>> filterResults(Map<String, List<Object>> map, Map<String, Boolean> labelToIsReturnMap) {
+		
+		Map<String,List<Object>> finalResuts=new LinkedHashMap<String, List<Object>>();
+		System.out.println(labelToIsReturnMap);
+		for(Entry<String,List<Object>> entry:map.entrySet()){
+			String label=entry.getKey();
+			if(labelToIsReturnMap.get(label)){
+				finalResuts.put(label, entry.getValue());
+			}
+		}
+		
+		return finalResuts;
+	}
+
+
 	/**
 	 * This method initialize the list corresponding to keys of currentTargetLabelMap with 0. 
 	 * @param currentTargetLabelMap is a map with key=label(source of a query) and value is list of the counts of target labels.
