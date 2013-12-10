@@ -8,7 +8,14 @@ public class LabelTree {
 	Map<String,List<List<String>>> sourceToTargetLabelMap;
 	Map<String,String> targetJsonMap;
 	Map<String,String> oldLabelToNewLabelMap;
+	Map<String,Boolean> labelToIsReturnMap;
 	
+	public Map<String, Boolean> getLabelToIsReturnMap() {
+		return labelToIsReturnMap;
+	}
+	public void setLabelToIsReturnMap(Map<String, Boolean> labelToIsReturnMap) {
+		this.labelToIsReturnMap = labelToIsReturnMap;
+	}
 	public Map<String, List<List<String>>> getSourceToTargetLabelMap() {
 		return sourceToTargetLabelMap;
 	}

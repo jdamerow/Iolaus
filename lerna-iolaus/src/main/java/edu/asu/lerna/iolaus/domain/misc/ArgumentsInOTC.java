@@ -10,6 +10,7 @@ public class ArgumentsInOTC {
 	Map<String,String> startMap;
 	Map<String,String> matchMap ;
 	Map<String,List<String>> whereMap;
+	Map<String,Boolean> labelToIsReturnMap;
 	PropertyOf propertyOf;
 	Map<Object,String> objectToLabelMap;
 	String dataSet;
@@ -71,5 +72,11 @@ public class ArgumentsInOTC {
 	}
 	public void setDataSet(String dataSet) {
 		this.dataSet = dataSet;
+	}
+	public Map<String, Boolean> getLabelToIsReturnMap() {
+		return labelToIsReturnMap;
+	}
+	public void setLabelToIsReturnMap(Map<String, Boolean> labelToIsReturnMap) {
+		this.labelToIsReturnMap = labelToIsReturnMap;
 	}
 }
