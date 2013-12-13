@@ -4,7 +4,7 @@
     <xs:element name="query">
         <xs:complexType>
             <xs:sequence>
-                <xs:element ref="database" minOccurs="0" maxOccurs="1"/>
+                <xs:element ref="databaseList" minOccurs="0" maxOccurs="1"/>
                 <xs:element ref="dataset" minOccurs="0" maxOccurs="1"/>
                 <xs:element ref="node" minOccurs="0" maxOccurs="1"/>
                 <xs:element ref="relationship" minOccurs="0" maxOccurs="1"/>
@@ -84,4 +84,12 @@
             <xs:element ref="or" minOccurs="0"/>
         </xs:choice>
     </xs:complexType>
+
+    <xs:complexType name="databaseList">
+    	<xs:sequence>
+    		<xs:element ref="database" maxOccurs="unbounded" minOccurs="1"></xs:element>
+    	</xs:sequence>
+    </xs:complexType>
+
+    <xs:element name="databaseList" type="databaseList"></xs:element>
 </xs:schema>
