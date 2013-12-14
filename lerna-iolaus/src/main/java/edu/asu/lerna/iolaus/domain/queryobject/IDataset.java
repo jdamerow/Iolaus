@@ -1,11 +1,9 @@
 package edu.asu.lerna.iolaus.domain.queryobject;
 
-import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlSeeAlso;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 import edu.asu.lerna.iolaus.domain.queryobject.impl.Dataset;
-import edu.asu.lerna.iolaus.domain.queryobject.impl.Query;
 
 @XmlJavaTypeAdapter(Dataset.Adapter.class)
 @XmlSeeAlso(Dataset.class)

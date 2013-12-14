@@ -6,7 +6,6 @@ import javax.xml.bind.JAXBElement;
 import javax.xml.bind.annotation.XmlSeeAlso;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
-import edu.asu.lerna.iolaus.domain.queryobject.impl.Dataset;
 import edu.asu.lerna.iolaus.domain.queryobject.impl.Node;
 import edu.asu.lerna.iolaus.domain.queryobject.impl.Property;
 import edu.asu.lerna.iolaus.domain.queryobject.impl.Relationship;

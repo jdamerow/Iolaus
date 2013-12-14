@@ -1,5 +1,7 @@
 package edu.asu.lerna.iolaus.domain.queryobject;
 
+import java.util.List;
+
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 import edu.asu.lerna.iolaus.domain.queryobject.impl.Database;
@@ -19,7 +21,7 @@ public interface IQuery {
 	 *     {@link Database }
 	 *     
 	 */
-	public abstract IDatabase getDatabase();
+	public abstract IDatabaseList getDatabaseList();
 
 	/**
 	 * Sets the value of the database property.
@@ -29,7 +31,7 @@ public interface IQuery {
 	 *     {@link Database }
 	 *     
 	 */
-	public abstract void setDatabase(IDatabase value);
+	public abstract void setDatabaseList(IDatabaseList value);
 
 	/**
 	 * Gets the value of the dataset property.
@@ -112,13 +114,23 @@ public interface IQuery {
 	public abstract String getDatasetName(IDataset ds);
 
 	/**
-	 * Gets the value of the dataset name.
+	 * Gets the value of the Node details.
+	 * 
+	 * @return
+	 *     possible object is
+	 *     {@link Node }
+	 *     
+	 */
+	public abstract void getNodeDetails(INode node);
+
+	/**
+	 * Gets the value of the database list.
 	 * 
 	 * @return
 	 *     possible object is
 	 *     {@link Dataset }
 	 *     
 	 */
-	public abstract void getNodeDetails(INode node);
+	List<IDatabase> getDatabaseList(IDatabaseList dbList);
 
 }

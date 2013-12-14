@@ -5,7 +5,6 @@ import java.math.BigInteger;
 import javax.xml.bind.annotation.XmlSeeAlso;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
-import edu.asu.lerna.iolaus.domain.queryobject.impl.Operator;
 import edu.asu.lerna.iolaus.domain.queryobject.impl.Property;
 
 @XmlJavaTypeAdapter(Property.Adapter.class)
