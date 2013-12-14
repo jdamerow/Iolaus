@@ -8,19 +8,19 @@
 
 package edu.asu.lerna.iolaus.domain.queryobject.impl;
 
+import java.util.List;
+
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlAnyElement;
-import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 import javax.xml.bind.annotation.adapters.XmlAdapter;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 import edu.asu.lerna.iolaus.domain.queryobject.IDatabase;
+import edu.asu.lerna.iolaus.domain.queryobject.IDatabaseList;
 import edu.asu.lerna.iolaus.domain.queryobject.IDataset;
 import edu.asu.lerna.iolaus.domain.queryobject.INode;
-import edu.asu.lerna.iolaus.domain.queryobject.IProperty;
 import edu.asu.lerna.iolaus.domain.queryobject.IQuery;
 import edu.asu.lerna.iolaus.domain.queryobject.IRelationship;
 
@@ -49,7 +49,7 @@ import edu.asu.lerna.iolaus.domain.queryobject.IRelationship;
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "", propOrder = {
-    "database",
+    "databaseList",
     "dataset",
     "node",
     "relationship"
@@ -57,7 +57,7 @@ import edu.asu.lerna.iolaus.domain.queryobject.IRelationship;
 @XmlRootElement(name = "query")
 public class Query implements IQuery {
 
-	@XmlJavaTypeAdapter(Database.Adapter.class) protected IDatabase database;
+	@XmlJavaTypeAdapter(DatabaseList.Adapter.class) protected IDatabaseList databaseList;
 	@XmlJavaTypeAdapter(Dataset.Adapter.class) protected IDataset dataset;
 	@XmlJavaTypeAdapter(Node.Adapter.class) protected INode node;
 	@XmlJavaTypeAdapter(RelNode.Adapter.class) protected IRelationship relationship;
@@ -67,16 +67,16 @@ public class Query implements IQuery {
 	 * @see edu.asu.lerna.iolaus.domain.queryobject.impl.IQuery#getDatabase()
 	 */
     @Override
-	public IDatabase getDatabase() {
-        return database;
+	public IDatabaseList getDatabaseList() {
+        return databaseList;
     }
 
     /* (non-Javadoc)
 	 * @see edu.asu.lerna.iolaus.domain.queryobject.impl.IQuery#setDatabase(edu.asu.lerna.iolaus.domain.queryobject.IDatabase)
 	 */
     @Override
-	public void setDatabase(IDatabase value) {
-        this.database = value;
+	public void setDatabaseList(IDatabaseList value) {
+        this.databaseList = value;
     }
 
     /* (non-Javadoc)
@@ -134,6 +134,11 @@ public class Query implements IQuery {
     @Override
 	public String getDatabaseId(IDatabase db){
     	return db.getId();
+    }
+    
+    @Override
+	public List<IDatabase> getDatabaseList(IDatabaseList dbList){
+    	return dbList.getDatabase();
     }
     
     

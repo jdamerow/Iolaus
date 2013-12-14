@@ -16,7 +16,6 @@ import javax.xml.bind.annotation.XmlType;
 import javax.xml.bind.annotation.adapters.XmlAdapter;
 
 import edu.asu.lerna.iolaus.domain.queryobject.IDatabase;
-import edu.asu.lerna.iolaus.domain.queryobject.IDataset;
 
 
 /**

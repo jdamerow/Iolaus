@@ -5,7 +5,6 @@ import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 import edu.asu.lerna.iolaus.domain.queryobject.impl.Node;
 import edu.asu.lerna.iolaus.domain.queryobject.impl.RelNode;
-import edu.asu.lerna.iolaus.domain.queryobject.impl.Relationship;
 
 
 @XmlJavaTypeAdapter(RelNode.Adapter.class)
