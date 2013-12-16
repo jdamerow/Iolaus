@@ -1,0 +1,4 @@
+id=1
+description=Instance is running at port 7476
+host=diging.asu.edu
+path=http://localhost:7476/db/data/cypher

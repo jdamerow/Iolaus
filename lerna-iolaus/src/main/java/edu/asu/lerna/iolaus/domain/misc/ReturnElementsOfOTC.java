@@ -3,7 +3,7 @@ import java.util.Map;
 
 public class ReturnElementsOfOTC {
 	Map<Object,String> objectToTargetLabelMap;
-	Map<String,Boolean> labelToIsReturnMap;
+	Map<String,Boolean> isReturnMap;
 	String json;
 	
 	public Map<Object, String> getObjectToTargetLabelMap() {
@@ -18,11 +18,11 @@ public class ReturnElementsOfOTC {
 	public void setJson(String json) {
 		this.json = json;
 	}
-	public Map<String, Boolean> getLabelToIsReturnMap() {
-		return labelToIsReturnMap;
+	public Map<String, Boolean> getIsReturnMap() {
+		return isReturnMap;
 	}
-	public void setLabelToIsReturnMap(Map<String, Boolean> labelToIsReturnMap) {
-		this.labelToIsReturnMap = labelToIsReturnMap;
+	public void setIsReturnMap(Map<String, Boolean> labelToIsReturnMap) {
+		this.isReturnMap = labelToIsReturnMap;
 	}
 	
 }

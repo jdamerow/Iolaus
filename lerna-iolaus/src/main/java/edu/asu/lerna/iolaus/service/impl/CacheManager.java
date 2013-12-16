@@ -1,12 +1,12 @@
 package edu.asu.lerna.iolaus.service.impl;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 import java.util.Map.Entry;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,16 +14,15 @@ import edu.asu.lerna.iolaus.configuration.neo4j.iml.Neo4jConfFile;
 import edu.asu.lerna.iolaus.configuration.neo4j.iml.Neo4jRegistry;
 import edu.asu.lerna.iolaus.domain.json.IJsonNode;
 import edu.asu.lerna.iolaus.domain.json.IJsonRelation;
-import edu.asu.lerna.iolaus.domain.json.impl.JsonNode;
-import edu.asu.lerna.iolaus.domain.json.impl.JsonRelation;
 import edu.asu.lerna.iolaus.service.ICacheManager;
 import edu.asu.lerna.iolaus.service.IRepositoryHandler;
 
 @Service
 public class CacheManager implements ICacheManager {
 
-	//TODO: Change this implementation to use autowiring
-	//	private List<IRepositoryHandler> repoHanlders;
+	private static final Logger logger = LoggerFactory
+			.getLogger(CacheManager.class);
+//	private List<IRepositoryHandler> repoHanlders;
 	@Autowired
 	private IRepositoryHandler repoHandler;
 	@Autowired
@@ -31,43 +30,36 @@ public class CacheManager implements ICacheManager {
 
 	public CacheManager()
 	{
-
-		//		repoHanlders = new ArrayList<IRepositoryHandler>();
+			//repoHanlders = new ArrayList<IRepositoryHandler>();
 	}
 
 	@Override
 	public List<List<Object>> executeQuery(String json, List<String> dbInstances)
 	{
-		//TODO: Iterate through each repository and for each repository fetch the result.
-		System.out.println("\n\n");
-		//json = "{\"query\":\"Start source=node:node_auto_index(type={param1}) match source-[r]->(target) Where (( source.dataset={param3} )) return source, r, target\", \"params\":{\"param1\":\"Person\",\"param3\":\"mblcourses\"}}";
-
-		List<List<Object>> listOfNodesAndRelations = null;
-		
+		logger.debug("\n\n");
+		List<List<Object>> listOfNodesAndRelations = new ArrayList<List<Object>>();
 		List<String> instanceUrl = new ArrayList<String>();
-		//Iterator<String> iterator = dbInstances.iterator();
-		/*while(iterator.hasNext())
+		Iterator<String> iterator = dbInstances.iterator();
+		while(iterator.hasNext())
 		{
 			String dbName = iterator.next();
 			Iterator<Neo4jConfFile> fileIterator = neo4jInstances.getfileList().iterator();
 			while(fileIterator.hasNext())
 			{
 				Neo4jConfFile dbFile = fileIterator.next();
-				if (dbName.equals(dbFile.getTitle()))
+				if (dbName.equals(dbFile.getId()))
 				{
 					instanceUrl.add(dbFile.getPath());
 				}
 			}
 		}
-		
+		List<List<Object>> queryResults;
 		for (String instance: instanceUrl)
 		{
-			listOfNodesAndRelations = repoHandler.executeQuery(json, instance);
-			printList(listOfNodesAndRelations);
+			queryResults = repoHandler.executeQuery(json, instance);
+			if(queryResults.size()!=0)
+				listOfNodesAndRelations.addAll(queryResults);
 		}
-		*/
-		listOfNodesAndRelations = repoHandler.executeQuery(json,null);
-		//printList(listOfNodesAndRelations);
 		return listOfNodesAndRelations;
 	}
 
@@ -92,7 +84,7 @@ public class CacheManager implements ICacheManager {
 						Iterator<Entry<String, String>> iterator = jsonNode.getData().entrySet().iterator();
 						while(iterator.hasNext())
 						{
-							Map.Entry dataEntry = (Map.Entry) iterator.next();
+							Entry<String, String> dataEntry = iterator.next();
 							System.out.println(dataEntry.getKey()+" : "+dataEntry.getValue());
 						}
 						System.out.println();
@@ -109,7 +101,7 @@ public class CacheManager implements ICacheManager {
 						Iterator<Entry<String, String>> iterator = jsonRelation.getData().entrySet().iterator();
 						while(iterator.hasNext())
 						{
-							Map.Entry dataEntry = (Map.Entry) iterator.next();
+							Entry<String, String> dataEntry = iterator.next();
 							System.out.println(dataEntry.getKey()+" : "+dataEntry.getValue());
 						}
 						System.out.println();

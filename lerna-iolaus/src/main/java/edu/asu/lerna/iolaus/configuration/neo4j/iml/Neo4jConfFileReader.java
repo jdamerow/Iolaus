@@ -18,7 +18,7 @@ import org.springframework.stereotype.Service;
  *
  */
 
-@PropertySource(value="classpath:/lerna.properties")
+@PropertySource(value="/lerna.properties")
 @Service
 public class Neo4jConfFileReader {
 	
@@ -28,8 +28,8 @@ public class Neo4jConfFileReader {
 	public ArrayList<Neo4jConfFile> getNeo4jConfFiles() throws IOException
 	{
 		ArrayList<Neo4jConfFile> listOfFiles = new ArrayList<Neo4jConfFile>();
-		File folder = new File(env.getProperty("LOCAL_PATH_FOR_NEO4JCONFIGURATION"));
-
+		String classPath=Neo4jConfFileReader.class.getProtectionDomain().getCodeSource().getLocation().getPath();
+		File folder = new File(classPath.substring(0,classPath.indexOf("classes"))+"classes/"+env.getProperty("LOCAL_PATH_FOR_NEO4JCONFIGURATION"));
 		for(final File fileEntry : folder.listFiles())
 		{
 			Neo4jConfFile confFile = new Neo4jConfFile();
@@ -41,8 +41,8 @@ public class Neo4jConfFileReader {
 			}
 			for(String key : properties.stringPropertyNames()) {
 				String value = properties.getProperty(key);
-				if(key.equals("title"))
-					confFile.setTitle(value);
+				if(key.equals("id"))
+					confFile.setId(value);
 				if(key.equals("host"))
 					confFile.setHost(value);
 				if(key.equals("description"))

@@ -12,14 +12,14 @@ import org.springframework.stereotype.Service;
 @Service
 public class Neo4jConfFile {
 
-	private String title;
+	private String id;
 	private String description;
 	private String host;
 	private String path;
 	
-	public void setTitle(String title)
+	public void setId(String title)
 	{
-		this.title = title;
+		this.id = title;
 	}
 	
 	public void setDescription(String description)
@@ -49,8 +49,8 @@ public class Neo4jConfFile {
 	{
 		return path;
 	}
-	public String getTitle()
+	public String getId()
 	{
-		return title;
+		return id;
 	}
 }
