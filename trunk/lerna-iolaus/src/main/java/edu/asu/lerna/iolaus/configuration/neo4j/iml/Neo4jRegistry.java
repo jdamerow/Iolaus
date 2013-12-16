@@ -27,9 +27,10 @@ public class Neo4jRegistry {
 	
 	private List<Neo4jConfFile> fileList;
 	
-	/*@PostConstruct void init() throws IOException
+	@PostConstruct void init() throws IOException
 	{
 		fileList = fileReader.getNeo4jConfFiles();
+		print(fileList);
 	}
 	
 	public List<Neo4jConfFile> getfileList()
@@ -37,13 +38,13 @@ public class Neo4jRegistry {
 		return Collections.unmodifiableList(this.fileList);
 	}
 	
-	void print (ArrayList<Neo4jConfFile> filelist)
+	void print (List<Neo4jConfFile> filelist)
 	{
 		Iterator<Neo4jConfFile> it = filelist.iterator();
 		while(it.hasNext())
 		{
 			Neo4jConfFile fileelement = it.next();
-			System.out.println("File details:" +fileelement.getDescription()+ "\n" + fileelement.getTitle());
+			System.out.println("File details:" +fileelement.getDescription()+ "\n" + fileelement.getId());
 		}
-	}*/
+	}
 }

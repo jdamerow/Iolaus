@@ -83,7 +83,7 @@ public class ObjectToCypher implements IObjectToCypher {
 		String json=cypherToJson.cypherToJson(query);
 		returnObj.setJson(json);
 		returnObj.setObjectToTargetLabelMap(objectToLabelMap);
-		returnObj.setLabelToIsReturnMap(labelToIsReturnMap);
+		returnObj.setIsReturnMap(labelToIsReturnMap);
 		return returnObj;
 	}
 
@@ -128,7 +128,7 @@ public class ObjectToCypher implements IObjectToCypher {
 		String json=cypherToJson.cypherToJson(query);
 		returnObj.setJson(json);
 		returnObj.setObjectToTargetLabelMap(objectToTargetLabelMap);
-		returnObj.setLabelToIsReturnMap(labelToIsReturnMap);
+		returnObj.setIsReturnMap(labelToIsReturnMap);
 		return returnObj;
 	}
 	
