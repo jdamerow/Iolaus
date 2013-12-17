@@ -2,6 +2,13 @@ package edu.asu.lerna.iolaus.service.impl;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBElement;
@@ -14,11 +21,14 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import edu.asu.lerna.iolaus.domain.json.IJsonNode;
+import edu.asu.lerna.iolaus.domain.json.IJsonRelation;
+import edu.asu.lerna.iolaus.domain.misc.ResultSet;
 import edu.asu.lerna.iolaus.domain.queryobject.IQuery;
 import edu.asu.lerna.iolaus.domain.queryobject.impl.Query;
 import edu.asu.lerna.iolaus.service.IObjecttoXMLConverter;
 import edu.asu.lerna.iolaus.service.IQueryManager;
-import edu.asu.lerna.iolaus.service.IRepositoryManager;
+import edu.asu.lerna.iolaus.service.IQueryHandler;
 import edu.asu.lerna.iolaus.service.IXMLtoCypherConverter;
 
 @Service
@@ -31,7 +41,7 @@ public class QueryManager implements IQueryManager {
 	private IObjecttoXMLConverter objectToXMLConverter;
 	
 	@Autowired
-	private IRepositoryManager repositoryManager;
+	private IQueryHandler queryHandler;
 	
 	private static final Logger logger = LoggerFactory
 			.getLogger(QueryManager.class);
@@ -50,12 +60,10 @@ public class QueryManager implements IQueryManager {
 		//xmlToCypherConverter.parseQuery(q);	
 		
 		//This stage should return the nodes and relations
-		repositoryManager.executeQuery(q);
-		
-		
-		
-		//TODO: Make a decision to send nodes or relations or both in xml
-		//TODO: call this.getRESTOutput with the decision
+		ResultSet rset=queryHandler.executeQuery(q);
+		Map<String,List<Object>> resultSet=filterResults(rset.getResultSet(),rset.getLabelToIsReturnTrueMap());
+		Map<String,List<Object>> finalResultSet=deleteDuplicateRows(resultSet);
+		logger.info("Final Result - Total Number of Rows:"+finalResultSet.size());
 		
 		if(inputXML.contains("<node return=\"true\">") && inputXML.contains("<relationship return=\"true\">"))
 		{
@@ -73,6 +81,62 @@ public class QueryManager implements IQueryManager {
 		return getRESTOutput(null, false, false);
 	}
 	
+	/**
+	 * This method filters the columns of the results based on whether labels are to be displayed to user or not
+	 * @param resultSet is a results having number of columns=number of labels used in the cypher query
+	 * @param isReturnTrueMap is a map with key=label and value=whether that column is to be displayed to user or not
+	 * @return a map with key=label(only for which return="true") and value=List of IJonNode and IJsonRelation
+	 */
+	@Override
+	public Map<String, List<Object>> filterResults(Map<String, List<Object>> resultSet, Map<String, Boolean> isReturnTrueMap) {
+		
+		Map<String,List<Object>> filteredResults=new LinkedHashMap<String, List<Object>>();
+		//This loop will add only columns(labels) for which return="true"
+		for(Entry<String,List<Object>> entry:resultSet.entrySet()){
+			String label=entry.getKey();
+			if(isReturnTrueMap.get(label)){
+				filteredResults.put(label, entry.getValue());
+			}
+		}
+		return filteredResults;
+	}
+	
+	/**
+	 * This method deletes the duplicate rows based on the number of labels for which return="true"
+	 * @param resultSet is a map with key=label and value=List of IJsonNode or IJsomRelation 
+	 * @return a map with key = id of all the IJson objects for which return="true" and value=List of IJsonNode or IJsomRelation 
+	 */
+	@Override
+	public Map<String, List<Object>> deleteDuplicateRows(Map<String, List<Object>> resultSet) {
+		
+		Map<Integer,Iterator<Object>> iteratorMap=new HashMap<Integer, Iterator<Object>>();
+		int i=0;//Count of labels for which return="true"
+		for(Entry<String,List<Object>> entry:resultSet.entrySet()){
+			iteratorMap.put(i++, entry.getValue().iterator());
+		}
+		Map<String,List<Object>> finalResultSet=new LinkedHashMap<String, List<Object>>();
+		if(i!=0){
+			while(iteratorMap.get(0).hasNext()){
+				String key="";
+				List<Object> row=new ArrayList<Object>();;
+				for(int j=0;j<i;j++){
+					Object obj=iteratorMap.get(j).next();
+					row.add(obj);
+					if(obj instanceof IJsonNode){
+						IJsonNode node=(IJsonNode)obj;
+						key=key+node.getId();
+					}else{
+						IJsonRelation rel=(IJsonRelation) obj;
+						key=key+rel.getId();
+					}
+				}
+				if(!finalResultSet.containsKey(key)){
+					finalResultSet.put(key, row);
+				}
+			}
+		}
+		return finalResultSet;
+	}
 	
 	/**
 	 * Use Unmarshaller to unmarshal the XMl into Query object

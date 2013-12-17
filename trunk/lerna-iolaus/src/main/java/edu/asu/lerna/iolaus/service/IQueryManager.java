@@ -1,5 +1,8 @@
 package edu.asu.lerna.iolaus.service;
 
+import java.util.List;
+import java.util.Map;
+
 import javax.xml.bind.JAXBException;
 
 import edu.asu.lerna.iolaus.domain.queryobject.IQuery;
@@ -20,6 +23,8 @@ public interface IQueryManager {
 	public abstract IQuery xmlToQueryObject(String res) throws JAXBException;
 
 	public abstract String getRESTOutput(IQuery q, boolean wantNodes, boolean wantRelations);
+	
+	public abstract Map<String, List<Object>> filterResults(Map<String, List<Object>> resultSet, Map<String, Boolean> isReturnTrueMap);
 
-
+	public abstract Map<String, List<Object>> deleteDuplicateRows(Map<String, List<Object>> resultSet);
 }

@@ -1,6 +1,5 @@
 package edu.asu.lerna.iolaus.domain.misc;
 
-import java.util.List;
 import java.util.Map;
 
 import edu.asu.lerna.iolaus.domain.Label;

@@ -1,9 +1,10 @@
 package edu.asu.lerna.iolaus.service;
 
-import edu.asu.lerna.iolaus.domain.queryobject.IQuery;
+import java.util.List;
 
 public interface IRepositoryManager {
 
-	public abstract void executeQuery(IQuery q);
+	public abstract List<List<Object>> executeQuery(String json, List<String> dbInstances);
+
 
 }
