@@ -3,9 +3,11 @@ package edu.asu.lerna.iolaus.domain.misc;
 import java.util.List;
 import java.util.Map;
 
+import edu.asu.lerna.iolaus.domain.Label;
+
 public class LabelTree {
 
-	Map<String,List<List<String>>> sourceToTargetLabelMap;
+	Map<String,Label> sourceToTargetLabelMap;
 	Map<String,String> targetJsonMap;
 	Map<String,String> oldLabelToNewLabelMap;
 	Map<String,Boolean> labelToIsReturnMap;
@@ -16,11 +18,11 @@ public class LabelTree {
 	public void setLabelToIsReturnMap(Map<String, Boolean> labelToIsReturnMap) {
 		this.labelToIsReturnMap = labelToIsReturnMap;
 	}
-	public Map<String, List<List<String>>> getSourceToTargetLabelMap() {
+	public Map<String, Label> getSourceToTargetLabelMap() {
 		return sourceToTargetLabelMap;
 	}
 	public void setSourceToTargetLabelMap(
-			Map<String, List<List<String>>> sourceToTargetLabelMap) {
+			Map<String, Label> sourceToTargetLabelMap) {
 		this.sourceToTargetLabelMap = sourceToTargetLabelMap;
 	}
 	public Map<String, String> getTargetJsonMap() {
