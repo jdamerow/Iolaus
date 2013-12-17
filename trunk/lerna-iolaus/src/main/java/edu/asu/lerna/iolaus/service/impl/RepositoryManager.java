@@ -21,6 +21,7 @@ import org.springframework.stereotype.Service;
 
 import scala.sys.Prop;
 
+import edu.asu.lerna.iolaus.domain.Label;
 import edu.asu.lerna.iolaus.domain.json.IJsonNode;
 import edu.asu.lerna.iolaus.domain.json.IJsonRelation;
 import edu.asu.lerna.iolaus.domain.json.impl.JsonNode;
@@ -73,7 +74,7 @@ public class RepositoryManager implements IRepositoryManager{
 		Map<String,List<Object>> resultSet;
 		Map<String,List<Object>> finalResultSet=null;
 		//if cypher query doesn't have target node the "if" statement will get executed otherwise "else" statement 
-		if(tree.getSourceToTargetLabelMap().get(PropertyOf.SOURCE.toString()).size()!=0){
+		if(tree.getSourceToTargetLabelMap().get(PropertyOf.SOURCE.toString()).getLabel().size()!=0){
 			resultSet=traverseLabelsAndExecute(tree,dbInstances);	
 			finalResultSet=deleteDuplicateRows(resultSet);
 		}
@@ -134,8 +135,8 @@ public class RepositoryManager implements IRepositoryManager{
 		Map<IRelNode,String> parsedNodeToLabelMap=new LinkedHashMap<IRelNode,String>();
 		//It is the map with key=IRelNode object and value=label. It has all such pairs. 
 		Map<IRelNode,String> allNodeToLabelMap=new LinkedHashMap<IRelNode,String>();
-		//It is a map with key=label used as a source and value=list of list of the target labels .
-		Map<String,List<List<String>>> sourceToTargetLabelMap=new LinkedHashMap<String, List<List<String>>>();
+		//It is a map with key=label used as a source and value=Label .
+		Map<String,Label> sourceToTargetLabelMap=new LinkedHashMap<String, Label>();
 		//It is map with key=label and value=Json Query
 		Map<String,String> targetJsonMap=new LinkedHashMap<String,String>();
 		//It is map with key=new unique labels and value=old labels
@@ -218,7 +219,7 @@ public class RepositoryManager implements IRepositoryManager{
 	 * @param source is the label of the source node.
 	 * @return the new value of the targetCounter.(When a new target label is found, it's value gets incremented).
 	 */
-	public int parseNodeListObject(ReturnElementsOfOTC nodeListObject, Map<IRelNode, String> allNodesToLabelMap, Map<IRelNode, String> parsedNodesToLabelMap, Map<String, List<List<String>>> sourceToTargetLabelMap, Map<String, String> targetJsonMap, Map<String, String> oldLabelToNewLabelMap, int targetCounter, List<IRelNode> nodeList, String source){
+	public int parseNodeListObject(ReturnElementsOfOTC nodeListObject, Map<IRelNode, String> allNodesToLabelMap, Map<IRelNode, String> parsedNodesToLabelMap, Map<String, Label> sourceToTargetLabelMap, Map<String, String> targetJsonMap, Map<String, String> oldLabelToNewLabelMap, int targetCounter, List<IRelNode> nodeList, String source){
 		
 		String jsonQuery = nodeListObject.getJson();
 		Map<Object,String> objectToLabelMap = nodeListObject.getObjectToTargetLabelMap();
@@ -261,7 +262,9 @@ public class RepositoryManager implements IRepositoryManager{
 		    	}
 			}
 		}
-		sourceToTargetLabelMap.put(source, labelList);
+		Label label=new Label();
+		label.setLabel(labelList);
+		sourceToTargetLabelMap.put(source, label);
 		return targetCounter;
 	}
 	
@@ -336,7 +339,7 @@ public class RepositoryManager implements IRepositoryManager{
 	 */
 	public Map<String, List<Object>> traverseLabelsAndExecute(LabelTree tree, List<String> dbInstances) {
 		
-		Map<String,List<List<String>>> sourceToTargetLabelMap=tree.getSourceToTargetLabelMap();
+		Map<String,Label> sourceToTargetLabelMap=tree.getSourceToTargetLabelMap();
 		Map<String,String> targetLabelToJsonMap=tree.getTargetJsonMap();
 		Map<String,String> oldLabelToNewLabelMap=tree.getOldLabelToNewLabelMap();
 		
@@ -362,7 +365,7 @@ public class RepositoryManager implements IRepositoryManager{
 				changeTargetLabelCounts(sourceToTargetLabelMap,currentTargetLabelCounter,sourceLabel,innerCount,outerCount);
 				
 				stack.push(sourceLabel);
-				sourceLabel=sourceToTargetLabelMap.get(sourceLabel).get(outerCount).get(innerCount);
+				sourceLabel=sourceToTargetLabelMap.get(sourceLabel).getLabel().get(outerCount).get(innerCount);
 			}
 			sourceLabel=stack.pop();
 			if(!stack.isEmpty()&&areMoreLabels(currentTargetLabelCounter,sourceLabel)){//if some target labels of a query are yet to be added to the stack
@@ -408,9 +411,9 @@ public class RepositoryManager implements IRepositoryManager{
 	 * @param sourceToTargetLabelMap is a map with key=label used as a source and value=list of list of the target labels.
 	 */
 	public void initializeCurrentTargetLabelCounter(Map<String, List<Integer>> currentTargetLabelMap,
-			Map<String, List<List<String>>> sourceToTargetLabelMap) {
+			Map<String, Label> sourceToTargetLabelMap) {
 		//This loop will initialize all the labels having other target labels to 0 
-		for(Entry<String, List<List<String>>> entry:sourceToTargetLabelMap.entrySet()){
+		for(Entry<String, Label> entry:sourceToTargetLabelMap.entrySet()){
 			List<Integer> currentCountList=new ArrayList<Integer>();
 			currentCountList.add(0);
 			currentCountList.add(0);
@@ -433,18 +436,18 @@ public class RepositoryManager implements IRepositoryManager{
 	/**
 	 * This method increment the value of the list corresponding to keys of currentTargetLabelMap by 1.
 	 * @param sourceToTargetLabelMap is a map whose key is label used as a source and value is list of the target labels.
-	 * @param currentTargetLabelCounter is a map whose key is label(source of a query) and value is list of the counts of target labels.
+	 * @param currentTargetLabelCounter is a map whose key is label(source of a query) and value target label.
 	 * @param sourceLabel is the label of the source node in the query.
 	 * @param innerCount is count of the labels corresponding to same target.
 	 * @param outerCount is count of the target labels in a single query.
 	 */
-	public void changeTargetLabelCounts(Map<String, List<List<String>>> sourceToTargetLabelMap,Map<String, List<Integer>> currentTargetLabelCounter,
+	public void changeTargetLabelCounts(Map<String, Label> sourceToTargetLabelMap,Map<String, List<Integer>> currentTargetLabelCounter,
 			String sourceLabel, int innerCount, int outerCount) {
 		
-		if(sourceToTargetLabelMap.get(sourceLabel).get(outerCount).size()-1>=innerCount+1){//if all the labels corresponding to same target are added to the stack 
+		if(sourceToTargetLabelMap.get(sourceLabel).getLabel().get(outerCount).size()-1>=innerCount+1){//if all the labels corresponding to same target are added to the stack 
 			currentTargetLabelCounter.get(sourceLabel).set(1, innerCount+1);
 		}
-		else if(sourceToTargetLabelMap.get(sourceLabel).size()-1>=outerCount+1) {//if all the target labels of a query are added to the stack
+		else if(sourceToTargetLabelMap.get(sourceLabel).getLabel().size()-1>=outerCount+1) {//if all the target labels of a query are added to the stack
 			currentTargetLabelCounter.get(sourceLabel).set(0, outerCount+1);
 			currentTargetLabelCounter.get(sourceLabel).set(1, 0);
 		}else{
@@ -462,10 +465,10 @@ public class RepositoryManager implements IRepositoryManager{
 	 * @param outerCount is count of the target labels in a single query
 	 * @param stack is stack where labels are pushed.
 	 */
-	public void pushLabelsToStack(Map<String, List<List<String>>> sourceToTargetLabelMap,String sourceLabel, int innerCount, int outerCount,Stack<String> stack) {
+	public void pushLabelsToStack(Map<String, Label> sourceToTargetLabelMap,String sourceLabel, int innerCount, int outerCount,Stack<String> stack) {
 		
 		int i=0;
-		for(List<String >targetLabelList:sourceToTargetLabelMap.get(sourceLabel)){
+		for(List<String> targetLabelList: sourceToTargetLabelMap.get(sourceLabel).getLabel()){
 			int j=0;
 			for(String labelsOfSameTarget:targetLabelList){
 				if(i!=outerCount){
@@ -497,12 +500,12 @@ public class RepositoryManager implements IRepositoryManager{
 	public void aggregateResults(
 			Map<String, Map<String, List<Object>>> aggregatedResults,
 			Map<String, List<Object>> processedResults,
-			Map<String, List<List<String>>> sourceToTargetLabelMap, Map<String, String> oldLabelToNewLabelMap, String sourceLabel) {
+			Map<String, Label> sourceToTargetLabelMap, Map<String, String> oldLabelToNewLabelMap, String sourceLabel) {
 		
 			Map<Integer,Map<String,List<Object>>> resultsOfTargets=new LinkedHashMap<Integer,Map<String, List<Object>>>();
 			int outerForCounter=0;
 			//This loop will take union of the results of the inner query. This process will be taken place for each target label used in the query having inner query.
-			for(List<String> targetsOfSameSource:sourceToTargetLabelMap.get(sourceLabel)){
+			for(List<String> targetsOfSameSource:sourceToTargetLabelMap.get(sourceLabel).getLabel()){
 				for(String sameTargets:targetsOfSameSource){
 					if(sourceToTargetLabelMap.containsKey(sameTargets)){
 						unionOfResults(aggregatedResults,resultsOfTargets,outerForCounter,sameTargets);
@@ -576,7 +579,7 @@ public class RepositoryManager implements IRepositoryManager{
 	 * @return the result after intersection with source node
 	 */
 	public Map<String, List<Object>> intersectionOfResultsWithSourceQuery(Map<String, List<Object>> processedResults,Map<Integer, Map<String, List<Object>>> resultsOfTargets,
-			Map<String, String> oldLabelToNewLabelMap, Map<String, List<List<String>>> sourceToTargetLabelMap, String sourceLabel) {
+			Map<String, String> oldLabelToNewLabelMap, Map<String, Label> sourceToTargetLabelMap, String sourceLabel) {
 		
 		
 		Map<Integer,Map<String, List<Object>>>intermediateResults=new LinkedHashMap<Integer,Map<String, List<Object>>>();
@@ -593,7 +596,7 @@ public class RepositoryManager implements IRepositoryManager{
 			String[] labels=new String[intermediateResults.get(loopCounter).size()+resultsOfTargets.get(loopCounter).size()];	
 			int i=0;
 			boolean flag=true;
-			String targetNode=sourceToTargetLabelMap.get(sourceLabel).get(loopCounter).get(0);
+			String targetNode=sourceToTargetLabelMap.get(sourceLabel).getLabel().get(loopCounter).get(0);
 			String oldTargetMapping=oldLabelToNewLabelMap.get(targetNode);
 			int targetId=0;
 			//This loop creates labels for the results of source query
