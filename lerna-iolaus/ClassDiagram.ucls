@@ -61,8 +61,8 @@
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </class>  
-  <interface id="7" language="java" name="edu.asu.lerna.iolaus.service.IRepositoryManager" project="lerna-iolaus" 
-    file="/lerna-iolaus/src/main/java/edu/asu/lerna/iolaus/service/IRepositoryManager.java" binary="false" 
+  <interface id="7" language="java" name="edu.asu.lerna.iolaus.service.IQueryHandler" project="lerna-iolaus" 
+    file="/lerna-iolaus/src/main/java/edu/asu/lerna/iolaus/service/IQueryHandler.java" binary="false" 
     corner="BOTTOM_RIGHT">    
     <position height="-1" width="-1" x="631" y="553"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
@@ -81,8 +81,8 @@
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </interface>  
-  <class id="9" language="java" name="edu.asu.lerna.iolaus.service.impl.RepositoryManager" project="lerna-iolaus" 
-    file="/lerna-iolaus/src/main/java/edu/asu/lerna/iolaus/service/impl/RepositoryManager.java" binary="false" 
+  <class id="9" language="java" name="edu.asu.lerna.iolaus.service.impl.QueryHandler" project="lerna-iolaus" 
+    file="/lerna-iolaus/src/main/java/edu/asu/lerna/iolaus/service/impl/QueryHandler.java" binary="false" 
     corner="BOTTOM_RIGHT">    
     <position height="-1" width="-1" x="636" y="723"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
@@ -91,8 +91,8 @@
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </class>  
-  <interface id="10" language="java" name="edu.asu.lerna.iolaus.service.ICacheManager" project="lerna-iolaus" 
-    file="/lerna-iolaus/src/main/java/edu/asu/lerna/iolaus/service/ICacheManager.java" binary="false" 
+  <interface id="10" language="java" name="edu.asu.lerna.iolaus.service.IRepositoryManager" project="lerna-iolaus" 
+    file="/lerna-iolaus/src/main/java/edu/asu/lerna/iolaus/service/IRepositoryManager.java" binary="false" 
     corner="BOTTOM_RIGHT">    
     <position height="-1" width="-1" x="636" y="899"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
@@ -101,8 +101,8 @@
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </interface>  
-  <class id="11" language="java" name="edu.asu.lerna.iolaus.service.impl.CacheManager" project="lerna-iolaus" 
-    file="/lerna-iolaus/src/main/java/edu/asu/lerna/iolaus/service/impl/CacheManager.java" binary="false" 
+  <class id="11" language="java" name="edu.asu.lerna.iolaus.service.impl.RepositoryManager" project="lerna-iolaus" 
+    file="/lerna-iolaus/src/main/java/edu/asu/lerna/iolaus/service/impl/RepositoryManager.java" binary="false" 
     corner="BOTTOM_RIGHT">    
     <position height="-1" width="-1" x="637" y="1040"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
