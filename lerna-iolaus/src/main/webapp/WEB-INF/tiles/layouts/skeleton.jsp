@@ -1,12 +1,11 @@
+<%@ taglib uri="http://tiles.apache.org/tags-tiles" prefix="tiles"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+
 <!DOCTYPE HTML>
-<!--
-	Helios 1.5 by HTML5 UP
-	html5up.net | @n33co
-	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
--->
+
 <html>
 <head>
-<title>Helios by HTML5 UP</title>
+<title><tiles:insertAttribute name="title"/></title>
 <meta http-equiv="content-type" content="text/html; charset=utf-8" />
 <meta name="description" content="" />
 <meta name="keywords" content="" />
@@ -19,7 +18,6 @@
 	src="js/jquery.dropotron.min.js"></script>
 <script
 	src="js/skel.min.js"></script>
-<!-- <script src="js/skel-panels.min.js"></script>-->
 <script
 	src="js/init.js"></script>
 <link rel="stylesheet"
@@ -32,7 +30,7 @@
 	href="css/style-noscript.css" />
 </head>
 <body class="no-sidebar">
-
+	<tiles:importAttribute name="currentPage" scope="request" />
 	<!-- Header -->
 	<div id="header">
 
@@ -57,7 +55,7 @@
 
 	</div>
 
-	<tiles:importAttribute name="currentPage" scope="request" />
+
 
 	<!-- Header -->
 	<header id="header">
@@ -73,24 +71,16 @@
 	<!-- /Header -->
 
 	<!-- Nav -->
-	<tiles:insertAttribute name="navigation" />
+
 	<!-- /Nav -->
 
 	<!-- Main -->
+	
+
+<!-- Main -->
 	<div id="main-wrapper">
 		<div id="main" class="container">
-			<sec:authorize access="isAuthenticated()">
-				<div>
-					<div class="loggedInMsg">
-						Welcome <span class="user" style="margin-left: 5px;"><sec:authentication
-								property="principal.username" /></span>!
-					</div>
-					<div class="loggedOutLink">
-						<a href="<c:url value='/j_spring_security_logout' />">Logout</a>
-					</div>
-					<hr class="clearLoggedIn">
-				</div>
-			</sec:authorize>
+			
 			<div class="row">
 				<div class="9u skel-cell-mainContent">
 					<div class="content content-left">
@@ -122,7 +112,6 @@
 		</div>
 	</div>
 
-
 	<!-- Footer -->
 	<div id="footer">
 		<div class="container">
@@ -131,7 +120,7 @@
 					<!-- Copyright -->
 					<div class="copyright">
 						<ul class="menu">
-							<li>&copy; Untitled. All rights reserved.</li>
+							<li>&copy;2013 Digital Innovation Group</li>
 							<li>Design: <a href="http://html5up.net/">HTML5 UP</a></li>
 							<li>Demo Images: <a
 								href="http://mdomaradzki.deviantart.com/">Michael Domaradzki</a></li>
