@@ -20,16 +20,16 @@ public class CypherToJson implements ICypherToJson {
 		logger.info("***********************************\nCypher Query : "+cypher+"\n***********************************\n");
 		String json="";
 		String query="\"query\":";
-		String regx="(\")([a-zA-Z0-9_.\\s?*()]*)(\")";
-		Pattern pattern = Pattern.compile(regx);
+		String regex="(\")([a-zA-Z0-9_.\\s?*()]*)(\")";//Regular expression for extracting strings in ""
+		Pattern pattern = Pattern.compile(regex);
 		Matcher matcher = pattern.matcher(cypher);
 		Map<String,String> paramMap=new LinkedHashMap<String,String>();
 		String p="param";
 		int counter=0;
 		String temp=cypher;
 		int indexCount=0;
-		if(cypher.contains("Where")){
-			indexCount=cypher.substring(0, cypher.indexOf("Where")).split("\"").length/2;
+		if(cypher.contains("Where")){//if cypher query has where clause 
+			indexCount=cypher.substring(0, cypher.indexOf("Where")).split("\"").length/2;//scan for " in where clause and count the number of strings in ""
 		}else{
 			indexCount=1;
 		}
@@ -39,9 +39,9 @@ public class CypherToJson implements ICypherToJson {
 				 counter++;
 				 String replacement="{"+p+counter+"}";
 				 String property=matcher.group();
-				 if(x>indexCount)
+				 if(x>indexCount)// If property in where clause
 					 paramMap.put("\""+p+counter+"\"","\"(?i).*"+property.substring(1,property.length()-1)+".*\"");
-				 else
+				 else //If it is property in Start clause
 					 paramMap.put("\""+p+counter+"\"", property);
 				 temp=temp.replaceAll(matcher.group(),replacement );
 				 x++;
