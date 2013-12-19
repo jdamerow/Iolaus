@@ -26,7 +26,6 @@ import edu.asu.lerna.iolaus.domain.queryobject.PropertyOf;
 import edu.asu.lerna.iolaus.service.IAggregateResult;
 import edu.asu.lerna.iolaus.service.IFragmentQuery;
 import edu.asu.lerna.iolaus.service.IRepositoryManager;
-import edu.asu.lerna.iolaus.service.IObjectToCypher;
 import edu.asu.lerna.iolaus.service.IQueryHandler;
 
 /**
@@ -39,9 +38,6 @@ public class QueryHandler implements IQueryHandler{
 
 	@Autowired
 	private IRepositoryManager repositoryManager;
-	
-	@Autowired
-	private IObjectToCypher objectToCypher; 
 	
 	@Autowired
 	private IFragmentQuery fragmentQuery;
@@ -80,7 +76,7 @@ public class QueryHandler implements IQueryHandler{
 		}
 		ResultSet rset=new ResultSet();
 		rset.setResultSet(resultSet);
-		rset.setLabelToIsReturnTrueMap(tree.getLabelToIsReturnMap());
+		rset.setLabelToIsReturnTrueMap(tree.getLabelToIsReturnTrueMap());
 		return rset;
 	}
 	
