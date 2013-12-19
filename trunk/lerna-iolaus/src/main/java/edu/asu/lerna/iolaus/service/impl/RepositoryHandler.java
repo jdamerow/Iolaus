@@ -35,7 +35,6 @@ public class RepositoryHandler implements IRepositoryHandler {
 		URI traverserUri = null;
  
 		try {
-			//traverserUri = new URI( "http://localhost:7476/db/data/cypher" );
 			traverserUri = new URI( neo4jInstance );
 		} catch (URISyntaxException e1) {
 			e1.printStackTrace();

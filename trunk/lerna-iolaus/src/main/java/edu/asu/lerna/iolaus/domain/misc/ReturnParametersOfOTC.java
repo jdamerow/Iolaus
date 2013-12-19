@@ -1,7 +1,7 @@
 package edu.asu.lerna.iolaus.domain.misc;
 import java.util.Map;
 
-public class ReturnElementsOfOTC {
+public class ReturnParametersOfOTC {
 	Map<Object,String> objectToTargetLabelMap;
 	Map<String,Boolean> isReturnMap;
 	String json;

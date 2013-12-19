@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import edu.asu.lerna.iolaus.domain.misc.ReturnElementsOfOTC;
+import edu.asu.lerna.iolaus.domain.misc.ReturnParametersOfOTC;
 import edu.asu.lerna.iolaus.domain.queryobject.INode;
 import edu.asu.lerna.iolaus.domain.queryobject.IOperator;
 import edu.asu.lerna.iolaus.domain.queryobject.IProperty;
@@ -15,8 +15,8 @@ import edu.asu.lerna.iolaus.domain.queryobject.PropertyOf;
 
 public interface IObjectToCypher {
 	
-	ReturnElementsOfOTC objectToCypher(INode node);
-	ReturnElementsOfOTC objectToCypher(IRelNode node);
+	ReturnParametersOfOTC objectToCypher(INode node);
+	ReturnParametersOfOTC objectToCypher(IRelNode node);
 	//public String objectToCypher(IRelNode node);
 	
 	String s="Start ";

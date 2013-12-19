@@ -9,13 +9,13 @@ public class LabelTree {
 	Map<String,Label> sourceToTargetLabelMap;
 	Map<String,String> targetJsonMap;
 	Map<String,String> oldLabelToNewLabelMap;
-	Map<String,Boolean> labelToIsReturnMap;
+	Map<String,Boolean> labelToIsReturnTrueMap;
 	
-	public Map<String, Boolean> getLabelToIsReturnMap() {
-		return labelToIsReturnMap;
+	public Map<String, Boolean> getLabelToIsReturnTrueMap() {
+		return labelToIsReturnTrueMap;
 	}
-	public void setLabelToIsReturnMap(Map<String, Boolean> labelToIsReturnMap) {
-		this.labelToIsReturnMap = labelToIsReturnMap;
+	public void setLabelToIsReturnTrueMap(Map<String, Boolean> labelToIsReturnMap) {
+		this.labelToIsReturnTrueMap = labelToIsReturnMap;
 	}
 	public Map<String, Label> getSourceToTargetLabelMap() {
 		return sourceToTargetLabelMap;

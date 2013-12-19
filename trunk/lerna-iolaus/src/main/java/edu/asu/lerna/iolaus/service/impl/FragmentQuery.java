@@ -17,7 +17,7 @@ import org.springframework.stereotype.Service;
 
 import edu.asu.lerna.iolaus.domain.Label;
 import edu.asu.lerna.iolaus.domain.misc.LabelTree;
-import edu.asu.lerna.iolaus.domain.misc.ReturnElementsOfOTC;
+import edu.asu.lerna.iolaus.domain.misc.ReturnParametersOfOTC;
 import edu.asu.lerna.iolaus.domain.queryobject.INode;
 import edu.asu.lerna.iolaus.domain.queryobject.IQuery;
 import edu.asu.lerna.iolaus.domain.queryobject.IRelNode;
@@ -72,7 +72,7 @@ public class FragmentQuery implements IFragmentQuery {
 		String source="";
 		List<IRelNode> keyElements=new ArrayList<IRelNode>();
 		if(n!=null){
-			ReturnElementsOfOTC nodeListObject = objectToCypher.objectToCypher(n);
+			ReturnParametersOfOTC nodeListObject = objectToCypher.objectToCypher(n);
 			Map<String,Boolean> isReturnTempMap=nodeListObject.getIsReturnMap();
 			source=PropertyOf.SOURCE.toString();
 			isReturnTrueMap.put(source, n.isReturn()==null?false:n.isReturn());
@@ -122,7 +122,7 @@ public class FragmentQuery implements IFragmentQuery {
 		tree.setSourceToTargetLabelMap(sourceToTargetLabelMap);
 		tree.setTargetJsonMap(targetJsonMap);
 		tree.setOldLabelToNewLabelMap(newLabelToOldLabelMap);
-		tree.setLabelToIsReturnMap(isReturnTrueMap);
+		tree.setLabelToIsReturnTrueMap(isReturnTrueMap);
 		return tree;
 	}
 	
@@ -140,7 +140,7 @@ public class FragmentQuery implements IFragmentQuery {
 	 * @return the new value of the targetCounter.(When a new target label is found, it's value gets incremented).
 	 */
 	@SuppressWarnings("unchecked")
-	public int parseNodeListObject(ReturnElementsOfOTC nodeListObject, Map<IRelNode, String> allNodesToLabelMap, Map<IRelNode, String> parsedNodesToLabelMap, Map<String, Label> sourceToTargetLabelMap, Map<String, String> targetJsonMap, Map<String, String> oldLabelToNewLabelMap, int targetCounter, List<IRelNode> nodeList, String source){
+	public int parseNodeListObject(ReturnParametersOfOTC nodeListObject, Map<IRelNode, String> allNodesToLabelMap, Map<IRelNode, String> parsedNodesToLabelMap, Map<String, Label> sourceToTargetLabelMap, Map<String, String> targetJsonMap, Map<String, String> oldLabelToNewLabelMap, int targetCounter, List<IRelNode> nodeList, String source){
 		
 		String jsonQuery = nodeListObject.getJson();
 		Map<Object,String> objectToLabelMap = nodeListObject.getObjectToTargetLabelMap();

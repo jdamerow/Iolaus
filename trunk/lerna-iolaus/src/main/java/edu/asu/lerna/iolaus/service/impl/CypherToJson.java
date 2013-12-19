@@ -19,11 +19,6 @@ public class CypherToJson implements ICypherToJson {
 	public String cypherToJson(String cypher){
 		logger.info("***********************************\nCypher Query : "+cypher+"\n***********************************\n");
 		String json="";
-		/*{
-			  "query" : "START x  = node(353) MATCH x -[r]-> n RETURN type(r), n.name, n.age",
-			  "params" : {
-			  }
-			}*/
 		String query="\"query\":";
 		String regx="(\")([a-zA-Z0-9_.\\s?*()]*)(\")";
 		Pattern pattern = Pattern.compile(regx);
@@ -35,6 +30,8 @@ public class CypherToJson implements ICypherToJson {
 		int indexCount=0;
 		if(cypher.contains("Where")){
 			indexCount=cypher.substring(0, cypher.indexOf("Where")).split("\"").length/2;
+		}else{
+			indexCount=1;
 		}
 		int x=1;
 		 while (matcher.find()) {

@@ -14,6 +14,7 @@ import edu.asu.lerna.iolaus.configuration.neo4j.iml.Neo4jConfFile;
 import edu.asu.lerna.iolaus.configuration.neo4j.iml.Neo4jRegistry;
 import edu.asu.lerna.iolaus.domain.json.IJsonNode;
 import edu.asu.lerna.iolaus.domain.json.IJsonRelation;
+import edu.asu.lerna.iolaus.service.ICacheManager;
 import edu.asu.lerna.iolaus.service.IRepositoryManager;
 import edu.asu.lerna.iolaus.service.IRepositoryHandler;
 
@@ -24,7 +25,8 @@ public class RepositoryManager implements IRepositoryManager {
 			.getLogger(RepositoryManager.class);
 //	private List<IRepositoryHandler> repoHanlders;
 	@Autowired
-	private IRepositoryHandler repoHandler;
+	private ICacheManager cacheManager;
+	
 	@Autowired
 	private Neo4jRegistry neo4jInstances;
 
@@ -56,8 +58,8 @@ public class RepositoryManager implements IRepositoryManager {
 		List<List<Object>> queryResults;
 		for (String instance: instanceUrl)
 		{
-			queryResults = repoHandler.executeQuery(json, instance);
-			if(queryResults.size()!=0)
+			queryResults = cacheManager.executeQuery(json, instance);
+			if(queryResults!=null)
 				listOfNodesAndRelations.addAll(queryResults);
 		}
 		return listOfNodesAndRelations;
