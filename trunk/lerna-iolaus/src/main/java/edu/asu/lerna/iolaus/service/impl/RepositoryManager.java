@@ -10,13 +10,12 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import edu.asu.lerna.iolaus.configuration.neo4j.iml.Neo4jConfFile;
 import edu.asu.lerna.iolaus.configuration.neo4j.iml.Neo4jRegistry;
+import edu.asu.lerna.iolaus.domain.INeo4jConfFile;
 import edu.asu.lerna.iolaus.domain.json.IJsonNode;
 import edu.asu.lerna.iolaus.domain.json.IJsonRelation;
 import edu.asu.lerna.iolaus.service.ICacheManager;
 import edu.asu.lerna.iolaus.service.IRepositoryManager;
-import edu.asu.lerna.iolaus.service.IRepositoryHandler;
 
 @Service
 public class RepositoryManager implements IRepositoryManager {
@@ -45,10 +44,10 @@ public class RepositoryManager implements IRepositoryManager {
 		while(iterator.hasNext())
 		{
 			String dbName = iterator.next();
-			Iterator<Neo4jConfFile> fileIterator = neo4jInstances.getfileList().iterator();
+			Iterator<INeo4jConfFile> fileIterator = neo4jInstances.getfileList().iterator();
 			while(fileIterator.hasNext())
 			{
-				Neo4jConfFile dbFile = fileIterator.next();
+				INeo4jConfFile dbFile = fileIterator.next();
 				if (dbName.equals(dbFile.getId()))
 				{
 					instanceUrl.add(dbFile.getPort());
