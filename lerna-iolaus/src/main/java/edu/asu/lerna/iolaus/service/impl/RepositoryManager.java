@@ -51,7 +51,7 @@ public class RepositoryManager implements IRepositoryManager {
 				Neo4jConfFile dbFile = fileIterator.next();
 				if (dbName.equals(dbFile.getId()))
 				{
-					instanceUrl.add(dbFile.getPath());
+					instanceUrl.add(dbFile.getPort());
 				}
 			}
 		}
