@@ -35,6 +35,13 @@
 		line-height: 1.85em;
 	}
 
+	heading
+	{
+		font-family: 'Open Sans Condensed', sans-serif;
+		font-weight: 700;
+		text-transform: uppercase;
+		color: #6b7770;
+	}
 	h1,h2,h3,h4,h5,h6
 	{
 		font-weight: 400;
@@ -428,7 +435,7 @@
 				display: block;
 				border: 0;
 				background: #ccc;
-				width: 100%;
+				width: 50%;
 			}
 
 				form input.text:hover,
@@ -441,6 +448,10 @@
 				form select:focus,
 				form textarea:focus
 				{
+				}
+				form input.text
+				{
+					min-height: 2em;
 				}
 				
 				form textarea
@@ -477,6 +488,7 @@
 				{
 					border: 0;
 				}
+		
 			
 	/* Tables */
 	
@@ -521,6 +533,10 @@
 				table.style1 tbody
 				{
 				}
+
+
+
+
 
 	/* Buttons */
 		

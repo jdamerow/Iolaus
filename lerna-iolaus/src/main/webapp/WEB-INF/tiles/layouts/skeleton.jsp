@@ -37,7 +37,7 @@
 		<div class="inner">
 			<header>
 				<h1><a href="#" id="logo">Lerna</a></h1>
-				<span class="byline">- Neo4J Management</span>
+				<span class="byline">Neo4J Management</span>
 			</header>
 		</div>
 		<!-- Nav -->
