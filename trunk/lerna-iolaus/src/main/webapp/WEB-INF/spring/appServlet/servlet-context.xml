@@ -18,6 +18,10 @@
 	<resources mapping="/css/**" location="/resources/txt-layout/css/" />
 	<resources mapping="/js/**" location="/resources/txt-layout/js/" />
 	<resources mapping="/images/**" location="/resources/txt-layout/images/" />
+	<resources mapping="/auth/resources/**" location="/resources/" />
+	<resources mapping="/auth/css/**" location="/resources/txt-layout/css/" />
+	<resources mapping="/auth/js/**" location="/resources/txt-layout/js/" />
+	<resources mapping="/auth/images/**" location="/resources/txt-layout/images/" />
 
 	<!-- Resolves views selected for rendering by @Controllers to .jsp resources 
 		in the /WEB-INF/views directory -->
