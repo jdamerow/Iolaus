@@ -4,12 +4,16 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Properties;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
+
+import edu.asu.lerna.iolaus.domain.INeo4jConfFile;
+import edu.asu.lerna.iolaus.domain.implementation.Neo4jConfFile;
 
 /**
  * @author Veena Borannagowda
@@ -25,14 +29,14 @@ public class Neo4jConfFileReader {
 	@Autowired	
 	private Environment env;
 
-	public ArrayList<Neo4jConfFile> getNeo4jConfFiles() throws IOException
+	public List<INeo4jConfFile> getNeo4jConfFiles() throws IOException
 	{
-		ArrayList<Neo4jConfFile> listOfFiles = new ArrayList<Neo4jConfFile>();
+		List<INeo4jConfFile> listOfFiles = new ArrayList<INeo4jConfFile>();
 		String classPath=Neo4jConfFileReader.class.getProtectionDomain().getCodeSource().getLocation().getPath();
 		File folder = new File(classPath.substring(0,classPath.indexOf("classes"))+"classes/"+env.getProperty("LOCAL_PATH_FOR_NEO4JCONFIGURATION"));
 		for(final File fileEntry : folder.listFiles())
 		{
-			Neo4jConfFile confFile = new Neo4jConfFile();
+			INeo4jConfFile confFile = new Neo4jConfFile();
 			Properties properties = new Properties();
 			try {
 				properties.load(new FileInputStream(fileEntry));
@@ -48,14 +52,13 @@ public class Neo4jConfFileReader {
 				if(key.equals("description"))
 					confFile.setDescription(value);
 				if(key.equals("path"))
-					confFile.setPath(value);
+					confFile.setPort(value);
 
 			}
-
-		listOfFiles.add(confFile);
+			listOfFiles.add(confFile);
+		}
+		return listOfFiles;
 	}
-	return listOfFiles;
-}
 }
 
 
