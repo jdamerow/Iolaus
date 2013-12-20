@@ -180,7 +180,7 @@
 		margin: 2.5em 0 0 0;
 	}
 		
-	hr
+	/*hr
 	{
 		position: relative;
 		display: block;
@@ -191,6 +191,10 @@
 		height: 6px;
 		border-top: solid 1px rgba(128,128,128,0.2);
 		border-bottom: solid 1px rgba(128,128,128,0.2);
+	}-*/
+	hr
+	{
+		border: solid 1px #BDBDBD;
 	}
 	
 		hr:before,
@@ -328,7 +332,22 @@
 					margin: 0 auto;
 					width: auto;
 				}
-
+	.user {
+		padding-left: 20px;
+		background: url('images/user.png') left no-repeat;
+	}
+	
+	.loggedInMsg {
+		float: left;
+	}
+	
+	.loggedOutLink {
+		float: right;
+	}
+	
+	.clearLoggedIn {
+		clear: both;
+	}
 	/* Lists */
 
 		ul.style1
