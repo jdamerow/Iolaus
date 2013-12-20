@@ -33,9 +33,6 @@
 	<tiles:importAttribute name="currentPage" scope="request" />
 	<!-- Header -->
 	<div id="header">
-	<!-- Nav -->
-	<tiles:insertAttribute name="navigation" />
-	<!-- /Nav -->
 		<!-- Inner -->
 		<div class="inner">
 			<header>
@@ -43,7 +40,7 @@
 				<span class="byline">Neo4J Management</span>
 			</header>
 		</div>
-		
+	
 	</div>
 	<!-- Header -->
 
