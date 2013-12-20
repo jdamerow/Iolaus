@@ -16,6 +16,7 @@
 		<put-attribute name="navigation"
 			value="/WEB-INF/views/top-navs/loggedin-nav.jsp" />
 		<put-attribute name="footer" value="/tiles/credits.jsp" />
+		<put-attribute name="sub-navigation" value="" />
 		<put-attribute name="currentPage" value="home" />
 	</definition>
 	
@@ -39,7 +40,7 @@
 	</definition>
 
 	<!-- Home pages -->
-	<definition name="index" extends="base.definition">
+	<definition name="login" extends="base.definition.nonav">
 		<put-attribute name="title" value="Lerna - home" />
 		<put-attribute name="content" value="/WEB-INF/views/login.jsp" />
 	</definition>
@@ -51,11 +52,7 @@
 		<put-attribute name="currentPage" value="about" />
 	</definition>
 	
-	<!-- public pages -->
-	<definition name="login" extends="base.definition.nonav">
-		<put-attribute name="title" value="Quadriga - Login" />
-		<put-attribute name="content" value="/WEB-INF/views/login.jsp" />
-	</definition>
+
 
 	<definition name="nouser" extends="base.definition">
 		<put-attribute name="title" value="Quadriga - No Account" />
