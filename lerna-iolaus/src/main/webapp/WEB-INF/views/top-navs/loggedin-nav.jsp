@@ -4,7 +4,7 @@
 	<nav id="nav">
 		<ul>
 			<li><a href="#">Home</a></li>
-			<li><span>Neo4J Instance Management</span>
+			<li><a href="#">Neo4J Instance Management</a>
 				<ul>
 					<li><a href="#"><g>List Neo4J Instances</g></a></li>
 					<li><a href="#"><g>Add a Neo4J Instance</g></a></li>
