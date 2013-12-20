@@ -1077,6 +1077,7 @@
 		text-align: center;
 		padding: 2.5em 0 2em 0;
 		cursor: default;
+		height:175px;
 	}
 
 		.homepage #header
@@ -1112,7 +1113,7 @@
 			position: relative;
 			z-index: 1;
 			margin: 0;
-			padding: 4em 0 0 0;
+			padding: 1em 0 0 0;
 		}
 	
 		#header h1
