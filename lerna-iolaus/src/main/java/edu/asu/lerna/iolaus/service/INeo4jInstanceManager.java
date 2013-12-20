@@ -6,7 +6,7 @@ import org.springframework.stereotype.Service;
 
 import edu.asu.lerna.iolaus.domain.INeo4jInstance;
 
-@Service
+
 public interface INeo4jInstanceManager {
 	
 	abstract String addNeo4jInstance(INeo4jInstance instance);

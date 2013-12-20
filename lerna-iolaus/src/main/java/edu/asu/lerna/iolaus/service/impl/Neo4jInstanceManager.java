@@ -8,12 +8,14 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import edu.asu.lerna.iolaus.configuration.neo4j.iml.Neo4jRegistry;
 import edu.asu.lerna.iolaus.domain.INeo4jConfFile;
 import edu.asu.lerna.iolaus.domain.INeo4jInstance;
 import edu.asu.lerna.iolaus.service.INeo4jInstanceManager;
 
+@Service
 public class Neo4jInstanceManager implements INeo4jInstanceManager {
 
 	@Autowired Neo4jRegistry neo4jRegistry;
