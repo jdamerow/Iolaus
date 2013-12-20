@@ -33,46 +33,29 @@
 	<tiles:importAttribute name="currentPage" scope="request" />
 	<!-- Header -->
 	<div id="header">
-
+		<!-- Inner -->
+		<div class="inner">
+			<header>
+				<h1><a href="#" id="logo">Lerna</a></h1>
+				<span class="byline">- Neo4J Management</span>
+			</header>
+		</div>
 		<!-- Nav -->
 		<nav id="nav">
 			<ul>
 				<li><a href="#">Home</a></li>
-				<li>
-					<span>Neo4J Instance Management</span>
+				<li><a href="#">User Management</a></li>
+				<li><span>Neo4J Instance Management</span>
 					<ul>
 						<li><a href="#"><g>List Neo4J Instances</g></a></li>
 						<li><a href="#"><g>Add a Neo4J Instance</g></a></li>
-						<li><a href="#"><g>Edit a Neo4J Instance</g></a></li>
-						<li><a href="#"><g>Delete a Neo4J Instance</g></a></li>
 					</ul>
 				</li>
-				<li><a href="#">User Management</a></li>
 			</ul>
 		</nav>
-		
-
-
+		<!-- Nav -->
 	</div>
-
-
-
 	<!-- Header -->
-	<header id="header">
-		<div class="logo">
-			<div>
-				<h1>
-					<a href="#" id="logo">Lerna</a>
-				</h1>
-				<span class="byline">- Neo4J Management</span>
-			</div>
-		</div>
-	</header>
-	<!-- /Header -->
-
-	<!-- Nav -->
-
-	<!-- /Nav -->
 
 	<!-- Main -->
 	
@@ -80,7 +63,6 @@
 <!-- Main -->
 	<div id="main-wrapper">
 		<div id="main" class="container">
-			
 			<div class="row">
 				<div class="9u skel-cell-mainContent">
 					<div class="content content-left">
