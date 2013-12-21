@@ -3,6 +3,8 @@ package edu.asu.lerna.iolaus.configuration.neo4j.iml;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.net.URLDecoder;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
@@ -32,7 +34,8 @@ public class Neo4jConfFileReader {
 	public List<INeo4jConfFile> getNeo4jConfFiles() throws IOException
 	{
 		List<INeo4jConfFile> listOfFiles = new ArrayList<INeo4jConfFile>();
-		String classPath=Neo4jConfFileReader.class.getProtectionDomain().getCodeSource().getLocation().getPath();
+		String classPath=URLDecoder.decode(Neo4jConfFileReader.class.getProtectionDomain().getCodeSource().getLocation().getPath(),"UTF-8");
+		
 		File folder = new File(classPath.substring(0,classPath.indexOf("classes"))+"classes/"+env.getProperty("LOCAL_PATH_FOR_NEO4JCONFIGURATION"));
 		for(final File fileEntry : folder.listFiles())
 		{
