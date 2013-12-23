@@ -19,6 +19,9 @@
 		<logout logout-success-url="/logout" invalidate-session="true" />
 	</http>
  
+ 	<beans:bean id="lernaUserService"
+		class="edu.asu.lerna.iolaus.service.login.LernaUserService" />
+ 	
 	<beans:bean id="encoder"
 		class="org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder" />
 
