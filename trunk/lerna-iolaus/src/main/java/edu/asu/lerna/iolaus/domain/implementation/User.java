@@ -44,6 +44,9 @@ public class User implements UserDetails {
 	public String getPassword() {
 		return password;
 	}
+	public void addAuthority(LernaGrantedAuthority auth) {
+		this.authorities.add(auth);
+	}
 	public void setPassword(String password) {
 		this.password = password;
 	}
