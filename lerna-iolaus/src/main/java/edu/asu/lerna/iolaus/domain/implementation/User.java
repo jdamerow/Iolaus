@@ -1,6 +1,11 @@
 package edu.asu.lerna.iolaus.domain.implementation;
 
-import edu.asu.lerna.iolaus.domain.IUser;
+import java.util.List;
+
+import org.springframework.security.core.userdetails.UserDetails;
+
+import edu.asu.lerna.iolaus.service.login.LernaGrantedAuthority;
+
 
 /**
  * @description : User class describing the properties 
@@ -8,102 +13,63 @@ import edu.asu.lerna.iolaus.domain.IUser;
  * 
  * @author      : Lohith Dwaraka
  */
-public class User implements IUser {
+public class User implements UserDetails {
 
-	private String firstName;
-	private String lastName;
-	private String userId;
-	private String password;
+	private String name;
 	private String email;
-	private String role;
+	private String password;
+	private List<LernaGrantedAuthority> authorities;
 	
+	private static final long serialVersionUID = 2581926783303008251L;
 	
-	/* (non-Javadoc)
-	 * @see edu.asu.lerna.iolaus.domain.implementation.IUser#getFirstName()
-	 */
-	@Override
-	public String getFirstName() {
-		return firstName;
+	private String username;
+	public String getUsername() {
+		return username;
 	}
-	/* (non-Javadoc)
-	 * @see edu.asu.lerna.iolaus.domain.implementation.IUser#setFirstName(java.lang.String)
-	 */
-	@Override
-	public void setFirstName(String firstName) {
-		this.firstName = firstName;
+	public void setUsername(String username) {
+		this.username = username;
 	}
-	/* (non-Javadoc)
-	 * @see edu.asu.lerna.iolaus.domain.implementation.IUser#getLastName()
-	 */
-	@Override
-	public String getLastName() {
-		return lastName;
+	public String getName() {
+		return name;
 	}
-	/* (non-Javadoc)
-	 * @see edu.asu.lerna.iolaus.domain.implementation.IUser#setLastName(java.lang.String)
-	 */
-	@Override
-	public void setLastName(String lastName) {
-		this.lastName = lastName;
+	public void setName(String name) {
+		this.name = name;
 	}
-	/* (non-Javadoc)
-	 * @see edu.asu.lerna.iolaus.domain.implementation.IUser#getUserId()
-	 */
-	@Override
-	public String getUserId() {
-		return userId;
-	}
-	/* (non-Javadoc)
-	 * @see edu.asu.lerna.iolaus.domain.implementation.IUser#setUserId(java.lang.String)
-	 */
-	@Override
-	public void setUserId(String userId) {
-		this.userId = userId;
-	}
-	/* (non-Javadoc)
-	 * @see edu.asu.lerna.iolaus.domain.implementation.IUser#getPassword()
-	 */
-	@Override
-	public String getPassword() {
-		return password;
-	}
-	/* (non-Javadoc)
-	 * @see edu.asu.lerna.iolaus.domain.implementation.IUser#setPassword(java.lang.String)
-	 */
-	@Override
-	public void setPassword(String password) {
-		this.password = password;
-	}
-	/* (non-Javadoc)
-	 * @see edu.asu.lerna.iolaus.domain.implementation.IUser#getEmail()
-	 */
-	@Override
 	public String getEmail() {
 		return email;
 	}
-	/* (non-Javadoc)
-	 * @see edu.asu.lerna.iolaus.domain.implementation.IUser#setEmail(java.lang.String)
-	 */
-	@Override
 	public void setEmail(String email) {
 		this.email = email;
 	}
-	/* (non-Javadoc)
-	 * @see edu.asu.lerna.iolaus.domain.implementation.IUser#getRole()
-	 */
-	@Override
-	public String getRole() {
-		return role;
+	public String getPassword() {
+		return password;
 	}
-	/* (non-Javadoc)
-	 * @see edu.asu.lerna.iolaus.domain.implementation.IUser#setRole(java.lang.String)
-	 */
-	@Override
-	public void setRole(String role) {
-		this.role = role;
+	public void setPassword(String password) {
+		this.password = password;
 	}
+	public List<LernaGrantedAuthority> getAuthorities() {
+		return authorities;
+	}
+	public void setAuthorities(List<LernaGrantedAuthority> authorities) {
+		this.authorities = authorities;
+	}
+
 	
-	
-	
+	@Override
+	public boolean isAccountNonExpired() {
+		return true;
+	}
+	@Override
+	public boolean isAccountNonLocked() {
+		return true;
+	}
+	@Override
+	public boolean isCredentialsNonExpired() {
+		return true;
+	}
+	@Override
+	public boolean isEnabled() {
+		return true;
+	}
 		
 }
