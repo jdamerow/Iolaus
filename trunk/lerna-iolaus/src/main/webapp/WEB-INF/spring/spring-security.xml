@@ -19,12 +19,22 @@
 		<logout logout-success-url="/logout" invalidate-session="true" />
 	</http>
  
+	<beans:bean id="encoder"
+		class="org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder" />
+
+	<beans:bean id="authProvider"
+		class="org.springframework.security.authentication.dao.DaoAuthenticationProvider">
+		<beans:property name="userDetailsService" ref="lernaUserService" />
+		<beans:property name="passwordEncoder" ref="encoder" />
+	</beans:bean>
+	
 	<authentication-manager>
 	  <authentication-provider>
 		<user-service>
 			<user name="admin" password="pwd123" authorities="ROLE_USER" />
 		</user-service>
 	  </authentication-provider>
+	  <authentication-provider ref="authProvider"></authentication-provider>
 	</authentication-manager>
 	
 </beans:beans>
