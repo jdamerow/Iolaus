@@ -13,11 +13,11 @@ import org.springframework.web.bind.annotation.RequestMethod;
 public class ListUserController {
 
 	
-	@RequestMapping(value = "auth/listuser", method = RequestMethod.GET)
+	@RequestMapping(value = "auth/user/listuser", method = RequestMethod.GET)
 	public String getUserList( ModelMap model, Principal principal)
 					 {
 	
 
-		return "auth/listuser";
+		return "auth/user/listuser";
 	}
 }

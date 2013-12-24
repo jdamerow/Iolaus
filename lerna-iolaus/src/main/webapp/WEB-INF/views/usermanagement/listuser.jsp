@@ -10,5 +10,5 @@
 </header>
 
 <input type=button
-	onClick="location.href='${pageContext.servletContext.contextPath}/auth/adduser'"
+	onClick="location.href='${pageContext.servletContext.contextPath}/auth/user/adduser'"
 	value='Add User'>

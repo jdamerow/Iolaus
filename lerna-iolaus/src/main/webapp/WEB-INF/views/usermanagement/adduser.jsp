@@ -9,7 +9,7 @@
 	<span class="byline">Enter user information</span>
 </div>
 
-<form:form method="post" modelAttribute="userBackingBean" action="${pageContext.servletContext.contextPath}/auth/addUser">
+<form:form method="POST" modelAttribute="userBackingBean" action="${pageContext.servletContext.contextPath}/auth/user/adduser">
 
 	<table class="form">
 		<tr>

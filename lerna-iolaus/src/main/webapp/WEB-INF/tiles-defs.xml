@@ -41,13 +41,13 @@
 	</definition>
 	
 	<!-- List User page -->
-	<definition name="auth/listuser" extends="base.definition">
+	<definition name="auth/user/listuser" extends="base.definition">
 	    <put-attribute name="title" value="Lerna - List User" />
 		<put-attribute name="content" value="/WEB-INF/views/usermanagement/listuser.jsp"/>
 	</definition>
 	
 	<!-- Add User page -->
-	<definition name="auth/adduser" extends="base.definition">
+	<definition name="auth/user/adduser" extends="base.definition">
 	    <put-attribute name="title" value="Lerna - Add User" />
 		<put-attribute name="content" value="/WEB-INF/views/usermanagement/adduser.jsp"/>
 	</definition>

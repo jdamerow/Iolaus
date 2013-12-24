@@ -12,14 +12,14 @@
 	<!-- Available roles -->	
 	<bean class="edu.asu.lerna.iolaus.domain.implementation.Role">
 		<property name="id" value="ROLE_USER" />
-		<property name="name" value="Momo User" />
-		<property name="description" value="A regular user enters time and manages his time sheets." />
+		<property name="name" value="Lerna User" />
+		<property name="description" value="A regular user." />
 	</bean>
 	
 	<bean class="edu.asu.lerna.iolaus.domain.implementation.Role">
 		<property name="id" value="ROLE_ADMIN" />
-		<property name="name" value="Momo Admin" />
-		<property name="description" value="Momo Administrator can create new Teams." />
+		<property name="name" value="Lerna Admin" />
+		<property name="description" value="Lerna Administrator to add neo4j instance and users." />
 	</bean>
 	
 </beans>
