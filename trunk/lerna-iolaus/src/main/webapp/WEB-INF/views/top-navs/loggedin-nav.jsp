@@ -9,6 +9,6 @@
 					<li><a href="#"><g>List Neo4J Instances</g></a></li>
 					<li><a href="#"><g>Add a Neo4J Instance</g></a></li>
 				</ul></li>
-			<li><a href="#">User Management</a></li>
+			<li><a href="${pageContext.servletContext.contextPath}/auth/listuser">User Management</a></li>
 		</ul>
 	</nav>

@@ -1,7 +1,12 @@
 package edu.asu.lerna.iolaus.web.usermanagement;
 
+import java.security.Principal;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 
 import edu.asu.lerna.iolaus.factory.IUserFactory;
 import edu.asu.lerna.iolaus.service.IRoleManager;
@@ -19,5 +24,11 @@ public class AddUserController {
 	@Autowired
 	private IRoleManager roleManager;
 	
+	@RequestMapping(value = "auth/adduser", method = RequestMethod.GET)
+	public String getUserList( ModelMap model, Principal principal)
+					 {
 	
+
+		return "auth/adduser";
+	}
 }
