@@ -48,7 +48,7 @@
 	
 	<!-- Add User page -->
 	<definition name="auth/adduser" extends="base.definition">
-	    <put-attribute name="title" value="Lerna - List User" />
+	    <put-attribute name="title" value="Lerna - Add User" />
 		<put-attribute name="content" value="/WEB-INF/views/usermanagement/adduser.jsp"/>
 	</definition>
 	

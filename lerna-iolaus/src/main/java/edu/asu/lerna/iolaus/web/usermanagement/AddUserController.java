@@ -25,10 +25,10 @@ public class AddUserController {
 	private IRoleManager roleManager;
 	
 	@RequestMapping(value = "auth/adduser", method = RequestMethod.GET)
-	public String getUserList( ModelMap model, Principal principal)
-					 {
+	public String getUserList( ModelMap model, Principal principal) {
 	
-
+		model.addAttribute("availableRoles", roleManager.getRoles());
+		model.addAttribute("userBackingBean", new edu.asu.lerna.iolaus.web.usermanagement.backing.UserBackingBean());
 		return "auth/adduser";
 	}
 }
