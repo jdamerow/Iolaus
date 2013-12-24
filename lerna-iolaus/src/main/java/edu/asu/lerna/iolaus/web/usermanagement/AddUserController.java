@@ -46,11 +46,15 @@ public class AddUserController {
 	
 	@RequestMapping(value = "auth/user/adduser", method = RequestMethod.POST)
 	public String addNewUser(@Valid @ModelAttribute UserBackingBean userForm, BindingResult result, ModelMap map) {
+		logger.info("Came to add ");
 		if (result.hasErrors()) {
+			logger.info(""+result.toString());
+			logger.info(""+result.getObjectName());
 			map.addAttribute("availableRoles", roleManager.getRoles());
 			
-			return "auth/user/listuser";
+			return "auth/user/adduser";
 		}
+		logger.info("Came to adding ");
 		User user = userFactory.createUser(userForm.getUsername(), userForm.getName(), userForm.getEmail(), userForm.getPassword(), userForm.getRoles());
 		userManager.saveUser(user);
 		
