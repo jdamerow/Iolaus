@@ -7,12 +7,12 @@ import org.springframework.stereotype.Service;
 import edu.asu.lerna.iolaus.domain.implementation.Role;
 
 @Service
-public class MyService {
+public class TestConverter {
 
     private ConversionService conversionService;
 
 	@Autowired
-    public MyService(ConversionService conversionService) {
+    public TestConverter(ConversionService conversionService) {
         this.conversionService = conversionService;
     }
     
