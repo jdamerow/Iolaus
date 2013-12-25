@@ -1,5 +1,6 @@
 package edu.asu.lerna.iolaus.service.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,5 +27,10 @@ public class RoleManager implements IRoleManager{
 				return role;
 		}
 		return null;
+	}
+
+	@Override
+	public List<Role> getRolesList() {
+		return this.roles;
 	}
 }

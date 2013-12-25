@@ -9,6 +9,10 @@ public interface IUserFactory {
 
 	public abstract User createUser(String username, String name, String email,
 			String password, List<Role> roles);
+	
+	
+	public abstract User createUser(String username, String name, String email,
+			String password, Role[] roles);
 
 	public abstract String encrypt(String pw);
 }
