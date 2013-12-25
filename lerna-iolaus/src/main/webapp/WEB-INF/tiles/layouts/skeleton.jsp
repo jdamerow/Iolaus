@@ -17,6 +17,8 @@
 <script
 	src="js/jquery.min.js"></script>
 <script
+	src="js/jquery.dataTables.js"></script>
+<script
 	src="js/jquery.dropotron.min.js"></script>
 <script
 	src="js/skel.min.js"></script>
@@ -26,8 +28,6 @@
 	href="css/skel-noscript.css" />
 <link rel="stylesheet"
 	href="css/style.css" />
-<link rel="stylesheet"
-	href="css/style-desktop.css" />
 <link rel="stylesheet"
 	href="css/style-noscript.css" />
 </head>

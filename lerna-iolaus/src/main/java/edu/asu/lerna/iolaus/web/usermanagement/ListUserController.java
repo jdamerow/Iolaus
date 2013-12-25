@@ -32,10 +32,12 @@ public class ListUserController {
 	public String getUserList( ModelMap model, Principal principal){
 
 		List<User> users = userManager.getAllUsers();
-		for(User user : users){
-			logger.info("" + user.getUsername());
-		}
-
+//		for(User user : users){
+//			logger.info("" + user.getUsername());
+//			
+//		}
+		model.addAttribute("userList", users);
+		
 		return "auth/user/listuser";
 	}
 }
