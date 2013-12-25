@@ -23,12 +23,12 @@ public class UserTranslator {
 		bean.setName(user.getName());
 		bean.setPassword(user.getPassword());
 		bean.setUsername(user.getUsername());
-		bean.setRoles(new ArrayList<Role>());
+		bean.setRoles(new ArrayList<String>());
 		
 		for (GrantedAuthority auth : user.getAuthorities()) {
 			Role role = roleManager.getRole(auth.getAuthority());
 			if (role != null)
-				bean.getRoles().add(role);
+				bean.getRoles().add(role.getName());
 		}
 		
 		return bean;

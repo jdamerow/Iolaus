@@ -32,6 +32,23 @@ public class UserFactory implements IUserFactory {
 	}
 
 	@Override
+	public User createUser(String username, String name, String email,
+			String password, Role[] roles) {
+		User user = new User();
+		user.setUsername(username);
+		user.setName(name);
+		user.setEmail(email);
+		user.setPassword(encrypt(password));
+		
+		user.setAuthorities(new ArrayList<LernaGrantedAuthority>());
+		for (Role role : roles) {
+			user.addAuthority(new LernaGrantedAuthority(role.getId()));
+		}
+		
+		return user;
+	}
+	
+	@Override
 	public String encrypt(String pw) {
 		return BCrypt.hashpw(pw, BCrypt.gensalt());
 	}

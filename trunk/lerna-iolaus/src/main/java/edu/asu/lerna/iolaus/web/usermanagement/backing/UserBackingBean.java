@@ -21,7 +21,9 @@ public class UserBackingBean {
 	private String email;
 	
 	@NotEmpty(message = "At least one role needs to be selected.")
-	private List<Role> roles;
+	private List<String> roles;
+//	private Role[] roles;
+	
 	
 	public String getUsername() {
 		return username;
@@ -41,12 +43,18 @@ public class UserBackingBean {
 	public void setPassword(String password) {
 		this.password = password;
 	}
-	public List<Role> getRoles() {
+	public List<String> getRoles() {
 		return roles;
 	}
-	public void setRoles(List<Role> roles) {
+	public void setRoles(List<String> roles) {
 		this.roles = roles;
 	}
+//	public Role[] getRoles() {
+//		return roles;
+//	}
+//	public void setRoles(Role[] roles) {
+//		this.roles = roles;
+//	}
 	public String getEmail() {
 		return email;
 	}

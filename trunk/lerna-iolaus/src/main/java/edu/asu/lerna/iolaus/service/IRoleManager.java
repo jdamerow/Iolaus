@@ -1,5 +1,7 @@
 package edu.asu.lerna.iolaus.service;
 
+import java.util.List;
+
 import edu.asu.lerna.iolaus.domain.implementation.Role;
 
 
@@ -23,5 +25,11 @@ public interface IRoleManager {
 	 * @return array of all roles
 	 */
 	public abstract Role[] getRoles();
+	
+	/**
+	 * Get All roles in a list
+	 * @return list of all the roles
+	 */
+	public abstract List<Role> getRolesList();
 
 }
