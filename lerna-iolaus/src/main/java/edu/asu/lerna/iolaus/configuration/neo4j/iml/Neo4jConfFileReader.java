@@ -54,7 +54,7 @@ public class Neo4jConfFileReader {
 					confFile.setHost(value);
 				if(key.equals("description"))
 					confFile.setDescription(value);
-				if(key.equals("path"))
+				if(key.equals("port"))
 					confFile.setPort(value);
 
 			}
