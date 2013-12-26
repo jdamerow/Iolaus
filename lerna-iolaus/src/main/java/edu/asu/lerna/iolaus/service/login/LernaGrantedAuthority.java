@@ -13,10 +13,18 @@ public class LernaGrantedAuthority implements GrantedAuthority{
 	
 	@Override
 	public String getAuthority() {
-		return roleName;
+		return this.roleName;
 	}
 
-	public void setAuthority(String rolename) {
-		this.roleName = rolename;
+	public void setAuthority(String roleName) {
+		this.roleName = roleName;
+	}
+	
+	public String getRoleName() {
+		return this.roleName;
+	}
+
+	public void setRoleName(String roleName) {
+		this.roleName = roleName;
 	}
 }

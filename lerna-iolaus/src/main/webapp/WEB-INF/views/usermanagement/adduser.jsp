@@ -23,14 +23,14 @@
 			<td><form:errors path="username" cssClass="errors" /></td>
 		</tr>
 		<tr>
-			<td>Email:</td>
-			<td><form:input type='text' path='email' value='' /></td>
-			<td><form:errors path="email" cssClass="errors" /></td>
-		</tr>
-		<tr>
 			<td>Password:</td>
 			<td><form:input type='password' path='password' /></td>
 			<td><form:errors path="password" cssClass="errors" /></td>
+		</tr>
+		<tr>
+			<td>Email:</td>
+			<td><form:input type='text' path='email' value='' /></td>
+			<td><form:errors path="email" cssClass="errors" /></td>
 		</tr>
 		<tr>
 			<td valign="top">Roles:</td><td><form:checkboxes element="li" items="${availableRoles}" itemLabel="name" itemValue="id" path="roles" /></td>
