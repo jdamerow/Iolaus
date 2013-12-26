@@ -29,7 +29,7 @@
 		font-weight: 300;
 	}
 
-	body,input,textarea,select
+	body,select
 	{
 		font-size: 15pt;
 		line-height: 1.85em;
@@ -166,7 +166,7 @@
 		font-style: italic;
 	}
 	
-	p, ul, ol, dl, table
+	p, ul, ol, dl
 	{
 		margin-bottom: 1em;
 	}
@@ -451,179 +451,6 @@
 		ol.style1
 		{
 		}
-
-	/* Forms */
-
-		form
-		{
-		}
-		
-			form label
-			{
-				display: block;
-			}
-		
-			form input.text,
-			form select,
-			form textarea
-			{
-				-webkit-appearance: none;
-				display: block;
-				border: 0;
-				background: #ccc;
-				width: 50%;
-			}
-
-				form input.text:hover,
-				form select:hover,
-				form textarea:hover
-				{
-				}
-
-				form input.text:focus,
-				form select:focus,
-				form textarea:focus
-				{
-				}
-				form input.text
-				{
-					min-height: 2em;
-				}
-				
-				form textarea
-				{
-					min-height: 9em;
-				}
-
-				form .formerize-placeholder
-				{
-					color: #555 !important;
-				}
-
-				form ::-webkit-input-placeholder
-				{
-					color: #555 !important;
-				}
-
-				form :-moz-placeholder
-				{
-					color: #555 !important;
-				}
-
-				form ::-moz-placeholder
-				{
-					color: #555 !important;
-				}
-
-				form :-ms-input-placeholder
-				{
-					color: #555 !important;
-				}
-
-				form ::-moz-focus-inner
-				{
-					border: 0;
-				}
-		
-			
-	/* Tables */
-	
-		table
-		{
-			width: 100%;
-		}
-		
-			table.style1
-			{
-				width: 100%;
-			}
-			
-				table.style1 tbody tr:nth-child(2n+2)
-				{
-					background: #f4f4f4;
-				}
-				
-				table.style1 td
-				{
-					padding: 0.5em 1em 0.5em 1em;
-				}
-				
-				table.style1 th
-				{
-					text-align: left;
-					font-weight: 400;
-					padding: 0.5em 1em 0.5em 1em;
-				}
-			
-				table.style1 thead
-				{
-					background: #444;
-					color: #fff;
-				}
-				
-				table.style1 tfoot
-				{
-					background: #eee;
-				}
-				
-				table.style1 tbody
-				{
-				}
-
-
-
-
-
-	/* Buttons */
-		
-		.button
-		{
-			position: relative;
-			display: inline-block;
-			background: #df7366;
-			color: #fff;
-			text-align: center;
-			border-radius: 0.5em;
-			text-decoration: none;
-			padding: 0.65em 3em 0.65em 3em;
-			border: 0;
-			cursor: pointer;
-			outline: 0;
-		}
-
-			.button:hover
-			{
-				color: #fff;
-				background: #ef8376;
-			}
-			
-			.button:active
-			{
-			}
-		
-			.button.alt
-			{
-			}
-
-				.button.alt:hover
-				{
-				}
-				
-				.button.alt:active
-				{
-				}
-		
-			.button.small
-			{
-			}
-			
-			.button.big
-			{
-			}
-			
-			.button.huge
-			{
-			}
 			
 	/* Posts */
 

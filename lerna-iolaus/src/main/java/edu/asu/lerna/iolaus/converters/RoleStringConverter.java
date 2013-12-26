@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
 import edu.asu.lerna.iolaus.domain.implementation.Role;
 import edu.asu.lerna.iolaus.service.IRoleManager;
 
-@Component
+
 public class RoleStringConverter implements Converter<String, Role>{
 
 	@Autowired
