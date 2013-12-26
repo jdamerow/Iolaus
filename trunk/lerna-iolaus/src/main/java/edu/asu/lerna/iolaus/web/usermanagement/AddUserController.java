@@ -43,7 +43,6 @@ public class AddUserController {
 	
 	@RequestMapping(value = "auth/user/adduser", method = RequestMethod.GET)
 	public String getToAddUserPage( ModelMap model, Principal principal) {
-		logger.info("Came to add user loading parameter function");
 		model.addAttribute("availableRoles", roleManager.getRolesList());
 		model.addAttribute("userBackingBean", new UserBackingBean());
 		return "auth/user/adduser";
@@ -51,16 +50,11 @@ public class AddUserController {
 	
 	@RequestMapping(value = "auth/user/adduser", method = RequestMethod.POST)
 	public String addNewUser(@Valid @ModelAttribute UserBackingBean userForm, BindingResult result, ModelMap map) {
-		logger.info("Came to add ");
 		if (result.hasErrors()) {
-			logger.info(""+result.toString());
-			logger.info(""+result.getObjectName());
 			map.addAttribute("availableRoles", roleManager.getRoles());
 			
 			return "auth/user/adduser";
 		}
-		logger.info("Came to adding ");
-		
 		List<String> roleList = userForm.getRoles();
 		
 		List<Role> roleList1  = new ArrayList<Role>();
