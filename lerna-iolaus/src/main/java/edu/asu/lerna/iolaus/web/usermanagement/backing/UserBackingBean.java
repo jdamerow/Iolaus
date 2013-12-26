@@ -2,8 +2,8 @@ package edu.asu.lerna.iolaus.web.usermanagement.backing;
 
 import java.util.List;
 
-import org.hibernate.validator.constraints.NotEmpty;
-
+import edu.asu.lerna.iolaus.annotation.NotEmpty;
+import edu.asu.lerna.iolaus.annotation.NotEmptyList;
 import edu.asu.lerna.iolaus.annotation.UniqueUsername;
 
 public class UserBackingBean {
@@ -21,7 +21,7 @@ public class UserBackingBean {
 	@NotEmpty(message = "Please provide an email address.")
 	private String email;
 	
-	@NotEmpty(message = "At least one role needs to be selected.")
+	@NotEmptyList(message = "At least one role needs to be selected.")
 	private List<String> roles;
 //	private Role[] roles;
 	

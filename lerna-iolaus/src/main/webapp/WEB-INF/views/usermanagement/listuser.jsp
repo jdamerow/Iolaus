@@ -18,7 +18,6 @@
 -->
 
 
-
 <script type="text/javascript" charset="utf8">
 	$(document).ready(function() {
 		$('#selectall').click(function() {
@@ -83,11 +82,6 @@
 </script>
 
 
-<header>
-	<span class="byline">List of users.</span>
-</header>
-
-
 
 <br />
 <div class="container">
@@ -99,9 +93,11 @@
 					onClick="location.href='${pageContext.servletContext.contextPath}/auth/user/adduser'"
 					value='Add User'> <input type="submit" value="Delete User"
 					onclick="this.form.action='${pageContext.servletContext.contextPath}/auth/user/deleteUser'" />
+
+				<span class="inline">List of Users.</span>
 				<hr />
 				<table style="width: 100%" cellpadding="0" cellspacing="0"
-					border="0" class="display dataTable">
+					border="0" class="display dataTable" id="listuser">
 					<thead>
 						<tr>
 							<th align="left"><input type="checkbox" id="selectall">
@@ -123,12 +119,10 @@
 									type="hidden" value="<c:out value="${user.username}"></c:out>" />
 									<c:out value="${user.username}"></c:out></td>
 								<td width="25%" align="center"><c:out value="${user.email}"></c:out></td>
-								<td width="25%" align="center">
-									<c:forEach var="authorities"
+								<td width="25%" align="center"><c:forEach var="authorities"
 										items="${user.authorities}">
 										<c:out value="${authorities.authority}"></c:out> :
-										</c:forEach>
-								</td>
+										</c:forEach></td>
 							</tr>
 						</c:forEach>
 					</tbody>
