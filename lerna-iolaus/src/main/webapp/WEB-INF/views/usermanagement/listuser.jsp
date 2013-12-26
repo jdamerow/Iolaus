@@ -9,10 +9,8 @@
 	<span class="byline">Users you could edit, delete and add.</span>
 </header>
 
-<input type=button
-	onClick="location.href='${pageContext.servletContext.contextPath}/auth/user/adduser'"
-	value='Add User'>
-	
+
+
 
 <!--  
 	Author Lohith Dwaraka  
@@ -100,42 +98,50 @@
 <div class="container">
 	<c:choose>
 		<c:when test="${not empty userList}">
-			<table style="width: 100%" cellpadding="0" cellspacing="0" border="0"
-				class="display dataTable">
-				<thead>
-					<tr>
-						<th align="left"><input type="checkbox" id="selectall">
-									Select	All</th>
-						<th align="left">Name</th>
-						<th>User Name</th>
-						<th>Email ID</th>
-						<th>Role</th>
-					</tr>
-				</thead>
 
-				<tbody>
-					<c:forEach var="user" items="${userList}">
+			<form method="POST">
+				<input type=button
+					onClick="location.href='${pageContext.servletContext.contextPath}/auth/user/adduser'"
+					value='Add User'> <input type="submit" value="Delete User"
+					onclick="this.form.action='${pageContext.servletContext.contextPath}/auth/user/deleteUser'" />
+				<hr />
+				<table style="width: 100%" cellpadding="0" cellspacing="0"
+					border="0" class="display dataTable">
+					<thead>
 						<tr>
-							<td><input type="checkbox" class="selected"
-											name="selected"
-											value='<c:out value="${user.username}"></c:out>' /></td>
-							<td width="25%" align="left"><c:out
-									value="${user.name}"></c:out></td>
-							<td width="25%" align="center"> <input name="usernames"
-								type="hidden" value="<c:out value="${user.username}"></c:out>" />
-								<c:out value="${user.username}"></c:out></td>
-							<td width="25%" align="center"><c:out
-									value="${user.email}"></c:out></td>
-							<td width="25%" align="center"><c:out
-									value="${user.email}"></c:out></td>
+							<th align="left"><input type="checkbox" id="selectall">
+								Select All</th>
+							<th align="left">Name</th>
+							<th>User Name</th>
+							<th>Email ID</th>
+							<th>Role</th>
 						</tr>
-					</c:forEach>
-				</tbody>
-			</table>
+					</thead>
+
+					<tbody>
+						<c:forEach var="user" items="${userList}">
+							<tr>
+								<td><input type="checkbox" class="selected" name="selected"
+									value='<c:out value="${user.username}"></c:out>' /></td>
+								<td width="25%" align="left"><c:out value="${user.name}"></c:out></td>
+								<td width="25%" align="center"><input name="usernames"
+									type="hidden" value="<c:out value="${user.username}"></c:out>" />
+									<c:out value="${user.username}"></c:out></td>
+								<td width="25%" align="center"><c:out value="${user.email}"></c:out></td>
+								<td width="25%" align="center"><c:out value="${user.email}"></c:out></td>
+							</tr>
+						</c:forEach>
+					</tbody>
+				</table>
+			</form>
 		</c:when>
 		<c:otherwise>
+			<input type=button
+				onClick="location.href='${pageContext.servletContext.contextPath}/auth/user/adduser'"
+				value='Add User'>
+			<hr />
+			<br />
 			No Users
 		</c:otherwise>
 	</c:choose>
 </div>
-	
