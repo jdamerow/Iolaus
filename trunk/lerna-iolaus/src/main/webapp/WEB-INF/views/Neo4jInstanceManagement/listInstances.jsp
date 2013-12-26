@@ -69,10 +69,13 @@
 </script>
 <script type="text/javascript" charset="utf8">
 	$(document).ready(function() {
-		activeTable = $('.dataTable').dataTable({
+		$('#listinstance').dataTable({
 			"bJQueryUI" : true,
 			"sPaginationType" : "full_numbers",
-			"bAutoWidth" : false
+			"bAutoWidth" : false,
+			"aoColumns" : [ {
+				"bSortable" : false
+			}, null, null, null, null, null ]
 		});
 	});
 	$(document).ready(function() {
@@ -101,7 +104,7 @@
 					onclick="this.form.action='${pageContext.servletContext.contextPath}/auth/user/deleteUser'" />
 				<hr />
 				<table style="width: 100%" cellpadding="0" cellspacing="0"
-					border="0" class="display dataTable">
+					border="0" class="display dataTable" id="listinstance">
 					<thead>
 						<tr>
 							<th align="left"><input type="checkbox" id="selectall">All</th>
@@ -116,13 +119,18 @@
 					<tbody>
 						<c:forEach var="instance" items="${instanceList}">
 							<tr>
-								<td width="5%"><input type="checkbox" class="selected" name="selected"
-									value='<c:out value="${instance.id}"></c:out>' /></td>
-								<td width="10%" align="center"><c:out value="${instance.id}"></c:out></td>
-								<td width="10%" align="center"><c:out value="${instance.port}"></c:out></td>
-								<td width="15%" align="center"><c:out value="${instance.host}"></c:out></td>
-								<td width="50%" align="center"><c:out value="${instance.description}"></c:out></td>
-								<td width="10%" align="center"><c:out value="${instance.active}"></c:out></td>
+								<td width="5%"><input type="checkbox" class="selected"
+									name="selected" value='<c:out value="${instance.id}"></c:out>' /></td>
+								<td width="10%" align="center"><c:out
+										value="${instance.id}"></c:out></td>
+								<td width="10%" align="center"><c:out
+										value="${instance.port}"></c:out></td>
+								<td width="15%" align="center"><c:out
+										value="${instance.host}"></c:out></td>
+								<td width="50%" align="center"><c:out
+										value="${instance.description}"></c:out></td>
+								<td width="10%" align="center"><c:out
+										value="${instance.active}"></c:out></td>
 							</tr>
 						</c:forEach>
 					</tbody>
