@@ -12,7 +12,7 @@
    =========================== */
 
 
-#addInstance h1 {
+#form h1 {
 	margin-bottom: 20px;
 	margin-left: 70px;
 	color: #474E69;
@@ -58,7 +58,7 @@ input:focus, textarea:focus {
 	-webkit-box-shadow: rgba(0, 0, 0, 0.2) 0px 0px 8px;	
 }
 
-#addInstance label {
+#form label {
 	margin-left: 10px;
 	color: #000000;
 	font-size: 15px;
@@ -74,7 +74,7 @@ input:focus, textarea:focus {
 	font-style: Verdana, Tahoma, sans-serif;
 }
 
-#addInstance table{
+#form table{
 	width:70%;
 	margin-top:50px;
 	margin-left:200px;
