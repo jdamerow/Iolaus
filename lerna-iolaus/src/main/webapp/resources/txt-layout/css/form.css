@@ -16,7 +16,7 @@
 	margin-bottom: 20px;
 	margin-left: 70px;
 	color: #474E69;
-	font-size:25px;
+	font-size:35px;
 	font-weight:bold;
 }
 
@@ -89,9 +89,22 @@ input:focus, textarea:focus {
 	background-color: #474E69; 
 	color:#FFFFFF;
 	width: 150px;
-	height:40px;
+	height:30px;
+	weight: bold;
 	border-radius: 3px;
 	-moz-border-radius: 3px;
 	-webkit-border-radius: 3px;	
 	margin-left:150px;
+}
+
+ .submituser input {
+	background-color: #474E69; 
+	color:#FFFFFF;
+	width: 150px;
+	height:30px;
+	weight: bold;
+	border-radius: 3px;
+	-moz-border-radius: 3px;
+	-webkit-border-radius: 3px;	
+	margin-left:95px;
 }
