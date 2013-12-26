@@ -35,7 +35,7 @@ public class Neo4jRegistry {
 	
 	public List<INeo4jConfFile> getfileList()
 	{
-		return Collections.unmodifiableList(this.fileList);
+		return this.fileList;
 	}
 	
 	void print (List<INeo4jConfFile> filelist)

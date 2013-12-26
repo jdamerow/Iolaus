@@ -3,6 +3,7 @@ package edu.asu.lerna.iolaus.service.impl;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -13,12 +14,15 @@ import org.springframework.stereotype.Service;
 import edu.asu.lerna.iolaus.configuration.neo4j.iml.Neo4jRegistry;
 import edu.asu.lerna.iolaus.domain.INeo4jConfFile;
 import edu.asu.lerna.iolaus.domain.INeo4jInstance;
+import edu.asu.lerna.iolaus.domain.implementation.Neo4jConfFile;
+import edu.asu.lerna.iolaus.domain.implementation.Neo4jInstance;
 import edu.asu.lerna.iolaus.service.INeo4jInstanceManager;
 
 @Service
 public class Neo4jInstanceManager implements INeo4jInstanceManager {
 
-	@Autowired Neo4jRegistry neo4jRegistry;
+	@Autowired 
+	Neo4jRegistry neo4jRegistry;
 	
 	private static final Logger logger = LoggerFactory
 			.getLogger(Neo4jInstanceManager.class);
@@ -42,6 +46,13 @@ public class Neo4jInstanceManager implements INeo4jInstanceManager {
 			bw.append("port:"+instance.getPort()+"\n");
 			bw.append("active:"+String.valueOf(instance.isActive()==true?true:false));
 			bw.close();
+			INeo4jConfFile confFile=new Neo4jConfFile();
+			confFile.setId(String.valueOf(maxId+1));
+			confFile.setDescription(modifiedDescription);
+			confFile.setHost(instance.getHost());
+			confFile.setPort(instance.getPort());
+			confFile.setActive(instance.isActive()==true?true:false);
+			neo4jRegistry.getfileList().add(confFile);
 		}catch(IOException exception){
 			if(bw==null){
 				logger.info("Error occured while creating the file");
@@ -64,9 +75,18 @@ public class Neo4jInstanceManager implements INeo4jInstanceManager {
 	}
 
 	@Override
-	public List<INeo4jInstance> listNeo4jInstances() {
-		// TODO Auto-generated method stub
-		return null;
+	public List<INeo4jInstance> getAllInstances() {
+		List<INeo4jInstance> allInstances=new ArrayList<INeo4jInstance>();
+		for(INeo4jConfFile instance:neo4jRegistry.getfileList()){
+			INeo4jInstance castedInstance=new Neo4jInstance();
+			castedInstance.setId(instance.getId());
+			castedInstance.setPort(instance.getPort());
+			castedInstance.setHost(instance.getHost());
+			castedInstance.setDescription(instance.getDescription());
+			castedInstance.setActive(instance.isActive());
+			allInstances.add(castedInstance);
+		}
+		return allInstances;
 	}
 
 }
