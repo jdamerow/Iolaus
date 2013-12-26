@@ -1,9 +1,8 @@
 package edu.asu.lerna.iolaus.web.usermanagement;
 
-
-
 import java.security.Principal;
-import java.util.List;
+
+import javax.servlet.http.HttpServletRequest;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,28 +11,33 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-
-import edu.asu.lerna.iolaus.domain.implementation.User;
 import edu.asu.lerna.iolaus.service.IUserManager;
 
 @Controller
-public class ListUserController {
+public class ModifyUserController {
 
 	private static final Logger logger = LoggerFactory
-			.getLogger(ListUserController.class);
-	
+			.getLogger(ModifyUserController.class);
 
-
-	
 	@Autowired
 	private IUserManager userManager; 
-	
-	@RequestMapping(value = "auth/user/listuser", method = RequestMethod.GET)
-	public String getUserList( ModelMap model, Principal principal){
 
-		List<User> users = userManager.getAllUsers();
-		model.addAttribute("userList", users);
-		
-		return "auth/user/listuser";
+	@RequestMapping(value = "auth/user/deleteUser", method = RequestMethod.POST)
+	public String deleteUser(HttpServletRequest req, ModelMap model,	Principal principal) {
+
+		String[] values = req.getParameterValues("selected");
+		try{
+			for(String v : values){
+				logger.info(" selected : "+ v);
+				userManager.deleteUser(v);
+			}
+		}catch(Exception e){
+			logger.error("DB Error :",e);
+		}
+
+
+		return "redirect:/auth/user/listuser";
 	}
+
 }
+
