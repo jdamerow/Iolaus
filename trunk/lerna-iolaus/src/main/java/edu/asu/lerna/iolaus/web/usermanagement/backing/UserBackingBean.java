@@ -4,11 +4,13 @@ import java.util.List;
 
 import org.hibernate.validator.constraints.NotEmpty;
 
+import edu.asu.lerna.iolaus.annotation.UniqueUsername;
 import edu.asu.lerna.iolaus.domain.implementation.Role;
 
 public class UserBackingBean {
 
 	@NotEmpty(message = "Please provide a username.")
+	@UniqueUsername
 	private String username;
 	
 	@NotEmpty(message = "Please provide name of user.")

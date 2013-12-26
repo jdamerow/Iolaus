@@ -43,13 +43,6 @@
 		}
 	}
 	$(document).ready(function() {
-		activeTable = $('.dataTable').dataTable({
-			"bJQueryUI" : true,
-			"sPaginationType" : "full_numbers",
-			"bAutoWidth" : false
-		});
-	});
-	$(document).ready(function() {
 		$("input[type=submit]").button().click(function(event) {
 
 		});
@@ -110,7 +103,7 @@
 					<thead>
 						<tr>
 							<th align="left"><input type="checkbox" id="selectall">
-								Select All</th>
+								All</th>
 							<th align="left">Name</th>
 							<th>User Name</th>
 							<th>Email ID</th>
@@ -128,7 +121,12 @@
 									type="hidden" value="<c:out value="${user.username}"></c:out>" />
 									<c:out value="${user.username}"></c:out></td>
 								<td width="25%" align="center"><c:out value="${user.email}"></c:out></td>
-								<td width="25%" align="center"><c:out value="${user.email}"></c:out></td>
+								<td width="25%" align="center">
+									<c:forEach var="authorities"
+										items="${user.authorities}">
+										<c:out value="${authorities.authority}"></c:out> :
+										</c:forEach>
+								</td>
 							</tr>
 						</c:forEach>
 					</tbody>
