@@ -34,7 +34,7 @@ function validate()
 </script>
 
 <link rel="stylesheet" href="css/form.css" />
-<div id="addInstance">
+<div id="form">
 	<table>
 	<tr> <td colspan="2" align="left"><h1>Add a Neo4j Instance</h1></td></tr>
 	<form name="addInstanceForm" class="form" action="addInstance" method="POST" onsubmit="return(validate());">
