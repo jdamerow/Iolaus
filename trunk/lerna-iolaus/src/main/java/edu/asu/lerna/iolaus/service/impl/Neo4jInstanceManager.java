@@ -25,7 +25,7 @@ public class Neo4jInstanceManager implements INeo4jInstanceManager {
 	@Override
 	public String addNeo4jInstance(INeo4jInstance instance) {
 		List<INeo4jConfFile> fileList=neo4jRegistry.getfileList();
-		int maxId=1;
+		int maxId=0;
 		for(INeo4jConfFile file:fileList){
 			if(Integer.parseInt(file.getId())>maxId){
 				maxId=Integer.parseInt(file.getId());
@@ -34,12 +34,13 @@ public class Neo4jInstanceManager implements INeo4jInstanceManager {
 		String classPath=Neo4jInstanceManager.class.getProtectionDomain().getCodeSource().getLocation().getPath();
 		BufferedWriter bw=null;
 		try{
-			bw=new BufferedWriter(new FileWriter(classPath.substring(0,classPath.indexOf("classes"))+"classes/Neo4jConfiguration"+maxId+1+".txt"));
-			bw.append("id:"+maxId+1+"\n");
-			bw.append("description:"+instance.getDescription()+"\n");
+			bw=new BufferedWriter(new FileWriter(classPath.substring(0,classPath.indexOf("classes"))+"classes/ConfigurationFiles/Neo4jConfiguration"+(maxId+1)+".txt"));
+			bw.append("id:"+(maxId+1)+"\n"); 
+			String modifiedDescription=instance.getDescription().replaceAll("\n", " ").replace("\r","");
+			bw.append("description:"+modifiedDescription+"\n");
 			bw.append("host:"+instance.getHost()+"\n");
-			bw.append("ip:"+instance.getIp()+"\n"); 
-			bw.append("port:"+instance.getPort());
+			bw.append("port:"+instance.getPort()+"\n");
+			bw.append("active:"+String.valueOf(instance.isActive()==true?true:false));
 			bw.close();
 		}catch(IOException exception){
 			if(bw==null){

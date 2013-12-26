@@ -8,8 +8,18 @@ public class Neo4jConfFile implements INeo4jConfFile {
 	private String description;
 	private String host;
 	private String port;
-	private String ip;
+	private boolean active;
 	
+	@Override
+	public boolean isActive() {
+		return active;
+	}
+	
+	@Override
+	public void setActive(boolean active) {
+		this.active = active;
+	}
+
 	@Override
 	public String getId() {
 		return id;
@@ -48,15 +58,5 @@ public class Neo4jConfFile implements INeo4jConfFile {
 	@Override
 	public void setHost(String host) {
 		this.host=host;
-	}
-
-	@Override
-	public String getIp() {
-		return ip;
-	}
-
-	@Override
-	public void setIp(String ip) {
-		this.ip=ip;
 	}
 }

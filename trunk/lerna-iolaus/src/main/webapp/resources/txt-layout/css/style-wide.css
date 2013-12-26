@@ -8,7 +8,7 @@
 /* Basic                                                                         */
 /*********************************************************************************/
 
-	body,input,textarea,select
+	body,select
 	{
 		font-size: 14pt;
 		line-height: 1.75em;
