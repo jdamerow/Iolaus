@@ -5,7 +5,6 @@ import java.util.List;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import edu.asu.lerna.iolaus.annotation.UniqueUsername;
-import edu.asu.lerna.iolaus.domain.implementation.Role;
 
 public class UserBackingBean {
 
