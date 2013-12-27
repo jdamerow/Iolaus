@@ -61,7 +61,7 @@ public class QueryHandler implements IQueryHandler{
 		List<IDatabase> dbList =  q.getDatabaseList().getDatabase();
 		Iterator<IDatabase> dbIterator = dbList.iterator();
 		while(dbIterator.hasNext()){
-			dbInstances.add(q.getDatabaseId(dbIterator.next()));//add a dbInstance to the List;
+			dbInstances.add(dbIterator.next().getId());//add a dbInstance to the List;
 		}
 		
 		Map<String,List<Object>> resultSet;

@@ -17,7 +17,20 @@
 	Used to list the users
 -->
 
-
+<style type="text/css">
+    
+    .submit{
+	background-color: #474E69; 
+	color:#FFFFFF;
+	width: 120px;
+	height:30px;
+	weight: bold;
+	border-radius: 3px;
+	-moz-border-radius: 3px;
+	-webkit-border-radius: 3px;	
+	margin-bottom:5px;
+}
+  </style>
 
 <script type="text/javascript" charset="utf8">
 	$(document).ready(function() {
@@ -75,7 +88,7 @@
 			"bAutoWidth" : false,
 			"aoColumns" : [ {
 				"bSortable" : false
-			}, null, null, null, null, null ]
+			}, null, null, null, null, null, null ]
 		});
 	});
 	$(document).ready(function() {
@@ -98,10 +111,10 @@
 		<c:when test="${not empty instanceList}">
 
 			<form method="POST">
-				<input type=button
+				<input type=button class="submit"
 					onClick="location.href='${pageContext.servletContext.contextPath}/auth/addInstance'"
-					value='Add Instance'> <input type="submit" value="Delete Instance"
-					onclick="this.form.action='${pageContext.servletContext.contextPath}/auth/user/deleteInstance'" />
+					value='Add a Instance'> <input type="submit" class="submit" value="Delete Instances"
+					onclick="this.form.action='${pageContext.servletContext.contextPath}/auth/deleteInstances'" />
 				<hr />
 				<table style="width: 100%" cellpadding="0" cellspacing="0"
 					border="0" class="display dataTable" id="listinstance">
@@ -113,24 +126,36 @@
 							<th>Host</th>
 							<th>Description</th>
 							<th>Status</th>
+							<th></th>
 						</tr>
 					</thead>
 
 					<tbody>
 						<c:forEach var="instance" items="${instanceList}">
 							<tr>
-								<td width="5%"><input type="checkbox" class="selected"
+								<td width="10%"><input type="checkbox" class="selected"
 									name="selected" value='<c:out value="${instance.id}"></c:out>' /></td>
 								<td width="10%" align="center"><c:out
 										value="${instance.id}"></c:out></td>
-								<td width="10%" align="center"><c:out
+								<td width="5%" align="center"><c:out
 										value="${instance.port}"></c:out></td>
 								<td width="15%" align="center"><c:out
 										value="${instance.host}"></c:out></td>
-								<td width="50%" align="center"><c:out
+								<td width="40%" align="center"><c:out
 										value="${instance.description}"></c:out></td>
-								<td width="10%" align="center"><c:out
-										value="${instance.active}"></c:out></td>
+								<c:choose>
+								      <c:when test="${instance.active}">
+									      <td width="10%" align="center"><c:out
+											value="Active"></c:out></td>
+								      </c:when>
+								      <c:otherwise>
+								      	<td width="10%" align="center"><c:out
+											value="Inactive"></c:out></td>
+								      </c:otherwise>
+								</c:choose>
+								<td width="10%" align="center"><input type=button class="submit"
+					onClick="location.href='${pageContext.servletContext.contextPath}/auth/editInstance/'"
+					value='Edit'></td>
 							</tr>
 						</c:forEach>
 					</tbody>
