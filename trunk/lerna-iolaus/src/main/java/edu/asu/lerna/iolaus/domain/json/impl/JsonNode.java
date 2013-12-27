@@ -1,10 +1,11 @@
 package edu.asu.lerna.iolaus.domain.json.impl;
 
+import java.io.Serializable;
 import java.util.HashMap;
 
 import edu.asu.lerna.iolaus.domain.json.IJsonNode;
 
-public class JsonNode implements IJsonNode {
+public class JsonNode implements IJsonNode, Serializable {
  
 	private String id;
 	private String type;

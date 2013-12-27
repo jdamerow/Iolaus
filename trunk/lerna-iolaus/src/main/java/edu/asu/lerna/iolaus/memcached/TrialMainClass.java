@@ -15,7 +15,7 @@ public class TrialMainClass {
 		
 		OperationFuture<Boolean> result = memcachedClient.set("1", 0, "One");
 		System.out.println(result.get());
-		result = memcachedClient.add("10", 0, "TEN");
+		result = memcachedClient.set("10", 0, "TEN");
 		System.out.println(result.get());
 		result = memcachedClient.set("2", 0, "Two");
 		System.out.println(result.get());
