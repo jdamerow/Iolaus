@@ -10,7 +10,7 @@
 </div>
 
 
-<form:form name="modifyUserForm" method="POST" modelAttribute="userBackingBean" action="${pageContext.servletContext.contextPath}/auth/user/updateuser">
+<form:form name="modifyUserForm" method="POST" modelAttribute="userBackingBean" action="${pageContext.servletContext.contextPath}/auth/user/modifyuser/${username}">
 
 	<table class="form">
 		<tr>

@@ -17,6 +17,19 @@
 	Used to list the users
 -->
 
+<style type="text/css">
+.submit {
+	background-color: #474E69;
+	color: #FFFFFF;
+	width: 120px;
+	height: 30px;
+	weight: bold;
+	border-radius: 3px;
+	-moz-border-radius: 3px;
+	-webkit-border-radius: 3px;
+	margin-bottom: 5px;
+}
+</style>
 
 <script type="text/javascript" charset="utf8">
 	$(document).ready(function() {
@@ -92,7 +105,7 @@
 				<div class="form">
 					<h1>List of Users.</h1>
 				</div>
-				<input type=button
+				<input class="submit" type=button
 					onClick="location.href='${pageContext.servletContext.contextPath}/auth/user/adduser'"
 					value='Add User'> <input type="submit" value="Delete User"
 					onclick="this.form.action='${pageContext.servletContext.contextPath}/auth/user/deleteUser'" />
@@ -125,7 +138,7 @@
 										items="${user.authorities}">
 										<c:out value="${authorities.authority}"></c:out> :
 										</c:forEach></td>
-								<td><input type=button
+								<td><input type=button class="submit"
 									onClick="location.href='${pageContext.servletContext.contextPath}/auth/user/modifyuser/<c:out value="${user.username}"></c:out>'"
 									value='Modify User'></td>
 							</tr>

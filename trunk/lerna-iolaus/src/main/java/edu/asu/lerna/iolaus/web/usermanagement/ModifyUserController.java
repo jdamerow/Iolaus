@@ -74,12 +74,13 @@ public class ModifyUserController {
 		}
 		
 		ubb.setRoles(roleStrList);
+		model.addAttribute("username",userName);
 		model.addAttribute("availableRoles", roleManager.getRolesList());
 		model.addAttribute("userBackingBean", ubb);
 		return "auth/user/modifyuser";
 	}
 	
-	@RequestMapping(value = "auth/user/updateUser/{username}", method = RequestMethod.POST)
+	@RequestMapping(value = "auth/user/modifyuser/{username}", method = RequestMethod.POST)
 	public String updateUser(@PathVariable("username") String userName,@Valid @ModelAttribute UserBackingBean userForm, BindingResult result, ModelMap model,	Principal principal) {
 
 		

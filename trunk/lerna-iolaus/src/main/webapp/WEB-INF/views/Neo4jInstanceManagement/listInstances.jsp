@@ -18,19 +18,18 @@
 -->
 
 <style type="text/css">
-    
-    .submit{
-	background-color: #474E69; 
-	color:#FFFFFF;
+.submit {
+	background-color: #474E69;
+	color: #FFFFFF;
 	width: 120px;
-	height:30px;
+	height: 30px;
 	weight: bold;
 	border-radius: 3px;
 	-moz-border-radius: 3px;
-	-webkit-border-radius: 3px;	
-	margin-bottom:5px;
+	-webkit-border-radius: 3px;
+	margin-bottom: 5px;
 }
-  </style>
+</style>
 
 <script type="text/javascript" charset="utf8">
 	$(document).ready(function() {
@@ -113,7 +112,8 @@
 			<form method="POST">
 				<input type=button class="submit"
 					onClick="location.href='${pageContext.servletContext.contextPath}/auth/addInstance'"
-					value='Add a Instance'> <input type="submit" class="submit" value="Delete Instances"
+					value='Add a Instance'> <input type="submit" class="submit"
+					value="Delete Instances"
 					onclick="this.form.action='${pageContext.servletContext.contextPath}/auth/deleteInstances'" />
 				<hr />
 				<table style="width: 100%" cellpadding="0" cellspacing="0"
@@ -144,18 +144,17 @@
 								<td width="40%" align="center"><c:out
 										value="${instance.description}"></c:out></td>
 								<c:choose>
-								      <c:when test="${instance.active}">
-									      <td width="10%" align="center"><c:out
-											value="Active"></c:out></td>
-								      </c:when>
-								      <c:otherwise>
-								      	<td width="10%" align="center"><c:out
-											value="Inactive"></c:out></td>
-								      </c:otherwise>
+									<c:when test="${instance.active}">
+										<td width="10%" align="center"><c:out value="Active"></c:out></td>
+									</c:when>
+									<c:otherwise>
+										<td width="10%" align="center"><c:out value="Inactive"></c:out></td>
+									</c:otherwise>
 								</c:choose>
-								<td width="10%" align="center"><input type=button class="submit"
-					onClick="location.href='${pageContext.servletContext.contextPath}/auth/editInstance/'"
-					value='Edit'></td>
+								<td width="10%" align="center"><input type=button
+									class="submit"
+									onClick="location.href='${pageContext.servletContext.contextPath}/auth/editInstance/'"
+									value='Edit'></td>
 							</tr>
 						</c:forEach>
 					</tbody>
