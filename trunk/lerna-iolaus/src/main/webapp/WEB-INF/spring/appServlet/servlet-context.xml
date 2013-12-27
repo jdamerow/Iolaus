@@ -26,6 +26,10 @@
 	<resources mapping="/auth/user/css/**" location="/resources/txt-layout/css/" />
 	<resources mapping="/auth/user/js/**" location="/resources/txt-layout/js/" />
 	<resources mapping="/auth/user/images/**" location="/resources/txt-layout/images/" />
+	<resources mapping="/auth/user/modifyuser/resources/**" location="/resources/" />
+	<resources mapping="/auth/user/modifyuser/css/**" location="/resources/txt-layout/css/" />
+	<resources mapping="/auth/user/modifyuser/js/**" location="/resources/txt-layout/js/" />
+	<resources mapping="/auth/user/modifyuser/images/**" location="/resources/txt-layout/images/" />
 
 	<!-- Resolves views selected for rendering by @Controllers to .jsp resources 
 		in the /WEB-INF/views directory -->

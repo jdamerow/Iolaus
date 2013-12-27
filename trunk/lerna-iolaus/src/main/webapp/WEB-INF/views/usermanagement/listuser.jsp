@@ -89,15 +89,13 @@
 		<c:when test="${not empty userList}">
 
 			<form method="POST">
-			<div class="form">
-			<h1>List of Users.</h1>
-			</div>
+				<div class="form">
+					<h1>List of Users.</h1>
+				</div>
 				<input type=button
 					onClick="location.href='${pageContext.servletContext.contextPath}/auth/user/adduser'"
 					value='Add User'> <input type="submit" value="Delete User"
 					onclick="this.form.action='${pageContext.servletContext.contextPath}/auth/user/deleteUser'" />
-					<input type="submit" value="Edit User"
-					onclick="this.form.action='${pageContext.servletContext.contextPath}/auth/user/modifyUser'" />				
 				<hr />
 				<table style="width: 100%" cellpadding="0" cellspacing="0"
 					border="0" class="display dataTable" id="listuser">
@@ -109,6 +107,7 @@
 							<th>User Name</th>
 							<th>Email ID</th>
 							<th>Role</th>
+							<th>Action</th>
 						</tr>
 					</thead>
 
@@ -126,6 +125,9 @@
 										items="${user.authorities}">
 										<c:out value="${authorities.authority}"></c:out> :
 										</c:forEach></td>
+								<td><input type=button
+									onClick="location.href='${pageContext.servletContext.contextPath}/auth/user/modifyuser/<c:out value="${user.username}"></c:out>'"
+									value='Modify User'></td>
 							</tr>
 						</c:forEach>
 					</tbody>
