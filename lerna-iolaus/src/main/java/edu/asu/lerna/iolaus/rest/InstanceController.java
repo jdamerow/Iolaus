@@ -21,7 +21,7 @@ public class InstanceController {
 	@Autowired
 	private INeo4jInstanceManager instanceManager;
 	
-	@RequestMapping(value = "/auth/instance", method = RequestMethod.GET)
+	@RequestMapping(value = "/auth/addInstance", method = RequestMethod.GET)
 	public ModelAndView instance() {
 	      return new ModelAndView("auth/addInstance", "command", new Neo4jInstance());
 	 }
