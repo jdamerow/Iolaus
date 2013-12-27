@@ -24,6 +24,7 @@
 <script src="js/jquery.quick.pagination.min.js"></script>
 <link rel="stylesheet" href="css/skel-noscript.css" />
 <link rel="stylesheet" href="css/style.css" />
+<link rel="stylesheet" href="css/jquery-ui.css" />
 <link rel="stylesheet" href="css/style-noscript.css" />
 <link rel="stylesheet" href="css/ul-pagination-styles.css" />
 <link rel="stylesheet"	href="css/jquery.dataTables_themeroller.css" />

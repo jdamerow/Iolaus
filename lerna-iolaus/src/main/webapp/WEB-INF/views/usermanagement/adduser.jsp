@@ -15,7 +15,6 @@
 	color: #FFFFFF;
 	width: 120px;
 	height: 30px;
-	weight: bold;
 	border-radius: 3px;
 	-moz-border-radius: 3px;
 	-webkit-border-radius: 3px;
