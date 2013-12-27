@@ -56,11 +56,8 @@ public class Neo4jConfFileReader {
 					confFile.setDescription(value);
 				if(key.equals("port"))
 					confFile.setPort(value);
-				if(key.equals("true")){
-					confFile.setActive(true);
-				}else{
-					confFile.setActive(false);
-				}
+				if(key.equals("active"))
+					confFile.setActive(Boolean.parseBoolean(value));
 			}
 			listOfFiles.add(confFile);
 		}

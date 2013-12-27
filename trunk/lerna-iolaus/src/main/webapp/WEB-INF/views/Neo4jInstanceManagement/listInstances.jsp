@@ -99,9 +99,9 @@
 
 			<form method="POST">
 				<input type=button
-					onClick="location.href='${pageContext.servletContext.contextPath}/auth/user/adduser'"
-					value='Add User'> <input type="submit" value="Delete User"
-					onclick="this.form.action='${pageContext.servletContext.contextPath}/auth/user/deleteUser'" />
+					onClick="location.href='${pageContext.servletContext.contextPath}/auth/addInstance'"
+					value='Add Instance'> <input type="submit" value="Delete Instance"
+					onclick="this.form.action='${pageContext.servletContext.contextPath}/auth/user/deleteInstance'" />
 				<hr />
 				<table style="width: 100%" cellpadding="0" cellspacing="0"
 					border="0" class="display dataTable" id="listinstance">
@@ -112,7 +112,7 @@
 							<th>Port Number</th>
 							<th>Host</th>
 							<th>Description</th>
-							<th>Active</th>
+							<th>Status</th>
 						</tr>
 					</thead>
 
@@ -143,7 +143,7 @@
 				value='Add Instance'>
 			<hr />
 			<br />
-			No Users
+			No Instances
 		</c:otherwise>
 	</c:choose>
 </div>
