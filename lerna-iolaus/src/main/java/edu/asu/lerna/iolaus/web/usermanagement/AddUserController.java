@@ -16,14 +16,11 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import EDU.purdue.cs.bloat.tree.ArrayLengthExpr;
-
 import edu.asu.lerna.iolaus.domain.implementation.Role;
 import edu.asu.lerna.iolaus.domain.implementation.User;
 import edu.asu.lerna.iolaus.factory.IUserFactory;
 import edu.asu.lerna.iolaus.service.IRoleManager;
 import edu.asu.lerna.iolaus.service.IUserManager;
-import edu.asu.lerna.iolaus.service.impl.Neo4jInstanceManager;
 import edu.asu.lerna.iolaus.web.usermanagement.backing.UserBackingBean;
 
 @Controller

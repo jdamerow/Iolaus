@@ -5,22 +5,22 @@
 <%@ page isELIgnored="false" %>
 
 <div class="title">
-	<h2>Add new user</h2>
-	<span class="byline">Enter user information</span>
+	<h2>Modify user</h2>
+	<span class="byline">Update user information</span>
 </div>
 
 
-<form:form name="addUserForm" method="POST" modelAttribute="userBackingBean" action="${pageContext.servletContext.contextPath}/auth/user/adduser">
+<form:form name="modifyUserForm" method="POST" modelAttribute="userBackingBean" action="${pageContext.servletContext.contextPath}/auth/user/updateuser">
 
 	<table class="form">
 		<tr>
 			<td width="100">Name:</td>
-			<td><form:input type='text' path='name' name ='name' value='${userBackingBean.name}'/></td>
+			<td><form:input type='text' path='name' name ='name' /></td>
 			<td><font color="red"><form:errors path="name" cssClass="errors" /></font></td>
 		</tr>
 		<tr>
 			<td>Username:</td>
-			<td><form:input type='text' path='username' name ='username' value='${userBackingBean.username}' /></td>
+			<td><form:input type='text' path='username' name ='username' /></td>
 			<td><font color="red"><form:errors path="username" cssClass="errors" /></font></td>
 		</tr>
 		<tr>
@@ -30,7 +30,7 @@
 		</tr>
 		<tr>
 			<td>Email:</td>
-			<td><form:input type='text' path='email' name='email' value='${userBackingBean.email}' /></td>
+			<td><form:input type='text' path='email' name='email' /></td>
 			<td><font color="red"><form:errors path="email" cssClass="errors" /></font></td>
 		</tr>
 		<tr>
@@ -39,7 +39,7 @@
 		</tr>
 		<tr>
 			<td colspan='4'><input name="submit" type="submit"
-				value="Add user" /></td>
+				value="Modify user" /></td>
 		</tr>
 	</table>
 
