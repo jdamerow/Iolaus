@@ -24,14 +24,15 @@
 	body
 	{
 		background: #f0f4f4;
-		color: #5b5b5b;
+		color: #000000;
 		font-family: 'Source Sans Pro', sans-serif;
 		font-weight: 300;
 	}
 
+	
 	body,select
 	{
-		font-size: 15pt;
+		font-size: 12pt;
 		line-height: 1.85em;
 	}
 
@@ -953,6 +954,7 @@
 		background-position: center center;
 		background-attachment: fixed;
 		color: #fff;
+		font-size: 15pt;
 		text-align: center;
 		padding: 2.5em 0 2em 0;
 		cursor: default;
@@ -1064,6 +1066,7 @@
 		top: 0;
 		left: 0;
 		width: 100%;
+		font-size: 15pt;
 		text-align: center;
 		padding: 1.5em 0 1.5em 0;
 		z-index: 1;
