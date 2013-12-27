@@ -9,7 +9,6 @@ import java.util.List;
 
 import javax.ws.rs.core.MediaType;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.sun.jersey.api.client.Client;
@@ -22,7 +21,6 @@ import edu.asu.lerna.iolaus.domain.json.impl.JsonNode;
 import edu.asu.lerna.iolaus.domain.json.impl.JsonRelation;
 import edu.asu.lerna.iolaus.json.parser.library.JSONArray;
 import edu.asu.lerna.iolaus.json.parser.library.JSONObject;
-import edu.asu.lerna.iolaus.repository.NodeRepository;
 import edu.asu.lerna.iolaus.service.IRepositoryHandler;
 
 @Service
@@ -48,7 +46,6 @@ public class RepositoryHandler implements IRepositoryHandler {
 				
 		String oneSingleJsonString = response.getEntity(String.class);
 		response.close();
-		
 		return getListOfNodesAndRelations(oneSingleJsonString);
 	}
 
@@ -143,97 +140,4 @@ public class RepositoryHandler implements IRepositoryHandler {
 		return resultList;
 	}
 	
-	private HashMap<String, List> getListOfNodesAndRelations_outdated(JSONArray jsonArray)
-	{
-		List<IJsonNode> nodeList = null;
-		List<IJsonRelation> relationList = null;
-		IJsonNode node = null;
-		IJsonRelation relation = null;
-		HashMap<String, List> listOfNodesAndRelations = new HashMap<String, List>();
-
-
-		System.out.println("Total number of json objects fetched: "+jsonArray.length());
-		for(int i=0;i<jsonArray.length();i++)
-		{
-			JSONObject jsonObject = jsonArray.getJSONObject(i);
-			if(jsonObject.has("start") && jsonObject.has("end"))
-			{
-				//Found a relation object
-				if(relationList == null)
-					relationList = new ArrayList<IJsonRelation>();
-				relation = new JsonRelation();
-
-				Iterator<String> keysIterator = jsonObject.keys();
-				while(keysIterator.hasNext())
-				{
-					String key = keysIterator.next();
-					if(key.equals("data"))
-					{
-						JSONObject objectData = jsonObject.getJSONObject(key);
-						Iterator<String> dataIterator = objectData.keys();
-						while(dataIterator.hasNext())
-						{
-							String dataKey = dataIterator.next(); 							
-							relation.addData(dataKey, objectData.optString(dataKey));							
-						}
-					}
-					else if(key.equals("start"))
-					{
-						relation.setStartNode(jsonObject.getString(key));
-					}
-					else if(key.equals("end"))
-					{
-						relation.setEndNode(jsonObject.getString(key));
-					}
-					else if(key.equals("type"))
-					{
-						relation.setType(jsonObject.getString(key));
-					}
-					else if(key.equals("self"))
-					{
-						relation.setId(jsonObject.getString(key));
-					}
-
-				}
-				relationList.add(relation);
-			}
-			else
-			{
-				//Found a node object
-				if(nodeList == null)
-					nodeList = new ArrayList<IJsonNode>();
-				node = new JsonNode();
-
-				Iterator<String> keysIterator = jsonObject.keys();
-				while(keysIterator.hasNext())
-				{
-					String key = keysIterator.next();
-					if(key.equals("data"))
-					{
-						JSONObject objectData = jsonObject.getJSONObject(key);
-						Iterator<String> dataIterator = objectData.keys();
-						while(dataIterator.hasNext())
-						{
-							String dataKey = dataIterator.next();
-							if(dataKey.equals("type"))
-								node.setType(objectData.optString(dataKey));
-							else
-								node.addData(dataKey, objectData.optString(dataKey));							
-						}
-					}
-					else if(key.equals("self"))
-					{
-						node.setId(jsonObject.getString(key));
-					}
-				}
-				nodeList.add(node);
-			}
-		}
-
-		//		System.out.println("Number of relations: "+relationList.size());
-		listOfNodesAndRelations.put("nodesList", nodeList);
-		listOfNodesAndRelations.put("relationList",relationList);
-		return listOfNodesAndRelations;
-
-	}
 }
