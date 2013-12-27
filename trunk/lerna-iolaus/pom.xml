@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-
+
+v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>edu.asu</groupId>
 	<artifactId>lerna</artifactId>
@@ -9,16 +11,17 @@
 	<version>1.0.0-BUILD-SNAPSHOT</version>
 	<properties>
 		<java-version>1.6</java-version>
-		<org.springframework-version>3.2.1.RELEASE</org.springframework-version>
+		<org.springframework-version>3.2.1.RELEASE
+		</org.springframework-version>
 		<org.aspectj-version>1.6.10</org.aspectj-version>
 		<org.slf4j-version>1.6.6</org.slf4j-version>
 	</properties>
 	<repositories>
-	    <repository>
-	      <id>source.db4o</id>
-	      <url>http://source.db4o.com/maven</url>
-	    </repository>
- 	</repositories>
+		<repository>
+			<id>source.db4o</id>
+			<url>http://source.db4o.com/maven</url>
+		</repository>
+	</repositories>
 	<dependencies>
 		<!-- Spring -->
 		<dependency>
@@ -54,17 +57,17 @@
 		</dependency>
 
 		<!-- Db4o -->
-    	<dependency>
+		<dependency>
 			<groupId>com.db4o</groupId>
 			<artifactId>db4o-full-java5</artifactId>
+			<version>7.13-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>com.db4o</groupId>
+			<artifactId>db4o-core-java5</artifactId>
 			<version>8.1-SNAPSHOT</version>
 		</dependency>
-    	<dependency>  
-		 <groupId>com.db4o</groupId>  
-		 <artifactId>db4o-core-java5</artifactId>  
-		 <version>8.1-SNAPSHOT</version>  
-		</dependency>
-    	
+
 		<!-- Spring Security -->
 		<dependency>
 			<groupId>org.springframework.security</groupId>
@@ -181,7 +184,7 @@
 			<version>4.7</version>
 			<scope>test</scope>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>org.apache.tiles</groupId>
 			<artifactId>tiles-template</artifactId>
@@ -207,8 +210,8 @@
 			<artifactId>tiles-jsp</artifactId>
 			<version>3.0.1</version>
 		</dependency>
-		
-		
+
+
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-web</artifactId>
@@ -239,6 +242,19 @@
 			<artifactId>commons-fileupload</artifactId>
 			<version>1.2.1</version>
 		</dependency>
+
+		<!-- Memcached Dependency -->
+		<dependency>
+			<groupId>net.spy</groupId>
+			<artifactId>spymemcached</artifactId>
+			<version>2.10.3</version>
+		</dependency>
+		<dependency>
+			<groupId>net.spy</groupId>
+			<artifactId>spymemcached-test</artifactId>
+			<version>2.10.3</version>
+		</dependency>
+
 	</dependencies>
 	<build>
 		<plugins>
@@ -247,10 +263,16 @@
 				<version>2.9</version>
 				<configuration>
 					<additionalProjectnatures>
-						<projectnature>org.springframework.ide.eclipse.core.springnature</projectnature>
+
+
+						<projectnature>org.springframework.ide.eclipse.core.springnature
+						</projectnature>
 					</additionalProjectnatures>
 					<additionalBuildcommands>
-						<buildcommand>org.springframework.ide.eclipse.core.springbuilder</buildcommand>
+
+
+						<buildcommand>org.springframework.ide.eclipse.core.springbuilder
+						</buildcommand>
 					</additionalBuildcommands>
 					<downloadSources>true</downloadSources>
 					<downloadJavadocs>true</downloadJavadocs>
