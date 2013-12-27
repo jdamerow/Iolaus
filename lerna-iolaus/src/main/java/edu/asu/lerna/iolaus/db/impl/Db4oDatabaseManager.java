@@ -21,6 +21,7 @@ import com.db4o.ObjectServer;
 import com.db4o.config.EmbeddedConfiguration;
 import com.db4o.cs.Db4oClientServer;
 import com.db4o.cs.config.ServerConfiguration;
+import com.db4o.ext.DatabaseFileLockedException;
 
 import edu.asu.lerna.iolaus.db.IDatabaseManager;
 import edu.asu.lerna.iolaus.domain.implementation.User;
@@ -63,8 +64,16 @@ public class Db4oDatabaseManager implements Serializable, IDatabaseManager{
 				.indexed(true);
 		config.common().objectClass(User.class).cascadeOnActivate(true);
 		config.common().objectClass(User.class).cascadeOnUpdate(true);
+		
+		try
+		{
 		server = Db4oClientServer.openServer(configuration, dbFullPath, 0);
 		client = server.openClient();
+		}
+		catch(DatabaseFileLockedException e)
+		{
+			e.printStackTrace();
+		}
 	}
 
 	/*
