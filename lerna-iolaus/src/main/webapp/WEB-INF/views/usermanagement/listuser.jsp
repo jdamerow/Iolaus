@@ -96,6 +96,7 @@
 
 
 
+
 <br />
 <div class="container">
 	<c:choose>
@@ -107,7 +108,7 @@
 				</div>
 				<input class="submit" type=button
 					onClick="location.href='${pageContext.servletContext.contextPath}/auth/user/adduser'"
-					value='Add User'> <input type="submit" value="Delete User"
+					value='Add User'> <input class="submit" type="submit" value="Delete User"
 					onclick="this.form.action='${pageContext.servletContext.contextPath}/auth/user/deleteUser'" />
 				<hr />
 				<table style="width: 100%" cellpadding="0" cellspacing="0"

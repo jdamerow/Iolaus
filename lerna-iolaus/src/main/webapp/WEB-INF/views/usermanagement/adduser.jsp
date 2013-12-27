@@ -9,6 +9,19 @@
 	<span class="byline">Enter user information</span>
 </div>
 
+<style type="text/css">
+.submit {
+	background-color: #474E69;
+	color: #FFFFFF;
+	width: 120px;
+	height: 30px;
+	weight: bold;
+	border-radius: 3px;
+	-moz-border-radius: 3px;
+	-webkit-border-radius: 3px;
+	margin-bottom: 5px;
+}
+</style>
 
 <form:form name="addUserForm" method="POST" modelAttribute="userBackingBean" action="${pageContext.servletContext.contextPath}/auth/user/adduser">
 
@@ -38,7 +51,7 @@
 			<td><font color="red"><form:errors path="roles" cssClass="errors" /></font></td>
 		</tr>
 		<tr>
-			<td colspan='4'><input name="submit" type="submit"
+			<td colspan='4'><input class="submit" name="submit" type="submit"
 				value="Add user" /></td>
 		</tr>
 	</table>
