@@ -64,6 +64,12 @@
 		<put-attribute name="content" value="/WEB-INF/views/usermanagement/adduser.jsp"/>
 	</definition>
 	
+	
+	<!-- Modify User page -->
+	<definition name="auth/user/modifyuser" extends="base.definition">
+	    <put-attribute name="title" value="Lerna - Modify User" />
+		<put-attribute name="content" value="/WEB-INF/views/usermanagement/modifyuser.jsp"/>
+	</definition>
 </tiles-definitions>
 
 	

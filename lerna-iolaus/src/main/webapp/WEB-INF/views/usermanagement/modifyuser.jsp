@@ -15,12 +15,12 @@
 	<table class="form">
 		<tr>
 			<td width="100">Name:</td>
-			<td><form:input type='text' path='name' name ='name' value=''/></td>
+			<td><form:input type='text' path='name' name ='name' value='${userBackingBean.name}'/></td>
 			<td><font color="red"><form:errors path="name" cssClass="errors" /></font></td>
 		</tr>
 		<tr>
 			<td>Username:</td>
-			<td><form:input type='text' path='username' name ='username' value='' /></td>
+			<td><form:input type='text' path='username' name ='username' value='${userBackingBean.username}' /></td>
 			<td><font color="red"><form:errors path="username" cssClass="errors" /></font></td>
 		</tr>
 		<tr>
@@ -30,7 +30,7 @@
 		</tr>
 		<tr>
 			<td>Email:</td>
-			<td><form:input type='text' path='email' name='email' value='' /></td>
+			<td><form:input type='text' path='email' name='email' value='${userBackingBean.email}' /></td>
 			<td><font color="red"><form:errors path="email" cssClass="errors" /></font></td>
 		</tr>
 		<tr>
