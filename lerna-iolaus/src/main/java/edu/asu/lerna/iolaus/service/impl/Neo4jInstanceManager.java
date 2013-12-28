@@ -74,6 +74,23 @@ public class Neo4jInstanceManager implements INeo4jInstanceManager {
 
 	}
 
+	@Override 
+	public INeo4jInstance getInstance(String id){
+		INeo4jInstance instance=new Neo4jInstance();
+		for(INeo4jConfFile confFile:neo4jRegistry.getfileList()){
+			if(confFile.getId().equals(id)){
+				instance.setId(confFile.getId());
+				
+				instance.setPort(confFile.getPort());
+				instance.setHost(confFile.getHost());
+				instance.setDescription(confFile.getDescription());
+				instance.setActive(confFile.isActive());
+				break;
+			}
+		}
+		return instance;
+	}
+	
 	@Override
 	public List<INeo4jInstance> getAllInstances() {
 		List<INeo4jInstance> allInstances=new ArrayList<INeo4jInstance>();
