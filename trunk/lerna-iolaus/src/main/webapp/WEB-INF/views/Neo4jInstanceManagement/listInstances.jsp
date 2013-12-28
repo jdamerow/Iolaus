@@ -5,17 +5,13 @@
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring"%>
 
 <header>
-	<h2>Instance Management</h2>
-	<span class="byline">Instances you could edit, delete and add.</span>
+	<h2 class="dataTableHeading">Instance Management</h2>
+	<h4 class="dataTableByline">Instances you could edit, delete and add.</h4>
+	<br/>
 </header>
 
 
 
-
-<!--  
-	Author Lohith Dwaraka  
-	Used to list the users
--->
 
 <style type="text/css">
 .submit {
@@ -28,6 +24,32 @@
 	-moz-border-radius: 3px;
 	-webkit-border-radius: 3px;
 	margin-bottom: 5px;
+}
+
+.dataTableHeading{
+	font-weight: "900";
+	display:block;
+	color:#2E0854;
+	margin-top: 50px;
+	margin-left:40%;
+	font-family: 'Open Sans Condensed', sans-serif;
+}
+
+.dataTableByline{
+	weight: bold; 
+	color:#2E0854;
+	font-size: 20 px;
+	margin-left:40%;
+}
+
+.dataTableSubHeading{
+	weight: bold; 
+	color:#2E0854;
+	font-size: 25 px;
+	margin-left:50%;
+}
+
+.dataTable{
 }
 </style>
 
@@ -99,12 +121,9 @@
 
 
 <header>
-	<span class="byline">List of Instances.</span>
+	<h3 class="dataTables">List of Instances.</h3>
 </header>
 
-
-
-<br />
 <div class="container">
 	<c:choose>
 		<c:when test="${not empty instanceList}">
@@ -117,7 +136,7 @@
 					onclick="this.form.action='${pageContext.servletContext.contextPath}/auth/deleteInstances'" />
 				<hr />
 				<table style="width: 100%" cellpadding="0" cellspacing="0"
-					border="0" class="display dataTable" id="listinstance">
+					border="0" class="display dataTable" id="listinstance" class="dataTable">
 					<thead>
 						<tr>
 							<th align="left"><input type="checkbox" id="selectall">All</th>
@@ -159,6 +178,7 @@
 						</c:forEach>
 					</tbody>
 				</table>
+				<br/>
 			</form>
 		</c:when>
 		<c:otherwise>

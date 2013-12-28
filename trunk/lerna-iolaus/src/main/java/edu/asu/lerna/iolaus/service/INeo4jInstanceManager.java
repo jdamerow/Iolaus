@@ -10,4 +10,5 @@ public interface INeo4jInstanceManager {
 	abstract String addNeo4jInstance(INeo4jInstance instance);
 	abstract void deleteNeo4jInstance(String instanceId);
 	abstract List<INeo4jInstance> getAllInstances();
+	INeo4jInstance getInstance(String id);
 }

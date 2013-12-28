@@ -51,6 +51,12 @@
   		<put-attribute name="title" value="Lerna - List of Instances" /> 
   		<put-attribute name="content" value="/WEB-INF/views/Neo4jInstanceManagement/listInstances.jsp" /> 
   	</definition>
+  	
+  	<!-- Edit a Instance -->
+	<definition name="auth/editInstance" extends="base.definition">
+  		<put-attribute name="title" value="Lerna - Edit Instance" /> 
+  		<put-attribute name="content" value="/WEB-INF/views/Neo4jInstanceManagement/editInstance.jsp" /> 
+  	</definition>
 	
 	<!-- List User page -->
 	<definition name="auth/user/listuser" extends="base.definition">

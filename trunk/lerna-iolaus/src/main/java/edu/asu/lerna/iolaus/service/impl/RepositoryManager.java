@@ -48,9 +48,9 @@ public class RepositoryManager implements IRepositoryManager {
 			while(fileIterator.hasNext())
 			{
 				INeo4jConfFile dbFile = fileIterator.next();
-				if (dbName.equals(dbFile.getId()))
+				if (dbName.equals(dbFile.getId())&&dbFile.isActive())
 				{
-					instanceUrl.add(dbFile.getPort());
+					instanceUrl.add("http://localhost:"+dbFile.getPort()+"/db/data/cypher");
 				}
 			}
 		}
