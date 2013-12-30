@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+	
+	<bean id="conversionService"
+		class="org.springframework.format.support.FormattingConversionServiceFactoryBean">
+		<property name="converters">
+			<list>
+				<bean class="edu.asu.lerna.iolaus.converters.RoleStringConverter" />
+				<bean class="edu.asu.lerna.iolaus.converters.UserStringConverter" />
+				<bean class="edu.asu.lerna.iolaus.converters.UserBackingBeanConverter" />
+				<bean class="edu.asu.lerna.iolaus.converters.StringListConverter" />
+				<bean class="edu.asu.lerna.iolaus.converters.StringListRoleConverter" />
+			</list>
+		</property>
+	</bean>
+	
+	<!-- Root Context: defines shared resources visible to all other web components -->
+		
+	<!-- Reference to Neo4j  -->
+	<import resource="neo4j.xml"/>
+	
+	<import resource="roles.xml" />
+	
+	
+
+</beans>

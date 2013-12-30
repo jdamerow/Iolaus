@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<!DOCTYPE tiles-definitions PUBLIC
+       "-//Apache Software Foundation//DTD Tiles Configuration 2.0//EN"
+       "http://tiles.apache.org/dtds/tiles-config_2_0.dtd">
+<tiles-definitions>
+
+	<!-- Base definitions -->
+
+	
+	<definition name="base.definition.nonav"
+		template="/WEB-INF/tiles/layouts/skeleton_nomenu.jsp">
+		<put-attribute name="title" value="" />
+		<put-attribute name="navigation"
+			value="/WEB-INF/views/top-navs/loggedin-nav.jsp" />
+		<put-attribute name="footer" value="/tiles/credits.jsp" />
+		<put-attribute name="sub-navigation" value="" />
+		<put-attribute name="currentPage" value="home" />
+	</definition>
+
+	
+	<definition name="base.definition" template="/WEB-INF/tiles/layouts/skeleton.jsp">
+		<put-attribute name="title" value="" />
+		<put-attribute name="navigation"
+			value="/WEB-INF/views/top-navs/loggedin-nav.jsp" />
+		<put-attribute name="footer" value="/tiles/credits.jsp" />
+		<put-attribute name="sub-navigation" value="" />
+		<put-attribute name="right-sub-navigation" value="" />
+		<put-attribute name="currentPage" value="login" />
+	</definition>
+
+	<!-- Login pages -->
+	<definition name="login" extends="base.definition.nonav">
+		<put-attribute name="title" value="Lerna - login" />
+		<put-attribute name="content" value="/WEB-INF/views/login.jsp" />
+	</definition>
+	
+	<!-- About page -->
+	<definition name="auth/home" extends="base.definition">
+	    <put-attribute name="title" value="Lerna - home" />
+		<put-attribute name="content" value="/WEB-INF/views/index.jsp"/>
+	</definition>
+	
+	<!-- Add a Instance -->
+	<definition name="auth/addInstance" extends="base.definition">
+  		<put-attribute name="title" value="Lerna - add a Instance" /> 
+  		<put-attribute name="content" value="/WEB-INF/views/Neo4jInstanceManagement/addInstance.jsp" /> 
+  	</definition>
+  	
+  	<!-- List Instances -->
+	<definition name="auth/listInstances" extends="base.definition">
+  		<put-attribute name="title" value="Lerna - List of Instances" /> 
+  		<put-attribute name="content" value="/WEB-INF/views/Neo4jInstanceManagement/listInstances.jsp" /> 
+  	</definition>
+  	
+  	<!-- Edit a Instance -->
+	<definition name="auth/editInstance" extends="base.definition">
+  		<put-attribute name="title" value="Lerna - Edit Instance" /> 
+  		<put-attribute name="content" value="/WEB-INF/views/Neo4jInstanceManagement/editInstance.jsp" /> 
+  	</definition>
+	
+	<!-- List User page -->
+	<definition name="auth/user/listuser" extends="base.definition">
+	    <put-attribute name="title" value="Lerna - List User" />
+		<put-attribute name="content" value="/WEB-INF/views/usermanagement/listuser.jsp"/>
+	</definition>
+	
+	<!-- Add User page -->
+	<definition name="auth/user/adduser" extends="base.definition">
+	    <put-attribute name="title" value="Lerna - Add User" />
+		<put-attribute name="content" value="/WEB-INF/views/usermanagement/adduser.jsp"/>
+	</definition>
+	
+	
+	<!-- Modify User page -->
+	<definition name="auth/user/modifyuser" extends="base.definition">
+	    <put-attribute name="title" value="Lerna - Modify User" />
+		<put-attribute name="content" value="/WEB-INF/views/usermanagement/modifyuser.jsp"/>
+	</definition>
+</tiles-definitions>
+
+	
