@@ -2,9 +2,11 @@ package edu.asu.lerna.iolaus.service.impl;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import net.spy.memcached.AddrUtil;
 import net.spy.memcached.MemcachedClient;
+import net.spy.memcached.internal.GetFuture;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -63,14 +65,32 @@ public class CacheManager implements ICacheManager {
 	}
 
 	private void cacheResults(String json, String instance,List<List<Object>> resultSet) throws IOException {
+		try
+		{
 		MemcachedClient memcachedClient = new MemcachedClient(AddrUtil.getAddresses("127.0.0.1:11211"));
 		memcachedClient.set(getKey(json, instance),0,resultSet);
-
+		}
+		catch(Exception e)
+		{
+			logger.debug("Error in storing the cache", e);
+		}
 	}
 
 	private List<List<Object>> getCachedResults(String json, String instance) throws IOException {
 		MemcachedClient memcachedClient = new MemcachedClient(AddrUtil.getAddresses("127.0.0.1:11211"));
-		return (List<List<Object>>) memcachedClient.get(getKey(json, instance));
+		Object returnedObject = null;
+		try
+		{
+			// Try to get a value, for up to 5 seconds, and cancel if it doesn't return
+			GetFuture<Object> returnedFutureObject = memcachedClient.asyncGet(getKey(json, instance));
+			returnedObject = returnedFutureObject.get(5, TimeUnit.SECONDS); 
+		}
+		catch(Exception e)
+		{
+			logger.debug("Error in retrieving the cache", e);
+			return null;
+		}
+		return (List<List<Object>>) returnedObject;
 	}
 
 }
