@@ -3,6 +3,13 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring"%>
 
+
+<style type="text/css">
+.response{
+	color:red;
+}
+</style>
+
 <script type="text/javascript">
 <!--
 // Form validation code will come here.
@@ -34,11 +41,13 @@ function validate()
 </script>
 
 <link rel="stylesheet" href="css/form.css" />
-
+<form name="addInstanceForm" class="form" action="updateInstance" method="POST" onsubmit="return(validate());">
 <div id="form">
 	<table>
 	<tr> <td colspan="2" align="left"><h1>Edit a Neo4j Instance</h1></td></tr>
-	<form name="addInstanceForm" class="form" action="updateInstance" method="POST" onsubmit="return(validate());">
+	<tr><td colspan="2" align="left"><c:if test="${flag}">
+	<h5 class="response">**Port ${instance.port} is already in used on host machine ${instance.host}</h5>
+	</c:if></td></tr>
 	<tr>
 			<td><label>ID:</label></td>
 			<td><input class ="text" type="text" name="id" value="${instance.id}" readonly /></td>
@@ -71,6 +80,6 @@ function validate()
 	<tr>	
 			<td class="submit" colspan="2" align="left"><input type="submit" value="Update" /></td>
 	</tr>
-	</form>
 	</table>
 	</div>
+</form>

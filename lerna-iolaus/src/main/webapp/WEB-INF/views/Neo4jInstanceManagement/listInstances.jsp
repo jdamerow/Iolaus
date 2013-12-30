@@ -48,6 +48,11 @@
 
 .dataTable{
 }
+
+.response{
+color:red;
+margin-left:40%;
+}
 </style>
 
 <script type="text/javascript" charset="utf8">
@@ -122,6 +127,9 @@
 </header>
 
 <div class="container">	
+	<c:if test="${not empty instanceId}">
+	<h4 class="response">Instance id is ${instanceId}</h4>
+	</c:if>
 	<c:choose>
 		<c:when test="${not empty instanceList}">
 

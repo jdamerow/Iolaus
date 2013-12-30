@@ -3,6 +3,14 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring"%>
 
+
+<style type="text/css">
+.response{
+	color:red;
+}
+</style>
+
+
 <script type="text/javascript">
 <!--
 // Form validation code will come here.
@@ -34,30 +42,40 @@ function validate()
 </script>
 
 <link rel="stylesheet" href="css/form.css" />
+<form name="addInstanceForm" class="form" action="addInstance" method="POST" onsubmit="return(validate());">
 <div id="form">
 	<table>
 	<tr> <td colspan="2" align="left"><h1>Add a Neo4j Instance</h1></td></tr>
-	<form name="addInstanceForm" class="form" action="addInstance" method="POST" onsubmit="return(validate());">
+	<tr><td colspan="2" align="left"><c:if test="${not empty instance}">
+	<h5 class="response">**Port ${instance.port} is already in used on host machine ${instance.host}</h5>
+	</c:if></td></tr>
 	<tr>
 			<td><label>Port Number:</label></td>
-			<td><input class ="text" type="text" name="port" /></td>
+			<td><input class ="text" type="text" name="port" value="${instance.port}"/></td>
 			
 	</tr>		
 	<tr>		
 			<td><label>Host:</label></td>
-			<td><input class ="text" type="text" name="host" /></td>		
+			<td><input class ="text" type="text" name="host" value="${instance.host}" /></td>		
 	</tr>	
 	<tr>
 			<td><label>Description:</label></td>
-			<td><textarea class ="description" name="description"/></textarea></td>
+			<td><textarea class ="description" name="description">${instance.description}</textarea></td>
 	</tr>
 	<tr>		
 			<td><label>Activate Now</label></td>
-			<td><input class ="checkbox" type="checkbox" name="active" /></td>		
+			<c:choose>
+				<c:when test="${instance.active}">
+					<td><input class ="checkbox" type="checkbox" name="active" checked/></td>
+				</c:when>
+				<c:otherwise>
+					<td><input class ="checkbox" type="checkbox" name="active" /></td>
+				</c:otherwise>
+			</c:choose>	
 	</tr>
 	<tr>	
 			<td class="submit" colspan="2" align="left"><input type="submit" value="Add" /></td>
 	</tr>
-	</form>
 	</table>
 	</div>
+	</form>
