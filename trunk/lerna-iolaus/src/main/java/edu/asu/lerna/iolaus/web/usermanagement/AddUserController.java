@@ -1,8 +1,6 @@
 package edu.asu.lerna.iolaus.web.usermanagement;
 
 import java.security.Principal;
-import java.util.ArrayList;
-import java.util.List;
 
 import javax.validation.Valid;
 
@@ -16,7 +14,6 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import edu.asu.lerna.iolaus.domain.implementation.Role;
 import edu.asu.lerna.iolaus.domain.implementation.User;
 import edu.asu.lerna.iolaus.factory.IUserFactory;
 import edu.asu.lerna.iolaus.service.IRoleManager;
@@ -51,17 +48,9 @@ public class AddUserController {
 			map.addAttribute("availableRoles", roleManager.getRoles());
 			
 			return "auth/user/adduser";
-		}
-		List<String> roleList = userForm.getRoles();
+		}		
 		
-		List<Role> roleList1  = new ArrayList<Role>();
-		for(String role : roleList){
-			Role rol1 = roleManager.getRole(role);
-			roleList1.add(rol1);
-		}
-		
-		
-		User user = userFactory.createUser(userForm.getUsername(), userForm.getName(), userForm.getEmail(), userForm.getPassword(), roleList1);
+		User user = userFactory.createUser(userForm.getUsername(), userForm.getName(), userForm.getEmail(), userForm.getPassword(), userForm.getRoles());
 		userManager.saveUser(user);
 		
 		return "redirect:/auth/user/listuser";

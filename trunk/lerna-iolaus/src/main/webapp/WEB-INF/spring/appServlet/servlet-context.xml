@@ -10,7 +10,6 @@
 		infrastructure -->
 
 	<!-- Enables the Spring MVC @Controller programming model -->
-	<annotation-driven />
 
 	<!-- Handles HTTP GET requests for /resources/** by efficiently serving 
 		up static resources in the ${webappRoot}/resources directory -->
@@ -43,7 +42,7 @@
 		<beans:property name="suffix" value=".jsp" />
 	</beans:bean> -->
 
-	<context:component-scan base-package="edu.asu.lerna" />
+	
 	<beans:bean
 		class="org.springframework.web.multipart.commons.CommonsMultipartResolver"
 		id="multipartResolver">
@@ -61,5 +60,7 @@
             </beans:list>
         </beans:property>
 	</beans:bean>
+	
+	<context:component-scan base-package="edu.asu.lerna.iolaus.web" />
 
 </beans:beans>

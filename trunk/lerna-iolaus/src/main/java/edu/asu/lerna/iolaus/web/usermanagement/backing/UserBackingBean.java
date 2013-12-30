@@ -5,6 +5,7 @@ import java.util.List;
 import edu.asu.lerna.iolaus.annotation.NotEmpty;
 import edu.asu.lerna.iolaus.annotation.NotEmptyList;
 import edu.asu.lerna.iolaus.annotation.UniqueUsername;
+import edu.asu.lerna.iolaus.domain.implementation.Role;
 
 public class UserBackingBean {
 
@@ -22,7 +23,7 @@ public class UserBackingBean {
 	private String email;
 	
 	@NotEmptyList(message = "At least one role needs to be selected.")
-	private List<String> roles;
+	private List<Role> roles;
 //	private Role[] roles;
 	
 	
@@ -44,10 +45,10 @@ public class UserBackingBean {
 	public void setPassword(String password) {
 		this.password = password;
 	}
-	public List<String> getRoles() {
+	public List<Role> getRoles() {
 		return roles;
 	}
-	public void setRoles(List<String> roles) {
+	public void setRoles(List<Role> roles) {
 		this.roles = roles;
 	}
 //	public Role[] getRoles() {
