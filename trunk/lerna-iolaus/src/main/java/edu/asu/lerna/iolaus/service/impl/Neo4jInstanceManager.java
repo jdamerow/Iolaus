@@ -34,7 +34,7 @@ public class Neo4jInstanceManager implements INeo4jInstanceManager {
 		String host=instance.getHost();
 		for(INeo4jConfFile file:fileList){
 			if(file.getPort().equals(port)&&file.getHost().equalsIgnoreCase(host)){
-				return null;
+				return "0";
 			}
 			
 			if(Integer.parseInt(file.getId())>maxId){
@@ -81,8 +81,10 @@ public class Neo4jInstanceManager implements INeo4jInstanceManager {
 	}
 
 	@Override
-	public void updateNeo4jInstance(INeo4jInstance instance){
+	public boolean updateNeo4jInstance(INeo4jInstance instance){
 		List<INeo4jConfFile> configFileList=neo4jRegistry.getfileList();
+		String port=instance.getPort();
+		String host=instance.getHost();
 		for(INeo4jConfFile configFile:configFileList){
 			if(instance.getId().equals(configFile.getId())){
 				String modifiedDescription=instance.getDescription().replaceAll("\n", " ").replace("\r","");
@@ -91,7 +93,11 @@ public class Neo4jInstanceManager implements INeo4jInstanceManager {
 				configFile.setPort(instance.getPort());
 				configFile.setActive(instance.isActive()==true?true:false);
 			}
+			else if(configFile.getPort().equals(port)&&configFile.getHost().equalsIgnoreCase(host)){
+				return false;
+			}
 		}
+		return true;
 	}
 	
 	@Override 

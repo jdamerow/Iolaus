@@ -38,12 +38,18 @@ public class InstanceController {
 	@RequestMapping(value = "/auth/addInstance", method = RequestMethod.POST)
 	public String addInstance(@ModelAttribute("SpringWeb")Neo4jInstance instance, ModelMap model) {
 		String instanceId=instanceManager.addNeo4jInstance(instance);
+		if(instanceId.equals("0")){
+			model.addAttribute("instance", instance);
+			return "auth/addInstance";
+		}
 		model.addAttribute("instanceId", instanceId);
-	    return "redirect:/auth/listInstances";
+		List<INeo4jInstance> instanceList=instanceManager.getAllInstances();
+		model.addAttribute("instanceList", instanceList);
+	    return "auth/listInstances";
 	}
 	
 	@RequestMapping(value = "auth/listInstances", method = RequestMethod.GET)
-	public String getUserList( ModelMap model, Principal principal){
+	public String getUserList(HttpServletRequest req, ModelMap model, Principal principal){
 		List<INeo4jInstance> instanceList=instanceManager.getAllInstances();
 		model.addAttribute("instanceList", instanceList);
 		return "auth/listInstances";
@@ -58,7 +64,12 @@ public class InstanceController {
 	
 	@RequestMapping(value = "/auth/editInstance/updateInstance", method = RequestMethod.POST)
 	public String updateInstance(@ModelAttribute("SpringWeb")Neo4jInstance instance, ModelMap model) {
-		instanceManager.updateNeo4jInstance(instance);
+		boolean flag=instanceManager.updateNeo4jInstance(instance);
+		if(!flag){
+			model.addAttribute("instance", instance);
+			model.addAttribute("flag", true);
+			return "auth/editInstance";
+		}
 	    return "redirect:/auth/listInstances";
 	}
 }
