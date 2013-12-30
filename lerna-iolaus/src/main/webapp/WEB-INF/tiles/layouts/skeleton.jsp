@@ -14,22 +14,22 @@
 <link
 	href="http://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600"
 	rel="stylesheet" type="text/css" />
-<script src="js/jquery.min.js"></script>
-<script src="js/jquery.dataTables.js"></script>
-<script src="js/jquery.dropotron.min.js"></script>
-<script src="js/skel.min.js"></script>
-<script src="js/init.js"></script>
-<script src="js/jquery-ui.js"></script>
-<script src="js/jquery-alert.js"></script>
-<script src="js/jquery.quick.pagination.min.js"></script>
-<link rel="stylesheet" href="css/skel-noscript.css" />
-<link rel="stylesheet" href="css/style.css" />
-<link rel="stylesheet" href="css/jquery-ui.css" />
-<link rel="stylesheet" href="css/style-noscript.css" />
-<link rel="stylesheet" href="css/ul-pagination-styles.css" />
-<link rel="stylesheet"	href="css/jquery.dataTables_themeroller.css" />
-<link rel="stylesheet"	href="css/demo_table_jui.css" />
-<link rel="stylesheet"	href="css/ul-pagination-styles.css" />
+<script src="${pageContext.servletContext.contextPath}/resources/txt-layout/js/jquery.min.js"></script>
+<script src="${pageContext.servletContext.contextPath}/resources/txt-layout/js/jquery.dataTables.js"></script>
+<script src="${pageContext.servletContext.contextPath}/resources/txt-layout/js/jquery.dropotron.min.js"></script>
+<script src="${pageContext.servletContext.contextPath}/resources/txt-layout/js/skel.min.js"></script>
+<script src="${pageContext.servletContext.contextPath}/resources/txt-layout/js/init.js"></script>
+<script src="${pageContext.servletContext.contextPath}/resources/txt-layout/js/jquery-ui.js"></script>
+<script src="${pageContext.servletContext.contextPath}/resources/txt-layout/js/jquery-alert.js"></script>
+<script src="${pageContext.servletContext.contextPath}/resources/txt-layout/js/jquery.quick.pagination.min.js"></script>
+<link rel="stylesheet" href="${pageContext.servletContext.contextPath}/resources/txt-layout/css/skel-noscript.css" />
+<link rel="stylesheet" href="${pageContext.servletContext.contextPath}/resources/txt-layout/css/style.css" />
+<link rel="stylesheet" href="${pageContext.servletContext.contextPath}/resources/txt-layout/css/jquery-ui.css" />
+<link rel="stylesheet" href="${pageContext.servletContext.contextPath}/resources/txt-layout/css/style-noscript.css" />
+<link rel="stylesheet" href="${pageContext.servletContext.contextPath}/resources/txt-layout/css/ul-pagination-styles.css" />
+<link rel="stylesheet"	href="${pageContext.servletContext.contextPath}/resources/txt-layout/css/jquery.dataTables_themeroller.css" />
+<link rel="stylesheet"	href="${pageContext.servletContext.contextPath}/resources/txt-layout/css/demo_table_jui.css" />
+<link rel="stylesheet"	href="${pageContext.servletContext.contextPath}/resources/txt-layout/css/ul-pagination-styles.css" />
 
 
 </head>

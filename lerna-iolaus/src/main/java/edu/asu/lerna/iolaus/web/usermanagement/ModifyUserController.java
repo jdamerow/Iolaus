@@ -67,13 +67,13 @@ public class ModifyUserController {
 		ubb.setName(user.getName());
 		ubb.setUsername(user.getUsername());
 		ubb.setEmail(user.getEmail());
-		List<String> roleStrList = new ArrayList<String>();
-		List<LernaGrantedAuthority> roleList = user.getAuthorities();
-		for(LernaGrantedAuthority l : roleList){
-			roleStrList.add(l.getAuthority());
+		List<Role> roleList = new ArrayList<Role>();
+		List<LernaGrantedAuthority> roleLGAList = user.getAuthorities();
+		for(LernaGrantedAuthority l : roleLGAList){
+			roleList.add(roleManager.getRole(l.getAuthority()));
 		}
 		
-		ubb.setRoles(roleStrList);
+		ubb.setRoles(roleList);
 		model.addAttribute("username",userName);
 		model.addAttribute("availableRoles", roleManager.getRolesList());
 		model.addAttribute("userBackingBean", ubb);
@@ -91,27 +91,21 @@ public class ModifyUserController {
 			ubb.setName(user.getName());
 			ubb.setUsername(user.getUsername());
 			ubb.setEmail(user.getEmail());
-			List<String> roleStrList = new ArrayList<String>();
-			List<LernaGrantedAuthority> roleList = user.getAuthorities();
-			for(LernaGrantedAuthority l : roleList){
-				roleStrList.add(l.getAuthority());
+			List<Role> roleList = new ArrayList<Role>();
+			List<LernaGrantedAuthority> roleLGAList = user.getAuthorities();
+			for(LernaGrantedAuthority l : roleLGAList){
+				roleList.add(roleManager.getRole(l.getAuthority()));
 			}
 			
-			ubb.setRoles(roleStrList);
+			ubb.setRoles(roleList);
 			model.addAttribute("availableRoles", roleManager.getRolesList());
 			model.addAttribute("userBackingBean", ubb);
 			return "auth/user/modifyuser";
 		}
-		List<String> roleList = userForm.getRoles();
-		
-		List<Role> roleList1  = new ArrayList<Role>();
-		for(String role : roleList){
-			Role rol1 = roleManager.getRole(role);
-			roleList1.add(rol1);
-		}
+
 		
 		
-		User user = userFactory.createUser(userForm.getUsername(), userForm.getName(), userForm.getEmail(), userForm.getPassword(), roleList1);
+		User user = userFactory.createUser(userForm.getUsername(), userForm.getName(), userForm.getEmail(), userForm.getPassword(), userForm.getRoles());
 		userManager.modifyUser(user, userName);
 		
 		return "redirect:/auth/user/listuser";

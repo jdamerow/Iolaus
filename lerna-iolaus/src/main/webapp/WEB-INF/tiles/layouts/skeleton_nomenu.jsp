@@ -15,21 +15,21 @@
 	href="http://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600"
 	rel="stylesheet" type="text/css" />
 <script
-	src="js/jquery.min.js"></script>
+	src="${pageContext.servletContext.contextPath}/resources/txt-layout/js/jquery.min.js"></script>
 <script
-	src="js/jquery.dropotron.min.js"></script>
+	src="${pageContext.servletContext.contextPath}/resources/txt-layout/js/jquery.dropotron.min.js"></script>
 <script
-	src="js/skel.min.js"></script>
+	src="${pageContext.servletContext.contextPath}/resources/txt-layout/js/skel.min.js"></script>
 <script
-	src="js/init.js"></script>
+	src="${pageContext.servletContext.contextPath}/resources/txt-layout/js/init.js"></script>
 <link rel="stylesheet"
-	href="css/skel-noscript.css" />
+	href="${pageContext.servletContext.contextPath}/resources/txt-layout/css/skel-noscript.css" />
 <link rel="stylesheet"
-	href="css/style.css" />
+	href="${pageContext.servletContext.contextPath}/resources/txt-layout/css/style.css" />
 <link rel="stylesheet"
-	href="css/style-desktop.css" />
+	href="${pageContext.servletContext.contextPath}/resources/txt-layout/css/style-desktop.css" />
 <link rel="stylesheet"
-	href="css/style-noscript.css" />
+	href="${pageContext.servletContext.contextPath}/resources/txt-layout/css/style-noscript.css" />
 </head>
 <body class="no-sidebar">
 	<tiles:importAttribute name="currentPage" scope="request" />
