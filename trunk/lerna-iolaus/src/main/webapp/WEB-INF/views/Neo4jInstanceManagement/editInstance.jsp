@@ -38,7 +38,12 @@ function validate()
 <div id="form">
 	<table>
 	<tr> <td colspan="2" align="left"><h1>Edit a Neo4j Instance</h1></td></tr>
-	<form name="addInstanceForm" class="form" action="addInstance" method="POST" onsubmit="return(validate());">
+	<form name="addInstanceForm" class="form" action="updateInstance" method="POST" onsubmit="return(validate());">
+	<tr>
+			<td><label>ID:</label></td>
+			<td><input class ="text" type="text" name="id" value="${instance.id}" readonly /></td>
+			
+	</tr>	
 	<tr>
 			<td><label>Port Number:</label></td>
 			<td><input class ="text" type="text" name="port" value="${instance.port}" /></td>
