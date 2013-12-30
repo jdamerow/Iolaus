@@ -17,29 +17,26 @@
 .submit {
 	background-color: #474E69;
 	color: #FFFFFF;
-	width: 120px;
+	width: 130px;
 	height: 30px;
 	weight: bold;
 	border-radius: 3px;
 	-moz-border-radius: 3px;
 	-webkit-border-radius: 3px;
-	margin-bottom: 5px;
+	margin-bottom: 3px;
 }
 
 .dataTableHeading{
 	font-weight: "900";
 	display:block;
-	color:#2E0854;
-	margin-top: 50px;
-	margin-left:40%;
-	font-family: 'Open Sans Condensed', sans-serif;
+	color:#72587F;
+	margin-top: 25px;
 }
 
 .dataTableByline{
 	weight: bold; 
 	color:#2E0854;
 	font-size: 20 px;
-	margin-left:40%;
 }
 
 .dataTableSubHeading{
@@ -124,7 +121,7 @@
 	<h3 class="dataTables">List of Instances.</h3>
 </header>
 
-<div class="container">
+<div class="container">	
 	<c:choose>
 		<c:when test="${not empty instanceList}">
 
@@ -154,9 +151,9 @@
 							<tr>
 								<td width="10%"><input type="checkbox" class="selected"
 									name="selected" value='<c:out value="${instance.id}"></c:out>' /></td>
-								<td width="10%" align="center"><c:out
-										value="${instance.id}"></c:out></td>
 								<td width="5%" align="center"><c:out
+										value="${instance.id}"></c:out></td>
+								<td width="10%" align="center"><c:out
 										value="${instance.port}"></c:out></td>
 								<td width="15%" align="center"><c:out
 										value="${instance.host}"></c:out></td>
@@ -172,7 +169,7 @@
 								</c:choose>
 								<td width="10%" align="center"><input type=button
 									class="submit"
-									onClick="location.href='${pageContext.servletContext.contextPath}/auth/editInstance/'"
+									onClick="location.href='${pageContext.servletContext.contextPath}/auth/editInstance/${instance.id}'"
 									value='Edit'></td>
 							</tr>
 						</c:forEach>
@@ -182,12 +179,12 @@
 			</form>
 		</c:when>
 		<c:otherwise>
-			<input type=button
+			<input type=button class="submit"
 				onClick="location.href='${pageContext.servletContext.contextPath}/auth/addInstance'"
 				value='Add Instance'>
 			<hr />
 			<br />
-			No Instances
+			Empty List
 		</c:otherwise>
 	</c:choose>
 </div>

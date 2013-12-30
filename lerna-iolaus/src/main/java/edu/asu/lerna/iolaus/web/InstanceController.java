@@ -1,4 +1,4 @@
-package edu.asu.lerna.iolaus.rest;
+package edu.asu.lerna.iolaus.web;
 
 import java.security.Principal;
 import java.util.List;
@@ -18,6 +18,12 @@ import edu.asu.lerna.iolaus.domain.INeo4jInstance;
 import edu.asu.lerna.iolaus.domain.implementation.Neo4jInstance;
 import edu.asu.lerna.iolaus.service.INeo4jInstanceManager;
 
+/**
+ * This is controller for Instance Management
+ * @author Karan Kothari
+ *
+ */
+
 @Controller
 public class InstanceController {
 	
@@ -25,19 +31,19 @@ public class InstanceController {
 	private INeo4jInstanceManager instanceManager;
 	
 	@RequestMapping(value = "/auth/addInstance", method = RequestMethod.GET)
-	public ModelAndView instance() {
+	public ModelAndView addInstance() {
 	      return new ModelAndView("auth/addInstance", "command", new Neo4jInstance());
 	 }
 	  
 	@RequestMapping(value = "/auth/addInstance", method = RequestMethod.POST)
 	public String addInstance(@ModelAttribute("SpringWeb")Neo4jInstance instance, ModelMap model) {
-		instanceManager.addNeo4jInstance(instance);
-	    return "redirect:/auth/home";
+		String instanceId=instanceManager.addNeo4jInstance(instance);
+		model.addAttribute("instanceId", instanceId);
+	    return "redirect:/auth/listInstances";
 	}
 	
 	@RequestMapping(value = "auth/listInstances", method = RequestMethod.GET)
 	public String getUserList( ModelMap model, Principal principal){
-
 		List<INeo4jInstance> instanceList=instanceManager.getAllInstances();
 		model.addAttribute("instanceList", instanceList);
 		return "auth/listInstances";
@@ -48,5 +54,11 @@ public class InstanceController {
 		INeo4jInstance instance=instanceManager.getInstance(instanceId);
 		model.addAttribute("instance", instance);
 		return "auth/editInstance";
+	}
+	
+	@RequestMapping(value = "/auth/editInstance/updateInstance", method = RequestMethod.POST)
+	public String updateInstance(@ModelAttribute("SpringWeb")Neo4jInstance instance, ModelMap model) {
+		instanceManager.updateNeo4jInstance(instance);
+	    return "redirect:/auth/listInstances";
 	}
 }

@@ -30,7 +30,13 @@ public class Neo4jInstanceManager implements INeo4jInstanceManager {
 	public String addNeo4jInstance(INeo4jInstance instance) {
 		List<INeo4jConfFile> fileList=neo4jRegistry.getfileList();
 		int maxId=0;
+		String port=instance.getPort();
+		String host=instance.getHost();
 		for(INeo4jConfFile file:fileList){
+			if(file.getPort().equals(port)&&file.getHost().equalsIgnoreCase(host)){
+				return null;
+			}
+			
 			if(Integer.parseInt(file.getId())>maxId){
 				maxId=Integer.parseInt(file.getId());
 			}
@@ -74,13 +80,26 @@ public class Neo4jInstanceManager implements INeo4jInstanceManager {
 
 	}
 
+	@Override
+	public void updateNeo4jInstance(INeo4jInstance instance){
+		List<INeo4jConfFile> configFileList=neo4jRegistry.getfileList();
+		for(INeo4jConfFile configFile:configFileList){
+			if(instance.getId().equals(configFile.getId())){
+				String modifiedDescription=instance.getDescription().replaceAll("\n", " ").replace("\r","");
+				configFile.setDescription(modifiedDescription);
+				configFile.setHost(instance.getHost());
+				configFile.setPort(instance.getPort());
+				configFile.setActive(instance.isActive()==true?true:false);
+			}
+		}
+	}
+	
 	@Override 
 	public INeo4jInstance getInstance(String id){
 		INeo4jInstance instance=new Neo4jInstance();
 		for(INeo4jConfFile confFile:neo4jRegistry.getfileList()){
 			if(confFile.getId().equals(id)){
 				instance.setId(confFile.getId());
-				
 				instance.setPort(confFile.getPort());
 				instance.setHost(confFile.getHost());
 				instance.setDescription(confFile.getDescription());
