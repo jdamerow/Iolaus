@@ -50,6 +50,34 @@
 		line-height: 1.25em;
 	}
 	
+	.dataTableHeading{
+	font-weight: "900";
+	display:block;
+	color:#72587F;
+	margin-top: 25px;
+}
+
+.dataTableByline{
+	weight: bold; 
+	color:#2E0854;
+	font-size: 20 px;
+}
+
+.dataTableSubHeading{
+	weight: bold; 
+	color:#2E0854;
+	font-size: 25 px;
+	margin-left:50%;
+}
+
+.dataTable{
+}
+
+.response{
+color:red;
+margin-left:40%;
+}
+	
 		h1 a, h2 a, h3 a, h4 a, h5 a, h6 a
 		{
 			color: inherit;
