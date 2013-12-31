@@ -4,12 +4,12 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring"%>
 
+
 <header>
-	<h2>User Management</h2>
-	<span class="byline">Users you could edit, delete and add.</span>
+	<h2 class="dataTableHeading">User Management</h2>
+	<h4 class="dataTableByline">Users you could edit, delete and add.</h4>
+	<br/>
 </header>
-
-
 
 
 <!--  
@@ -19,7 +19,7 @@
 
 <style type="text/css">
 .submit {
-	background-color: #474E69;
+	background-color: #808080;
 	color: #FFFFFF;
 	width: 120px;
 	height: 30px;
@@ -105,7 +105,7 @@
 				<div class="form">
 					<h1>List of Users.</h1>
 				</div>
-				<input class="submit" type=button
+				<input class="submit" type=button class="submit"
 					onClick="location.href='${pageContext.servletContext.contextPath}/auth/user/adduser'"
 					value='Add User'> <input class="submit" type="submit" value="Delete User"
 					onclick="this.form.action='${pageContext.servletContext.contextPath}/auth/user/deleteUser'" />
@@ -148,7 +148,7 @@
 			</form>
 		</c:when>
 		<c:otherwise>
-			<input class="submit" type=button
+			<input type=button class="submit"
 				onClick="location.href='${pageContext.servletContext.contextPath}/auth/user/adduser'"
 				value='Add User'>
 			<hr />
