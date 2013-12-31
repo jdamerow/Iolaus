@@ -37,8 +37,9 @@ public class CacheManager implements ICacheManager {
 	@Override
 	public List<List<Object>> executeQuery(String json,String instance) {
 		//TODO: Remove these after implementation is successful
-		instance = "http://localhost:7474/db/data/cypher";
-		json = "{ \"query\" : \"start s=node(*),t=node(*) Match s-[r]->t return s,r,t\" }";
+//		instance = "http://localhost:7474/db/data/cypher";
+//		json = "{ \"query\" : \"start s=node(*),t=node(*) Match s-[r]->t return s,r,t\" }";
+//		json = "{ \"query\" : \"start n=node(*) return count(n)\" }";
 
 		List<List<Object>> resultSet=null;
 		
@@ -52,6 +53,7 @@ public class CacheManager implements ICacheManager {
 
 		//Query the neo4j instance and save the result to a cache
 		if(resultSet==null){
+			System.out.println("..............DID NOT find the result in cache..............");
 			resultSet=repositoryHandler.executeQuery(json, instance);
 			// Save the result set to the cache
 			try {
@@ -61,14 +63,19 @@ public class CacheManager implements ICacheManager {
 				logger.debug("Error in saving to the cache :",e);
 			}
 		}
+		else
+		{
+			System.out.println("..............Found the result in cache..............");
+		}
 		return resultSet;
 	}
 
 	private void cacheResults(String json, String instance,List<List<Object>> resultSet) throws IOException {
 		try
 		{
-		MemcachedClient memcachedClient = new MemcachedClient(AddrUtil.getAddresses("127.0.0.1:11211"));
+		MemcachedClient memcachedClient = new MemcachedClient(AddrUtil.getAddresses("127.0.0.1:11211 127.0.0.1:11212"));
 		memcachedClient.set(getKey(json, instance),0,resultSet);
+		System.out.println("Saved key: "+getKey(json, instance));
 		}
 		catch(Exception e)
 		{
@@ -77,11 +84,12 @@ public class CacheManager implements ICacheManager {
 	}
 
 	private List<List<Object>> getCachedResults(String json, String instance) throws IOException {
-		MemcachedClient memcachedClient = new MemcachedClient(AddrUtil.getAddresses("127.0.0.1:11211"));
+		MemcachedClient memcachedClient = new MemcachedClient(AddrUtil.getAddresses("127.0.0.1:11211 127.0.0.1:11212"));
 		Object returnedObject = null;
 		try
 		{
 			// Try to get a value, for up to 5 seconds, and cancel if it doesn't return
+			System.out.println("Searching for key: "+getKey(json, instance));
 			GetFuture<Object> returnedFutureObject = memcachedClient.asyncGet(getKey(json, instance));
 			returnedObject = returnedFutureObject.get(5, TimeUnit.SECONDS); 
 		}
