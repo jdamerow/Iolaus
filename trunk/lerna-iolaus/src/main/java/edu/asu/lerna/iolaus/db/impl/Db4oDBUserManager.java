@@ -8,7 +8,9 @@ import org.springframework.stereotype.Service;
 import com.db4o.ObjectSet;
 
 import edu.asu.lerna.iolaus.domain.implementation.User;
+import edu.asu.lerna.iolaus.roles.IRoleName;
 import edu.asu.lerna.iolaus.service.IUserManager;
+import edu.asu.lerna.iolaus.service.login.LernaGrantedAuthority;
 
 @Service
 public class Db4oDBUserManager extends DBManager implements IUserManager {
@@ -56,5 +58,16 @@ public class Db4oDBUserManager extends DBManager implements IUserManager {
 		database.delete(userToBeDeleted);
 		updateObject(user);
 		return true;
+	}
+
+	@Override
+	public boolean hasAdminAccess(User user) {
+		List<LernaGrantedAuthority> authorities = user.getAuthorities();
+		for(LernaGrantedAuthority lgh : authorities){
+			if(lgh.getAuthority().equals( IRoleName.ADMIN)){
+				return true;
+			}
+		}
+		return false;
 	}
 }

@@ -29,4 +29,6 @@ public interface IUserManager {
 	public abstract boolean deleteUser(String username);
 
 	public abstract boolean modifyUser(User user, String username);
+	
+	public abstract boolean hasAdminAccess(User user);
 }
