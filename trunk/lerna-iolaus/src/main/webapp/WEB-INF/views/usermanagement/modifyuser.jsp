@@ -4,6 +4,19 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <%@ page isELIgnored="false" %>
 
+<style type="text/css">
+.submit {
+	background-color: #474E69;
+	color: #FFFFFF;
+	width: 120px;
+	height: 30px;
+	border-radius: 3px;
+	-moz-border-radius: 3px;
+	-webkit-border-radius: 3px;
+	margin-bottom: 5px;
+}
+</style>
+
 <div class="title">
 	<h2>Modify user</h2>
 	<span class="byline">Update user information</span>
@@ -38,7 +51,7 @@
 			<td><font color="red"><form:errors path="roles" cssClass="errors" /></font></td>
 		</tr>
 		<tr>
-			<td colspan='4'><input name="submit" type="submit"
+			<td colspan='4'><input class="submit" name="submit" type="submit"
 				value="Modify user" /></td>
 		</tr>
 	</table>

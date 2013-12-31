@@ -148,7 +148,7 @@
 			</form>
 		</c:when>
 		<c:otherwise>
-			<input type=button
+			<input class="submit" type=button
 				onClick="location.href='${pageContext.servletContext.contextPath}/auth/user/adduser'"
 				value='Add User'>
 			<hr />
