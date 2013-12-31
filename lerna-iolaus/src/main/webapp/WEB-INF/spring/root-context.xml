@@ -15,6 +15,7 @@
 
 	<import resource="roles.xml" />
 	<import resource="neo4j.xml" />
+	<import resource="memcached.xml" />
 	
 	<bean id="conversionService"
 		class="org.springframework.format.support.FormattingConversionServiceFactoryBean">
