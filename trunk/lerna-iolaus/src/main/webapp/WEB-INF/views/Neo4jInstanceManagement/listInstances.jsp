@@ -1,4 +1,7 @@
-
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<jsp:useBean id="currentPage" type="java.lang.String" scope="request" />
+<%@ taglib prefix="sec"
+	uri="http://www.springframework.org/security/tags"%>
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
 	pageEncoding="ISO-8859-1"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
@@ -125,7 +128,7 @@
 
 
 <header>
-	<h3 class="dataTables">List of Instances.</h3>
+	<h3 class="dataTables">List of Instances</h3>
 </header>
 
 <div class="container">	
@@ -136,17 +139,17 @@
 		<c:when test="${not empty instanceList}">
 
 			<form method="POST" id="instanceform">
-				<input type=button class="submit"
+				<sec:authorize access="hasAnyRole('ROLE_ADMIN')"><input type=button class="submit"
 					onClick="location.href='${pageContext.servletContext.contextPath}/auth/addInstance'"
 					value='Add a Instance'> <input type="submit" class="submit"
 					value="Delete Instances" name="deleteinstances"
-					onclick="this.form.action='${pageContext.servletContext.contextPath}/auth/deleteInstances'" />
+					onclick="this.form.action='${pageContext.servletContext.contextPath}/auth/deleteInstances'" /></sec:authorize>
 				<hr />
 				<table style="width: 100%" cellpadding="0" cellspacing="0"
 					border="0" class="display dataTable" id="listinstance" class="dataTable">
 					<thead>
 						<tr>
-							<th align="left"><input type="checkbox" id="selectall">All</th>
+							<th align="left"><sec:authorize access="hasAnyRole('ROLE_ADMIN')"><input type="checkbox" id="selectall">All</sec:authorize></th>
 							<th>Id</th>
 							<th>Port Number</th>
 							<th>Host</th>
@@ -159,8 +162,8 @@
 					<tbody>
 						<c:forEach var="instance" items="${instanceList}">
 							<tr>
-								<td width="10%"><input type="checkbox" class="selected"
-									name="selected" value='<c:out value="${instance.id}"></c:out>' /></td>
+								<td width="10%"><sec:authorize access="hasAnyRole('ROLE_ADMIN')"><input type="checkbox" class="selected"
+									name="selected" value='<c:out value="${instance.id}"></c:out>' /></sec:authorize></td>
 								<td width="5%" align="center"><c:out
 										value="${instance.id}"></c:out></td>
 								<td width="10%" align="center"><c:out
@@ -177,10 +180,10 @@
 										<td width="10%" align="center"><c:out value="Inactive"></c:out></td>
 									</c:otherwise>
 								</c:choose>
-								<td width="10%" align="center"><input type=button
+								<td width="10%" align="center"><sec:authorize access="hasAnyRole('ROLE_ADMIN')"><input type=button
 									class="submit"
 									onClick="location.href='${pageContext.servletContext.contextPath}/auth/editInstance/${instance.id}'"
-									value='Edit'></td>
+									value='Edit'></sec:authorize></td>
 							</tr>
 						</c:forEach>
 					</tbody>

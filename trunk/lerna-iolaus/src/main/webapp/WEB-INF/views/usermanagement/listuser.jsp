@@ -128,14 +128,17 @@
 
 
 <br />
+
+<header>
+	<h3 class="dataTables">List of Users</h3>
+</header>
+
 <div class="container">
 	<c:choose>
 		<c:when test="${not empty userList}">
 
 			<form method="POST" id="userform">
-				<div class="form">
-					<h1>List of Users.</h1>
-				</div>
+
 				<input class="submit" type=button class="submit"
 					onClick="location.href='${pageContext.servletContext.contextPath}/auth/user/adduser'"
 					value='Add User'> <input class="submit" type="submit"
