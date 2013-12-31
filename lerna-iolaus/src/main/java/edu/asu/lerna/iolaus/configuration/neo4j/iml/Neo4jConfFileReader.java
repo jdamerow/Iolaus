@@ -4,18 +4,19 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.URLDecoder;
-import java.net.URLEncoder;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Properties;
+import java.util.date;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 
-import edu.asu.lerna.iolaus.domain.INeo4jConfFile;
-import edu.asu.lerna.iolaus.domain.implementation.Neo4jConfFile;
+import edu.asu.lerna.iolaus.domain.INeo4jInstance;
+import edu.asu.lerna.iolaus.domain.implementation.Neo4jInstance;
 
 /**
  * @author Veena Borannagowda
@@ -31,15 +32,15 @@ public class Neo4jConfFileReader {
 	@Autowired	
 	private Environment env;
 
-	public List<INeo4jConfFile> getNeo4jConfFiles() throws IOException
+	public List<INeo4jInstance> getNeo4jConfFiles() throws IOException
 	{
-		List<INeo4jConfFile> listOfFiles = new ArrayList<INeo4jConfFile>();
+		List<INeo4jInstance> listOfFiles = new ArrayList<INeo4jInstance>();
 		String classPath=URLDecoder.decode(Neo4jConfFileReader.class.getProtectionDomain().getCodeSource().getLocation().getPath(),"UTF-8");
 		
 		File folder = new File(classPath.substring(0,classPath.indexOf("classes"))+"classes/"+env.getProperty("LOCAL_PATH_FOR_NEO4JCONFIGURATION"));
 		for(final File fileEntry : folder.listFiles())
 		{
-			INeo4jConfFile confFile = new Neo4jConfFile();
+			INeo4jInstance instance = new Neo4jInstance();
 			Properties properties = new Properties();
 			try {
 				properties.load(new FileInputStream(fileEntry));
@@ -49,17 +50,21 @@ public class Neo4jConfFileReader {
 			for(String key : properties.stringPropertyNames()) {
 				String value = properties.getProperty(key);
 				if(key.equals("id"))
-					confFile.setId(value);
+					instance.setId(value);
 				if(key.equals("host"))
-					confFile.setHost(value);
+					instance.setHost(value);
 				if(key.equals("description"))
-					confFile.setDescription(value);
+					instance.setDescription(value);
 				if(key.equals("port"))
-					confFile.setPort(value);
+					instance.setPort(value);
 				if(key.equals("active"))
-					confFile.setActive(Boolean.parseBoolean(value));
+					instance.setActive(Boolean.parseBoolean(value));
+				if(key.equals("userid"))
+					instance.setUserName(value);
+				if(key.equals("date"))
+					instance.setDate()
 			}
-			listOfFiles.add(confFile);
+			listOfFiles.add(instance);
 		}
 		return listOfFiles;
 	}

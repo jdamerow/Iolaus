@@ -52,11 +52,12 @@ public class InstanceController {
 			model.addAttribute("failure",true);
 			return "auth/addInstance";
 		}
+		model.addAttribute("instanceId",instanceId);
 	    return "redirect:/auth/listInstances";
 	}
 	
 	@RequestMapping(value = "auth/listInstances", method = RequestMethod.GET)
-	public String instanceList(HttpServletRequest req, ModelMap model, Principal principal){
+	public String listInstances(HttpServletRequest req, ModelMap model, Principal principal){
 		List<INeo4jInstance> instanceList=instanceManager.getAllInstances();
 		model.addAttribute("instanceList", instanceList);
 		String instanceId=req.getParameter("instanceId");
