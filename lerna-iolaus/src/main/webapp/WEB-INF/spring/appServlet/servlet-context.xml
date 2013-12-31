@@ -14,9 +14,6 @@
 	<!-- Handles HTTP GET requests for /resources/** by efficiently serving 
 		up static resources in the ${webappRoot}/resources directory -->
 	<resources mapping="*/resources/**" location="/resources/" />
-	<resources mapping="*/css/**" location="/resources/txt-layout/css/" />
-	<resources mapping="*/js/**" location="/resources/txt-layout/js/" />
-	<resources mapping="*/images/**" location="/resources/txt-layout/images/" />
 
 	<!-- Resolves views selected for rendering by @Controllers to .jsp resources 
 		in the /WEB-INF/views directory -->

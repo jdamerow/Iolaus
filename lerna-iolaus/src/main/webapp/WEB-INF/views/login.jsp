@@ -3,7 +3,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring"%>
 
-<link rel="stylesheet" href="css/login.css" />
+<link rel="stylesheet" href="${pageContext.servletContext.contextPath}/resources/txt-layout/css/login.css" />
 
 <style>
 p.ex1 {
