@@ -41,7 +41,7 @@ function validate()
 //-->
 </script>
 
-<link rel="stylesheet" href="css/form.css" />
+<link rel="stylesheet" href="${pageContext.servletContext.contextPath}/resources/txt-layout/css/form.css" />
 <form name="addInstanceForm" class="form" action="addInstance" method="POST" onsubmit="return(validate());">
 <div id="form">
 	<table>
