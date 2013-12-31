@@ -10,7 +10,37 @@
 	<br/>
 </header>
 
-
+<script>
+	$(document).ready(function() {
+		$("#dlgConfirm").hide();
+	});
+	
+	$(function() {
+		
+		
+		$("input[name='deleteinstances']").button().click(function(event) {
+			if ($("form input:checkbox").is(":checked")) {
+				event.preventDefault();
+				$("#dlgConfirm").dialog({
+					resizable : false,
+					height : 'auto',
+					width : 350,
+					modal : true,
+					buttons : {
+						Submit : function() {
+							$(this).dialog("close");
+							$("#instanceform")[0].submit();
+						},
+						Cancel : function() {
+							$(this).dialog("close");
+						}
+					}
+				});
+			}
+		});
+		
+	});
+</script>
 
 
 <style type="text/css">
@@ -20,9 +50,9 @@
 	width: 130px;
 	height: 30px;
 	weight: bold;
-	border-radius: 3px;
-	-moz-border-radius: 3px;
-	-webkit-border-radius: 3px;
+	border-radius: 10px;
+	-moz-border-radius: 10px;
+	-webkit-border-radius: 10px;
 	margin-bottom: 3px;
 }
 </style>
@@ -105,11 +135,11 @@
 	<c:choose>
 		<c:when test="${not empty instanceList}">
 
-			<form method="POST">
+			<form method="POST" id="instanceform">
 				<input type=button class="submit"
 					onClick="location.href='${pageContext.servletContext.contextPath}/auth/addInstance'"
 					value='Add a Instance'> <input type="submit" class="submit"
-					value="Delete Instances"
+					value="Delete Instances" name="deleteinstances"
 					onclick="this.form.action='${pageContext.servletContext.contextPath}/auth/deleteInstances'" />
 				<hr />
 				<table style="width: 100%" cellpadding="0" cellspacing="0"
@@ -155,6 +185,7 @@
 						</c:forEach>
 					</tbody>
 				</table>
+				<div id="dlgConfirm" title="Confirmation">Do you want to delete the selected Instances?</div>
 				<br/>
 			</form>
 		</c:when>

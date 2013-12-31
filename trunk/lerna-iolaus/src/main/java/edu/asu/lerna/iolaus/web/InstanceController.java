@@ -5,6 +5,8 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -27,6 +29,10 @@ import edu.asu.lerna.iolaus.service.INeo4jInstanceManager;
 @Controller
 public class InstanceController {
 	
+	private static final Logger logger = LoggerFactory
+			.getLogger(InstanceController.class);
+
+	
 	@Autowired
 	private INeo4jInstanceManager instanceManager;
 	
@@ -42,16 +48,22 @@ public class InstanceController {
 			model.addAttribute("instance", instance);
 			return "auth/addInstance";
 		}
-		model.addAttribute("instanceId", instanceId);
-		List<INeo4jInstance> instanceList=instanceManager.getAllInstances();
-		model.addAttribute("instanceList", instanceList);
-	    return "auth/listInstances";
+		if(instanceId.equals("-1")){
+			model.addAttribute("failure",true);
+			return "auth/addInstance";
+		}
+	    return "redirect:/auth/listInstances";
 	}
 	
 	@RequestMapping(value = "auth/listInstances", method = RequestMethod.GET)
-	public String getUserList(HttpServletRequest req, ModelMap model, Principal principal){
+	public String instanceList(HttpServletRequest req, ModelMap model, Principal principal){
 		List<INeo4jInstance> instanceList=instanceManager.getAllInstances();
 		model.addAttribute("instanceList", instanceList);
+		String instanceId=req.getParameter("instanceId");
+		INeo4jInstance instance=instanceManager.getInstance(instanceId);
+		if(instance.getId()!=null){
+			model.addAttribute("instanceId", instanceId);
+		}
 		return "auth/listInstances";
 	}
 	
@@ -71,5 +83,22 @@ public class InstanceController {
 			return "auth/editInstance";
 		}
 	    return "redirect:/auth/listInstances";
+	}
+	
+	@RequestMapping(value = "auth/deleteInstances", method = RequestMethod.POST)
+	public String deleteUser(HttpServletRequest req, ModelMap model,	Principal principal) {
+
+		String[] idList = req.getParameterValues("selected");
+		try{
+			for(String instanceId : idList){
+				logger.info(" selected : "+ instanceId);
+				instanceManager.deleteNeo4jInstance(instanceId);
+			}
+		}catch(Exception e){
+			logger.error("System Error while deleting the file :",e);
+		}
+
+
+		return "redirect:/auth/listInstances";
 	}
 }

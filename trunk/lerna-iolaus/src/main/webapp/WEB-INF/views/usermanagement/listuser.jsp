@@ -54,10 +54,10 @@
 	color: #FFFFFF;
 	width: 120px;
 	height: 30px;
-	border-radius: 3px;
-	-moz-border-radius: 3px;
-	-webkit-border-radius: 3px;
-	margin-bottom: 5px;
+	border-radius: 10px;
+	-moz-border-radius: 10px;
+	-webkit-border-radius: 10px;
+	margin-bottom: 3px;
 }
 </style>
 

@@ -1,8 +1,11 @@
 package edu.asu.lerna.iolaus.service.impl;
 
 import java.io.BufferedWriter;
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,6 +35,8 @@ public class Neo4jInstanceManager implements INeo4jInstanceManager {
 		int maxId=0;
 		String port=instance.getPort();
 		String host=instance.getHost();
+		if(port.equals("")||host.equals(""))
+			return "-1";
 		for(INeo4jConfFile file:fileList){
 			if(file.getPort().equals(port)&&file.getHost().equalsIgnoreCase(host)){
 				return "0";
@@ -44,7 +49,7 @@ public class Neo4jInstanceManager implements INeo4jInstanceManager {
 		String classPath=Neo4jInstanceManager.class.getProtectionDomain().getCodeSource().getLocation().getPath();
 		BufferedWriter bw=null;
 		try{
-			bw=new BufferedWriter(new FileWriter(classPath.substring(0,classPath.indexOf("classes"))+"classes/ConfigurationFiles/Neo4jConfiguration"+(maxId+1)+".txt"));
+			bw=new BufferedWriter(new FileWriter(URLDecoder.decode(classPath.substring(0,classPath.indexOf("classes")),"UTF-8")+"classes/ConfigurationFiles/Neo4jConfiguration"+(maxId+1)+".txt"));
 			bw.append("id:"+(maxId+1)+"\n"); 
 			String modifiedDescription=instance.getDescription().replaceAll("\n", " ").replace("\r","");
 			bw.append("description:"+modifiedDescription+"\n");
@@ -75,9 +80,19 @@ public class Neo4jInstanceManager implements INeo4jInstanceManager {
 	}
 
 	@Override
-	public void deleteNeo4jInstance(String instanceId) {
-		// TODO Auto-generated method stub
-
+	public void deleteNeo4jInstance(String instanceId) throws UnsupportedEncodingException {
+		
+		List<INeo4jConfFile> configFileList=neo4jRegistry.getfileList();
+		for(INeo4jConfFile configFile:configFileList){
+			if(configFile.getId().equals(instanceId)){
+				configFileList.remove(configFile);
+				String classPath=Neo4jInstanceManager.class.getProtectionDomain().getCodeSource().getLocation().getPath();
+				String filePath=URLDecoder.decode(classPath.substring(0,classPath.indexOf("classes")),"UTF-8")+"classes/ConfigurationFiles/Neo4jConfiguration"+instanceId+".txt";
+				File file = new File(filePath);
+				file.delete();
+				break;
+			}
+		}
 	}
 
 	@Override
