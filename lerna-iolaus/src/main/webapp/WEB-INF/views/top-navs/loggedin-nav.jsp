@@ -3,7 +3,7 @@
 	<!-- Nav -->
 	<nav id="nav">
 		<ul>
-			<li><a href="${pageContext.servletContext.contextPath}/auth/index">Home</a></li>
+			<li><a href="${pageContext.servletContext.contextPath}/auth/home">Home</a></li>
 			<li><a href="${pageContext.servletContext.contextPath}/auth/listInstances">Neo4J Instance Management</a>
 				<ul>
 					<li><a href="${pageContext.servletContext.contextPath}/auth/listInstances"><g>List Neo4J Instances</g></a></li>
