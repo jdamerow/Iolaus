@@ -15,7 +15,7 @@
 
 		<intercept-url pattern="/resources/**" access="permitAll" />
 		
-		<intercept-url pattern="/auth/home**" access="hasRole('ROLE_ADMIN')"/>
+		<intercept-url pattern="/auth/home**" access="hasAnyRole('ROLE_ADMIN','ROLE_USER')"/>
 
 		<intercept-url pattern="/auth/**" access="isAuthenticated()" />
 		

@@ -8,9 +8,40 @@
 <header>
 	<h2 class="dataTableHeading">User Management</h2>
 	<h4 class="dataTableByline">Users you could edit, delete and add.</h4>
-	<br/>
+	<br />
 </header>
 
+<script>
+	$(document).ready(function() {
+		$("#dlgConfirm").hide();
+	});
+	
+	$(function() {
+		
+		
+		$("input[name='deleteuser']").button().click(function(event) {
+			if ($("form input:checkbox").is(":checked")) {
+				event.preventDefault();
+				$("#dlgConfirm").dialog({
+					resizable : false,
+					height : 'auto',
+					width : 350,
+					modal : true,
+					buttons : {
+						Submit : function() {
+							$(this).dialog("close");
+							$("#userform")[0].submit();
+						},
+						Cancel : function() {
+							$(this).dialog("close");
+						}
+					}
+				});
+			}
+		});
+		
+	});
+</script>
 
 <!--  
 	Author Lohith Dwaraka  
@@ -101,13 +132,14 @@
 	<c:choose>
 		<c:when test="${not empty userList}">
 
-			<form method="POST">
+			<form method="POST" id="userform">
 				<div class="form">
 					<h1>List of Users.</h1>
 				</div>
 				<input class="submit" type=button class="submit"
 					onClick="location.href='${pageContext.servletContext.contextPath}/auth/user/adduser'"
-					value='Add User'> <input class="submit" type="submit" value="Delete User"
+					value='Add User'> <input class="submit" type="submit"
+					name="deleteuser" value="Delete User"
 					onclick="this.form.action='${pageContext.servletContext.contextPath}/auth/user/deleteUser'" />
 				<hr />
 				<table style="width: 100%" cellpadding="0" cellspacing="0"
@@ -145,6 +177,7 @@
 						</c:forEach>
 					</tbody>
 				</table>
+				<div id="dlgConfirm" title="Confirmation">Do you want to delete the selected users?</div>
 			</form>
 		</c:when>
 		<c:otherwise>
@@ -157,4 +190,4 @@
 		</c:otherwise>
 	</c:choose>
 </div>
-<br/>
+<br />
