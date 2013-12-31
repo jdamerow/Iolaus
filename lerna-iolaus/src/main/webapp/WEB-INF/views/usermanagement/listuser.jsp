@@ -149,8 +149,7 @@
 					border="0" class="display dataTable" id="listuser">
 					<thead>
 						<tr>
-							<th align="left"><input type="checkbox" id="selectall">
-								All</th>
+							<th align="left"><input type="checkbox" id="selectall">All</th>
 							<th align="left">Name</th>
 							<th>User Name</th>
 							<th>Email ID</th>
@@ -162,10 +161,10 @@
 					<tbody>
 						<c:forEach var="user" items="${userList}">
 							<tr>
-								<td><input type="checkbox" class="selected" name="selected"
+								<td width="10%"><input type="checkbox" class="selected" name="selected"
 									value='<c:out value="${user.username}"></c:out>' /></td>
-								<td width="25%" align="left"><c:out value="${user.name}"></c:out></td>
-								<td width="25%" align="center"><input name="usernames"
+								<td width="15%" align="left"><c:out value="${user.name}"></c:out></td>
+								<td width="15%" align="center"><input name="usernames"
 									type="hidden" value="<c:out value="${user.username}"></c:out>" />
 									<c:out value="${user.username}"></c:out></td>
 								<td width="25%" align="center"><c:out value="${user.email}"></c:out></td>
@@ -194,3 +193,4 @@
 	</c:choose>
 </div>
 <br />
+

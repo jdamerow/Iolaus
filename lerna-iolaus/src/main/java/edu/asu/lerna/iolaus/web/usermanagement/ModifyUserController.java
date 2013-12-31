@@ -2,6 +2,7 @@ package edu.asu.lerna.iolaus.web.usermanagement;
 
 import java.security.Principal;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -10,6 +11,9 @@ import javax.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
@@ -21,6 +25,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import edu.asu.lerna.iolaus.domain.implementation.Role;
 import edu.asu.lerna.iolaus.domain.implementation.User;
 import edu.asu.lerna.iolaus.factory.IUserFactory;
+import edu.asu.lerna.iolaus.roles.IRoleName;
 import edu.asu.lerna.iolaus.service.IRoleManager;
 import edu.asu.lerna.iolaus.service.IUserManager;
 import edu.asu.lerna.iolaus.service.login.LernaGrantedAuthority;
@@ -44,6 +49,17 @@ public class ModifyUserController {
 	@RequestMapping(value = "auth/user/deleteUser", method = RequestMethod.POST)
 	public String deleteUser(HttpServletRequest req, ModelMap model,	Principal principal) {
 
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		Collection<? extends GrantedAuthority> authorities = auth.getAuthorities();
+		boolean access = false; 
+		for (GrantedAuthority ga : authorities) {
+			if(ga.getAuthority().equals(IRoleName.ADMIN))
+				access=true;
+		}
+		if(access ==false){
+			logger.info("Access not allowes");
+			return "auth/noaccess";
+		}
 		String[] values = req.getParameterValues("selected");
 		try{
 			for(String v : values){
@@ -60,7 +76,17 @@ public class ModifyUserController {
 	
 	@RequestMapping(value = "auth/user/modifyuser/{username}", method = RequestMethod.GET)
 	public String modifyUser(@PathVariable("username") String userName,HttpServletRequest req, ModelMap model,Principal principal) {
-		
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		Collection<? extends GrantedAuthority> authorities = auth.getAuthorities();
+		boolean access = false; 
+		for (GrantedAuthority ga : authorities) {
+			if(ga.getAuthority().equals(IRoleName.ADMIN))
+				access=true;
+		}
+		if(access ==false){
+			logger.info("Access not allowes");
+			return "auth/noaccess";
+		}
 		User user = userManager.getUserById(userName);
 		UserBackingBean ubb =new UserBackingBean();
 		
@@ -82,7 +108,17 @@ public class ModifyUserController {
 	
 	@RequestMapping(value = "auth/user/modifyuser/{username}", method = RequestMethod.POST)
 	public String updateUser(@PathVariable("username") String userName,@Valid @ModelAttribute UserBackingBean userForm, BindingResult result, ModelMap model,	Principal principal) {
-
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		Collection<? extends GrantedAuthority> authorities = auth.getAuthorities();
+		boolean access = false; 
+		for (GrantedAuthority ga : authorities) {
+			if(ga.getAuthority().equals(IRoleName.ADMIN))
+				access=true;
+		}
+		if(access ==false){
+			logger.info("Access not allowes");
+			return "auth/noaccess";
+		}
 		
 		if (result.hasErrors()) {
 			User user = userManager.getUserById(userName);
