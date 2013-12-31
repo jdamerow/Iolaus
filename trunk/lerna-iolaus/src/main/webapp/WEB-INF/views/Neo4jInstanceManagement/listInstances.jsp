@@ -15,7 +15,7 @@
 
 <style type="text/css">
 .submit {
-	background-color: #474E69;
+	background-color: #808080;
 	color: #FFFFFF;
 	width: 130px;
 	height: 30px;
@@ -24,34 +24,6 @@
 	-moz-border-radius: 3px;
 	-webkit-border-radius: 3px;
 	margin-bottom: 3px;
-}
-
-.dataTableHeading{
-	font-weight: "900";
-	display:block;
-	color:#72587F;
-	margin-top: 25px;
-}
-
-.dataTableByline{
-	weight: bold; 
-	color:#2E0854;
-	font-size: 20 px;
-}
-
-.dataTableSubHeading{
-	weight: bold; 
-	color:#2E0854;
-	font-size: 25 px;
-	margin-left:50%;
-}
-
-.dataTable{
-}
-
-.response{
-color:red;
-margin-left:40%;
 }
 </style>
 
