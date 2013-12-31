@@ -7,6 +7,7 @@
 <style type="text/css">
 .response{
 	color:red;
+	margin-left: -60px;
 }
 </style>
 
@@ -45,8 +46,12 @@ function validate()
 <form name="addInstanceForm" class="form" action="addInstance" method="POST" onsubmit="return(validate());">
 <div id="form">
 	<table>
+		<c:if test="${failure}">
+			<tr><td colspan="2" align="center">
+			<h5 class="response">**Failure</h5></td></tr>
+		</c:if>
 	<tr> <td colspan="2" align="left"><h1>Add a Neo4j Instance</h1></td></tr>
-	<tr><td colspan="2" align="left"><c:if test="${not empty instance}">
+	<tr><td colspan="2" align="center"><c:if test="${not empty instance}">
 	<h5 class="response">**Port ${instance.port} is already in used on host machine ${instance.host}</h5>
 	</c:if></td></tr>
 	<tr>
