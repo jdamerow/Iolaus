@@ -112,7 +112,6 @@ public class ModifyUserController {
 	
 	@RequestMapping(value = "auth/user/modifyuser/{username}", method = RequestMethod.POST)
 	public String updateUser(@PathVariable("username") String userName,@Valid @ModelAttribute ModifyUserBackingBean userForm, BindingResult result, ModelMap model,	Principal principal) {
-		logger.info(" came here ");
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		Collection<? extends GrantedAuthority> authorities = auth.getAuthorities();
 		boolean access = false; 
@@ -130,10 +129,8 @@ public class ModifyUserController {
 			return "auth/user/modifyuser";
 		}
 		if(!userName.equals(userForm.getUsername())){
-			logger.info("User name is :"+ userName);
 			User user = userManager.getUserById(userForm.getUsername());
 			if (!(user == null)){
-				logger.info("User name is null :"+ userName);
 				model.addAttribute("errorMsg", "Username should original or unique one");
 				model.addAttribute("availableRoles", roleManager.getRolesList());
 				return "auth/user/modifyuser";
