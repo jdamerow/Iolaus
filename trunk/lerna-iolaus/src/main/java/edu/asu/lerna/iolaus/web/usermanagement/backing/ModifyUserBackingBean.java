@@ -4,13 +4,11 @@ import java.util.List;
 
 import edu.asu.lerna.iolaus.annotation.NotEmpty;
 import edu.asu.lerna.iolaus.annotation.NotEmptyList;
-import edu.asu.lerna.iolaus.annotation.UniqueUsername;
 import edu.asu.lerna.iolaus.domain.implementation.Role;
 
-public class UserBackingBean {
+public class ModifyUserBackingBean {
 
 	@NotEmpty(message = "Please provide a username.")
-	@UniqueUsername
 	private String username;
 	
 	@NotEmpty(message = "Please provide name of user.")
@@ -24,6 +22,7 @@ public class UserBackingBean {
 	
 	@NotEmptyList(message = "At least one role needs to be selected.")
 	private List<Role> roles;
+//	private Role[] roles;
 	
 	
 	public String getUsername() {
@@ -50,6 +49,12 @@ public class UserBackingBean {
 	public void setRoles(List<Role> roles) {
 		this.roles = roles;
 	}
+//	public Role[] getRoles() {
+//		return roles;
+//	}
+//	public void setRoles(Role[] roles) {
+//		this.roles = roles;
+//	}
 	public String getEmail() {
 		return email;
 	}
