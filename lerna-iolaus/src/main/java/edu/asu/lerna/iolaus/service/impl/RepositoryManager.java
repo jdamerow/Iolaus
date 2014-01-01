@@ -11,7 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import edu.asu.lerna.iolaus.configuration.neo4j.iml.Neo4jRegistry;
-import edu.asu.lerna.iolaus.domain.INeo4jConfFile;
+import edu.asu.lerna.iolaus.domain.INeo4jInstance;
 import edu.asu.lerna.iolaus.domain.json.IJsonNode;
 import edu.asu.lerna.iolaus.domain.json.IJsonRelation;
 import edu.asu.lerna.iolaus.service.ICacheManager;
@@ -44,10 +44,10 @@ public class RepositoryManager implements IRepositoryManager {
 		while(iterator.hasNext())
 		{
 			String dbName = iterator.next();
-			Iterator<INeo4jConfFile> fileIterator = neo4jInstances.getfileList().iterator();
+			Iterator<INeo4jInstance> fileIterator = neo4jInstances.getfileList().iterator();
 			while(fileIterator.hasNext())
 			{
-				INeo4jConfFile dbFile = fileIterator.next();
+				INeo4jInstance dbFile = fileIterator.next();
 				if (dbName.equals(dbFile.getId())&&dbFile.isActive())
 				{
 					instanceUrl.add("http://localhost:"+dbFile.getPort()+"/db/data/cypher");
