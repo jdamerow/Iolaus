@@ -6,7 +6,7 @@
 
 <style type="text/css">
 .submit {
-	background-color: #474E69;
+	background-color: #808080;
 	color: #FFFFFF;
 	width: 120px;
 	height: 30px;
@@ -17,43 +17,41 @@
 }
 </style>
 
-<div class="title">
-	<h2>Modify user</h2>
-	<span class="byline">Update user information</span>
-</div>
-
-
-<form:form name="modifyUserForm" method="POST" modelAttribute="modifyUserBackingBean" action="${pageContext.servletContext.contextPath}/auth/user/modifyuser/${username}">
-
-	<table class="form">
+<link rel="stylesheet" href="${pageContext.servletContext.contextPath}/resources/txt-layout/css/form.css" />
+<form:form name="modifyUserForm" class="form" method="POST" modelAttribute="modifyUserBackingBean" action="${pageContext.servletContext.contextPath}/auth/user/modifyuser/${username}">
+<div id="form">
+	<table>
+	<tr> <td colspan="3" align="left"><h1>Modify a User</h1></td></tr>
 		<tr>
-			<td width="100">Name:</td>
-			<td><form:input type='text' path='name' name ='name' /></td>
+			<td width="20%"><label>Name:</label></td>
+			<td><form:input type='text' class="text" path='name' name ='name' /></td>
 			<td><font color="red"><form:errors path="name" cssClass="errors" /></font></td>
 		</tr>
 		<tr>
-			<td>Username:</td>
-			<td><form:input type='text' path='username' name ='username' /></td>
+			<td><label>Username:</label></td>
+			<td><form:input type='text' class="text" path='username' name ='username' /></td>
 			<td><font color="red"><form:errors path="username" cssClass="errors" />${errorMsg}</font></td>
 		</tr>
 		<tr>
-			<td>Password:</td>
-			<td><form:input type='password' name='password' path='password' /></td>
+			<td><label>Password:</label></td>
+			<td><form:input type='password' class="text" name='password' path='password' /></td>
 			<td><font color="red"><form:errors path="password" cssClass="errors" /></font></td>
 		</tr>
 		<tr>
-			<td>Email:</td>
-			<td><form:input type='text' path='email' name='email' /></td>
+			<td><label>Email:</label></td>
+			<td><form:input type='email' class="text" path='email' name='email' /></td>
 			<td><font color="red"><form:errors path="email" cssClass="errors" /></font></td>
 		</tr>
 		<tr>
-			<td valign="top">Roles:</td><td><form:checkboxes element="li" items="${availableRoles}" itemLabel="name" itemValue="id" path="roles" /></td>
+			<td><label>Role:</label></td>
+			<td><form:checkboxes class ="checkbox" element="li" items="${availableRoles}" itemLabel="name" itemValue="id" path="roles" /></td>
 			<td><font color="red"><form:errors path="roles" cssClass="errors" /></font></td>
 		</tr>
 		<tr>
-			<td colspan='4'><input class="submit" name="submit" type="submit"
+		<td></td>
+			<td colspan='2' align="left"><input class="submit" name="submit" type="submit"
 				value="Modify user" /></td>
 		</tr>
 	</table>
-
+</div>
 </form:form>

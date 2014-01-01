@@ -86,25 +86,26 @@ input:focus, textarea:focus {
    ====== Submit Button ====== 
    =========================== */
  .submit input {
-	background-color: #474E69; 
-	color:#FFFFFF;
-	width: 150px;
-	height:30px;
+ 
+	background-color: #808080;
+	color: #FFFFFF;
+	width: 130px;
+	height: 30px;
 	weight: bold;
-	border-radius: 3px;
-	-moz-border-radius: 3px;
-	-webkit-border-radius: 3px;	
+	border-radius: 10px;
+	-moz-border-radius: 10px;
+	-webkit-border-radius: 10px;
 	margin-left:150px;
 }
 
  .submituser input {
-	background-color: #474E69; 
-	color:#FFFFFF;
-	width: 150px;
-	height:30px;
+	background-color: #808080;
+	color: #FFFFFF;
+	width: 130px;
+	height: 30px;
 	weight: bold;
-	border-radius: 3px;
-	-moz-border-radius: 3px;
-	-webkit-border-radius: 3px;	
+	border-radius: 10px;
+	-moz-border-radius: 10px;
+	-webkit-border-radius: 10px;
 	margin-left:95px;
 }
