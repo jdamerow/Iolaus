@@ -58,7 +58,8 @@ public class InstanceController {
 	 }
 	  
 	@RequestMapping(value = "/auth/addInstance", method = RequestMethod.POST)
-	public String addInstance(@ModelAttribute("SpringWeb")Neo4jInstance instance, ModelMap model) {
+	public String addInstance(@ModelAttribute("SpringWeb")Neo4jInstance instance, ModelMap model,Principal principal) {
+		instance.setUserName(principal.getName());
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		Collection<? extends GrantedAuthority> authorities = auth.getAuthorities();
 		boolean access = false; 
@@ -88,9 +89,11 @@ public class InstanceController {
 		List<INeo4jInstance> instanceList=instanceManager.getAllInstances();
 		model.addAttribute("instanceList", instanceList);
 		String instanceId=req.getParameter("instanceId");
-		INeo4jInstance instance=instanceManager.getInstance(instanceId);
-		if(instance.getId()!=null){
-			model.addAttribute("instanceId", instanceId);
+		if(instanceId!=null){
+			INeo4jInstance instance=instanceManager.getInstance(instanceId);
+			if(instance.getId()!=null){
+				model.addAttribute("instanceId", instanceId);
+			}
 		}
 		return "auth/listInstances";
 	}

@@ -4,11 +4,12 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.URLDecoder;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Properties;
-import java.util.date;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.PropertySource;
@@ -32,7 +33,7 @@ public class Neo4jConfFileReader {
 	@Autowired	
 	private Environment env;
 
-	public List<INeo4jInstance> getNeo4jConfFiles() throws IOException
+	public List<INeo4jInstance> getNeo4jConfFiles() throws IOException, ParseException
 	{
 		List<INeo4jInstance> listOfFiles = new ArrayList<INeo4jInstance>();
 		String classPath=URLDecoder.decode(Neo4jConfFileReader.class.getProtectionDomain().getCodeSource().getLocation().getPath(),"UTF-8");
@@ -47,6 +48,7 @@ public class Neo4jConfFileReader {
 			} catch (IOException e) {
 
 			}
+			DateFormat formatter = new SimpleDateFormat("dd-MMM-yy");
 			for(String key : properties.stringPropertyNames()) {
 				String value = properties.getProperty(key);
 				if(key.equals("id"))
@@ -59,10 +61,11 @@ public class Neo4jConfFileReader {
 					instance.setPort(value);
 				if(key.equals("active"))
 					instance.setActive(Boolean.parseBoolean(value));
-				if(key.equals("userid"))
+				if(key.equals("userName"))
 					instance.setUserName(value);
-				if(key.equals("date"))
-					instance.setDate()
+				if(key.equals("date")){
+					instance.setDate(formatter.parse(value));
+				}
 			}
 			listOfFiles.add(instance);
 		}

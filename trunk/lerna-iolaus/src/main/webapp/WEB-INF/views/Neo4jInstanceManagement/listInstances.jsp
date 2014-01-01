@@ -116,7 +116,7 @@
 			"bAutoWidth" : false,
 			"aoColumns" : [ {
 				"bSortable" : false
-			}, null, null, null, null, null, null ]
+			}, null, null, null, null, null,null, null ]
 		});
 	});
 	$(document).ready(function() {
@@ -154,6 +154,7 @@
 							<th>Port Number</th>
 							<th>Host</th>
 							<th>Description</th>
+							<th>Admin</th>
 							<th>Status</th>
 							<th></th>
 						</tr>
@@ -170,8 +171,10 @@
 										value="${instance.port}"></c:out></td>
 								<td width="15%" align="center"><c:out
 										value="${instance.host}"></c:out></td>
-								<td width="40%" align="center"><c:out
+								<td width="30%" align="center"><c:out
 										value="${instance.description}"></c:out></td>
+								<td width="10%" align="center"><c:out
+										value="${instance.userName}"></c:out></td>
 								<c:choose>
 									<c:when test="${instance.active}">
 										<td width="10%" align="center"><c:out value="Active"></c:out></td>
