@@ -71,9 +71,9 @@ public class AddUserController {
 			logger.info("Access not allowes");
 			return "auth/noaccess";
 		}
+
 		if (result.hasErrors()) {
 			map.addAttribute("availableRoles", roleManager.getRoles());
-			
 			return "auth/user/adduser";
 		}		
 		

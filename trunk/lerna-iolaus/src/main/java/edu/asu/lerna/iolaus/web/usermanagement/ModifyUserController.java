@@ -88,6 +88,10 @@ public class ModifyUserController {
 			return "auth/noaccess";
 		}
 		User user = userManager.getUserById(userName);
+		if(user == null){
+			model.addAttribute("message","User not found");
+			return "auth/resourcenotfound";
+		}
 		UserBackingBean ubb =new UserBackingBean();
 		
 		ubb.setName(user.getName());
@@ -121,21 +125,7 @@ public class ModifyUserController {
 		}
 		
 		if (result.hasErrors()) {
-			User user = userManager.getUserById(userName);
-			UserBackingBean ubb =new UserBackingBean();
-			
-			ubb.setName(user.getName());
-			ubb.setUsername(user.getUsername());
-			ubb.setEmail(user.getEmail());
-			List<Role> roleList = new ArrayList<Role>();
-			List<LernaGrantedAuthority> roleLGAList = user.getAuthorities();
-			for(LernaGrantedAuthority l : roleLGAList){
-				roleList.add(roleManager.getRole(l.getAuthority()));
-			}
-			
-			ubb.setRoles(roleList);
 			model.addAttribute("availableRoles", roleManager.getRolesList());
-			model.addAttribute("userBackingBean", ubb);
 			return "auth/user/modifyuser";
 		}
 
