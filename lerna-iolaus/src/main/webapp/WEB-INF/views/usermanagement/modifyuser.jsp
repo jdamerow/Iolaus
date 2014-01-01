@@ -23,7 +23,7 @@
 </div>
 
 
-<form:form name="modifyUserForm" method="POST" modelAttribute="userBackingBean" action="${pageContext.servletContext.contextPath}/auth/user/modifyuser/${username}">
+<form:form name="modifyUserForm" method="POST" modelAttribute="modifyUserBackingBean" action="${pageContext.servletContext.contextPath}/auth/user/modifyuser/${username}">
 
 	<table class="form">
 		<tr>
@@ -34,7 +34,7 @@
 		<tr>
 			<td>Username:</td>
 			<td><form:input type='text' path='username' name ='username' /></td>
-			<td><font color="red"><form:errors path="username" cssClass="errors" /></font></td>
+			<td><font color="red"><form:errors path="username" cssClass="errors" />${errorMsg}</font></td>
 		</tr>
 		<tr>
 			<td>Password:</td>

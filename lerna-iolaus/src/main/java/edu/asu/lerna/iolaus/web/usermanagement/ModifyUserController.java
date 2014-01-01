@@ -29,7 +29,7 @@ import edu.asu.lerna.iolaus.roles.IRoleName;
 import edu.asu.lerna.iolaus.service.IRoleManager;
 import edu.asu.lerna.iolaus.service.IUserManager;
 import edu.asu.lerna.iolaus.service.login.LernaGrantedAuthority;
-import edu.asu.lerna.iolaus.web.usermanagement.backing.UserBackingBean;
+import edu.asu.lerna.iolaus.web.usermanagement.backing.ModifyUserBackingBean;
 
 @Controller
 public class ModifyUserController {
@@ -92,26 +92,27 @@ public class ModifyUserController {
 			model.addAttribute("message","User not found");
 			return "auth/resourcenotfound";
 		}
-		UserBackingBean ubb =new UserBackingBean();
+		ModifyUserBackingBean mubb =new ModifyUserBackingBean();
 		
-		ubb.setName(user.getName());
-		ubb.setUsername(user.getUsername());
-		ubb.setEmail(user.getEmail());
+		mubb.setName(user.getName());
+		mubb.setUsername(user.getUsername());
+		mubb.setEmail(user.getEmail());
 		List<Role> roleList = new ArrayList<Role>();
 		List<LernaGrantedAuthority> roleLGAList = user.getAuthorities();
 		for(LernaGrantedAuthority l : roleLGAList){
 			roleList.add(roleManager.getRole(l.getAuthority()));
 		}
 		
-		ubb.setRoles(roleList);
+		mubb.setRoles(roleList);
 		model.addAttribute("username",userName);
 		model.addAttribute("availableRoles", roleManager.getRolesList());
-		model.addAttribute("userBackingBean", ubb);
+		model.addAttribute("modifyUserBackingBean", mubb);
 		return "auth/user/modifyuser";
 	}
 	
 	@RequestMapping(value = "auth/user/modifyuser/{username}", method = RequestMethod.POST)
-	public String updateUser(@PathVariable("username") String userName,@Valid @ModelAttribute UserBackingBean userForm, BindingResult result, ModelMap model,	Principal principal) {
+	public String updateUser(@PathVariable("username") String userName,@Valid @ModelAttribute ModifyUserBackingBean userForm, BindingResult result, ModelMap model,	Principal principal) {
+		logger.info(" came here ");
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		Collection<? extends GrantedAuthority> authorities = auth.getAuthorities();
 		boolean access = false; 
@@ -128,7 +129,17 @@ public class ModifyUserController {
 			model.addAttribute("availableRoles", roleManager.getRolesList());
 			return "auth/user/modifyuser";
 		}
-
+		if(!userName.equals(userForm.getUsername())){
+			logger.info("User name is :"+ userName);
+			User user = userManager.getUserById(userForm.getUsername());
+			if (!(user == null)){
+				logger.info("User name is null :"+ userName);
+				model.addAttribute("errorMsg", "Username should original or unique one");
+				model.addAttribute("availableRoles", roleManager.getRolesList());
+				return "auth/user/modifyuser";
+			}
+		}
+		
 		
 		
 		User user = userFactory.createUser(userForm.getUsername(), userForm.getName(), userForm.getEmail(), userForm.getPassword(), userForm.getRoles());
