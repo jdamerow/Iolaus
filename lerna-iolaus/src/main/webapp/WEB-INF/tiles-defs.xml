@@ -76,11 +76,16 @@
 	    <put-attribute name="title" value="Lerna - Modify User" />
 		<put-attribute name="content" value="/WEB-INF/views/usermanagement/modifyuser.jsp"/>
 	</definition>
-	
-	<!-- Modify User page -->
+	<!-- No access -->
 	<definition name="auth/noaccess" extends="base.definition">
 	    <put-attribute name="title" value="Lerna - No access error" />
 		<put-attribute name="content" value="/WEB-INF/views/accesserror.jsp"/>
+	</definition>
+	
+	<!-- resource not found -->
+	<definition name="auth/resourcenotfound" extends="base.definition">
+	    <put-attribute name="title" value="Lerna - Resource not found" />
+		<put-attribute name="content" value="/WEB-INF/views/resourcenotfound.jsp"/>
 	</definition>
 </tiles-definitions>
 

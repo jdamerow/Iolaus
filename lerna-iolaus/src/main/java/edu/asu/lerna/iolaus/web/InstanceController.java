@@ -1,6 +1,7 @@
 package edu.asu.lerna.iolaus.web;
 
 import java.security.Principal;
+import java.util.Collection;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -8,6 +9,9 @@ import javax.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -18,6 +22,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import edu.asu.lerna.iolaus.domain.INeo4jInstance;
 import edu.asu.lerna.iolaus.domain.implementation.Neo4jInstance;
+import edu.asu.lerna.iolaus.roles.IRoleName;
 import edu.asu.lerna.iolaus.service.INeo4jInstanceManager;
 
 /**
@@ -38,11 +43,33 @@ public class InstanceController {
 	
 	@RequestMapping(value = "/auth/addInstance", method = RequestMethod.GET)
 	public ModelAndView addInstance() {
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		Collection<? extends GrantedAuthority> authorities = auth.getAuthorities();
+		boolean access = false; 
+		for (GrantedAuthority ga : authorities) {
+			if(ga.getAuthority().equals(IRoleName.ADMIN))
+				access=true;
+		}
+		if(access ==false){
+			logger.info("Access not allowes");
+			return new ModelAndView("auth/noaccess");
+		}
 	      return new ModelAndView("auth/addInstance", "command", new Neo4jInstance());
 	 }
 	  
 	@RequestMapping(value = "/auth/addInstance", method = RequestMethod.POST)
 	public String addInstance(@ModelAttribute("SpringWeb")Neo4jInstance instance, ModelMap model) {
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		Collection<? extends GrantedAuthority> authorities = auth.getAuthorities();
+		boolean access = false; 
+		for (GrantedAuthority ga : authorities) {
+			if(ga.getAuthority().equals(IRoleName.ADMIN))
+				access=true;
+		}
+		if(access ==false){
+			logger.info("Access not allowes");
+			return "auth/noaccess";
+		}
 		String instanceId=instanceManager.addNeo4jInstance(instance);
 		if(instanceId.equals("0")){
 			model.addAttribute("instance", instance);
@@ -70,6 +97,17 @@ public class InstanceController {
 	
 	@RequestMapping(value = "auth/editInstance/{instanceId}", method = RequestMethod.GET)
 	public String editInstance(@PathVariable("instanceId") String instanceId,HttpServletRequest req, ModelMap model,Principal principal){
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		Collection<? extends GrantedAuthority> authorities = auth.getAuthorities();
+		boolean access = false; 
+		for (GrantedAuthority ga : authorities) {
+			if(ga.getAuthority().equals(IRoleName.ADMIN))
+				access=true;
+		}
+		if(access ==false){
+			logger.info("Access not allowes");
+			return "auth/noaccess";
+		}
 		INeo4jInstance instance=instanceManager.getInstance(instanceId);
 		model.addAttribute("instance", instance);
 		return "auth/editInstance";
@@ -77,6 +115,17 @@ public class InstanceController {
 	
 	@RequestMapping(value = "/auth/editInstance/updateInstance", method = RequestMethod.POST)
 	public String updateInstance(@ModelAttribute("SpringWeb")Neo4jInstance instance, ModelMap model) {
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		Collection<? extends GrantedAuthority> authorities = auth.getAuthorities();
+		boolean access = false; 
+		for (GrantedAuthority ga : authorities) {
+			if(ga.getAuthority().equals(IRoleName.ADMIN))
+				access=true;
+		}
+		if(access ==false){
+			logger.info("Access not allowes");
+			return "auth/noaccess";
+		}
 		boolean flag=instanceManager.updateNeo4jInstance(instance);
 		if(!flag){
 			model.addAttribute("instance", instance);
@@ -89,6 +138,17 @@ public class InstanceController {
 	@RequestMapping(value = "auth/deleteInstances", method = RequestMethod.POST)
 	public String deleteUser(HttpServletRequest req, ModelMap model,	Principal principal) {
 
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		Collection<? extends GrantedAuthority> authorities = auth.getAuthorities();
+		boolean access = false; 
+		for (GrantedAuthority ga : authorities) {
+			if(ga.getAuthority().equals(IRoleName.ADMIN))
+				access=true;
+		}
+		if(access ==false){
+			logger.info("Access not allowes");
+			return "auth/noaccess";
+		}
 		String[] idList = req.getParameterValues("selected");
 		try{
 			for(String instanceId : idList){
