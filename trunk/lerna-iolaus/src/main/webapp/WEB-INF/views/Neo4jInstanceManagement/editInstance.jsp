@@ -83,7 +83,10 @@ function validate()
 			</c:choose>		
 	</tr>
 	<tr>	
-			<td class="submit" colspan="2" align="left"><input type="submit" value="Update" /></td>
+			<td  colspan="2" align="left"><input class="submit" type="submit" value="Update" />
+			<input type=button class="cancel"
+					onClick="location.href='${pageContext.servletContext.contextPath}/auth/listInstances'"
+					value='Cancel'/></td>
 	</tr>
 	</table>
 	</div>

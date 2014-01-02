@@ -68,7 +68,7 @@ function validate()
 			<td><textarea class ="description" name="description">${instance.description}</textarea></td>
 	</tr>
 	<tr>		
-			<td><label>Activate Now</label></td>
+			<td><label>Activate Now:</label></td>
 			<c:choose>
 				<c:when test="${instance.active}">
 					<td><input class ="checkbox" type="checkbox" name="active" checked/></td>
@@ -79,7 +79,10 @@ function validate()
 			</c:choose>	
 	</tr>
 	<tr>	
-			<td class="submit" colspan="2" align="left"><input type="submit" value="Add" /></td>
+			<td colspan="2" align="left"><input class="submit" type="submit" value="Add" />
+			<input type=button class="cancel"
+					onClick="location.href='${pageContext.servletContext.contextPath}/auth/listInstances'"
+					value='Cancel'/></td>
 	</tr>
 	</table>
 	</div>
