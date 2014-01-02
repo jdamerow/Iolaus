@@ -16,18 +16,22 @@
 
 	body {
 		min-width: 1200px;
+		min-height:100%;
 	}
 
 	.container {
 		width: 1200px;
 		margin-left: auto;
 		margin-right: auto;
+		min-height:100%;
 	}
 
 	/* Modifiers */
 	
 		.container.small {
 			width: 900px;
+			min-height:100%;
+			height: auto;
 		}
 
 		.container.big {
