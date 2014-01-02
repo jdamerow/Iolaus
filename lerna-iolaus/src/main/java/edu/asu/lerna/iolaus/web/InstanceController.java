@@ -41,22 +41,35 @@ public class InstanceController {
 	@Autowired
 	private INeo4jInstanceManager instanceManager;
 	
+	/**
+	 * This method handles GET request for adding a Neo4j instance.
+	 * @return ModelAndView of Neo4jInstance
+	 */
 	@RequestMapping(value = "/auth/addInstance", method = RequestMethod.GET)
 	public ModelAndView addInstance() {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		Collection<? extends GrantedAuthority> authorities = auth.getAuthorities();
 		boolean access = false; 
 		for (GrantedAuthority ga : authorities) {
-			if(ga.getAuthority().equals(IRoleName.ADMIN))
+			if(ga.getAuthority().equals(IRoleName.ADMIN)) //if user is ADMIN then access=true
 				access=true;
 		}
-		if(access ==false){
+		if(!access){//if no access then display noaccess page otherwise return ModelAndView of Neo4jInstance
 			logger.info("Access not allowes");
 			return new ModelAndView("auth/noaccess");
+		}else{
+			return new ModelAndView("auth/addInstance", "command", new Neo4jInstance());
 		}
-	      return new ModelAndView("auth/addInstance", "command", new Neo4jInstance());
 	 }
 	  
+	/**
+	 * This method handles POST request for adding a Neo4j Instance
+	 * @param instance is object of Neo4jInstance
+	 * @param model is a ModelMap
+	 * @param principal is a object of Principal
+	 * @return "redirect:/auth/listInstances" to tiles.
+	 */
+	
 	@RequestMapping(value = "/auth/addInstance", method = RequestMethod.POST)
 	public String addInstance(@ModelAttribute("SpringWeb")Neo4jInstance instance, ModelMap model,Principal principal) {
 		instance.setUserName(principal.getName());
@@ -64,10 +77,10 @@ public class InstanceController {
 		Collection<? extends GrantedAuthority> authorities = auth.getAuthorities();
 		boolean access = false; 
 		for (GrantedAuthority ga : authorities) {
-			if(ga.getAuthority().equals(IRoleName.ADMIN))
+			if(ga.getAuthority().equals(IRoleName.ADMIN)) //if user is ADMIN then access=true
 				access=true;
 		}
-		if(access ==false){
+		if(!access){
 			logger.info("Access not allowes");
 			return "auth/noaccess";
 		}
