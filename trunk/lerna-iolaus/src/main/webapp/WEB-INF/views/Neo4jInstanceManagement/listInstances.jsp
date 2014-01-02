@@ -9,7 +9,6 @@
 
 <header>
 	<h2 class="dataTableHeading">Instance Management</h2>
-	<h4 class="dataTableByline">Instances you could edit, delete and add.</h4>
 	<br/>
 </header>
 
@@ -127,9 +126,7 @@
 </script>
 
 
-<header>
-	<h3 class="dataTables">List of Instances</h3>
-</header>
+
 
 <div class="container">	
 	<c:if test="${not empty instanceId}">
