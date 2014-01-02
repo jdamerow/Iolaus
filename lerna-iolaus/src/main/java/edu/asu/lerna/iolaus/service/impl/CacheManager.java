@@ -82,7 +82,7 @@ public class CacheManager implements ICacheManager {
 	private void cacheResults(String json, String instance,List<List<Object>> resultSet) throws IOException {
 		try
 		{
-			memcachedClient.set(getKey(json, instance),0,resultSet);
+			memcachedClient.set(getKey(json, instance),86400,resultSet);
 		}
 		catch(Exception e)
 		{
