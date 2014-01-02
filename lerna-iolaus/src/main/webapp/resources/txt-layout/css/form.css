@@ -77,7 +77,7 @@ input:focus, textarea:focus {
 #form table{
 	width:70%;
 	margin-top:50px;
-	margin-left:200px;
+	margin-left:150px;
 	margin-bottom:150px;
 }
 
@@ -85,7 +85,7 @@ input:focus, textarea:focus {
 /* ===========================
    ====== Submit Button ====== 
    =========================== */
- .submit input {
+ .submit {
  
 	background-color: #808080;
 	color: #FFFFFF;
@@ -95,10 +95,22 @@ input:focus, textarea:focus {
 	border-radius: 10px;
 	-moz-border-radius: 10px;
 	-webkit-border-radius: 10px;
-	margin-left:150px;
+	margin-left:80px;
 }
 
- .submituser input {
+.cancel{
+ 
+	background-color: #808080;
+	color: #FFFFFF;
+	width: 130px;
+	height: 30px;
+	weight: bold;
+	border-radius: 10px;
+	-moz-border-radius: 10px;
+	-webkit-border-radius: 10px;
+}
+          
+.submituser input {
 	background-color: #808080;
 	color: #FFFFFF;
 	width: 130px;

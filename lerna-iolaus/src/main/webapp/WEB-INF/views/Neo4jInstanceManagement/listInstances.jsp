@@ -194,8 +194,7 @@
 		</c:when>
 		<c:otherwise>
 			<input type=button class="submit"
-				onClick="location.href='${pageContext.servletContext.contextPath}/auth/addInstance'"
-				value='Add Instance'>
+				onClick="location.href='${pageContext.servletContext.contextPath}/auth/addInstance'" value='Add Instance'>
 			<hr />
 			<br />
 			Empty List
