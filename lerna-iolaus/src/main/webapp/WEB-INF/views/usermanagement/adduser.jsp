@@ -30,12 +30,12 @@
 		</tr>
 		<tr>
 			<td><label>Username:</label></td>
-			<td><form:input type='text' class="text" path='username' name ='username' value='' /></td>
+			<td><form:input type='text' class="text" path='username' name ='someuser' value='' /></td>
 			<td><font color="red"><form:errors path="username" cssClass="errors" /></font></td>
 		</tr>
 		<tr>
 			<td><label>Password:</label></td>
-			<td><form:input type='password' class="text" name='password' path='password' /></td>
+			<td><form:input type='password' class="text" name='somepassword' path='password' /></td>
 			<td><font color="red"><form:errors path="password" cssClass="errors" /></font></td>
 		</tr>
 		<tr>
@@ -51,7 +51,10 @@
 		<tr>
 		<td></td>
 			<td colspan='2' align="left"><input class="submit" name="submit" type="submit"
-				value="Add user" /></td>
+				value="Add user" />
+				<input class="submit" type=button
+					onClick="location.href='${pageContext.servletContext.contextPath}/auth/user/listuser'"
+					value='Cancel'/></td>
 		</tr>
 	</table>
 </div>

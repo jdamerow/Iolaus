@@ -7,7 +7,6 @@
 
 <header>
 	<h2 class="dataTableHeading">User Management</h2>
-	<h4 class="dataTableByline">Users you could edit, delete and add.</h4>
 	<br />
 </header>
 
@@ -129,9 +128,7 @@
 
 <br />
 
-<header>
-	<h3 class="dataTables">List of Users</h3>
-</header>
+
 
 <div class="container">
 	<c:choose>

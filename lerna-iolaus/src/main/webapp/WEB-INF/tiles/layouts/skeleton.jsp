@@ -44,7 +44,7 @@
 		<div class="inner">
 			<header>
 				<h1>
-					<a href="#" id="logo">Lerna</a>
+					<a href="#" id="logo">Iolaus</a>
 				</h1>
 				<span class="byline">Neo4J Management</span>
 			</header>
