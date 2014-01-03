@@ -26,24 +26,26 @@ public class Neo4jInstanceManager implements INeo4jInstanceManager {
 	
 	private static final Logger logger = LoggerFactory
 			.getLogger(Neo4jInstanceManager.class);
+	
 	@Override
 	public String addNeo4jInstance(INeo4jInstance instance) {
 		List<INeo4jInstance> fileList=neo4jRegistry.getfileList();
 		int maxId=0;
 		String port=instance.getPort();
 		String host=instance.getHost();
-		if(port.equals("")||host.equals(""))
+		if(port.equals("")||host.equals(""))//if port and host is null then return "-1"
 			return "-1";
+		//This loop will search for the maximum id in the registry and will set it to the maxId
 		for(INeo4jInstance file:fileList){
-			if(file.getPort().equals(port)&&file.getHost().equalsIgnoreCase(host)){
+			if(file.getPort().equals(port)&&file.getHost().equalsIgnoreCase(host)){//if combination of port and host already exists then return "0"
 				return "0";
 			}
 			
-			if(Integer.parseInt(file.getId())>maxId){
+			if(Integer.parseInt(file.getId())>maxId){ 
 				maxId=Integer.parseInt(file.getId());
 			}
 		}
-		String classPath=Neo4jInstanceManager.class.getProtectionDomain().getCodeSource().getLocation().getPath();
+		String classPath=Neo4jInstanceManager.class.getProtectionDomain().getCodeSource().getLocation().getPath();//gets the class path
 		BufferedWriter bw=null;
 		try{
 			bw=new BufferedWriter(new FileWriter(URLDecoder.decode(classPath.substring(0,classPath.indexOf("classes")),"UTF-8")+"classes/ConfigurationFiles/Neo4jConfiguration"+(maxId+1)+".txt"));
@@ -56,7 +58,7 @@ public class Neo4jInstanceManager implements INeo4jInstanceManager {
 			bw.append("userName:"+instance.getUserName());
 			bw.close();
 			instance.setId(String.valueOf(maxId+1));
-			neo4jRegistry.getfileList().add(instance);
+			neo4jRegistry.getfileList().add(instance);//add new instance to registry.
 		}catch(IOException exception){
 			if(bw==null){
 				logger.info("Error occured while creating the file");
@@ -101,7 +103,7 @@ public class Neo4jInstanceManager implements INeo4jInstanceManager {
 				configFile.setPort(instance.getPort());
 				configFile.setActive(instance.isActive()==true?true:false);
 			}
-			else if(configFile.getPort().equals(port)&&configFile.getHost().equalsIgnoreCase(host)){
+			else if(configFile.getPort().equals(port)&&configFile.getHost().equalsIgnoreCase(host)){//if combination of port and host already exists then return false
 				return false;
 			}
 		}
