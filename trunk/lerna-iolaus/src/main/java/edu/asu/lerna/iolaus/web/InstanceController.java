@@ -41,6 +41,8 @@ public class InstanceController {
 	@Autowired
 	private INeo4jInstanceManager instanceManager;
 	
+	
+	
 	/**
 	 * This method handles GET request for adding a Neo4j instance.
 	 * @return ModelAndView of Neo4jInstance
@@ -62,14 +64,15 @@ public class InstanceController {
 		}
 	 }
 	  
+	
+	
 	/**
 	 * This method handles POST request for adding a Neo4j Instance
 	 * @param instance is object of Neo4jInstance
 	 * @param model is a ModelMap
 	 * @param principal is a object of Principal
-	 * @return "redirect:/auth/listInstances" to tiles.
+	 * @return "redirect:/auth/listInstances" to tiles for creating view
 	 */
-	
 	@RequestMapping(value = "/auth/addInstance", method = RequestMethod.POST)
 	public String addInstance(@ModelAttribute("SpringWeb")Neo4jInstance instance, ModelMap model,Principal principal) {
 		instance.setUserName(principal.getName());
@@ -80,16 +83,16 @@ public class InstanceController {
 			if(ga.getAuthority().equals(IRoleName.ADMIN)) //if user is ADMIN then access=true
 				access=true;
 		}
-		if(!access){
+		if(!access){//if no access then return "auth/noaccess" to tiles
 			logger.info("Access not allowes");
 			return "auth/noaccess";
 		}
 		String instanceId=instanceManager.addNeo4jInstance(instance);
-		if(instanceId.equals("0")){
+		if(instanceId.equals("0")){//if combination of port number and host is not unique in that case instanceId="0"
 			model.addAttribute("instance", instance);
 			return "auth/addInstance";
 		}
-		if(instanceId.equals("-1")){
+		if(instanceId.equals("-1")){//if port number of host is null then instanceId="-1"
 			model.addAttribute("failure",true);
 			return "auth/addInstance";
 		}
@@ -97,30 +100,47 @@ public class InstanceController {
 	    return "redirect:/auth/listInstances";
 	}
 	
+	
+	/**
+	 * This method handles GET request for listing instances
+	 * @param req is HttpServletRequest
+	 * @param model is a ModelMap
+	 * @param principal is object of Principal
+	 * @return auth/listInstances to tiles for creating view.
+	 */
 	@RequestMapping(value = "auth/listInstances", method = RequestMethod.GET)
 	public String listInstances(HttpServletRequest req, ModelMap model, Principal principal){
 		List<INeo4jInstance> instanceList=instanceManager.getAllInstances();
 		model.addAttribute("instanceList", instanceList);
 		String instanceId=req.getParameter("instanceId");
-		if(instanceId!=null){
+		if(instanceId!=null){//instanceId!=null if request is redirected from addInstance
 			INeo4jInstance instance=instanceManager.getInstance(instanceId);
-			if(instance.getId()!=null){
+			if(instance.getId()!=null){//this is true if instanceId does not exists 
 				model.addAttribute("instanceId", instanceId);
 			}
 		}
 		return "auth/listInstances";
 	}
 	
+	
+	/**
+	 * This method handles the GET request for editing instance.
+	 * @param instanceId is a instance id provided by the user.
+	 * @param req is a HttpServletRequest
+	 * @param model is a modelMap
+	 * @param principal is a principal object
+	 * @return the auth/editInstancen string to the tiles for creating the view.
+	 */
 	@RequestMapping(value = "auth/editInstance/{instanceId}", method = RequestMethod.GET)
 	public String editInstance(@PathVariable("instanceId") String instanceId,HttpServletRequest req, ModelMap model,Principal principal){
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		Collection<? extends GrantedAuthority> authorities = auth.getAuthorities();
 		boolean access = false; 
 		for (GrantedAuthority ga : authorities) {
-			if(ga.getAuthority().equals(IRoleName.ADMIN))
+			if(ga.getAuthority().equals(IRoleName.ADMIN))//if user is ADMIN then access=true
 				access=true;
 		}
-		if(access ==false){
+		if(!access){//if no access then return "auth/noaccess" to tiles
 			logger.info("Access not allowes");
 			return "auth/noaccess";
 		}
@@ -129,20 +149,27 @@ public class InstanceController {
 		return "auth/editInstance";
 	}
 	
+	
+	/**
+	 * This method handles the POST request for updating the instance.
+	 * @param instance is Neo4jInstance object having values entered by user.
+	 * @param model is a ModelMap
+	 * @return the redirect:/auth/listInstances string to tiles for creating view. 
+	 */
 	@RequestMapping(value = "/auth/editInstance/updateInstance", method = RequestMethod.POST)
 	public String updateInstance(@ModelAttribute("SpringWeb")Neo4jInstance instance, ModelMap model) {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		Collection<? extends GrantedAuthority> authorities = auth.getAuthorities();
 		boolean access = false; 
-		for (GrantedAuthority ga : authorities) {
-			if(ga.getAuthority().equals(IRoleName.ADMIN))
+		for (GrantedAuthority ga : authorities) { 
+			if(ga.getAuthority().equals(IRoleName.ADMIN)) //if user is ADMIN then access=true
 				access=true;
 		}
-		if(access ==false){
+		if(!access){//if no access then return "auth/noaccess" to tiles
 			logger.info("Access not allowes");
 			return "auth/noaccess";
 		}
-		boolean flag=instanceManager.updateNeo4jInstance(instance);
+		boolean flag=instanceManager.updateNeo4jInstance(instance);//flag=true if combination of port number and host is already in use.
 		if(!flag){
 			model.addAttribute("instance", instance);
 			model.addAttribute("flag", true);
@@ -151,17 +178,26 @@ public class InstanceController {
 	    return "redirect:/auth/listInstances";
 	}
 	
+	
+	
+	/**
+	 * This method handles post request for deleting a Neo4j instance
+	 * @param req is a HttpServletRequest
+	 * @param model is a ModelMap
+	 * @param principal is a Principal Object
+	 * @return the redirect:/auth/listInstances string to the tile for creating view
+	 */
 	@RequestMapping(value = "auth/deleteInstances", method = RequestMethod.POST)
-	public String deleteUser(HttpServletRequest req, ModelMap model,	Principal principal) {
+	public String deleteInstance(HttpServletRequest req, ModelMap model,	Principal principal) {
 
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		Collection<? extends GrantedAuthority> authorities = auth.getAuthorities();
 		boolean access = false; 
 		for (GrantedAuthority ga : authorities) {
-			if(ga.getAuthority().equals(IRoleName.ADMIN))
+			if(ga.getAuthority().equals(IRoleName.ADMIN)) //if user is ADMIN then access=true
 				access=true;
 		}
-		if(access ==false){
+		if(!access){//if no access then return "auth/noaccess" to tiles
 			logger.info("Access not allowes");
 			return "auth/noaccess";
 		}
