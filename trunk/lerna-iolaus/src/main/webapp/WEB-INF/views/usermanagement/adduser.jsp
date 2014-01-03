@@ -19,7 +19,7 @@
 
 <link rel="stylesheet" href="${pageContext.servletContext.contextPath}/resources/txt-layout/css/form.css" />
 
-<form:form name="addUserForm" class="form" method="POST" modelAttribute="userBackingBean" action="${pageContext.servletContext.contextPath}/auth/user/adduser">
+<form:form name="addUserForm" autocomplete="off" class="form" method="POST" modelAttribute="userBackingBean" action="${pageContext.servletContext.contextPath}/auth/user/adduser">
 <div id="form">
 	<table>
 		<tr> <td colspan="3" align="left"><h1>Add a User</h1></td></tr>
