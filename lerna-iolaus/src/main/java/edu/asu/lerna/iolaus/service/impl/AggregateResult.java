@@ -59,14 +59,12 @@ public class AggregateResult implements IAggregateResult {
 			}
 			outerForCounter++;
 		}
-		logger.info("Size="+processedResults.get("source").size());
 		if(resultsOfTargets.size()==0){//if 0 rows are returned
 			aggregatedResults.put(sourceLabel, processedResults);
 		}else{
 			//This will take intersection of results of inner queries with the results of outer query  
 			Map<String, List<Object>> sourceLabelResults=intersectionOfResultsWithSourceQuery(processedResults,resultsOfTargets,oldLabelToNewLabelMap,sourceToTargetLabelMap,sourceLabel);	
 			
-			logger.info("Size="+sourceLabelResults.get("source").size());
 			aggregatedResults.put(sourceLabel, sourceLabelResults);
 		}
 

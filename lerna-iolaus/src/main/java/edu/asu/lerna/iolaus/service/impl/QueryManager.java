@@ -10,7 +10,9 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Properties;
 
+import javax.annotation.Resource;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
@@ -18,7 +20,6 @@ import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 import javax.xml.transform.stream.StreamSource;
 
-import org.apache.lucene.analysis.CharArrayMap.EntrySet;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,8 +33,8 @@ import edu.asu.lerna.iolaus.domain.misc.ResultSet;
 import edu.asu.lerna.iolaus.domain.queryobject.IQuery;
 import edu.asu.lerna.iolaus.domain.queryobject.impl.Query;
 import edu.asu.lerna.iolaus.service.IObjecttoXMLConverter;
-import edu.asu.lerna.iolaus.service.IQueryManager;
 import edu.asu.lerna.iolaus.service.IQueryHandler;
+import edu.asu.lerna.iolaus.service.IQueryManager;
 import edu.asu.lerna.iolaus.service.IXMLtoCypherConverter;
 
 @Service
@@ -41,17 +42,20 @@ public class QueryManager implements IQueryManager {
 
 	@Autowired
 	private IXMLtoCypherConverter xmlToCypherConverter;
-	
+
 	@Autowired
 	private IObjecttoXMLConverter objectToXMLConverter;
-	
+
 	@Autowired
 	private IQueryHandler queryHandler;
 	
+	@Resource(name = "xmlStrings")
+	private Properties xmlProperties;
+
 	private static final Logger logger = LoggerFactory
 			.getLogger(QueryManager.class);
-	
-	
+
+
 	@Override
 	public String executeQuery(String inputXML) throws JAXBException
 	{
@@ -60,35 +64,19 @@ public class QueryManager implements IQueryManager {
 		if(q == null){
 			return "failure";
 		}
-		
+
 		//Parse the query generated from the xml and get node, relation objects
 		//xmlToCypherConverter.parseQuery(q);	
-		
+
 		//This stage should return the nodes and relations
 		ResultSet rset=queryHandler.executeQuery(q);
 		Map<String,List<Object>> resultSet=filterResults(rset.getResultSet(),rset.getLabelToIsReturnTrueMap());
 		Map<String,List<Object>> finalResultSet=deleteDuplicateRows(resultSet);
-		
-		getRESTOutput(finalResultSet, inputXML);
-		
-		return "<?xml version=\"1.0\" encoding=\"ISO-8859-1\" ?>\n<resultset>\n	<nodes>\n		<node id=\"http://www.diging.asu.edu/lerna/mblcourses/nodes/13123\">\n			<property name=\"type\" value=\"Person\" />\n			<property name=\"firstName\" value=\"Jennie C. R.\" />\n			<property name=\"lastName\" value=\"Smith\" />\n		</node>\n		<node id=\"http://www.diging.asu.edu/lerna/mblcourses/nodes/13124\">\n			<property name=\"type\" value=\"Person\" />\n			<property name=\"firstName\" value=\"John H.\" />\n			<property name=\"lastName\" value=\"Northrup\" />\n		</node>\n		<node id=\"http://www.diging.asu.edu/lerna/mblcourses/nodes/13125\">\n			<property name=\"type\" value=\"Person\" />\n			<property name=\"firstName\" value=\"Joseph C.\" />\n			<property name=\"lastName\" value=\"Herrick\" />\n		</node>\n	</nodes>\n	<relations>\n		<relation id=\"http://www.diging.asu.edu/lerna/mblcourses/relations/9120\">\n			<property name=\"sourceType\" value=\"Person\" />\n			<property name=\"targetType\" value=\"Location\" />\n			<property name=\"sourceId\"				value=\"http://www.diging.asu.edu/lerna/mblcourses/nodes/13123\" />\n			<property name=\"targetId\"				value=\"http://www.diging.asu.edu/lerna/mblcourses/nodes/234\" />\n			<property name=\"year\" value=\"1902\" />\n		</relation>\n		<relation id=\"http://www.diging.asu.edu/lerna/mblcourses/relations/9121\">\n			<property name=\"sourceType\" value=\"Person\" />\n			<property name=\"targetType\" value=\"Location\" />\n			<property name=\"sourceId\"				value=\"http://www.diging.asu.edu/lerna/mblcourses/nodes/13124\" />\n			<property name=\"targetId\"				value=\"http://www.diging.asu.edu/lerna/mblcourses/nodes/234\" />\n			<property name=\"year\" value=\"1911\" />\n		</relation>\n		<relation id=\"http://www.diging.asu.edu/lerna/mblcourses/relations/9122\">\n			<property name=\"sourceType\" value=\"Person\" />\n			<property name=\"targetType\" value=\"Location\" />\n			<property name=\"sourceId\"				value=\"http://www.diging.asu.edu/lerna/mblcourses/nodes/13125\" />\n			<property name=\"targetId\"				value=\"http://www.diging.asu.edu/lerna/mblcourses/nodes/234\" />\n			<property name=\"year\" value=\"1914\" />\n		</relation>\n		<relation id=\"http://www.diging.asu.edu/lerna/mblcourses/relations/9123\">\n			<property name=\"sourceType\" value=\"Person\" />\n			<property name=\"targetType\" value=\"Location\" />\n			<property name=\"sourceId\"				value=\"http://www.diging.asu.edu/lerna/mblcourses/nodes/13125\" />\n			<property name=\"targetId\"				value=\"http://www.diging.asu.edu/lerna/mblcourses/nodes/234\" />\n			<property name=\"year\" value=\"1915\" />\n		</relation>\n	</relations>\n</resultset>\n";
-//		
-//		if(inputXML.contains("<node return=\"true\">") && inputXML.contains("<relationship return=\"true\">"))
-//		{
-//			return getRESTOutput(finalResultSet, true, true);
-//		}
-//		else if(inputXML.contains("<node return=\"true\">"))
-//		{
-//			return getRESTOutput(finalResultSet, true, false);
-//		}
-//		else if(inputXML.contains("<relationship return=\"true\">"))
-//		{
-//			return getRESTOutput(finalResultSet, false, true);
-//		}
-//			
-//		return getRESTOutput(null, false, false);
+
+		//Marshall to xml
+		return getRESTOutput(finalResultSet, inputXML);
 	}
-	
+
 	/**
 	 * This method filters the columns of the results based on whether labels are to be displayed to user or not
 	 * @param resultSet is a results having number of columns=number of labels used in the cypher query
@@ -97,7 +85,7 @@ public class QueryManager implements IQueryManager {
 	 */
 	@Override
 	public Map<String, List<Object>> filterResults(Map<String, List<Object>> resultSet, Map<String, Boolean> isReturnTrueMap) {
-		
+
 		Map<String,List<Object>> filteredResults=new LinkedHashMap<String, List<Object>>();
 		//This loop will add only columns(labels) for which return="true"
 		for(Entry<String,List<Object>> entry:resultSet.entrySet()){
@@ -108,7 +96,7 @@ public class QueryManager implements IQueryManager {
 		}
 		return filteredResults;
 	}
-	
+
 	/**
 	 * This method deletes the duplicate rows based on the number of labels for which return="true"
 	 * @param resultSet is a map with key=label and value=List of IJsonNode or IJsomRelation 
@@ -116,7 +104,7 @@ public class QueryManager implements IQueryManager {
 	 */
 	@Override
 	public Map<String, List<Object>> deleteDuplicateRows(Map<String, List<Object>> resultSet) {
-		
+
 		Map<Integer,Iterator<Object>> iteratorMap=new HashMap<Integer, Iterator<Object>>();
 		int i=0;//Count of labels for which return="true"
 		for(Entry<String,List<Object>> entry:resultSet.entrySet()){
@@ -145,7 +133,7 @@ public class QueryManager implements IQueryManager {
 		}
 		return finalResultSet;
 	}
-	
+
 	/**
 	 * Use Unmarshaller to unmarshal the XMl into Query object
 	 * @param res
@@ -161,72 +149,79 @@ public class QueryManager implements IQueryManager {
 		IQuery q = response1.getValue();
 		return q;
 	}
-	
-	
-	
+
+
+
 	@Override
 	public String getRESTOutput(Map<String,List<Object>> resultSet, String inputXML)
 	{
-		//TODO: Remove sysouts
-		//TODO: Externalize strings
 		JAXBContext jaxbContextNode = null;
 		Marshaller jaxbMarshallerNode = null;
 		JAXBContext jaxbContextRelation = null;
 		Marshaller jaxbMarshallerRelation = null;
-		
+
 		StringWriter outputWriter = new StringWriter();
-		outputWriter.write("<?xml version=\"1.0\" encoding=\"ISO-8859-1\" ?>\n");
-		outputWriter.write("<resultSet>\n");		
+		outputWriter.write(xmlProperties.getProperty("xml.header"));
+		outputWriter.write(System.lineSeparator());
+		outputWriter.write(xmlProperties.getProperty("xml.resultset.start"));		
+		outputWriter.write(System.lineSeparator());
 		try {
+			//Set up the jaxb writers for node and relation
 			jaxbContextNode = JAXBContext.newInstance(JsonNode.class);
 			jaxbMarshallerNode = jaxbContextNode.createMarshaller();
 			jaxbMarshallerNode.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
 			jaxbMarshallerNode.setProperty(Marshaller.JAXB_FRAGMENT, true);
-			
+
 			jaxbContextRelation = JAXBContext.newInstance(JsonRelation.class);
 			jaxbMarshallerRelation = jaxbContextRelation.createMarshaller();
 			jaxbMarshallerRelation.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
 			jaxbMarshallerRelation.setProperty(Marshaller.JAXB_FRAGMENT, true);
-		} catch (JAXBException e) {
-			e.printStackTrace();
-			//TODO: Set proper return message
-			return null;
-		}
-		
-		
-		for(Entry<String, List<Object>> entry: resultSet.entrySet())
-		{
-			outputWriter.write("<record>\n");
-			System.out.println("-------------------------------------------------------------\nKey: "+entry.getKey());
-			for(Object listobject : entry.getValue())
-			{
-				if(listobject instanceof IJsonNode)
-				{
-					try {
-						jaxbMarshallerNode.marshal(listobject, outputWriter);						
-					} catch (JAXBException e) {
-						e.printStackTrace();
-					}
-				}
-				else if(listobject instanceof IJsonRelation)
-				{
-					try {
-						jaxbMarshallerRelation.marshal(listobject, outputWriter);						
-					} catch (JAXBException e) {
-						e.printStackTrace();
-					}
-				}
-			}
 			
-			//TODO: Remove this after testing
-			outputWriter.write("</record>\n");
-			System.out.println(outputWriter);
-			break;
+			//Create the xml elements from the class
+			if(resultSet !=null)
+				for(Entry<String, List<Object>> entry: resultSet.entrySet())
+				{
+					outputWriter.write(xmlProperties.getProperty("xml.record.start"));
+					outputWriter.write(System.lineSeparator());
+					for(Object listobject : entry.getValue())
+					{
+						if(listobject instanceof IJsonNode)
+						{
+							try {
+								jaxbMarshallerNode.marshal(listobject, outputWriter);		
+								outputWriter.write(System.lineSeparator());
+							} catch (JAXBException e) {
+								e.printStackTrace();
+							}
+						}
+						else if(listobject instanceof IJsonRelation)
+						{
+							try {
+								jaxbMarshallerRelation.marshal(listobject, outputWriter);
+								outputWriter.write(System.lineSeparator());
+							} catch (JAXBException e) {
+								e.printStackTrace();
+							}
+						}
+					}
+
+					outputWriter.write(xmlProperties.getProperty("xml.record.end"));
+					outputWriter.write(System.lineSeparator());
+				}
+		} catch (JAXBException e) {
+			logger.debug("Exception in marshalling ",e);
+			//Reset the writer
+			outputWriter = new StringWriter();
+			outputWriter.write(xmlProperties.getProperty("xml.header"));
+			outputWriter.write(System.lineSeparator());
+			outputWriter.write(xmlProperties.getProperty("xml.resultset.start"));
+			outputWriter.write(System.lineSeparator());
 		}
+
+
+		outputWriter.write(xmlProperties.getProperty("xml.resultset.end"));
+		outputWriter.write(System.lineSeparator());
 		
-		
-		outputWriter.write("</resultSet>\n");
 		return outputWriter.toString();
-//		return "You did not request for any node or relationship! After all this work, you did not want to see the output...";
 	}
 }
