@@ -18,9 +18,9 @@ public class ModifyUserBackingBean {
 	@NotEmpty(message = "Please provide name of user.")
 	private String name;
 	
-	@NotEmpty(message = "Please enter a password.")
-	private String password;
-	
+//	@NotEmpty(message = "Please enter a password.")
+//	private String password;
+//	
 	@NotEmpty(message = "Please provide an email address.")
 	private String email;
 	
@@ -42,12 +42,12 @@ public class ModifyUserBackingBean {
 	public void setName(String name) {
 		this.name = name;
 	}
-	public String getPassword() {
-		return password;
-	}
-	public void setPassword(String password) {
-		this.password = password;
-	}
+//	public String getPassword() {
+//		return password;
+//	}
+//	public void setPassword(String password) {
+//		this.password = password;
+//	}
 	public List<Role> getRoles() {
 		return roles;
 	}

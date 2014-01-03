@@ -87,6 +87,14 @@
 	    <put-attribute name="title" value="Iolaus - Resource not found" />
 		<put-attribute name="content" value="/WEB-INF/views/resourcenotfound.jsp"/>
 	</definition>
+	
+	<!-- Change password -->
+	<definition name="auth/user/changepasswd" extends="base.definition">
+	    <put-attribute name="title" value="Iolaus - user password change" />
+		<put-attribute name="content" value="/WEB-INF/views/usermanagement/changepasswd.jsp"/>
+	</definition>
+	
+	
 </tiles-definitions>
 
 	

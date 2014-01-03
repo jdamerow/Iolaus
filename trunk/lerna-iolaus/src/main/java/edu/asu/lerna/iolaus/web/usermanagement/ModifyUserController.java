@@ -26,6 +26,7 @@ import edu.asu.lerna.iolaus.factory.IUserFactory;
 import edu.asu.lerna.iolaus.roles.IRoleName;
 import edu.asu.lerna.iolaus.service.IRoleManager;
 import edu.asu.lerna.iolaus.service.IUserManager;
+import edu.asu.lerna.iolaus.web.usermanagement.backing.ChangePasswdBackingBean;
 import edu.asu.lerna.iolaus.web.usermanagement.backing.ModifyUserBackingBean;
 /**
  * This controller class would help in delete and edit user details
@@ -170,11 +171,41 @@ public class ModifyUserController {
 		
 		
 		// Create user details for modification in the db
-		User user = userFactory.createUser(userForm.getUsername(), userForm.getName(), userForm.getEmail(), userForm.getPassword(), userForm.getRoles());
+		User user = userFactory.createUser(userForm.getUsername(), userForm.getName(), userForm.getEmail(), "", userForm.getRoles());
 		userManager.modifyUser(user, userName);
 		
 		return "redirect:/auth/user/listuser";
 	}
 
+	
+	@RequestMapping(value = "auth/user/changepasswd/{username}", method = RequestMethod.GET)
+	public String changePasswdGet(@PathVariable("username") String userName, ModelMap model,Principal principal) {
+		// Checking authentication issues based on role
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		Collection<? extends GrantedAuthority> authorities = auth.getAuthorities();
+		boolean access = false; 
+		for (GrantedAuthority ga : authorities) {
+			if(ga.getAuthority().equals(IRoleName.ADMIN))
+				access=true;
+		}
+		// If user is not authorized
+		if(access ==false){
+			logger.info("Access not allowes");
+			return "auth/noaccess";
+		}
+		// If user is authorized
+		// get User object using username
+		User user = userManager.getUserById(userName);
+		// If user not found
+		if(user == null){
+			model.addAttribute("message","User not found");
+			return "auth/resourcenotfound";
+		}
+		
+		// Send data to jsp
+		model.addAttribute("username",userName);
+		model.addAttribute("changePasswdBackingBean", new ChangePasswdBackingBean());
+		return "auth/user/changepasswd";
+	}
 }
 
