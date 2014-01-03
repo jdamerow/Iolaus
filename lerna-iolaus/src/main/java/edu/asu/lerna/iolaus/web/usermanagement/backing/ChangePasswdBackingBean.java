@@ -9,12 +9,12 @@ import edu.asu.lerna.iolaus.annotation.NotEmpty;
  */
 public class ChangePasswdBackingBean {
 
-	
-	
+
+
 	@NotEmpty(message = "Please provide the password.")
 	private String newpassword;
-	
-	@NotEmpty(message = "Please type the password again.")
+
+	@NotEmpty(message = "Repeat password doesn't match with the above")
 	private String repeatpassword;
 
 	public String getNewpassword() {
@@ -30,7 +30,11 @@ public class ChangePasswdBackingBean {
 	}
 
 	public void setRepeatpassword(String repeatpassword) {
-		this.repeatpassword = repeatpassword;
+		if(!repeatpassword.equals(this.newpassword)){
+			this.repeatpassword = null;
+		}else{
+			this.repeatpassword = repeatpassword;
+		}
 	}
 
 

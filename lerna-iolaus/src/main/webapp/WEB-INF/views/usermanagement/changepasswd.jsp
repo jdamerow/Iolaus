@@ -45,13 +45,13 @@
 				<td><label>Repeat password:</label></td>
 				<td><form:input type='password' class="text"
 						name='somepassword' path='repeatpassword' /></td>
-				<td><font color="red"><form:errors path="repeatpassword"
+				<td><font color="red">${errorMsg}<form:errors path="repeatpassword"
 							cssClass="errors" /></font></td>
 			</tr>
 			<tr>
 				<td colspan='2' align="left"><input class="submit"
 					name="submit" type="submit" value="Change passwd user" /><input class="submit" type=button
-					onClick="location.href='${pageContext.servletContext.contextPath}/auth/editInstance/${instance.id}'"
+					onClick="location.href='${pageContext.servletContext.contextPath}/auth/user/modifyuser/${username}'"
 					value='Cancel'/></td>
 			</tr>
 		</table>

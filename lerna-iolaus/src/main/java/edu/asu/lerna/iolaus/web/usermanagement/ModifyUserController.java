@@ -41,13 +41,13 @@ public class ModifyUserController {
 
 	@Autowired
 	private IUserManager userManager; 
-	
+
 	@Autowired
 	private IUserFactory userFactory; 
-	
+
 	@Autowired
 	private IRoleManager roleManager;
-	
+
 	@Autowired
 	private UserTranslator userTranslator;
 
@@ -88,7 +88,7 @@ public class ModifyUserController {
 
 		return "redirect:/auth/user/listuser";
 	}
-	
+
 	/**
 	 * Sets up modify user form for UI
 	 * @param userName
@@ -122,14 +122,14 @@ public class ModifyUserController {
 		}
 		// Prepare user backing bean
 		ModifyUserBackingBean mubb = userTranslator.translateModifyUser(user);
-		
+
 		// Send data to jsp
 		model.addAttribute("username",userName);
 		model.addAttribute("availableRoles", roleManager.getRolesList());
 		model.addAttribute("modifyUserBackingBean", mubb);
 		return "auth/user/modifyuser";
 	}
-	
+
 	/**
 	 * Modify user details based on form data 
 	 * @param userName
@@ -168,16 +168,16 @@ public class ModifyUserController {
 				return "auth/user/modifyuser";
 			}
 		}
-		
-		
+
+
 		// Create user details for modification in the db
 		User user = userFactory.createUser(userForm.getUsername(), userForm.getName(), userForm.getEmail(), "", userForm.getRoles());
 		userManager.modifyUser(user, userName);
-		
+
 		return "redirect:/auth/user/listuser";
 	}
 
-	
+
 	@RequestMapping(value = "auth/user/changepasswd/{username}", method = RequestMethod.GET)
 	public String changePasswdGet(@PathVariable("username") String userName, ModelMap model,Principal principal) {
 		// Checking authentication issues based on role
@@ -201,11 +201,58 @@ public class ModifyUserController {
 			model.addAttribute("message","User not found");
 			return "auth/resourcenotfound";
 		}
-		
+
 		// Send data to jsp
 		model.addAttribute("username",userName);
 		model.addAttribute("changePasswdBackingBean", new ChangePasswdBackingBean());
 		return "auth/user/changepasswd";
 	}
+
+
+	@RequestMapping(value = "auth/user/changepasswd/{username}", method = RequestMethod.POST)
+	public String updateUser(@PathVariable("username") String userName,@Valid @ModelAttribute ChangePasswdBackingBean passForm, BindingResult result, ModelMap model,	Principal principal) {
+		// Checking authentication issues based on role
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		Collection<? extends GrantedAuthority> authorities = auth.getAuthorities();
+		boolean access = false; 
+		for (GrantedAuthority ga : authorities) {
+			if(ga.getAuthority().equals(IRoleName.ADMIN))
+				access=true;
+		}
+		// If user is not authorized
+		if(access ==false){
+			logger.info("Access not allowes");
+			return "auth/noaccess";
+		}
+		// Validate user entry
+		if (result.hasErrors()) {
+			return "auth/user/changepasswd";
+		}
+		// Validate the user name modification for uniqueness or orginial name
+		if(!passForm.getNewpassword().equals(passForm.getRepeatpassword())){
+			model.addAttribute("errorMsg", "Repeat password are not similar");
+			return "auth/user/changepasswd";
+		}
+
+
+		// get User object using username
+		User user = userManager.getUserById(userName);
+		// If user not found
+		if(user == null){
+			model.addAttribute("message","User not found");
+			return "auth/resourcenotfound";
+		}
+
+		
+		// Prepare user backing bean
+		ModifyUserBackingBean mubb = userTranslator.translateModifyUser(user);
+
+		// Send data to jsp
+		model.addAttribute("username",userName);
+		model.addAttribute("availableRoles", roleManager.getRolesList());
+		model.addAttribute("modifyUserBackingBean", mubb);
+		return "auth/user/modifyuser";
+	}
+
 }
 
