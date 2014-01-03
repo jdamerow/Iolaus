@@ -19,7 +19,7 @@
 
 <link rel="stylesheet"
 	href="${pageContext.servletContext.contextPath}/resources/txt-layout/css/form.css" />
-<form:form name="modifyUserForm" class="form" method="POST"
+<form:form name="modifyUserForm"  autocomplete="off" class="form" method="POST"
 	modelAttribute="modifyUserBackingBean"
 	action="${pageContext.servletContext.contextPath}/auth/user/modifyuser/${username}">
 	<div id="form">
