@@ -51,10 +51,7 @@ public class AddNodesRestController {
 	private INodeManager nodeManager;
 	
 	
-	
-	
-	
-	
+
 	/**
 	 * @author Lohith Dwaraka
 	 * Initializing the hash Maps
@@ -72,10 +69,7 @@ public class AddNodesRestController {
 			logger.error("IO Error, File not uploaded",e);
 		}
         
-        
-        nodeManager.initializeNodeTypeMap(typesOfObjects);
-        
-        
+        nodeManager.initializeNodeTypeMap(typesOfObjects);        
         String line;
         try {
 			while((line=b.readLine())!=null){
@@ -87,8 +81,6 @@ public class AddNodesRestController {
 		
 		return "home";
 	}
-	
-	
 	
 	/**
 	 * @author Lohith Dwaraka
@@ -112,9 +104,7 @@ public class AddNodesRestController {
 		String locationCountry=data[11];
 		
 		String dataset="mblcourses";
-		
-		
-		
+				
 		PersonNode person = nodeManager.checkGetPerson(firstName,lastName);
 		if(person ==null){
 			person = new PersonNode();

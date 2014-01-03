@@ -7,6 +7,11 @@ import edu.asu.lerna.iolaus.annotation.NotEmptyList;
 import edu.asu.lerna.iolaus.annotation.UniqueUsername;
 import edu.asu.lerna.iolaus.domain.implementation.Role;
 
+/**
+ * Backing bean for user addition to db
+ * @author Lohith Dwaraka 
+ *
+ */
 public class UserBackingBean {
 
 	@NotEmpty(message = "Please provide a username.")
@@ -25,7 +30,9 @@ public class UserBackingBean {
 	@NotEmptyList(message = "At least one role needs to be selected.")
 	private List<Role> roles;
 	
-	
+	/*
+	 * Getters and setters
+	 */
 	public String getUsername() {
 		return username;
 	}

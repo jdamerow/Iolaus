@@ -1,9 +1,7 @@
 package edu.asu.lerna.iolaus.web.usermanagement;
 
 import java.security.Principal;
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
@@ -22,15 +20,18 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import edu.asu.lerna.iolaus.domain.implementation.Role;
+import edu.asu.lerna.iolaus.converters.UserTranslator;
 import edu.asu.lerna.iolaus.domain.implementation.User;
 import edu.asu.lerna.iolaus.factory.IUserFactory;
 import edu.asu.lerna.iolaus.roles.IRoleName;
 import edu.asu.lerna.iolaus.service.IRoleManager;
 import edu.asu.lerna.iolaus.service.IUserManager;
-import edu.asu.lerna.iolaus.service.login.LernaGrantedAuthority;
 import edu.asu.lerna.iolaus.web.usermanagement.backing.ModifyUserBackingBean;
-
+/**
+ * This controller class would help in delete and edit user details
+ * @author Lohith Dwaraka 
+ *
+ */
 @Controller
 public class ModifyUserController {
 
@@ -44,11 +45,21 @@ public class ModifyUserController {
 	private IUserFactory userFactory; 
 	
 	@Autowired
-	IRoleManager roleManager;
+	private IRoleManager roleManager;
+	
+	@Autowired
+	private UserTranslator userTranslator;
 
+	/**
+	 * Delete user from db
+	 * @param req
+	 * @param model
+	 * @param principal
+	 * @return
+	 */
 	@RequestMapping(value = "auth/user/deleteUser", method = RequestMethod.POST)
 	public String deleteUser(HttpServletRequest req, ModelMap model,	Principal principal) {
-
+		// Checking authentication issues based on role
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		Collection<? extends GrantedAuthority> authorities = auth.getAuthorities();
 		boolean access = false; 
@@ -56,14 +67,17 @@ public class ModifyUserController {
 			if(ga.getAuthority().equals(IRoleName.ADMIN))
 				access=true;
 		}
+		// If user is not authorized
 		if(access ==false){
 			logger.info("Access not allowes");
 			return "auth/noaccess";
 		}
+		// gets all the User id to be deleted 
 		String[] values = req.getParameterValues("selected");
 		try{
+			// deletes the user one by one
 			for(String v : values){
-				logger.info(" selected : "+ v);
+				logger.info(" selected user to be delete : "+ v);
 				userManager.deleteUser(v);
 			}
 		}catch(Exception e){
@@ -74,8 +88,17 @@ public class ModifyUserController {
 		return "redirect:/auth/user/listuser";
 	}
 	
+	/**
+	 * Sets up modify user form for UI
+	 * @param userName
+	 * @param req
+	 * @param model
+	 * @param principal
+	 * @return
+	 */
 	@RequestMapping(value = "auth/user/modifyuser/{username}", method = RequestMethod.GET)
 	public String modifyUser(@PathVariable("username") String userName,HttpServletRequest req, ModelMap model,Principal principal) {
+		// Checking authentication issues based on role
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		Collection<? extends GrantedAuthority> authorities = auth.getAuthorities();
 		boolean access = false; 
@@ -83,35 +106,41 @@ public class ModifyUserController {
 			if(ga.getAuthority().equals(IRoleName.ADMIN))
 				access=true;
 		}
+		// If user is not authorized
 		if(access ==false){
 			logger.info("Access not allowes");
 			return "auth/noaccess";
 		}
+		// If user is authorized
+		// get User object using username
 		User user = userManager.getUserById(userName);
+		// If user not found
 		if(user == null){
 			model.addAttribute("message","User not found");
 			return "auth/resourcenotfound";
 		}
-		ModifyUserBackingBean mubb =new ModifyUserBackingBean();
+		// Prepare user backing bean
+		ModifyUserBackingBean mubb = userTranslator.translateModifyUser(user);
 		
-		mubb.setName(user.getName());
-		mubb.setUsername(user.getUsername());
-		mubb.setEmail(user.getEmail());
-		List<Role> roleList = new ArrayList<Role>();
-		List<LernaGrantedAuthority> roleLGAList = user.getAuthorities();
-		for(LernaGrantedAuthority l : roleLGAList){
-			roleList.add(roleManager.getRole(l.getAuthority()));
-		}
-		
-		mubb.setRoles(roleList);
+		// Send data to jsp
 		model.addAttribute("username",userName);
 		model.addAttribute("availableRoles", roleManager.getRolesList());
 		model.addAttribute("modifyUserBackingBean", mubb);
 		return "auth/user/modifyuser";
 	}
 	
+	/**
+	 * Modify user details based on form data 
+	 * @param userName
+	 * @param userForm
+	 * @param result
+	 * @param model
+	 * @param principal
+	 * @return
+	 */
 	@RequestMapping(value = "auth/user/modifyuser/{username}", method = RequestMethod.POST)
 	public String updateUser(@PathVariable("username") String userName,@Valid @ModelAttribute ModifyUserBackingBean userForm, BindingResult result, ModelMap model,	Principal principal) {
+		// Checking authentication issues based on role
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		Collection<? extends GrantedAuthority> authorities = auth.getAuthorities();
 		boolean access = false; 
@@ -119,15 +148,17 @@ public class ModifyUserController {
 			if(ga.getAuthority().equals(IRoleName.ADMIN))
 				access=true;
 		}
+		// If user is not authorized
 		if(access ==false){
 			logger.info("Access not allowes");
 			return "auth/noaccess";
 		}
-		
+		// Validate user entry
 		if (result.hasErrors()) {
 			model.addAttribute("availableRoles", roleManager.getRolesList());
 			return "auth/user/modifyuser";
 		}
+		// Validate the user name modification for uniqueness or orginial name
 		if(!userName.equals(userForm.getUsername())){
 			User user = userManager.getUserById(userForm.getUsername());
 			if (!(user == null)){
@@ -138,7 +169,7 @@ public class ModifyUserController {
 		}
 		
 		
-		
+		// Create user details for modification in the db
 		User user = userFactory.createUser(userForm.getUsername(), userForm.getName(), userForm.getEmail(), userForm.getPassword(), userForm.getRoles());
 		userManager.modifyUser(user, userName);
 		

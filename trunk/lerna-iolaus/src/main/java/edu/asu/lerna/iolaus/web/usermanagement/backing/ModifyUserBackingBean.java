@@ -5,7 +5,11 @@ import java.util.List;
 import edu.asu.lerna.iolaus.annotation.NotEmpty;
 import edu.asu.lerna.iolaus.annotation.NotEmptyList;
 import edu.asu.lerna.iolaus.domain.implementation.Role;
-
+/**
+ * Modify user backing bean 
+ * @author Lohith Dwaraka 
+ *
+ */
 public class ModifyUserBackingBean {
 
 	@NotEmpty(message = "Please provide a username.")
@@ -22,9 +26,10 @@ public class ModifyUserBackingBean {
 	
 	@NotEmptyList(message = "At least one role needs to be selected.")
 	private List<Role> roles;
-//	private Role[] roles;
 	
-	
+	/*
+	 * Getters and setters
+	 */
 	public String getUsername() {
 		return username;
 	}
@@ -49,12 +54,6 @@ public class ModifyUserBackingBean {
 	public void setRoles(List<Role> roles) {
 		this.roles = roles;
 	}
-//	public Role[] getRoles() {
-//		return roles;
-//	}
-//	public void setRoles(Role[] roles) {
-//		this.roles = roles;
-//	}
 	public String getEmail() {
 		return email;
 	}

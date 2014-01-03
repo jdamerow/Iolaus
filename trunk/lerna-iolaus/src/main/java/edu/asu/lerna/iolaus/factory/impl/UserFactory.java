@@ -10,10 +10,23 @@ import edu.asu.lerna.iolaus.domain.implementation.Role;
 import edu.asu.lerna.iolaus.domain.implementation.User;
 import edu.asu.lerna.iolaus.factory.IUserFactory;
 import edu.asu.lerna.iolaus.service.login.LernaGrantedAuthority;
-
+/**
+ * Factory to create the user 
+ * @author Lohith Dwaraka
+ *
+ */
 @Service
 public class UserFactory implements IUserFactory {
 
+	/**
+	 * Create User object
+	 * @param username
+	 * @param name
+	 * @param email
+	 * @param password
+	 * @param roles
+	 * @return
+	 */
 	@Override
 	public User createUser(String username, String name, String email,
 			String password, List<Role> roles) {
@@ -31,6 +44,15 @@ public class UserFactory implements IUserFactory {
 		return user;
 	}
 
+	/**
+	 * Create User object
+	 * @param username
+	 * @param name
+	 * @param email
+	 * @param password
+	 * @param roles
+	 * @return
+	 */
 	@Override
 	public User createUser(String username, String name, String email,
 			String password, Role[] roles) {
@@ -48,6 +70,9 @@ public class UserFactory implements IUserFactory {
 		return user;
 	}
 	
+	/**
+	 *  Encrypt the password
+	 */
 	@Override
 	public String encrypt(String pw) {
 		return BCrypt.hashpw(pw, BCrypt.gensalt());

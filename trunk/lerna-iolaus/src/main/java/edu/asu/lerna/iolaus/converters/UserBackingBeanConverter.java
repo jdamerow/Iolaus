@@ -7,6 +7,11 @@ import edu.asu.lerna.iolaus.domain.implementation.User;
 import edu.asu.lerna.iolaus.service.IUserManager;
 import edu.asu.lerna.iolaus.web.usermanagement.backing.UserBackingBean;
 
+/**
+ * Converter for user backing bean from String
+ * @author Dwaraka
+ *
+ */
 public class UserBackingBeanConverter implements Converter<String,UserBackingBean> {
 
 	@Autowired
