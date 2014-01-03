@@ -56,6 +56,7 @@ public class Db4oDBUserManager extends DBManager implements IUserManager {
 	public boolean modifyUser(User user,String username) {
 		User userToBeDeleted = getUserById(username);
 		database.delete(userToBeDeleted);
+		user.setPassword(userToBeDeleted.getPassword());
 		updateObject(user);
 		return true;
 	}

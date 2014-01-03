@@ -19,6 +19,12 @@
 
 <link rel="stylesheet"
 	href="${pageContext.servletContext.contextPath}/resources/txt-layout/css/form.css" />
+	<br/>
+	<br/>
+<input class="submit" type=button
+					onClick="location.href='${pageContext.servletContext.contextPath}/auth/user/changepasswd/${username}'"
+					value='Change password'/>
+
 <form:form name="modifyUserForm"  autocomplete="off" class="form" method="POST"
 	modelAttribute="modifyUserBackingBean"
 	action="${pageContext.servletContext.contextPath}/auth/user/modifyuser/${username}">
@@ -42,13 +48,6 @@
 							cssClass="errors" />${errorMsg}</font></td>
 			</tr>
 			<tr>
-				<td><label>Password:</label></td>
-				<td><form:input type='password' class="text" name='password'
-						path='password' /></td>
-				<td><font color="red"><form:errors path="password"
-							cssClass="errors" /></font></td>
-			</tr>
-			<tr>
 				<td><label>Email:</label></td>
 				<td><form:input type='email' class="text" path='email'
 						name='email' /></td>
@@ -66,7 +65,7 @@
 			<tr>
 				<td></td>
 				<td colspan='2' align="left"><input class="submit"
-					name="submit" type="submit" value="Modify user" />&nbsp;
+					name="submit" type="submit" value="Modify user" />
 				<input class="submit" type=button
 					onClick="location.href='${pageContext.servletContext.contextPath}/auth/user/listuser'"
 					value='Cancel'/></td>

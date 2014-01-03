@@ -39,7 +39,7 @@ public class UserTranslator {
 		ModifyUserBackingBean bean = new ModifyUserBackingBean();
 		bean.setEmail(user.getEmail());
 		bean.setName(user.getName());
-		bean.setPassword(user.getPassword());
+//		bean.setPassword(user.getPassword());
 		bean.setUsername(user.getUsername());
 		bean.setRoles(new ArrayList<Role>());
 		
