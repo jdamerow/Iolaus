@@ -10,7 +10,11 @@ import org.springframework.stereotype.Service;
 
 import edu.asu.lerna.iolaus.db.ILoginManager;
 
-
+/**
+ * Customized userDetailsService class get get user details and authenticate
+ * @author Lohith Dwaraka 
+ *
+ */
 @Service(value = "lernaUserService")
 public class LernaUserService implements UserDetailsService{
 	
@@ -20,11 +24,15 @@ public class LernaUserService implements UserDetailsService{
 	@Autowired
 	private ILoginManager userManager;
 
+	/**
+	 * Customize load user
+	 */
 	@Override
 	public synchronized UserDetails loadUserByUsername(String username)
 			throws UsernameNotFoundException {
+		// get user object from DB
 		UserDetails matchingUser = userManager.getUserById(username);
-		logger.info("------------------------ came here ");
+		// Check if the object matches
 		if (matchingUser == null) {
 			throw new UsernameNotFoundException("Wrong username or password");
 		}

@@ -25,6 +25,11 @@ import edu.asu.lerna.iolaus.service.IRoleManager;
 import edu.asu.lerna.iolaus.service.IUserManager;
 import edu.asu.lerna.iolaus.web.usermanagement.backing.UserBackingBean;
 
+/**
+ *	This controller class would help in adding user to the db
+ * @author Lohith Dwaraka 
+ *
+ */
 @Controller
 public class AddUserController {
 
@@ -40,8 +45,15 @@ public class AddUserController {
 	private static final Logger logger = LoggerFactory
 			.getLogger(AddUserController.class);
 	
+	/**
+	 * Helps create add user form by getting the object ready for form jsp tags
+	 * @param model
+	 * @param principal
+	 * @return
+	 */
 	@RequestMapping(value = "auth/user/adduser", method = RequestMethod.GET)
 	public String getToAddUserPage( ModelMap model, Principal principal) {
+		// Checking authentication issues based on role
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		Collection<? extends GrantedAuthority> authorities = auth.getAuthorities();
 		boolean access = false; 
@@ -49,17 +61,29 @@ public class AddUserController {
 			if(ga.getAuthority().equals(IRoleName.ADMIN))
 				access=true;
 		}
+		
+		// If user is not authorized
 		if(access ==false){
 			logger.info("Access not allowes");
 			return "auth/noaccess";
 		}
+		// If user is authorized
 		model.addAttribute("availableRoles", roleManager.getRolesList());
 		model.addAttribute("userBackingBean", new UserBackingBean());
 		return "auth/user/adduser";
 	}
 	
+	/**
+	 * Adds users by receiving the user details as object form
+	 * @param userForm
+	 * @param result
+	 * @param map
+	 * @return
+	 */
 	@RequestMapping(value = "auth/user/adduser", method = RequestMethod.POST)
 	public String addNewUser(@Valid @ModelAttribute UserBackingBean userForm, BindingResult result, ModelMap map) {
+
+		// Checking authentication issues based on role
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		Collection<? extends GrantedAuthority> authorities = auth.getAuthorities();
 		boolean access = false; 
@@ -67,17 +91,20 @@ public class AddUserController {
 			if(ga.getAuthority().equals(IRoleName.ADMIN))
 				access=true;
 		}
+		// If user is not authorized
 		if(access ==false){
 			logger.info("Access not allowes");
 			return "auth/noaccess";
 		}
-
+		// If user data has validation issues
 		if (result.hasErrors()) {
 			map.addAttribute("availableRoles", roleManager.getRoles());
 			return "auth/user/adduser";
 		}		
 		
+		// Create the user object with the form data
 		User user = userFactory.createUser(userForm.getUsername(), userForm.getName(), userForm.getEmail(), userForm.getPassword(), userForm.getRoles());
+		// Saves into db4o
 		userManager.saveUser(user);
 		
 		return "redirect:/auth/user/listuser";

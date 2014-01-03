@@ -6,6 +6,11 @@ import org.springframework.core.convert.converter.Converter;
 import edu.asu.lerna.iolaus.domain.implementation.Role;
 import edu.asu.lerna.iolaus.service.IRoleManager;
 
+/**
+ * Converts for the spring conversion of String to role
+ * @author Lohith Dwaraka
+ *
+ */
 
 public class RoleStringConverter implements Converter<String, Role>{
 

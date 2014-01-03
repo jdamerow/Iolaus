@@ -2,6 +2,11 @@ package edu.asu.lerna.iolaus.service.login;
 
 import org.springframework.security.core.GrantedAuthority;
 
+/**
+ * Customized GrantedAuthority class for roles of the user
+ * @author Lohith Dwaraka 
+ *
+ */
 public class LernaGrantedAuthority implements GrantedAuthority{
 
 	private String roleName;
