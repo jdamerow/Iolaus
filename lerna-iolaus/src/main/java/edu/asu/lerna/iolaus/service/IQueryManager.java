@@ -22,7 +22,7 @@ public interface IQueryManager {
 
 	public abstract IQuery xmlToQueryObject(String res) throws JAXBException;
 
-	public abstract String getRESTOutput(IQuery q, boolean wantNodes, boolean wantRelations);
+	public abstract String getRESTOutput(Map<String,List<Object>> resultSet, String inputXML);
 	
 	public abstract Map<String, List<Object>> filterResults(Map<String, List<Object>> resultSet, Map<String, Boolean> isReturnTrueMap);
 

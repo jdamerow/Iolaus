@@ -3,8 +3,12 @@ package edu.asu.lerna.iolaus.domain.json.impl;
 import java.io.Serializable;
 import java.util.HashMap;
 
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
+
 import edu.asu.lerna.iolaus.domain.json.IJsonRelation;
 
+@XmlRootElement
 public class JsonRelation implements IJsonRelation, Serializable {
 	
 	private String id;
@@ -38,6 +42,7 @@ public class JsonRelation implements IJsonRelation, Serializable {
 	public String getId() {
 		return id;
 	}
+	@XmlElement
 	@Override
 	public void setId(String id) {
 		this.id = id;
@@ -46,6 +51,7 @@ public class JsonRelation implements IJsonRelation, Serializable {
 	public String getType() {
 		return type;
 	}
+	@XmlElement
 	@Override
 	public void setType(String type) {
 		this.type = type;
@@ -54,6 +60,7 @@ public class JsonRelation implements IJsonRelation, Serializable {
 	public HashMap<String, String> getData() {
 		return data;
 	}
+	@XmlElement
 	@Override
 	public void setData(HashMap<String, String> data) {
 		this.data = data;

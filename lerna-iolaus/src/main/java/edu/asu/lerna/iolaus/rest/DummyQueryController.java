@@ -49,24 +49,24 @@ public class DummyQueryController {
 		/**
 		 * TODO:Remove the if conditions after complete implementation
 		 * as this check will be done in getRESTOutput method based on q 
-		 */
-		if(res.contains("node return=\"true\"") && res.contains("relationship return=\"true\""))
-		{
-			outputXml = queryManager.getRESTOutput(q,true,true);
-		}
-		else if(res.contains("node return=\"true\""))
-		{
-			outputXml = queryManager.getRESTOutput(q,true,false);
-		}
-		else if(res.contains("relationship return=\"true\""))
-		{
-			outputXml = queryManager.getRESTOutput(q,false,true);
-		}
-		else
-		{
-			outputXml = queryManager.getRESTOutput(q,false,false);
-		}
-		
+//		 */
+//		if(res.contains("node return=\"true\"") && res.contains("relationship return=\"true\""))
+//		{
+//			outputXml = queryManager.getRESTOutput(q,true,true);
+//		}
+//		else if(res.contains("node return=\"true\""))
+//		{
+//			outputXml = queryManager.getRESTOutput(q,true,false);
+//		}
+//		else if(res.contains("relationship return=\"true\""))
+//		{
+//			outputXml = queryManager.getRESTOutput(q,false,true);
+//		}
+//		else
+//		{
+//			outputXml = queryManager.getRESTOutput(q,false,false);
+//		}
+//		
 		
 		return outputXml;
 	}

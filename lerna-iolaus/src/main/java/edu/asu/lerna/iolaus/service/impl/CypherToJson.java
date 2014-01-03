@@ -17,7 +17,6 @@ public class CypherToJson implements ICypherToJson {
 			.getLogger(CypherToJson.class);
 	@Override
 	public String cypherToJson(String cypher){
-		logger.info("***********************************\nCypher Query : "+cypher+"\n***********************************\n");
 		String json="";
 		String query="\"query\":";
 		String regex="(\")([a-zA-Z0-9_.\\s?*()]*)(\")";//Regular expression for extracting strings in ""
