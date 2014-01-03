@@ -55,7 +55,7 @@ public class CacheManager implements ICacheManager {
 
 	@Override
 	public List<List<Object>> executeQuery(String json,String instance) {
-
+//		json = "{ \"query\" : \"start s=node(*),t=node(*) Match s-[r]->t return s,r,t\" }";
 		List<List<Object>> resultSet=null;
 
 		//Check if the result is available in the cache
@@ -75,7 +75,7 @@ public class CacheManager implements ICacheManager {
 				logger.debug("Error in saving to the cache :",e);
 			}
 		}
-		
+
 		return resultSet;
 	}
 
