@@ -161,7 +161,7 @@ public class QueryHandler implements IQueryHandler{
 		initializeCurrentTargetLabelCounter(currentTargetLabelCounter,sourceToTargetLabelMap);
 		Stack<String> stack=new Stack<String>();
 		String sourceLabel=PropertyOf.SOURCE.toString();
-		System.out.println(sourceToTargetLabelMap);
+
 		int outerCount=0;
 		int innerCount=0;
 		boolean flag=true;

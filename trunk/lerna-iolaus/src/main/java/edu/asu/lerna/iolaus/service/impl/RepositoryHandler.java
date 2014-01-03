@@ -30,7 +30,7 @@ public class RepositoryHandler implements IRepositoryHandler {
 	public List<List<Object>> executeQuery(String jsonTraverserPayload, String neo4jInstance)
 	{
 		URI traverserUri = null;
- 
+
 		try {
 			traverserUri = new URI( neo4jInstance );
 		} catch (URISyntaxException e1) {
@@ -42,7 +42,7 @@ public class RepositoryHandler implements IRepositoryHandler {
 				.entity(jsonTraverserPayload)
 				.post(ClientResponse.class);
 
-				
+
 		String oneSingleJsonString = response.getEntity(String.class);
 		response.close();
 		return getListOfNodesAndRelations(oneSingleJsonString);
@@ -53,90 +53,91 @@ public class RepositoryHandler implements IRepositoryHandler {
 		List<List<Object>> resultList = new ArrayList<List<Object>>();
 		IJsonNode node = null;
 		IJsonRelation relation = null;
-		
+
 		JSONObject jsonResponseObject = new JSONObject(oneSingleJsonString);
 		JSONArray dataArray = jsonResponseObject.optJSONArray("data");
-		
-		for(int i=0;i<dataArray.length();i++)
-		{
-			List<Object> rowList = new ArrayList<Object>();
-			resultList.add(rowList);
-			
-			JSONArray rowObjects = dataArray.getJSONArray((i));
-			for(int j=0;j<rowObjects.length();j++)
+
+		if(dataArray != null)
+			for(int i=0;i<dataArray.length();i++)
 			{
-				JSONObject jsonObject = rowObjects.getJSONObject(j);
-				if(jsonObject.has("start") && jsonObject.has("end"))
-				{
-					//Found a relation object
-					relation = new JsonRelation();
+				List<Object> rowList = new ArrayList<Object>();
+				resultList.add(rowList);
 
-					Iterator<String> keysIterator = jsonObject.keys();
-					while(keysIterator.hasNext())
-					{
-						String key = keysIterator.next();
-						if(key.equals("data"))
-						{
-							JSONObject objectData = jsonObject.getJSONObject(key);
-							Iterator<String> dataIterator = objectData.keys();
-							while(dataIterator.hasNext())
-							{
-								String dataKey = dataIterator.next(); 							
-								relation.addData(dataKey, objectData.optString(dataKey));							
-							}
-						}
-						else if(key.equals("start"))
-						{
-							relation.setStartNode(jsonObject.getString(key));
-						}
-						else if(key.equals("end"))
-						{
-							relation.setEndNode(jsonObject.getString(key));
-						}
-						else if(key.equals("type"))
-						{
-							relation.setType(jsonObject.getString(key));
-						}
-						else if(key.equals("self"))
-						{
-							relation.setId(jsonObject.getString(key));
-						}
-					} //End of parsing relation object
-					rowList.add(relation);
-				}
-				else
+				JSONArray rowObjects = dataArray.getJSONArray((i));
+				for(int j=0;j<rowObjects.length();j++)
 				{
-					//Found a node object
-					node = new JsonNode();
-
-					Iterator<String> keysIterator = jsonObject.keys();
-					while(keysIterator.hasNext())
+					JSONObject jsonObject = rowObjects.getJSONObject(j);
+					if(jsonObject.has("start") && jsonObject.has("end"))
 					{
-						String key = keysIterator.next();
-						if(key.equals("data"))
+						//Found a relation object
+						relation = new JsonRelation();
+
+						Iterator<String> keysIterator = jsonObject.keys();
+						while(keysIterator.hasNext())
 						{
-							JSONObject objectData = jsonObject.getJSONObject(key);
-							Iterator<String> dataIterator = objectData.keys();
-							while(dataIterator.hasNext())
+							String key = keysIterator.next();
+							if(key.equals("data"))
 							{
-								String dataKey = dataIterator.next();
-								if(dataKey.equals("type"))
-									node.setType(objectData.optString(dataKey));
-								else
-									node.addData(dataKey, objectData.optString(dataKey));							
+								JSONObject objectData = jsonObject.getJSONObject(key);
+								Iterator<String> dataIterator = objectData.keys();
+								while(dataIterator.hasNext())
+								{
+									String dataKey = dataIterator.next(); 							
+									relation.addData(dataKey, objectData.optString(dataKey));							
+								}
 							}
-						}
-						else if(key.equals("self"))
+							else if(key.equals("start"))
+							{
+								relation.setStartNode(jsonObject.getString(key));
+							}
+							else if(key.equals("end"))
+							{
+								relation.setEndNode(jsonObject.getString(key));
+							}
+							else if(key.equals("type"))
+							{
+								relation.setType(jsonObject.getString(key));
+							}
+							else if(key.equals("self"))
+							{
+								relation.setId(jsonObject.getString(key));
+							}
+						} //End of parsing relation object
+						rowList.add(relation);
+					}
+					else
+					{
+						//Found a node object
+						node = new JsonNode();
+
+						Iterator<String> keysIterator = jsonObject.keys();
+						while(keysIterator.hasNext())
 						{
-							node.setId(jsonObject.getString(key));
-						}
-					} //End of parsing node object
-					rowList.add(node);
-				} //End of else for node and relation parsing
-			} //End of for: row data
-		} //End of for: complete json
-		
+							String key = keysIterator.next();
+							if(key.equals("data"))
+							{
+								JSONObject objectData = jsonObject.getJSONObject(key);
+								Iterator<String> dataIterator = objectData.keys();
+								while(dataIterator.hasNext())
+								{
+									String dataKey = dataIterator.next();
+									if(dataKey.equals("type"))
+										node.setType(objectData.optString(dataKey));
+									else
+										node.addData(dataKey, objectData.optString(dataKey));							
+								}
+							}
+							else if(key.equals("self"))
+							{
+								node.setId(jsonObject.getString(key));
+							}
+						} //End of parsing node object
+						rowList.add(node);
+					} //End of else for node and relation parsing
+				} //End of for: row data
+			} //End of for: complete json
+
 		return resultList;
 	}
-	
+
 }

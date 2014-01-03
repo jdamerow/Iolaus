@@ -2,6 +2,7 @@ package edu.asu.lerna.iolaus.service.impl;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
+import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -13,9 +14,11 @@ import java.util.Map.Entry;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
+import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 import javax.xml.transform.stream.StreamSource;
 
+import org.apache.lucene.analysis.CharArrayMap.EntrySet;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +26,8 @@ import org.springframework.stereotype.Service;
 
 import edu.asu.lerna.iolaus.domain.json.IJsonNode;
 import edu.asu.lerna.iolaus.domain.json.IJsonRelation;
+import edu.asu.lerna.iolaus.domain.json.impl.JsonNode;
+import edu.asu.lerna.iolaus.domain.json.impl.JsonRelation;
 import edu.asu.lerna.iolaus.domain.misc.ResultSet;
 import edu.asu.lerna.iolaus.domain.queryobject.IQuery;
 import edu.asu.lerna.iolaus.domain.queryobject.impl.Query;
@@ -63,22 +68,25 @@ public class QueryManager implements IQueryManager {
 		ResultSet rset=queryHandler.executeQuery(q);
 		Map<String,List<Object>> resultSet=filterResults(rset.getResultSet(),rset.getLabelToIsReturnTrueMap());
 		Map<String,List<Object>> finalResultSet=deleteDuplicateRows(resultSet);
-		logger.info("Final Result - Total Number of Rows:"+finalResultSet.size());
 		
-		if(inputXML.contains("<node return=\"true\">") && inputXML.contains("<relationship return=\"true\">"))
-		{
-			return getRESTOutput(null, true, true);
-		}
-		else if(inputXML.contains("<node return=\"true\">"))
-		{
-			return getRESTOutput(null, true, false);
-		}
-		else if(inputXML.contains("<relationship return=\"true\">"))
-		{
-			return getRESTOutput(null, false, true);
-		}
-			
-		return getRESTOutput(null, false, false);
+		getRESTOutput(finalResultSet, inputXML);
+		
+		return "<?xml version=\"1.0\" encoding=\"ISO-8859-1\" ?>\n<resultset>\n	<nodes>\n		<node id=\"http://www.diging.asu.edu/lerna/mblcourses/nodes/13123\">\n			<property name=\"type\" value=\"Person\" />\n			<property name=\"firstName\" value=\"Jennie C. R.\" />\n			<property name=\"lastName\" value=\"Smith\" />\n		</node>\n		<node id=\"http://www.diging.asu.edu/lerna/mblcourses/nodes/13124\">\n			<property name=\"type\" value=\"Person\" />\n			<property name=\"firstName\" value=\"John H.\" />\n			<property name=\"lastName\" value=\"Northrup\" />\n		</node>\n		<node id=\"http://www.diging.asu.edu/lerna/mblcourses/nodes/13125\">\n			<property name=\"type\" value=\"Person\" />\n			<property name=\"firstName\" value=\"Joseph C.\" />\n			<property name=\"lastName\" value=\"Herrick\" />\n		</node>\n	</nodes>\n	<relations>\n		<relation id=\"http://www.diging.asu.edu/lerna/mblcourses/relations/9120\">\n			<property name=\"sourceType\" value=\"Person\" />\n			<property name=\"targetType\" value=\"Location\" />\n			<property name=\"sourceId\"				value=\"http://www.diging.asu.edu/lerna/mblcourses/nodes/13123\" />\n			<property name=\"targetId\"				value=\"http://www.diging.asu.edu/lerna/mblcourses/nodes/234\" />\n			<property name=\"year\" value=\"1902\" />\n		</relation>\n		<relation id=\"http://www.diging.asu.edu/lerna/mblcourses/relations/9121\">\n			<property name=\"sourceType\" value=\"Person\" />\n			<property name=\"targetType\" value=\"Location\" />\n			<property name=\"sourceId\"				value=\"http://www.diging.asu.edu/lerna/mblcourses/nodes/13124\" />\n			<property name=\"targetId\"				value=\"http://www.diging.asu.edu/lerna/mblcourses/nodes/234\" />\n			<property name=\"year\" value=\"1911\" />\n		</relation>\n		<relation id=\"http://www.diging.asu.edu/lerna/mblcourses/relations/9122\">\n			<property name=\"sourceType\" value=\"Person\" />\n			<property name=\"targetType\" value=\"Location\" />\n			<property name=\"sourceId\"				value=\"http://www.diging.asu.edu/lerna/mblcourses/nodes/13125\" />\n			<property name=\"targetId\"				value=\"http://www.diging.asu.edu/lerna/mblcourses/nodes/234\" />\n			<property name=\"year\" value=\"1914\" />\n		</relation>\n		<relation id=\"http://www.diging.asu.edu/lerna/mblcourses/relations/9123\">\n			<property name=\"sourceType\" value=\"Person\" />\n			<property name=\"targetType\" value=\"Location\" />\n			<property name=\"sourceId\"				value=\"http://www.diging.asu.edu/lerna/mblcourses/nodes/13125\" />\n			<property name=\"targetId\"				value=\"http://www.diging.asu.edu/lerna/mblcourses/nodes/234\" />\n			<property name=\"year\" value=\"1915\" />\n		</relation>\n	</relations>\n</resultset>\n";
+//		
+//		if(inputXML.contains("<node return=\"true\">") && inputXML.contains("<relationship return=\"true\">"))
+//		{
+//			return getRESTOutput(finalResultSet, true, true);
+//		}
+//		else if(inputXML.contains("<node return=\"true\">"))
+//		{
+//			return getRESTOutput(finalResultSet, true, false);
+//		}
+//		else if(inputXML.contains("<relationship return=\"true\">"))
+//		{
+//			return getRESTOutput(finalResultSet, false, true);
+//		}
+//			
+//		return getRESTOutput(null, false, false);
 	}
 	
 	/**
@@ -157,25 +165,68 @@ public class QueryManager implements IQueryManager {
 	
 	
 	@Override
-	public String getRESTOutput(IQuery q, boolean wantNodes, boolean wantRelations)
+	public String getRESTOutput(Map<String,List<Object>> resultSet, String inputXML)
 	{
-		if(wantNodes && wantRelations)
-		{
-			//TODO: From the query return both the node and relation.
-			return "<?xml version=\"1.0\" encoding=\"ISO-8859-1\" ?>\n<resultset>\n	<nodes>\n		<node id=\"http://www.diging.asu.edu/lerna/mblcourses/nodes/13123\">\n			<property name=\"type\" value=\"Person\" />\n			<property name=\"firstName\" value=\"Jennie C. R.\" />\n			<property name=\"lastName\" value=\"Smith\" />\n		</node>\n		<node id=\"http://www.diging.asu.edu/lerna/mblcourses/nodes/13124\">\n			<property name=\"type\" value=\"Person\" />\n			<property name=\"firstName\" value=\"John H.\" />\n			<property name=\"lastName\" value=\"Northrup\" />\n		</node>\n		<node id=\"http://www.diging.asu.edu/lerna/mblcourses/nodes/13125\">\n			<property name=\"type\" value=\"Person\" />\n			<property name=\"firstName\" value=\"Joseph C.\" />\n			<property name=\"lastName\" value=\"Herrick\" />\n		</node>\n	</nodes>\n	<relations>\n		<relation id=\"http://www.diging.asu.edu/lerna/mblcourses/relations/9120\">\n			<property name=\"sourceType\" value=\"Person\" />\n			<property name=\"targetType\" value=\"Location\" />\n			<property name=\"sourceId\"				value=\"http://www.diging.asu.edu/lerna/mblcourses/nodes/13123\" />\n			<property name=\"targetId\"				value=\"http://www.diging.asu.edu/lerna/mblcourses/nodes/234\" />\n			<property name=\"year\" value=\"1902\" />\n		</relation>\n		<relation id=\"http://www.diging.asu.edu/lerna/mblcourses/relations/9121\">\n			<property name=\"sourceType\" value=\"Person\" />\n			<property name=\"targetType\" value=\"Location\" />\n			<property name=\"sourceId\"				value=\"http://www.diging.asu.edu/lerna/mblcourses/nodes/13124\" />\n			<property name=\"targetId\"				value=\"http://www.diging.asu.edu/lerna/mblcourses/nodes/234\" />\n			<property name=\"year\" value=\"1911\" />\n		</relation>\n		<relation id=\"http://www.diging.asu.edu/lerna/mblcourses/relations/9122\">\n			<property name=\"sourceType\" value=\"Person\" />\n			<property name=\"targetType\" value=\"Location\" />\n			<property name=\"sourceId\"				value=\"http://www.diging.asu.edu/lerna/mblcourses/nodes/13125\" />\n			<property name=\"targetId\"				value=\"http://www.diging.asu.edu/lerna/mblcourses/nodes/234\" />\n			<property name=\"year\" value=\"1914\" />\n		</relation>\n		<relation id=\"http://www.diging.asu.edu/lerna/mblcourses/relations/9123\">\n			<property name=\"sourceType\" value=\"Person\" />\n			<property name=\"targetType\" value=\"Location\" />\n			<property name=\"sourceId\"				value=\"http://www.diging.asu.edu/lerna/mblcourses/nodes/13125\" />\n			<property name=\"targetId\"				value=\"http://www.diging.asu.edu/lerna/mblcourses/nodes/234\" />\n			<property name=\"year\" value=\"1915\" />\n		</relation>\n	</relations>\n</resultset>\n";
-		}
-		else if(wantNodes)
-		{
-			//TODO: From the query return only the node
-			return "<?xml version=\"1.0\" encoding=\"ISO-8859-1\" ?>\n<resultset>\n	<nodes>\n		<node id=\"http://www.diging.asu.edu/lerna/mblcourses/nodes/13123\">\n			<property name=\"type\" value=\"Person\" />\n			<property name=\"firstName\" value=\"Jennie C. R.\" />\n			<property name=\"lastName\" value=\"Smith\" />\n		</node>\n		<node id=\"http://www.diging.asu.edu/lerna/mblcourses/nodes/13124\">\n			<property name=\"type\" value=\"Person\" />\n			<property name=\"firstName\" value=\"John H.\" />\n			<property name=\"lastName\" value=\"Northrup\" />\n		</node>\n		<node id=\"http://www.diging.asu.edu/lerna/mblcourses/nodes/13125\">\n			<property name=\"type\" value=\"Person\" />\n			<property name=\"firstName\" value=\"Joseph C.\" />\n			<property name=\"lastName\" value=\"Herrick\" />\n		</node>\n	</nodes>\n</resultset>\n";
-		}
-		else if(wantRelations)
-		{
-			//TODO: From the query return only the relation
-			return "<?xml version=\"1.0\" encoding=\"ISO-8859-1\" ?>\n<resultset>\n	<relations>\n		<relation id=\"http://www.diging.asu.edu/lerna/mblcourses/relations/9120\">\n			<property name=\"sourceType\" value=\"Person\" />\n			<property name=\"targetType\" value=\"Location\" />\n			<property name=\"sourceId\"				value=\"http://www.diging.asu.edu/lerna/mblcourses/nodes/13123\" />\n			<property name=\"targetId\"				value=\"http://www.diging.asu.edu/lerna/mblcourses/nodes/234\" />\n			<property name=\"year\" value=\"1902\" />\n		</relation>\n		<relation id=\"http://www.diging.asu.edu/lerna/mblcourses/relations/9121\">\n			<property name=\"sourceType\" value=\"Person\" />\n			<property name=\"targetType\" value=\"Location\" />\n			<property name=\"sourceId\"				value=\"http://www.diging.asu.edu/lerna/mblcourses/nodes/13124\" />\n			<property name=\"targetId\"				value=\"http://www.diging.asu.edu/lerna/mblcourses/nodes/234\" />\n			<property name=\"year\" value=\"1911\" />\n		</relation>\n		<relation id=\"http://www.diging.asu.edu/lerna/mblcourses/relations/9122\">\n			<property name=\"sourceType\" value=\"Person\" />\n			<property name=\"targetType\" value=\"Location\" />\n			<property name=\"sourceId\"				value=\"http://www.diging.asu.edu/lerna/mblcourses/nodes/13125\" />\n			<property name=\"targetId\"				value=\"http://www.diging.asu.edu/lerna/mblcourses/nodes/234\" />\n			<property name=\"year\" value=\"1914\" />\n		</relation>\n		<relation id=\"http://www.diging.asu.edu/lerna/mblcourses/relations/9123\">\n			<property name=\"sourceType\" value=\"Person\" />\n			<property name=\"targetType\" value=\"Location\" />\n			<property name=\"sourceId\"				value=\"http://www.diging.asu.edu/lerna/mblcourses/nodes/13125\" />\n			<property name=\"targetId\"				value=\"http://www.diging.asu.edu/lerna/mblcourses/nodes/234\" />\n			<property name=\"year\" value=\"1915\" />\n		</relation>\n	</relations>\n</resultset>\n";
+		//TODO: Remove sysouts
+		//TODO: Externalize strings
+		JAXBContext jaxbContextNode = null;
+		Marshaller jaxbMarshallerNode = null;
+		JAXBContext jaxbContextRelation = null;
+		Marshaller jaxbMarshallerRelation = null;
+		
+		StringWriter outputWriter = new StringWriter();
+		outputWriter.write("<?xml version=\"1.0\" encoding=\"ISO-8859-1\" ?>\n");
+		outputWriter.write("<resultSet>\n");		
+		try {
+			jaxbContextNode = JAXBContext.newInstance(JsonNode.class);
+			jaxbMarshallerNode = jaxbContextNode.createMarshaller();
+			jaxbMarshallerNode.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
+			jaxbMarshallerNode.setProperty(Marshaller.JAXB_FRAGMENT, true);
+			
+			jaxbContextRelation = JAXBContext.newInstance(JsonRelation.class);
+			jaxbMarshallerRelation = jaxbContextRelation.createMarshaller();
+			jaxbMarshallerRelation.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
+			jaxbMarshallerRelation.setProperty(Marshaller.JAXB_FRAGMENT, true);
+		} catch (JAXBException e) {
+			e.printStackTrace();
+			//TODO: Set proper return message
+			return null;
 		}
 		
 		
-		return "You did not request for any node or relationship! After all this work, you did not want to see the output...";
+		for(Entry<String, List<Object>> entry: resultSet.entrySet())
+		{
+			outputWriter.write("<record>\n");
+			System.out.println("-------------------------------------------------------------\nKey: "+entry.getKey());
+			for(Object listobject : entry.getValue())
+			{
+				if(listobject instanceof IJsonNode)
+				{
+					try {
+						jaxbMarshallerNode.marshal(listobject, outputWriter);						
+					} catch (JAXBException e) {
+						e.printStackTrace();
+					}
+				}
+				else if(listobject instanceof IJsonRelation)
+				{
+					try {
+						jaxbMarshallerRelation.marshal(listobject, outputWriter);						
+					} catch (JAXBException e) {
+						e.printStackTrace();
+					}
+				}
+			}
+			
+			//TODO: Remove this after testing
+			outputWriter.write("</record>\n");
+			System.out.println(outputWriter);
+			break;
+		}
+		
+		
+		outputWriter.write("</resultSet>\n");
+		return outputWriter.toString();
+//		return "You did not request for any node or relationship! After all this work, you did not want to see the output...";
 	}
 }
