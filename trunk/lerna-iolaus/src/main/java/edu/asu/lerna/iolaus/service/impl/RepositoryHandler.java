@@ -22,10 +22,19 @@ import edu.asu.lerna.iolaus.json.parser.library.JSONArray;
 import edu.asu.lerna.iolaus.json.parser.library.JSONObject;
 import edu.asu.lerna.iolaus.service.IRepositoryHandler;
 
+/**
+ * This makes a Rest call to a neo4j instance inorder to execute a given json string.
+ * The json output from neo4j are converted to generalized node and realtion classes.
+ * 
+ * @author Ram Kumar Kumaresan
+ */
 @Service
 public class RepositoryHandler implements IRepositoryHandler {
 
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public List<List<Object>> executeQuery(String jsonTraverserPayload, String neo4jInstance)
 	{
@@ -48,6 +57,12 @@ public class RepositoryHandler implements IRepositoryHandler {
 		return getListOfNodesAndRelations(oneSingleJsonString);
 	}
 
+	/**
+	 * Produce a generalized list of nodes and relations by parsing xml string using json libraries.
+	 * 
+	 * @param oneSingleJsonString		The xml string(response) from neo4j instance.
+	 * @return							List of generalized node and relation class objects.
+	 */
 	private List<List<Object>> getListOfNodesAndRelations(String oneSingleJsonString)
 	{
 		List<List<Object>> resultList = new ArrayList<List<Object>>();
