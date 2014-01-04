@@ -169,9 +169,17 @@ public class ModifyUserController {
 			}
 		}
 
+		// If user is authorized
+		// get User object using username
+		User userOld = userManager.getUserById(userName);
+		// If user not found
+		if(userOld == null){
+			model.addAttribute("message","User not found");
+			return "auth/resourcenotfound";
+		}
 
 		// Create user details for modification in the db
-		User user = userFactory.createUser(userForm.getUsername(), userForm.getName(), userForm.getEmail(), "", userForm.getRoles());
+		User user = userFactory.createUser(userForm.getUsername(), userForm.getName(), userForm.getEmail(), userOld.getPassword(), userForm.getRoles());
 		userManager.modifyUser(user, userName);
 
 		return "redirect:/auth/user/listuser";
@@ -243,9 +251,14 @@ public class ModifyUserController {
 			return "auth/resourcenotfound";
 		}
 
-		
 		// Prepare user backing bean
 		ModifyUserBackingBean mubb = userTranslator.translateModifyUser(user);
+				
+		User userPassChange = userFactory.createUser(mubb.getUsername(), mubb.getName(), mubb.getEmail(), passForm.getNewpassword(), mubb.getRoles());
+		userManager.modifyUser(userPassChange, userName);
+
+		// Prepare user backing bean
+		mubb = userTranslator.translateModifyUser(userPassChange);
 
 		// Send data to jsp
 		model.addAttribute("username",userName);
