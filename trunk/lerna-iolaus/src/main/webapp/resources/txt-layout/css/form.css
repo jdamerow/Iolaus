@@ -110,14 +110,25 @@ input:focus, textarea:focus {
 	-webkit-border-radius: 10px;
 }
           
-.submituser input {
+.submituser{
 	background-color: #808080;
 	color: #FFFFFF;
-	width: 130px;
 	height: 30px;
+	width:100px;
 	weight: bold;
 	border-radius: 10px;
 	-moz-border-radius: 10px;
 	-webkit-border-radius: 10px;
-	margin-left:95px;
+	margin-left: -100px;
+}
+.canceluser{
+ 
+	background-color: #808080;
+	color: #FFFFFF;
+	weight: bold;
+	height: 30px;
+	width:  70px;
+	border-radius: 10px;
+	-moz-border-radius: 10px;
+	-webkit-border-radius: 10px;
 }

@@ -50,8 +50,13 @@ function validate()
 			<tr><td colspan="2" align="center">
 			<h5 class="response">**Failure</h5></td></tr>
 		</c:if>
+		<c:if test="${noConnectivity}">
+			<tr><td colspan="2" align="center">
+			<h5 class="response">**Could not connect to Port number ${instance.port} on ${instance.host}.<br/> For adding this instance, please uncheck the Activate Now checkbox or start the server.</h5>
+			</td></tr>
+		</c:if>
 	<tr> <td colspan="2" align="left"><h1>Add a Neo4j Instance</h1></td></tr>
-	<tr><td colspan="2" align="center"><c:if test="${not empty instance}">
+	<tr><td colspan="2" align="center"><c:if test="${not empty instance and not noConnectivity}">
 	<h5 class="response">**Port ${instance.port} is already in used on host machine ${instance.host}</h5>
 	</c:if></td></tr>
 	<tr>

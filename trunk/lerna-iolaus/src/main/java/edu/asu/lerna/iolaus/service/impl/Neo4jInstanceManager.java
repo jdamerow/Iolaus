@@ -5,9 +5,11 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.net.URL;
 import java.net.URLDecoder;
 import java.util.List;
 
+import org.apache.commons.httpclient.util.HttpURLConnection;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,6 +35,10 @@ public class Neo4jInstanceManager implements INeo4jInstanceManager {
 		int maxId=0;
 		String port=instance.getPort();
 		String host=instance.getHost();
+		if(!checkConnectivity(port,host)&&instance.isActive()==true?true:false)
+		{
+			return "-2";
+		}
 		if(port.equals("")||host.equals(""))//if port and host is null then return "-1"
 			return "-1";
 		//This loop will search for the maximum id in the registry and will set it to the maxId
@@ -72,6 +78,19 @@ public class Neo4jInstanceManager implements INeo4jInstanceManager {
 			}
 		}
 		return String.valueOf(maxId+1);
+	}
+
+	private boolean checkConnectivity(String port, String host) {
+		boolean isAlive = true;
+		try {
+		  URL url = new URL("http://"+host+":"+port+"/webadmin/"); 
+		  HttpURLConnection connection=(HttpURLConnection) url.openConnection();//It will throw an exception if not able to connect to the server. 
+		  connection.getInputStream();
+		} catch (Exception e) {
+		  isAlive = false;
+		  System.out.println(isAlive);
+		}
+		return isAlive;
 	}
 
 	@Override
