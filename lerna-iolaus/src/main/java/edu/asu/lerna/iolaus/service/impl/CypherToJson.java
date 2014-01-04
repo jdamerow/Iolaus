@@ -6,15 +6,15 @@ import java.util.Map.Entry;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import edu.asu.lerna.iolaus.service.ICypherToJson;
 @Service
 public class CypherToJson implements ICypherToJson {
-	private static final Logger logger = LoggerFactory
-			.getLogger(CypherToJson.class);
+	
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public String cypherToJson(String cypher){
 		String json="";

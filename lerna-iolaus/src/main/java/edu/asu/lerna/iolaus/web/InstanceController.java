@@ -90,10 +90,17 @@ public class InstanceController {
 		String instanceId=instanceManager.addNeo4jInstance(instance);
 		if(instanceId.equals("0")){//if combination of port number and host is not unique in that case instanceId="0"
 			model.addAttribute("instance", instance);
+			model.addAttribute("noConnectivity", false);
 			return "auth/addInstance";
 		}
 		if(instanceId.equals("-1")){//if port number of host is null then instanceId="-1"
 			model.addAttribute("failure",true);
+			model.addAttribute("noConnectivity", false);
+			return "auth/addInstance";
+		}
+		if(instanceId.equals("-2")){//if connection failure then instanceId="-2"
+			model.addAttribute("noConnectivity", true);
+			model.addAttribute("instance", instance);
 			return "auth/addInstance";
 		}
 		model.addAttribute("instanceId",instanceId);

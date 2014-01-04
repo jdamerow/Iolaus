@@ -8,8 +8,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import edu.asu.lerna.iolaus.domain.Label;
@@ -19,7 +17,7 @@ import edu.asu.lerna.iolaus.service.IAggregateResult;
 
 
 /**
- * 
+ * This class will aggregate the results of outer query with inner query.
  * @author Karan Kothari
  *
  */
@@ -27,18 +25,10 @@ import edu.asu.lerna.iolaus.service.IAggregateResult;
 @Service
 public class AggregateResult implements IAggregateResult {
 	
-	private static final Logger logger = LoggerFactory
-			.getLogger(AggregateResult.class);
 	
 	
 	/**
-	 * This method aggregates the results of a source label once we have results for all the target labels.
-	 * @param aggregatedResults is a map which stores the results for source labels in a query. Key is Label and 
-	 * 		  value is Map with key=label used in query and value=IJsonNode or IJsonRelation.
-	 * @param processedResults is a map which stores result for a sourceLabel. key=label used in query and value=IJsonNode or IJsonRelation.
-	 * @param sourceToTargetLabelMap is a map whose key is label used as a source and value is list of the target labels.
-	 * @param oldLabelToNewLabelMap is a map with key=new unique labels and value=labels used in query. 
-	 * @param sourceLabel is a label corresponding to the source label of the processedResults.
+	 * {@inheritDoc}
 	 */
 	@Override
 	public void aggregateResults(

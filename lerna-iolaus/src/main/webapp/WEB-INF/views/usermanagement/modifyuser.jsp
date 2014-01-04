@@ -5,15 +5,11 @@
 <%@ page isELIgnored="false"%>
 
 <style type="text/css">
-.submit {
-	background-color: #808080;
-	color: #FFFFFF;
-	width: 120px;
-	height: 30px;
-	border-radius: 3px;
-	-moz-border-radius: 3px;
-	-webkit-border-radius: 3px;
-	margin-bottom: 5px;
+.response{
+	color:blue;
+	margin-left:100px;
+	margin-bottom:10px;
+	text-decoration:underline;
 }
 </style>
 
@@ -21,9 +17,6 @@
 	href="${pageContext.servletContext.contextPath}/resources/txt-layout/css/form.css" />
 	<br/>
 	<br/>
-<input class="submit" type=button
-					onClick="location.href='${pageContext.servletContext.contextPath}/auth/user/changepasswd/${username}'"
-					value='Change password'/>
 
 <form:form name="modifyUserForm"  autocomplete="off" class="form" method="POST"
 	modelAttribute="modifyUserBackingBean"
@@ -64,11 +57,14 @@
 			</tr>
 			<tr>
 				<td></td>
-				<td colspan='2' align="left"><input class="submit"
+				<td colspan='3' align="left"><input class="submituser"
 					name="submit" type="submit" value="Modify user" />
-				<input class="submit" type=button
+				<input type=button class="canceluser"
 					onClick="location.href='${pageContext.servletContext.contextPath}/auth/user/listuser'"
-					value='Cancel'/></td>
+					value='Cancel'/>
+				<input type=button class="cancel"
+					onClick="location.href='${pageContext.servletContext.contextPath}/auth/user/changepasswd/${username}'"
+					value='Change Password'/></td>
 			</tr>
 		</table>
 	</div>
