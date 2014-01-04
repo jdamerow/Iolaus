@@ -74,14 +74,11 @@ public class QueryManager implements IQueryManager {
 		Map<String,List<Object>> finalResultSet=deleteDuplicateRows(resultSet);
 
 		//Marshall to xml
-		return getRESTOutput(finalResultSet, inputXML);
+		return getRESTOutput(finalResultSet);
 	}
 
 	/**
-	 * This method filters the columns of the results based on whether labels are to be displayed to user or not
-	 * @param resultSet is a results having number of columns=number of labels used in the cypher query
-	 * @param isReturnTrueMap is a map with key=label and value=whether that column is to be displayed to user or not
-	 * @return a map with key=label(only for which return="true") and value=List of IJonNode and IJsonRelation
+	 * {@inheritDoc}
 	 */
 	@Override
 	public Map<String, List<Object>> filterResults(Map<String, List<Object>> resultSet, Map<String, Boolean> isReturnTrueMap) {
@@ -98,9 +95,7 @@ public class QueryManager implements IQueryManager {
 	}
 
 	/**
-	 * This method deletes the duplicate rows based on the number of labels for which return="true"
-	 * @param resultSet is a map with key=label and value=List of IJsonNode or IJsomRelation 
-	 * @return a map with key = id of all the IJson objects for which return="true" and value=List of IJsonNode or IJsomRelation 
+	 * {@inheritDoc}
 	 */
 	@Override
 	public Map<String, List<Object>> deleteDuplicateRows(Map<String, List<Object>> resultSet) {
@@ -135,9 +130,7 @@ public class QueryManager implements IQueryManager {
 	}
 
 	/**
-	 * Use Unmarshaller to unmarshal the XMl into Query object
-	 * @param res
-	 * @author Lohith Dwaraka
+	 * {@inheritDoc}
 	 */
 	@Override
 	public IQuery xmlToQueryObject(String res) throws JAXBException{
@@ -150,10 +143,11 @@ public class QueryManager implements IQueryManager {
 		return q;
 	}
 
-
-
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
-	public String getRESTOutput(Map<String,List<Object>> resultSet, String inputXML)
+	public String getRESTOutput(Map<String,List<Object>> resultSet)
 	{
 		JAXBContext jaxbContextNode = null;
 		Marshaller jaxbMarshallerNode = null;
