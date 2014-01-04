@@ -50,9 +50,9 @@
 		</tr>
 		<tr>
 		<td></td>
-			<td colspan='2' align="left"><input class="submit" name="submit" type="submit"
+			<td colspan='2' align="left"><input class="submituser" name="submit" type="submit"
 				value="Add user" />
-				<input class="submit" type=button
+				<input class="canceluser" type=button
 					onClick="location.href='${pageContext.servletContext.contextPath}/auth/user/listuser'"
 					value='Cancel'/></td>
 		</tr>

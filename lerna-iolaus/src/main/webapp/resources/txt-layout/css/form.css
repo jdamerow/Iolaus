@@ -81,7 +81,6 @@ input:focus, textarea:focus {
 	margin-bottom:150px;
 }
 
-
 /* ===========================
    ====== Submit Button ====== 
    =========================== */
@@ -119,7 +118,7 @@ input:focus, textarea:focus {
 	border-radius: 10px;
 	-moz-border-radius: 10px;
 	-webkit-border-radius: 10px;
-	margin-left: -100px;
+	margin-left: -80px;
 }
 .canceluser{
  
