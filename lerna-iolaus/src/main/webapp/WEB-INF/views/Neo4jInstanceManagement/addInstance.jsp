@@ -43,7 +43,7 @@ function validate()
 </script>
 
 <link rel="stylesheet" href="${pageContext.servletContext.contextPath}/resources/txt-layout/css/form.css" />
-<form name="addInstanceForm" class="form" action="addInstance" method="POST" onsubmit="return(validate());">
+<form name="addInstanceForm" class="form" autocomplete="off" action="addInstance" method="POST" onsubmit="return(validate());">
 <div id="form">
 	<table>
 		<c:if test="${failure}">

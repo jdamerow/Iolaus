@@ -5,6 +5,12 @@ import java.util.Map;
 
 import edu.asu.lerna.iolaus.domain.Label;
 
+/**
+ * This class will aggregate the results of outer query with inner query.
+ * @author Karan Kothari
+ *
+ */
+
 public interface IAggregateResult {
 	/**
 	 * This method aggregates the results of a source label once we have results for all the target labels.
