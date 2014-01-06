@@ -41,6 +41,13 @@
 							cssClass="errors" />${errorMsg}</font></td>
 			</tr>
 			<tr>
+				<td><label>Password:</label></td>
+				<td><input type='password' disabled="disabled" class="text"  value="*********************" /></td>
+				<td align="left"><input type=button class="cancel"
+					onClick="location.href='${pageContext.servletContext.contextPath}/auth/user/changepasswd/${username}'"
+					value='Change Password'/></td>
+			</tr>
+			<tr>
 				<td><label>Email:</label></td>
 				<td><form:input type='email' class="text" path='email'
 						name='email' /></td>
