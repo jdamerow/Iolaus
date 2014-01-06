@@ -7,10 +7,11 @@
 <style type="text/css">
 .response{
 	color:blue;
-	margin-left:100px;
+	margin-left:-170px;
 	margin-bottom:10px;
 	text-decoration:underline;
 }
+
 </style>
 
 <link rel="stylesheet"
@@ -43,9 +44,7 @@
 			<tr>
 				<td><label>Password:</label></td>
 				<td><input type='password' disabled="disabled" class="text"  value="*********************" /></td>
-				<td align="left"><input type=button class="cancel"
-					onClick="location.href='${pageContext.servletContext.contextPath}/auth/user/changepasswd/${username}'"
-					value='Change Password'/></td>
+				<td align="left"><a class="response" href="'${pageContext.servletContext.contextPath}/auth/user/changepasswd/${username}'">Change Password</a></td>
 			</tr>
 			<tr>
 				<td><label>Email:</label></td>
@@ -69,9 +68,6 @@
 				<input type=button class="canceluser"
 					onClick="location.href='${pageContext.servletContext.contextPath}/auth/user/listuser'"
 					value='Cancel'/>
-				<input type=button class="cancel"
-					onClick="location.href='${pageContext.servletContext.contextPath}/auth/user/changepasswd/${username}'"
-					value='Change Password'/></td>
 			</tr>
 		</table>
 	</div>

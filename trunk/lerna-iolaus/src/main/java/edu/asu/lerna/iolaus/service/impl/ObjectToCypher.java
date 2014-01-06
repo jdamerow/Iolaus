@@ -11,8 +11,6 @@ import java.util.Set;
 
 import javax.xml.bind.JAXBElement;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -31,23 +29,20 @@ import edu.asu.lerna.iolaus.service.IObjectToCypher;
 
 
 /**
+ * This class will convert Node or RelNode object to cypher
  * @author Karan Kothari
- * 
  */
 
 @Service
 public class ObjectToCypher implements IObjectToCypher {
 	
-	private static final Logger logger = LoggerFactory
-			.getLogger(ObjectToCypher.class);
-
+	/*private static final Logger logger = LoggerFactory
+			.getLogger(ObjectToCypher.class);*/
 	@Autowired
 	private ICypherToJson cypherToJson;
 	
 	/**
-	 * This method takes a Node object and converts it into cypher query
-	 * @param  node  is a INode object 
-	 * @return       returnObj (It has two variables - json Query and objectToLabelMap(Key-Object,Value-Label))
+	 * {@inheritDoc}
 	 */
 	@Override
 	public ReturnParametersOfOTC objectToCypher(INode node) {
@@ -91,9 +86,7 @@ public class ObjectToCypher implements IObjectToCypher {
 	}
 
 	/**
-	 * This method takes a IRelNode object and converts it into cypher query
-	 * @param  node  is a IRelNode object 
-	 * @return       returnObj (It has three members - json Query, objectToLabelMap(Key-Object,Value-Label) and isReturnTrueMap(Key-Label,value-boolean)
+	 * {@inheritDoc}
 	 */
 	@Override
 	public ReturnParametersOfOTC objectToCypher(IRelNode node) {
@@ -276,7 +269,7 @@ public class ObjectToCypher implements IObjectToCypher {
 	 * @return        returns the source Operator(Operator between different relationships)
 	 */	
 	@SuppressWarnings("unchecked")
-	public String nodeObject(INode node,ArgumentsInOTC args) {
+	private String nodeObject(INode node,ArgumentsInOTC args) {
 		
 		Map<Object, String> objectToLabelMap=args.getObjectToLabelMap();
 		String dataSet=args.getDataSet();
@@ -324,7 +317,7 @@ public class ObjectToCypher implements IObjectToCypher {
 	 * @return        	 returns the source Operator(Operator between different relationships)
 	 */
 	@SuppressWarnings("unchecked")
-	public String nestedRelNodeObject(IRelNode relNode,ArgumentsInOTC args) {
+	private String nestedRelNodeObject(IRelNode relNode,ArgumentsInOTC args) {
 		
 		INode node=relNode.getNode();
 		Map<Object, String> objectToLabelMap=args.getObjectToLabelMap();
@@ -369,7 +362,7 @@ public class ObjectToCypher implements IObjectToCypher {
 	 * @param  relationship   is a IRelationship object  
 	 * @param  args	  		  is a object which has all the maps, dataset and counters
 	 */
-	public void relationshipObject(IRelationship relationship,ArgumentsInOTC args){
+	private void relationshipObject(IRelationship relationship,ArgumentsInOTC args){
 		
 		Map<String, String> matchMap=args.getMatchMap();
 		Map<Object, String> objectToLabelMap=args.getObjectToLabelMap();
@@ -422,7 +415,7 @@ public class ObjectToCypher implements IObjectToCypher {
 	 * @param  op   is a IOperator object  
 	 * @param  args	is a object which has all the maps, dataset and counters
 	 */
-	public void operatorObject(IOperator op,ArgumentsInOTC args){
+	private void operatorObject(IOperator op,ArgumentsInOTC args){
 	
 		PropertyOf propertyOf=args.getPropertyOf();
 		Map<String, String> matchMap=args.getMatchMap();
@@ -475,7 +468,7 @@ public class ObjectToCypher implements IObjectToCypher {
 	 * @param  prop   is a IProperty object  
 	 * @param  args	  is a object which has all the maps, dataset and counters
 	 */
-	public void propertyObject(IProperty prop,ArgumentsInOTC args){
+	private void propertyObject(IProperty prop,ArgumentsInOTC args){
 		
 		PropertyOf propertyOf=args.getPropertyOf();
 		Map<String,String> startMap=args.getStartMap();
@@ -560,7 +553,7 @@ public class ObjectToCypher implements IObjectToCypher {
 	 * @param  relNode   is a IRelNode object  
 	 * @param  args	  	 is a object which has all the maps, dataset and counters
 	 */
-	public void relNodeObject(IRelNode relNode,ArgumentsInOTC args){
+	private void relNodeObject(IRelNode relNode,ArgumentsInOTC args){
 		
 		Map<String,List<String>> whereMap=args.getWhereMap();
 		String targetOperator=args.getTargetOperator();
@@ -614,7 +607,7 @@ public class ObjectToCypher implements IObjectToCypher {
 	 * @param  direction is direction of relation between source and target
 	 * @param  matchMap  is map with key=target label and value=newly created relationshipS 
 	 */
-	public void addRelationToMatch(String node1, String node2, String relation,boolean direction,Map<String,String> matchMap) {
+	private void addRelationToMatch(String node1, String node2, String relation,boolean direction,Map<String,String> matchMap) {
 		String match;
 		if(!matchMap.containsKey(node2)){
 			
@@ -634,7 +627,7 @@ public class ObjectToCypher implements IObjectToCypher {
 	 * @param  label      is the label of property used in start clause
 	 * @param  prop 	  is a property to be stored in startMap
 	 */
-	public void addToStart(Map<String,String> startMap,String label, String prop) {
+	private void addToStart(Map<String,String> startMap,String label, String prop) {
 		startMap.put(label, prop);
 	}
 
@@ -642,7 +635,7 @@ public class ObjectToCypher implements IObjectToCypher {
 	 * @param  o   is Object
 	 * @return     true if o is instance of the Property else return false
 	 */
-	public boolean isProperty(Object o) {
+	private boolean isProperty(Object o) {
 		return o instanceof Property;
 	}
 
@@ -650,7 +643,7 @@ public class ObjectToCypher implements IObjectToCypher {
 	 * @param  element   is JAXBElement
 	 * @return true      if element contains "}or" else return false
 	 */
-	public boolean isOrOperator(JAXBElement<?> element) {
+	private boolean isOrOperator(JAXBElement<?> element) {
 		return element.getName().toString().contains("}or");
 	}
 
@@ -658,7 +651,7 @@ public class ObjectToCypher implements IObjectToCypher {
 	 * @param  element   is JAXBElement
 	 * @return           true if element contains "}and" else return false
 	 */
-	public boolean isAndOperator(JAXBElement<?> element) {
+	private boolean isAndOperator(JAXBElement<?> element) {
 		return element.getName().toString().contains("}and");
 	}
 	
@@ -666,7 +659,7 @@ public class ObjectToCypher implements IObjectToCypher {
 	 * @param  element   is Object
 	 * @return           true if o is instance of the Relationship else return false
 	 */
-	public boolean isRelationship(Object element) {
+	private boolean isRelationship(Object element) {
 		return element instanceof Relationship;
 	}
 	
@@ -674,7 +667,7 @@ public class ObjectToCypher implements IObjectToCypher {
 	 * @param  element1   is JAXBElement
 	 * @return            true if element contains "}source" else return false
 	 */
-	public boolean isSourceNode(JAXBElement<?> element1) {
+	private boolean isSourceNode(JAXBElement<?> element1) {
 		return element1.getName().toString().contains("}source");
 	}
 
@@ -682,7 +675,7 @@ public class ObjectToCypher implements IObjectToCypher {
 	 * @param  element1   is JAXBElement
 	 * @return            true if element contains "}target" else return false
 	 */
-	public boolean isTargetNode(JAXBElement<?> element1) {
+	private boolean isTargetNode(JAXBElement<?> element1) {
 		return element1.getName().toString().contains("}target");
 	}
 
@@ -690,7 +683,7 @@ public class ObjectToCypher implements IObjectToCypher {
 	 * @param  element   is Object
 	 * @return           true if o is instance of the JAXBElement else return false
 	 */
-	public boolean isJAXBelement(Object element) {
+	private boolean isJAXBelement(Object element) {
 		return element instanceof JAXBElement<?>;
 	}
 	
@@ -698,7 +691,7 @@ public class ObjectToCypher implements IObjectToCypher {
 	 * @param  value   is a String
 	 * @return         true if it is Numeric else return false
 	 */
-	public boolean isNumeric(String value) {
+	private boolean isNumeric(String value) {
 		return value.matches("(\\d*)");
 	}
 	
@@ -706,7 +699,7 @@ public class ObjectToCypher implements IObjectToCypher {
 	 * @param  num   integer
 	 * @return       increment by 1
 	 */
-	public int increment(int num) {
+	private int increment(int num) {
 		return num+1;
 	}
 }

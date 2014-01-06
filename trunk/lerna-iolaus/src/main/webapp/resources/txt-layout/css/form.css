@@ -118,7 +118,7 @@ input:focus, textarea:focus {
 	border-radius: 10px;
 	-moz-border-radius: 10px;
 	-webkit-border-radius: 10px;
-	margin-left: -80px;
+	margin-left: -60px;
 }
 .canceluser{
  
@@ -126,7 +126,7 @@ input:focus, textarea:focus {
 	color: #FFFFFF;
 	weight: bold;
 	height: 30px;
-	width:  70px;
+	width:  100px;
 	border-radius: 10px;
 	-moz-border-radius: 10px;
 	-webkit-border-radius: 10px;
