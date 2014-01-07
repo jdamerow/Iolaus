@@ -15,18 +15,13 @@ import edu.asu.lerna.iolaus.service.login.LernaGrantedAuthority;
 @Service
 public class Db4oDBUserManager extends DBManager implements IUserManager {
 
-	
-	/* (non-Javadoc)
-	 * @see edu.asu.momo.db.impl.IUserManager#saveUser(edu.asu.momo.core.User)
-	 */
+
 	@Override
 	public boolean saveUser(User user) {
 		return updateObject(user);
 	}
 	
-	/* (non-Javadoc)
-	 * @see edu.asu.momo.db.impl.IUserManager#getUserById(java.lang.String)
-	 */
+
 	@Override
 	public User getUserById(String username) {
 		User example = new User();
