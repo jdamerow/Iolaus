@@ -44,7 +44,7 @@
 			<tr>
 				<td><label>Password:</label></td>
 				<td><input type='password' disabled="disabled" class="text"  value="*********************" /></td>
-				<td align="left"><a class="response" href="'${pageContext.servletContext.contextPath}/auth/user/changepasswd/${username}'">Change Password</a></td>
+				<td align="left"><a class="response" href="${pageContext.servletContext.contextPath}/auth/user/changepasswd/${username}">Change Password</a></td>
 			</tr>
 			<tr>
 				<td><label>Email:</label></td>
