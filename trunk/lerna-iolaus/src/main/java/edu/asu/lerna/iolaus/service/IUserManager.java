@@ -26,9 +26,25 @@ public interface IUserManager {
 	 */
 	public abstract List<User> getAllUsers();
 
+	/**
+	 * Deletes the User
+	 * @param username
+	 * @return
+	 */
 	public abstract boolean deleteUser(String username);
 
+	/**
+	 * Modify the User
+	 * @param user
+	 * @param username
+	 * @return
+	 */
 	public abstract boolean modifyUser(User user, String username);
 	
+	/**
+	 * Check for admin access
+	 * @param user
+	 * @return
+	 */
 	public abstract boolean hasAdminAccess(User user);
 }
