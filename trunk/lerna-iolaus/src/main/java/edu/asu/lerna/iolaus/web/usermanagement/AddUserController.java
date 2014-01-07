@@ -103,7 +103,7 @@ public class AddUserController {
 		}		
 		
 		// Create the user object with the form data
-		User user = userFactory.createUser(userForm.getUsername(), userForm.getName(), userForm.getEmail(), userForm.getPassword(), userForm.getRoles());
+		User user = userFactory.createUser(userForm.getUsername().toLowerCase(), userForm.getName(), userForm.getEmail(), userForm.getPassword(), userForm.getRoles());
 		// Saves into db4o
 		userManager.saveUser(user);
 		

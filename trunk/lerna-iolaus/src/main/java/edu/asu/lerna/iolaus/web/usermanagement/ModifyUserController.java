@@ -164,8 +164,8 @@ public class ModifyUserController {
 			return "auth/user/modifyuser";
 		}
 		// Validate the user name modification for uniqueness or orginial name
-		if(!userName.equals(userForm.getUsername())){
-			User user = userManager.getUserById(userForm.getUsername());
+		if(!userName.equals(userForm.getUsername().toLowerCase())){
+			User user = userManager.getUserById(userForm.getUsername().toLowerCase());
 			if (!(user == null)){
 				model.addAttribute("errorMsg", "Username should original or unique one");
 				model.addAttribute("availableRoles", roleManager.getRolesList());
@@ -183,7 +183,7 @@ public class ModifyUserController {
 		}
 
 		// Create user details for modification in the db
-		User user = userFactory.createUser(userForm.getUsername(), userForm.getName(), userForm.getEmail(), userOld.getPassword(), userForm.getRoles());
+		User user = userFactory.createUser(userForm.getUsername().toLowerCase(), userForm.getName(), userForm.getEmail(), userOld.getPassword(), userForm.getRoles());
 		userManager.modifyUser(user, userName);
 
 		return "redirect:/auth/user/listuser";
