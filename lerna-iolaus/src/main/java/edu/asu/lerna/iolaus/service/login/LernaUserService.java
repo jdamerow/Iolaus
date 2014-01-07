@@ -31,7 +31,7 @@ public class LernaUserService implements UserDetailsService{
 	public synchronized UserDetails loadUserByUsername(String username)
 			throws UsernameNotFoundException {
 		// get user object from DB
-		UserDetails matchingUser = userManager.getUserById(username);
+		UserDetails matchingUser = userManager.getUserById(username.toLowerCase());
 		// Check if the object matches
 		if (matchingUser == null) {
 			throw new UsernameNotFoundException("Wrong username or password");
