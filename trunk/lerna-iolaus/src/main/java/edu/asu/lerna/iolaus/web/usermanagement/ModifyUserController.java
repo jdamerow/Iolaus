@@ -78,8 +78,12 @@ public class ModifyUserController {
 		try{
 			// deletes the user one by one
 			for(String v : values){
-				logger.info(" selected user to be delete : "+ v);
-				userManager.deleteUser(v);
+				if(v.equals(principal.getName())){
+					logger.info("Seleted User is loggedin, So can't delete");
+				}else{
+					logger.info(" selected user to be delete : "+ v);
+					userManager.deleteUser(v);
+				}
 			}
 		}catch(Exception e){
 			logger.error("DB Error :",e);
@@ -253,7 +257,7 @@ public class ModifyUserController {
 
 		// Prepare user backing bean
 		ModifyUserBackingBean mubb = userTranslator.translateModifyUser(user);
-				
+
 		User userPassChange = userFactory.createUser(mubb.getUsername(), mubb.getName(), mubb.getEmail(), passForm.getNewpassword(), mubb.getRoles());
 		userManager.modifyUser(userPassChange, userName);
 
