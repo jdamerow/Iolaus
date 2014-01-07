@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema targetNamespace="http://digitalhps.org/lerna-query-model" elementFormDefault="unqualified" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://digitalhps.org/lerna-query-model">
+
+   <xsd:element name="query" type="queryType"></xsd:element>
+    
+   <xsd:complexType name="queryType">
+    <xsd:sequence>
+    	<xsd:element name="database" type="databaseType" maxOccurs="1" minOccurs="1"></xsd:element>
+    	<xsd:element name="dataset" type="datasetType" maxOccurs="1" minOccurs="1"></xsd:element>
+    	<xsd:element name="node" type="nodeType" maxOccurs="1" minOccurs="0"></xsd:element>
+    	<xsd:element name="relationship" type="relationType" maxOccurs="1" minOccurs="0">
+    	</xsd:element>
+    </xsd:sequence>
+   </xsd:complexType>
+
+    
+   <xsd:complexType name="databaseType">
+    <xsd:attribute name="id" type="xsd:string"></xsd:attribute>
+   </xsd:complexType>
+
+    
+   <xsd:complexType name="datasetType">
+    <xsd:attribute name="id" type="xsd:string"></xsd:attribute>
+   </xsd:complexType>
+
+    
+    
+   <xsd:complexType name="nodeType">
+    <xsd:sequence>
+    	<xsd:element name="source" type="nodeType" maxOccurs="1" minOccurs="0">
+    	</xsd:element>
+    	<xsd:element name="target" type="nodeType" maxOccurs="1" minOccurs="0">
+    	</xsd:element>
+    	<xsd:element name="property" type="propertyType" maxOccurs="1" minOccurs="0">
+    	</xsd:element>
+    	<xsd:element name="or" type="opertorType" maxOccurs="1" minOccurs="0">
+    	</xsd:element>
+    	<xsd:element name="add" type="opertorType" maxOccurs="1" minOccurs="0">
+    	</xsd:element>
+    	<xsd:element name="relationship" type="relationType" maxOccurs="1" minOccurs="0">
+    	</xsd:element>
+    </xsd:sequence>
+   </xsd:complexType>
+    
+   <xsd:complexType name="relationType">
+    <xsd:sequence>
+    	<xsd:element name="source" type="nodeType" maxOccurs="1" minOccurs="0">
+    	</xsd:element>
+    	<xsd:element name="target" type="nodeType" maxOccurs="1" minOccurs="0">
+    	</xsd:element>
+    	<xsd:element name="property" type="propertyType" maxOccurs="1" minOccurs="0">
+    	</xsd:element>
+    	<xsd:element name="or" type="xsd:string" maxOccurs="1" minOccurs="0">
+    	</xsd:element>
+    	<xsd:element name="add" type="xsd:string" maxOccurs="1" minOccurs="0">
+    	</xsd:element>
+    </xsd:sequence>
+   </xsd:complexType>
+    
+    
+   <xsd:complexType name="propertyType">
+    <xsd:attribute name="name" type="xsd:string"></xsd:attribute>
+    <xsd:attribute name="type" type="xsd:string"></xsd:attribute>
+    <xsd:attribute name="value" type="xsd:string"></xsd:attribute>
+    <xsd:attribute name="start" type="xsd:string"></xsd:attribute>
+    <xsd:attribute name="end" type="xsd:string"></xsd:attribute>
+   </xsd:complexType>
+
+
+
+    
+    
+
+
+
+
+   <xsd:complexType name="opertorType">
+    <xsd:sequence>
+    	<xsd:element name="source" type="xsd:string" maxOccurs="1" minOccurs="0">
+    	</xsd:element>
+    	<xsd:element name="target" type="xsd:string" maxOccurs="1" minOccurs="0">
+    	</xsd:element>
+    	<xsd:element name="property" type="propertyType" maxOccurs="1" minOccurs="0">
+    	</xsd:element>
+    	<xsd:element name="add" type="xsd:string" maxOccurs="1" minOccurs="0">
+    	</xsd:element>
+    	<xsd:element name="or" type="xsd:string" maxOccurs="1" minOccurs="0">
+    	</xsd:element>
+    	<xsd:element name="relationship" type="relationType" maxOccurs="1" minOccurs="0">
+    	</xsd:element>
+    	<xsd:element name="node" type="nodeType" maxOccurs="1" minOccurs="0">
+    	</xsd:element>
+    </xsd:sequence>
+   </xsd:complexType>
+   
+  </xsd:schema>
