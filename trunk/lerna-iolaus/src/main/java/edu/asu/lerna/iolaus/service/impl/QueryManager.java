@@ -13,6 +13,7 @@ import java.util.Map.Entry;
 import java.util.Properties;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
@@ -20,6 +21,10 @@ import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 import javax.xml.transform.stream.StreamSource;
 
+import org.apache.velocity.Template;
+import org.apache.velocity.VelocityContext;
+import org.apache.velocity.app.VelocityEngine;
+import org.apache.velocity.exception.ResourceNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +37,7 @@ import edu.asu.lerna.iolaus.domain.json.impl.JsonRelation;
 import edu.asu.lerna.iolaus.domain.misc.ResultSet;
 import edu.asu.lerna.iolaus.domain.queryobject.IQuery;
 import edu.asu.lerna.iolaus.domain.queryobject.impl.Query;
+import edu.asu.lerna.iolaus.factory.IRestVelocityEngineFactory;
 import edu.asu.lerna.iolaus.service.IObjecttoXMLConverter;
 import edu.asu.lerna.iolaus.service.IQueryHandler;
 import edu.asu.lerna.iolaus.service.IQueryManager;
@@ -46,6 +52,9 @@ public class QueryManager implements IQueryManager {
 	@Autowired
 	private IObjecttoXMLConverter objectToXMLConverter;
 
+	@Autowired
+	private IRestVelocityEngineFactory restVelocityEngineFactory;
+	
 	@Autowired
 	private IQueryHandler queryHandler;
 	
@@ -141,6 +150,31 @@ public class QueryManager implements IQueryManager {
 		JAXBElement<Query> response1 =  unmarshaller.unmarshal(new StreamSource(is), Query.class);
 		IQuery q = response1.getValue();
 		return q;
+	}
+	
+		
+	@Override
+	public String getErrorMsg(String errorMsg,HttpServletRequest req) {
+		VelocityEngine engine = null;
+		Template template = null;
+		StringWriter sw = new StringWriter();
+
+		try {
+			engine = restVelocityEngineFactory.getVelocityEngine(req);
+			engine.init();
+			template = engine
+					.getTemplate("velocitytemplates/error.vm");
+			VelocityContext context = new VelocityContext(
+					restVelocityEngineFactory.getVelocityContext());
+			context.put("errMsg", errorMsg);
+			template.merge(context, sw);
+			return sw.toString();
+		} catch (ResourceNotFoundException e) {
+			logger.error("Exception:", e);
+		} catch (Exception e) {
+			logger.error("Exception:", e);
+		}
+		return errorMsg;
 	}
 
 	/**
