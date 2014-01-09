@@ -6,10 +6,10 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URL;
+import java.net.URLConnection;
 import java.net.URLDecoder;
 import java.util.List;
 
-import org.apache.commons.httpclient.util.HttpURLConnection;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,10 +25,10 @@ public class Neo4jInstanceManager implements INeo4jInstanceManager {
 
 	@Autowired 
 	Neo4jRegistry neo4jRegistry;
-	
+
 	private static final Logger logger = LoggerFactory
 			.getLogger(Neo4jInstanceManager.class);
-	
+
 	@Override
 	public String addNeo4jInstance(INeo4jInstance instance) {
 		List<INeo4jInstance> fileList=neo4jRegistry.getfileList();
@@ -46,7 +46,7 @@ public class Neo4jInstanceManager implements INeo4jInstanceManager {
 			if(file.getPort().equals(port)&&file.getHost().equalsIgnoreCase(host)){//if combination of port and host already exists then return "0"
 				return "0";
 			}
-			
+
 			if(Integer.parseInt(file.getId())>maxId){ 
 				maxId=Integer.parseInt(file.getId());
 			}
@@ -70,8 +70,8 @@ public class Neo4jInstanceManager implements INeo4jInstanceManager {
 				logger.info("Error occured while creating the file");
 			}else{
 				try{
-				bw.close();
-				logger.info("Error occured while writting to the file");
+					bw.close();
+					logger.info("Error occured while writting to the file");
 				}catch(IOException exp){
 					System.out.println("Error occured while closing the file");
 				}	
@@ -82,20 +82,22 @@ public class Neo4jInstanceManager implements INeo4jInstanceManager {
 
 	private boolean checkConnectivity(String port, String host) {
 		boolean isAlive = true;
+		String urlStr="";
 		try {
-		  URL url = new URL("http://"+host+":"+port+"/webadmin/"); 
-		  HttpURLConnection connection=(HttpURLConnection) url.openConnection();//It will throw an exception if not able to connect to the server. 
-		  connection.getInputStream();
+			urlStr="http://"+host+":"+port+"/webadmin/";
+			URL url = new URL(urlStr); 
+			URLConnection connection= url.openConnection();//It will throw an exception if not able to connect to the server. 
+			connection.getInputStream();
 		} catch (Exception e) {
-		  isAlive = false;
-		  System.out.println(isAlive);
+			isAlive = false;
+			logger.error("Error in the connectivity : ",e);
 		}
 		return isAlive;
 	}
 
 	@Override
 	public void deleteNeo4jInstance(String instanceId) throws UnsupportedEncodingException {
-		
+
 		List<INeo4jInstance> configFileList=neo4jRegistry.getfileList();
 		for(INeo4jInstance configFile:configFileList){
 			if(configFile.getId().equals(instanceId)){
@@ -128,7 +130,7 @@ public class Neo4jInstanceManager implements INeo4jInstanceManager {
 		}
 		return true;
 	}
-	
+
 	@Override 
 	public INeo4jInstance getInstance(String id){
 		INeo4jInstance instance=new Neo4jInstance();
@@ -140,12 +142,12 @@ public class Neo4jInstanceManager implements INeo4jInstanceManager {
 		}
 		return instance;
 	}
-	
+
 	@Override
 	public List<INeo4jInstance> getAllInstances() {
 		return neo4jRegistry.getfileList();
 	}
-	
+
 	@Override
 	public String getInstanceId(String port, String host){
 		List<INeo4jInstance> fileList=neo4jRegistry.getfileList();
