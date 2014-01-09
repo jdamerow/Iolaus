@@ -40,9 +40,9 @@ public interface INeo4jInstanceManager {
 	/**
 	 * This method takes the object of {@link INeo4jInstance} and updates it. 
 	 * @param instance object of {@link INeo4jInstance}
-	 * @return  truth value of update operation
+	 * @return  the update code
 	 */
-	abstract boolean updateNeo4jInstance(INeo4jInstance instance);
+	abstract int updateNeo4jInstance(INeo4jInstance instance);
 	
 	/**
 	 * This method takes port number and host as input and returns the corresponding instance id.

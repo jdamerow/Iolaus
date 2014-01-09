@@ -1,5 +1,5 @@
 id=1
 description=Instance is running at port 7476
-host=diging.asu.edu
+host=localhost
 port=7476
 active=true

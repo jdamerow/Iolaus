@@ -176,12 +176,18 @@ public class InstanceController {
 			logger.info("Access not allowes");
 			return "auth/noaccess";
 		}
-		boolean flag=instanceManager.updateNeo4jInstance(instance);//flag=true if combination of port number and host is already in use.
-		if(!flag){
+		int flag=instanceManager.updateNeo4jInstance(instance);//flag=1 if combination of port number and host is already in use.
+		if(flag==1){
 			model.addAttribute("instance", instance);
 			model.addAttribute("flag", true);
 			return "auth/editInstance";
 		}
+		if(flag==2){
+			model.addAttribute("instance", instance);
+			model.addAttribute("noConnectivity", true);
+			return "auth/editInstance";
+		}
+		
 	    return "redirect:/auth/listInstances";
 	}
 	

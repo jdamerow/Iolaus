@@ -72,7 +72,7 @@ public class FragmentQuery implements IFragmentQuery {
 		String source="";
 		List<IRelNode> keyElements=new ArrayList<IRelNode>();
 		if(n!=null){
-			ReturnParametersOfOTC nodeListObject = objectToCypher.objectToCypher(n);
+			ReturnParametersOfOTC nodeListObject = objectToCypher.objectToCypher(n,q.getDataset().getId());
 			Map<String,Boolean> isReturnTempMap=nodeListObject.getIsReturnMap();
 			source=PropertyOf.SOURCE.toString();
 			isReturnTrueMap.put(source, n.isReturn()==null?false:n.isReturn());
@@ -93,7 +93,7 @@ public class FragmentQuery implements IFragmentQuery {
 			IRelNode relNode=null;
 			if(keyElements.size()!=0){//if there are more IRelNode objects having IRelation Object
 				while((relNode=keyElements.get(counter++))!=null){
-					nodeListObject = objectToCypher.objectToCypher(relNode);
+					nodeListObject = objectToCypher.objectToCypher(relNode,q.getDataset().getId());
 					isReturnTempMap=nodeListObject.getIsReturnMap();
 					source=allNodeToLabelMap.get(relNode);
 					parsedNodeToLabelMap.put(relNode,source);

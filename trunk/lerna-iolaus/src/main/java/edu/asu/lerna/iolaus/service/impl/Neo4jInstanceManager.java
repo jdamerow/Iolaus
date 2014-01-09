@@ -112,10 +112,13 @@ public class Neo4jInstanceManager implements INeo4jInstanceManager {
 	}
 
 	@Override
-	public boolean updateNeo4jInstance(INeo4jInstance instance){
+	public int updateNeo4jInstance(INeo4jInstance instance){
 		List<INeo4jInstance> configFileList=neo4jRegistry.getfileList();
 		String port=instance.getPort();
 		String host=instance.getHost();
+		if(!checkConnectivity(port, host)&&instance.isActive()==true?true:false){
+			return 2;
+		}
 		for(INeo4jInstance configFile:configFileList){
 			if(instance.getId().equals(configFile.getId())){
 				String modifiedDescription=instance.getDescription().replaceAll("\n", " ").replace("\r","");
@@ -125,10 +128,10 @@ public class Neo4jInstanceManager implements INeo4jInstanceManager {
 				configFile.setActive(instance.isActive()==true?true:false);
 			}
 			else if(configFile.getPort().equals(port)&&configFile.getHost().equalsIgnoreCase(host)){//if combination of port and host already exists then return false
-				return false;
+				return 1;
 			}
 		}
-		return true;
+		return 0;
 	}
 
 	@Override 
