@@ -45,7 +45,7 @@ public class ObjectToCypher implements IObjectToCypher {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public ReturnParametersOfOTC objectToCypher(INode node) {
+	public ReturnParametersOfOTC objectToCypher(INode node,String dataSet) {
 		
 		//key is label and value is its property used in Start clause of Cypher query
 		Map<String,String> startMap = new LinkedHashMap<String,String>();
@@ -57,7 +57,6 @@ public class ObjectToCypher implements IObjectToCypher {
 		Map<Object,String> objectToLabelMap=new LinkedHashMap<Object,String>();
 		//It is a map with key=Unique label and value=its return value
 		Map<String,Boolean> labelToIsReturnMap=new HashMap<String,Boolean>();
-		String dataSet="mblcourses";
 		//Set Parameters in args
 		ArgumentsInOTC args=new ArgumentsInOTC();
 		args.setStartMap(startMap);
@@ -89,7 +88,7 @@ public class ObjectToCypher implements IObjectToCypher {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public ReturnParametersOfOTC objectToCypher(IRelNode node) {
+	public ReturnParametersOfOTC objectToCypher(IRelNode node, String dataSet) {
 		
 		//key is label and value is its property used in Start clause of Cypher query
 		Map<String,String> startMap = new LinkedHashMap<String,String>();
@@ -101,7 +100,6 @@ public class ObjectToCypher implements IObjectToCypher {
 		Map<Object,String> objectToTargetLabelMap=new LinkedHashMap<Object,String>();
 		//It is a map with key=Unique label and value=its return value
 		Map<String,Boolean> labelToIsReturnMap=new HashMap<String,Boolean>();
-		String dataSet="mblcourses";
 		ArgumentsInOTC args=new ArgumentsInOTC();
 		//Set Parameters in args
 		args.setStartMap(startMap);

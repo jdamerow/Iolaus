@@ -15,15 +15,17 @@ public interface IObjectToCypher {
 	/**
 	 * This method will convert {@link Node} to the cypher query.
 	 * @param node is a {@link Node} object.
+	 * @param dataSet is a dataSet of the Objects in the Neo4j
 	 * @return the object of {@link ReturnParametersOfOTC}.
 	 */
-	ReturnParametersOfOTC objectToCypher(INode node);
+	ReturnParametersOfOTC objectToCypher(INode node,String dataSet);
 	/**
 	 * This method will convert {@link RelNode} object to the cypher query.
 	 * @param node is a {@link RelNode} object.
+	 * @param dataSet is a dataSet of the Objects in the Neo4j
 	 * @return the object of {@link ReturnParametersOfOTC}
 	 */
-	ReturnParametersOfOTC objectToCypher(IRelNode node);
+	ReturnParametersOfOTC objectToCypher(IRelNode node,String dataSet);
 	
 	String s="Start ";
 	String m="Match ";
