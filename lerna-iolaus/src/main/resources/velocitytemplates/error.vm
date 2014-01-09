@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<Iolaus:IolausReply xmlns:Iolaus="http://www.digitalhps.org/Iolaus" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="$url/resources/restxmlschema/error.xsd">
+	<Iolaus:ErrorMessage>
+		$errMsg 
+	</Iolaus:ErrorMessage>
+</Iolaus:IolausReply>

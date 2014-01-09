@@ -3,6 +3,7 @@ package edu.asu.lerna.iolaus.service;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.xml.bind.JAXBException;
 
 import edu.asu.lerna.iolaus.domain.queryobject.IQuery;
@@ -51,4 +52,6 @@ public interface IQueryManager {
 	 * @return a map with key = id of all the IJson objects for which return="true" and value=List of IJsonNode or IJsomRelation 
 	 */
 	public abstract Map<String, List<Object>> deleteDuplicateRows(Map<String, List<Object>> resultSet);
+
+	public abstract String getErrorMsg(String errorMsg, HttpServletRequest req);
 }
