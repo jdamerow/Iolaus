@@ -10,7 +10,6 @@
 
 	<!-- Root Context: defines shared resources visible to all other web components -->
 
-	<!-- <mvc:annotation-driven conversion-service="conversionService" /> -->
 	<context:component-scan base-package="edu.asu.lerna" />
 
 </beans>

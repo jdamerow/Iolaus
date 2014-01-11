@@ -15,5 +15,6 @@
 	</bean>
 	
 	<bean id="repositoryHandler" class="edu.asu.lerna.iolaus.service.impl.RepositoryHandler" />
+	<bean id="cacheManager" class="edu.asu.lerna.iolaus.service.impl.CacheManager" />
 	
 </beans>

@@ -72,21 +72,24 @@ public class CacheManager implements ICacheManager {
 	public List<List<Object>> executeQuery(String json,String instance) {
 		List<List<Object>> resultSet=null;
 
-		//Check if the result is available in the cache
-		try {
-			resultSet=getCachedResults(json,instance);			
-		} catch (Exception e) {
-			logger.debug("Error in fetching the cache :",e);
-		}
-
-		//Query the neo4j instance and save the result to a cache
-		if(resultSet==null){
-			resultSet=repositoryHandler.executeQuery(json, instance);
-			// Save the result set to the cache
+		if(json !=null && instance != null && !json.equals("") && !instance.equals(""))		
+		{
+			//Check if the result is available in the cache
 			try {
-				cacheResults(json,instance,resultSet);
+				resultSet=getCachedResults(json,instance);			
 			} catch (Exception e) {
-				logger.debug("Error in saving to the cache :",e);
+				logger.debug("Error in fetching the cache :",e);
+			}
+
+			//Query the neo4j instance and save the result to a cache
+			if(resultSet==null){
+				resultSet=repositoryHandler.executeQuery(json, instance);
+				// Save the result set to the cache
+				try {
+					cacheResults(json,instance,resultSet);
+				} catch (Exception e) {
+					logger.debug("Error in saving to the cache :",e);
+				}
 			}
 		}
 
