@@ -38,7 +38,7 @@ public class RepositoryManager implements IRepositoryManager {
 	public List<List<Object>> executeQuery(String json, List<String> dbInstances)
 	{
 		logger.debug("\n\n");
-		List<List<Object>> listOfNodesAndRelations = new ArrayList<List<Object>>();
+		List<List<Object>> listOfNodesAndRelations = null;
 		List<String> instanceUrl = new ArrayList<String>();
 		Iterator<String> iterator = dbInstances.iterator();
 		while(iterator.hasNext())
@@ -62,54 +62,5 @@ public class RepositoryManager implements IRepositoryManager {
 				listOfNodesAndRelations.addAll(queryResults);
 		}
 		return listOfNodesAndRelations;
-	}
-
-	//TODO:Remove this method
-	private void printList(List<List<Object>> listOfNodesAndRelations)
-	{
-		int count=0;
-		if(listOfNodesAndRelations != null)
-		{
-			for(List<Object> rowList: listOfNodesAndRelations)
-			{
-				System.out.println("--------------------------------------------"+count++);
-				for(Object obj: rowList)
-				{
-					if(obj instanceof IJsonNode)
-					{
-						IJsonNode jsonNode = (IJsonNode) obj;
-						System.out.println(">> Node <<");
-						System.out.println("Id: "+jsonNode.getId());
-						System.out.println("Type: "+jsonNode.getType());
-						System.out.println("Data size: "+jsonNode.getData().size());
-						Iterator<Entry<String, String>> iterator = jsonNode.getData().entrySet().iterator();
-						while(iterator.hasNext())
-						{
-							Entry<String, String> dataEntry = iterator.next();
-							System.out.println(dataEntry.getKey()+" : "+dataEntry.getValue());
-						}
-						System.out.println();
-					}
-					else if(obj instanceof IJsonRelation)
-					{
-						IJsonRelation jsonRelation = (IJsonRelation) obj;
-						System.out.println(">> Relation <<");
-						System.out.println("Id: "+jsonRelation.getId());
-						System.out.println("Start: "+jsonRelation.getStartNode());
-						System.out.println("End: "+jsonRelation.getEndNode());
-						System.out.println("Type: "+jsonRelation.getType());
-						System.out.println("Data size: "+jsonRelation.getData().size());
-						Iterator<Entry<String, String>> iterator = jsonRelation.getData().entrySet().iterator();
-						while(iterator.hasNext())
-						{
-							Entry<String, String> dataEntry = iterator.next();
-							System.out.println(dataEntry.getKey()+" : "+dataEntry.getValue());
-						}
-						System.out.println();
-					}
-				}
-				System.out.println("--------------------------------------------");
-			}
-		}
 	}
 }

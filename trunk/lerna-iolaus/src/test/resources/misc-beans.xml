@@ -14,4 +14,6 @@
 		<property name="location" value="classpath:xmlstrings.properties" />
 	</bean>
 	
+	<bean id="repositoryHandler" class="edu.asu.lerna.iolaus.service.impl.RepositoryHandler" />
+	
 </beans>

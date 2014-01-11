@@ -10,23 +10,7 @@
 
 	<!-- Root Context: defines shared resources visible to all other web components -->
 
-	<mvc:annotation-driven conversion-service="conversionService" />
+	<!-- <mvc:annotation-driven conversion-service="conversionService" /> -->
 	<context:component-scan base-package="edu.asu.lerna" />
-
-	<import resource="roles.xml" />
-	<import resource="neo4j.xml" />
-	<import resource="memcached.xml" />
-	<import resource="misc-beans.xml" />
-	
-	<bean id="conversionService"
-		class="org.springframework.format.support.FormattingConversionServiceFactoryBean">
-		<property name="converters">
-			<list>
-				<bean class="edu.asu.lerna.iolaus.converters.RoleStringConverter" />
-				<bean class="edu.asu.lerna.iolaus.converters.UserStringConverter" />
-				<bean class="edu.asu.lerna.iolaus.converters.UserBackingBeanConverter" />
-			</list>
-		</property>
-	</bean>
 
 </beans>

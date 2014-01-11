@@ -8,6 +8,8 @@ import java.util.List;
 
 import javax.ws.rs.core.MediaType;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import com.sun.jersey.api.client.Client;
@@ -31,19 +33,28 @@ import edu.asu.lerna.iolaus.service.IRepositoryHandler;
 @Service
 public class RepositoryHandler implements IRepositoryHandler {
 
-
+	private static final Logger logger = LoggerFactory
+			.getLogger(RepositoryHandler.class);
+	
 	/**
 	 * {@inheritDoc}
 	 */
 	@Override
 	public List<List<Object>> executeQuery(String jsonTraverserPayload, String neo4jInstance)
 	{
+		if(jsonTraverserPayload == null || jsonTraverserPayload.equals("") || neo4jInstance == null || neo4jInstance.equals(""))
+			return null;
+			
+		
 		URI traverserUri = null;
 
 		try {
 			traverserUri = new URI( neo4jInstance );
-		} catch (URISyntaxException e1) {
-			e1.printStackTrace();
+		} catch (URISyntaxException e) {
+			logger.debug("The input json: "+jsonTraverserPayload);
+			logger.debug("Neo4j instance value: "+neo4jInstance);
+			logger.debug("Exception occurrent in the REST connection to the neo4j instance", e);
+			return null;
 		}
 		WebResource resource = Client.create().resource( traverserUri );
 		ClientResponse response = resource.accept(MediaType.APPLICATION_JSON)
@@ -54,6 +65,7 @@ public class RepositoryHandler implements IRepositoryHandler {
 
 		String oneSingleJsonString = response.getEntity(String.class);
 		response.close();
+		System.out.println(oneSingleJsonString);
 		return getListOfNodesAndRelations(oneSingleJsonString);
 	}
 
@@ -65,7 +77,7 @@ public class RepositoryHandler implements IRepositoryHandler {
 	 */
 	private List<List<Object>> getListOfNodesAndRelations(String oneSingleJsonString)
 	{
-		List<List<Object>> resultList = new ArrayList<List<Object>>();
+		List<List<Object>> resultList = null;
 		IJsonNode node = null;
 		IJsonRelation relation = null;
 
@@ -73,6 +85,8 @@ public class RepositoryHandler implements IRepositoryHandler {
 		JSONArray dataArray = jsonResponseObject.optJSONArray("data");
 
 		if(dataArray != null)
+		{
+			resultList = new ArrayList<List<Object>>();
 			for(int i=0;i<dataArray.length();i++)
 			{
 				List<Object> rowList = new ArrayList<Object>();
@@ -151,6 +165,7 @@ public class RepositoryHandler implements IRepositoryHandler {
 					} //End of else for node and relation parsing
 				} //End of for: row data
 			} //End of for: complete json
+		} // End of if: null check
 
 		return resultList;
 	}
