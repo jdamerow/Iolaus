@@ -38,7 +38,7 @@ public class RepositoryManager implements IRepositoryManager {
 	public List<List<Object>> executeQuery(String json, List<String> dbInstances)
 	{
 		logger.debug("\n\n");
-		List<List<Object>> listOfNodesAndRelations = null;
+		List<List<Object>> listOfNodesAndRelations = new ArrayList<List<Object>>();;
 		List<String> instanceUrl = new ArrayList<String>();
 		Iterator<String> iterator = dbInstances.iterator();
 		while(iterator.hasNext())
