@@ -11,7 +11,7 @@ import java.util.List;
 public interface IRepositoryHandler {
 
 	/**
-	 * Execute the input json in a neo4j instance.
+	 * Execute the input json in a neo4j instance. Will return null if json or neo4j instance is null or empty.
 	 * 
 	 * @param json			The json query to be executed on neo4j.
 	 * @param instance		Reference to a running neo4j instance.
