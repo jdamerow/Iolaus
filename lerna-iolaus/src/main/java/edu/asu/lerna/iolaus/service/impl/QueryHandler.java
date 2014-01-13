@@ -15,6 +15,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import edu.asu.lerna.iolaus.configuration.neo4j.iml.Neo4jRegistry;
+import edu.asu.lerna.iolaus.domain.INeo4jInstance;
 import edu.asu.lerna.iolaus.domain.Label;
 import edu.asu.lerna.iolaus.domain.json.IJsonNode;
 import edu.asu.lerna.iolaus.domain.json.IJsonRelation;
@@ -44,6 +46,9 @@ public class QueryHandler implements IQueryHandler{
 	
 	@Autowired
 	private IAggregateResult aggregateResults;
+	
+	@Autowired
+	private Neo4jRegistry registry;
 
 	private static final Logger logger = LoggerFactory
 			.getLogger(QueryHandler.class);
@@ -62,6 +67,12 @@ public class QueryHandler implements IQueryHandler{
 		Iterator<IDatabase> dbIterator = dbList.iterator();
 		while(dbIterator.hasNext()){
 			dbInstances.add(dbIterator.next().getId());//add a dbInstance to the List;
+		}
+		
+		if(dbInstances.size()==0){
+			for(INeo4jInstance instance:registry.getfileList()){
+				dbInstances.add(instance.getId());
+			}
 		}
 		
 		Map<String,List<Object>> resultSet;

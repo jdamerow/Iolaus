@@ -9,6 +9,13 @@
 	color:red;
 	margin-left:0px;
 }
+
+.info{
+	color: green;
+	font-weight: 500;
+	margin-top: -30px;
+	margin-left:170px;
+}
 </style>
 
 <script type="text/javascript">
@@ -67,6 +74,17 @@ function validate()
 			<td><label>Port Number:</label></td>
 			<td><input class ="text" type="text" name="port" value="${instance.port}" /></td>
 			
+	</tr>
+	<tr>		
+			<td><label>Database Path:</label></td>
+			<c:choose>
+				<c:when test="${not empty instance}">
+					<td><input class ="text" type="text" name="dbPath" value="${instance.dbPath}" /><div class="info">Default path is db/data</div></td>
+				</c:when>
+				<c:otherwise>
+					<td><input class ="text" type="text" name="dbPath" value="db/data" /><div class="info">Default path is db/data</div></td>
+				</c:otherwise>
+			</c:choose>			
 	</tr>		
 	<tr>		
 			<td><label>Host:</label></td>

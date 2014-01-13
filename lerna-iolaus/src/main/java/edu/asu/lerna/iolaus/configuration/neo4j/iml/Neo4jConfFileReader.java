@@ -4,9 +4,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.URLDecoder;
-import java.text.DateFormat;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
@@ -48,7 +46,6 @@ public class Neo4jConfFileReader {
 			} catch (IOException e) {
 
 			}
-			DateFormat formatter = new SimpleDateFormat("dd-MMM-yy");
 			for(String key : properties.stringPropertyNames()) {
 				String value = properties.getProperty(key);
 				if(key.equals("id"))
@@ -63,9 +60,8 @@ public class Neo4jConfFileReader {
 					instance.setActive(Boolean.parseBoolean(value));
 				if(key.equals("userName"))
 					instance.setUserName(value);
-				if(key.equals("date")){
-					instance.setDate(formatter.parse(value));
-				}
+				if(key.equals("dbPath"))
+					instance.setDbPath(value);
 			}
 			listOfFiles.add(instance);
 		}
