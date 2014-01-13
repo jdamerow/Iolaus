@@ -87,7 +87,7 @@
 
     <xs:complexType name="databaseList">
     	<xs:sequence>
-    		<xs:element ref="database" maxOccurs="unbounded" minOccurs="1"></xs:element>
+    		<xs:element ref="database" maxOccurs="unbounded" minOccurs="0"></xs:element>
     	</xs:sequence>
     </xs:complexType>
 

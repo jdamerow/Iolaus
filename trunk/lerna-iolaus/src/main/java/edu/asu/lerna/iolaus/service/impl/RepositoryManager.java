@@ -3,17 +3,15 @@ package edu.asu.lerna.iolaus.service.impl;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map.Entry;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import edu.asu.lerna.iolaus.configuration.neo4j.iml.Neo4jRegistry;
 import edu.asu.lerna.iolaus.domain.INeo4jInstance;
-import edu.asu.lerna.iolaus.domain.json.IJsonNode;
-import edu.asu.lerna.iolaus.domain.json.IJsonRelation;
 import edu.asu.lerna.iolaus.service.ICacheManager;
 import edu.asu.lerna.iolaus.service.IRepositoryManager;
 
@@ -22,13 +20,17 @@ public class RepositoryManager implements IRepositoryManager {
 
 	private static final Logger logger = LoggerFactory
 			.getLogger(RepositoryManager.class);
-//	private List<IRepositoryHandler> repoHanlders;
+
 	@Autowired
 	private ICacheManager cacheManager;
 	
 	@Autowired
 	private Neo4jRegistry neo4jInstances;
 
+	@Autowired
+	@Qualifier("cypherEndPoint")
+	private String cypherEndPoint;
+	
 	public RepositoryManager()
 	{
 			//repoHanlders = new ArrayList<IRepositoryHandler>();
@@ -50,7 +52,7 @@ public class RepositoryManager implements IRepositoryManager {
 				INeo4jInstance dbFile = fileIterator.next();
 				if (dbName.equals(dbFile.getId())&&dbFile.isActive())
 				{
-					instanceUrl.add("http://localhost:"+dbFile.getPort()+"/db/data/cypher");
+					instanceUrl.add("http://+"+dbFile.getHost()+":"+dbFile.getPort()+"/"+dbFile.getDbPath()+"/"+cypherEndPoint);
 				}
 			}
 		}

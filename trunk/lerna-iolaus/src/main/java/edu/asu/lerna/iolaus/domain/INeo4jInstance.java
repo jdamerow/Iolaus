@@ -1,13 +1,8 @@
 package edu.asu.lerna.iolaus.domain;
 
-import java.util.Date;
-
-
 public interface INeo4jInstance {
 	public abstract String getUserName();
-	public abstract Date getDate();
 	public abstract void setUserName(String userName);
-	public abstract void setDate(Date date);
 	public abstract boolean isActive();
 	public abstract void setActive(boolean active);
 	public abstract String getId();
@@ -18,4 +13,6 @@ public interface INeo4jInstance {
 	public abstract void setHost(String host);
 	public abstract void setDescription(String description);
 	public abstract void setId(String id);
+	public abstract void setDbPath(String dbPath);
+	public abstract String getDbPath();
 }

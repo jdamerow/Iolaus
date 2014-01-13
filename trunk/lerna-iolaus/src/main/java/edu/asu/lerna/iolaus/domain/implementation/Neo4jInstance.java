@@ -1,7 +1,5 @@
 package edu.asu.lerna.iolaus.domain.implementation;
 
-import java.util.Date;
-
 import edu.asu.lerna.iolaus.domain.INeo4jInstance;
 
 public class Neo4jInstance implements INeo4jInstance{
@@ -11,9 +9,19 @@ public class Neo4jInstance implements INeo4jInstance{
 	private String host;
 	private String port;
 	private boolean active;
-	private Date date;
 	private String userName;
+	private String dbPath;
 	
+	@Override
+	public String getDbPath() {
+		return dbPath;
+	}
+
+	@Override
+	public void setDbPath(String dbPath) {
+		this.dbPath = dbPath;
+	}
+
 	@Override
 	public boolean isActive() {
 		return active;
@@ -70,13 +78,5 @@ public class Neo4jInstance implements INeo4jInstance{
 	@Override
 	public void setUserName(String userName) {
 		this.userName = userName;
-	}
-	@Override
-	public Date getDate() {
-		return date;
-	}
-	@Override
-	public void setDate(Date date) {
-		this.date = date;
 	}
 }

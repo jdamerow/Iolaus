@@ -13,7 +13,6 @@
 
 
 
-
 	<neo4j:repositories base-package="edu.asu.lerna.iolaus.repository"></neo4j:repositories>
 	<neo4j:config graphDatabaseService="graphDatabaseService" />
 	<bean id="graphDatabaseService"

@@ -57,9 +57,10 @@ public class Neo4jInstanceManager implements INeo4jInstanceManager {
 			bw=new BufferedWriter(new FileWriter(URLDecoder.decode(classPath.substring(0,classPath.indexOf("classes")),"UTF-8")+"classes/ConfigurationFiles/Neo4jConfiguration"+(maxId+1)+".txt"));
 			bw.append("id:"+(maxId+1)+"\n"); 
 			String modifiedDescription=instance.getDescription().replaceAll("\n", " ").replace("\r","");
-			bw.append("description:"+modifiedDescription+"\n");
-			bw.append("host:"+instance.getHost()+"\n");
 			bw.append("port:"+instance.getPort()+"\n");
+			bw.append("host:"+instance.getHost()+"\n");
+			bw.append("dbPath:"+instance.getDbPath()+"\n");
+			bw.append("description:"+modifiedDescription+"\n");
 			bw.append("active:"+String.valueOf(instance.isActive()==true?true:false)+"\n");
 			bw.append("userName:"+instance.getUserName());
 			bw.close();

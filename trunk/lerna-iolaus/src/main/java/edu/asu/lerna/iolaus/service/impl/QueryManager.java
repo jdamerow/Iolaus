@@ -1,8 +1,16 @@
 package edu.asu.lerna.iolaus.service.impl;
 
+import java.io.BufferedWriter;
 import java.io.ByteArrayInputStream;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringWriter;
+import java.io.File;
+
+import java.net.URL;
+import java.net.URLDecoder;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -29,6 +37,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.xml.sax.SAXException;
+
+import javax.xml.XMLConstants;
+import javax.xml.transform.Source;
+import javax.xml.validation.Schema;
+import javax.xml.validation.SchemaFactory;
+import javax.xml.validation.Validator;
 
 import edu.asu.lerna.iolaus.domain.json.IJsonNode;
 import edu.asu.lerna.iolaus.domain.json.IJsonRelation;
@@ -66,8 +81,9 @@ public class QueryManager implements IQueryManager {
 
 
 	@Override
-	public String executeQuery(String inputXML) throws JAXBException
+	public String executeQuery(String inputXML) throws JAXBException,SAXException,IOException
 	{
+		validateXml(inputXML);
 		//Parse the xml and generate the query object from it
 		IQuery q =  this.xmlToQueryObject(inputXML);
 		if(q == null){
@@ -84,6 +100,22 @@ public class QueryManager implements IQueryManager {
 
 		//Marshall to xml
 		return getRESTOutput(finalResultSet);
+	}
+	
+	private void validateXml(String res) throws SAXException, IOException {
+		String classPath=URLDecoder.decode(QueryManager.class.getProtectionDomain().getCodeSource().getLocation().getPath(),"UTF-8");
+		URL schemaFile = new File(classPath.substring(0,classPath.indexOf("classes"))+"classes/query-schema.xsd").toURI().toURL();
+		BufferedWriter bw=new BufferedWriter(new FileWriter("input.xml"));
+		bw.write(res);
+		bw.close();
+		File inputFile=new File("input.xml");
+		Source xmlFile = new StreamSource(inputFile);
+		SchemaFactory schemaFactory = SchemaFactory
+		    .newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
+		Schema schema = schemaFactory.newSchema(schemaFile);
+		Validator validator = schema.newValidator();
+		validator.validate(xmlFile);
+		inputFile.delete();
 	}
 
 	/**
