@@ -9,9 +9,10 @@ import edu.asu.lerna.iolaus.domain.implementation.Role;
 import edu.asu.lerna.iolaus.service.IRoleManager;
 
 /**
- * Implemented by IRolemanager methods.
+ * @description : Implemented by IRolemanager methods. 
+ * Class works on getting All {@link Role} in the DB, {@link Role} by role id
  * 
- * @author Lohith Dwaraka
+ * @author : Lohith Dwaraka
  *
  */
 @Service
@@ -21,9 +22,8 @@ public class RoleManager implements IRoleManager{
 	private List<Role> roles;
 
 	/**
-	 * Get role by its id.
-	 * @param id role id
-	 * @return role with appropriate id
+	 * 
+	 * {@inheritDoc}
 	 */
 	@Override
 	public Role[] getRoles() {
@@ -32,8 +32,8 @@ public class RoleManager implements IRoleManager{
 	
 	
 	/**
-	 * Get all roles.
-	 * @return array of all roles
+	 * 
+	 * {@inheritDoc}
 	 */
 	@Override
 	public Role getRole(String id) {
@@ -45,8 +45,8 @@ public class RoleManager implements IRoleManager{
 	}
 
 	/**
-	 * Get All roles in a list
-	 * @return list of all the roles
+	 * 
+	 * {@inheritDoc}
 	 */
 	@Override
 	public List<Role> getRolesList() {

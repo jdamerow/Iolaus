@@ -22,7 +22,7 @@ import edu.asu.lerna.iolaus.roles.IRoleName;
 import edu.asu.lerna.iolaus.service.IUserManager;
 
 /**
- * This controller class would list the users for view
+ * @description : This controller class would list the users for view
  * 
  * @author Lohith Dwaraka 
  *
@@ -38,7 +38,7 @@ public class ListUserController {
 	private IUserManager userManager; 
 	
 	/**
-	 * Lists the user list object for view
+	 * @description : Lists the {@link User} list object for view
 	 * @param model
 	 * @param principal
 	 * @return

@@ -6,8 +6,8 @@ import edu.asu.lerna.iolaus.annotation.NotEmpty;
 import edu.asu.lerna.iolaus.annotation.NotEmptyList;
 import edu.asu.lerna.iolaus.domain.implementation.Role;
 /**
- * Modify user backing bean 
- * @author Lohith Dwaraka 
+ * @description : Modify user backing bean used for validating data based on user input in the form for modify User 
+ * @author : Lohith Dwaraka 
  *
  */
 public class ModifyUserBackingBean {
@@ -18,18 +18,12 @@ public class ModifyUserBackingBean {
 	@NotEmpty(message = "Please provide name of user.")
 	private String name;
 	
-//	@NotEmpty(message = "Please enter a password.")
-//	private String password;
-//	
 	@NotEmpty(message = "Please provide an email address.")
 	private String email;
 	
 	@NotEmptyList(message = "At least one role needs to be selected.")
 	private List<Role> roles;
-	
-	/*
-	 * Getters and setters
-	 */
+
 	public String getUsername() {
 		return username;
 	}
@@ -42,12 +36,6 @@ public class ModifyUserBackingBean {
 	public void setName(String name) {
 		this.name = name;
 	}
-//	public String getPassword() {
-//		return password;
-//	}
-//	public void setPassword(String password) {
-//		this.password = password;
-//	}
 	public List<Role> getRoles() {
 		return roles;
 	}

@@ -29,7 +29,7 @@ import edu.asu.lerna.iolaus.service.IUserManager;
 import edu.asu.lerna.iolaus.web.usermanagement.backing.ChangePasswdBackingBean;
 import edu.asu.lerna.iolaus.web.usermanagement.backing.ModifyUserBackingBean;
 /**
- * This controller class would help in delete and edit user details
+ * @description : This controller class would help in delete and edit {@link User} details
  * @author Lohith Dwaraka 
  *
  */
@@ -52,7 +52,7 @@ public class ModifyUserController {
 	private UserTranslator userTranslator;
 
 	/**
-	 * Delete user from db
+	 * @description : Delete {@link User} from db and it can be accessed by Admin role {@link User} only
 	 * @param req
 	 * @param model
 	 * @param principal
@@ -94,7 +94,7 @@ public class ModifyUserController {
 	}
 
 	/**
-	 * Sets up modify user form for UI
+	 * @description : Sets up modify user form for UI and it can be access by Admin role {@link User} only
 	 * @param userName
 	 * @param req
 	 * @param model
@@ -135,7 +135,7 @@ public class ModifyUserController {
 	}
 
 	/**
-	 * Modify user details based on form data 
+	 * @description : Modify user details based on form data and accessed by 
 	 * @param userName
 	 * @param userForm
 	 * @param result
