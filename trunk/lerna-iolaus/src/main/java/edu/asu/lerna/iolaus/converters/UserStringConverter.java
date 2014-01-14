@@ -6,6 +6,12 @@ import org.springframework.core.convert.converter.Converter;
 import edu.asu.lerna.iolaus.domain.implementation.User;
 import edu.asu.lerna.iolaus.service.IUserManager;
 
+/**
+ * @description : Converts String to {@link User}
+ * 
+ * @author : Lohith Dwaraka
+ *
+ */
 public class UserStringConverter implements Converter<String, User>{
 	
 	@Autowired

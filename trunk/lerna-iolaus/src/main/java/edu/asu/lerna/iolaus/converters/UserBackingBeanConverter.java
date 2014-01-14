@@ -8,8 +8,9 @@ import edu.asu.lerna.iolaus.service.IUserManager;
 import edu.asu.lerna.iolaus.web.usermanagement.backing.UserBackingBean;
 
 /**
- * Converter for user backing bean from String
- * @author Dwaraka
+ * @description :  Converter for user backing bean from String
+ * 
+ * @author : Lohith Dwaraka
  *
  */
 public class UserBackingBeanConverter implements Converter<String,UserBackingBean> {
@@ -18,11 +19,14 @@ public class UserBackingBeanConverter implements Converter<String,UserBackingBea
 	private IUserManager manager;
 	
 	@Autowired
-	private UserTranslator translater;
+	private UserTranslator translator;
 	
+	/**
+	 * Converts String to {@link UserBackingBean}
+	 */
 	@Override
 	public UserBackingBean convert(String source) {
 		User user = manager.getUserById(source);
-		return translater.translateUser(user);
+		return translator.translateUser(user);
 	}
 }

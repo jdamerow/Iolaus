@@ -18,7 +18,14 @@ import edu.asu.lerna.iolaus.domain.implementation.User;
 import edu.asu.lerna.iolaus.factory.IUserFactory;
 import edu.asu.lerna.iolaus.roles.IRoleName;
 import edu.asu.lerna.iolaus.service.IRoleManager;
-
+/**
+ * @description : 	This class initializes the DB connection for DB4O. 
+ * 					It also works on adding a "lernauser" user,
+ *  				if there is no user in the database during startup 
+ *  
+ * @author : Lohith Dwaraka
+ *
+ */
 public  abstract class DBManager {
 
 	@Autowired 
@@ -39,6 +46,12 @@ public  abstract class DBManager {
 		super();
 	}
 
+	/**
+	 * Initializing the connection to DB4O, 
+	 * the connection doesn't go down untill the application goes down.
+	 * Also this post construct creates a "lernauser" user, 
+	 * if there is no user in the DB
+	 */
 	@PostConstruct
 	public synchronized void init() {
 		database = dbManager.getClient();
@@ -58,6 +71,12 @@ public  abstract class DBManager {
 		}
 	}
 
+	/**
+	 * Stores the object and commits
+	 * 
+	 * @param object any object stored in the database
+	 * @return success or failure
+	 */
 	public synchronized boolean updateObject(Object object) {
 		database.store(object);
 		database.commit();

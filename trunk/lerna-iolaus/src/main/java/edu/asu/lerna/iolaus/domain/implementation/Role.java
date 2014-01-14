@@ -1,5 +1,11 @@
 package edu.asu.lerna.iolaus.domain.implementation;
 
+/**
+ * @description : {@link Role} is used to define a role for the {@link User}
+ * 
+ * @author : Lohith Dwaraka
+ *
+ */
 public class Role {
 
 	private String id;
@@ -24,6 +30,7 @@ public class Role {
 	public void setDescription(String description) {
 		this.description = description;
 	}
+	
 	@Override
 	public String toString() {
 		return "Role [id=" + id + ", name=" + name + ", description="
