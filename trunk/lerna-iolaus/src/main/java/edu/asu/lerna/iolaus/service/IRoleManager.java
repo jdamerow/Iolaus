@@ -6,7 +6,7 @@ import edu.asu.lerna.iolaus.domain.implementation.Role;
 
 
 /**
- * Interface to be implemented by role manager classes.
+ * @description : Interface to be implemented by role manager classes.
  * 
  * @author Lohith Dwaraka
  *
@@ -14,21 +14,21 @@ import edu.asu.lerna.iolaus.domain.implementation.Role;
 public interface IRoleManager {
 
 	/**
-	 * Get role by its id.
+	 * @description : Returns {@link Role} object for role name as input. 
 	 * @param id role id
-	 * @return role with appropriate id
+	 * @return {@link Role} for appropriate id
 	 */
 	public abstract Role getRole(String id);
 
 	/**
-	 * Get all roles.
-	 * @return array of all roles
+	 * @description : We can get all the {@link Role} in this project
+	 * @return array of all {@link Role}
 	 */
 	public abstract Role[] getRoles();
 	
 	/**
-	 * Get All roles in a list
-	 * @return list of all the roles
+	 * @description : Returns {@link Role} in a form of {@link List}
+	 * @return {@link List} of all the {@link Role}
 	 */
 	public abstract List<Role> getRolesList();
 

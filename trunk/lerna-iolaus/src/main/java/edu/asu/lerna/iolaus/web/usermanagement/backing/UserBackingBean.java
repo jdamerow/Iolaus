@@ -6,9 +6,12 @@ import edu.asu.lerna.iolaus.annotation.NotEmpty;
 import edu.asu.lerna.iolaus.annotation.NotEmptyList;
 import edu.asu.lerna.iolaus.annotation.UniqueUsername;
 import edu.asu.lerna.iolaus.domain.implementation.Role;
+import edu.asu.lerna.iolaus.domain.implementation.User;
 
 /**
- * Backing bean for user addition to db
+ * @description : Backing bean for {@link User} addition to db. 
+ * It also validates the {@link User} based on the user inputs in the form ( front end).  
+ * This bean checks for the unique user input too.
  * @author Lohith Dwaraka 
  *
  */

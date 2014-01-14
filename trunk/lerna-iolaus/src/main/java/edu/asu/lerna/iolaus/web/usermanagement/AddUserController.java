@@ -26,7 +26,7 @@ import edu.asu.lerna.iolaus.service.IUserManager;
 import edu.asu.lerna.iolaus.web.usermanagement.backing.UserBackingBean;
 
 /**
- *	This controller class would help in adding user to the db
+ *	@description : This controller class would help in adding user to the db
  * @author Lohith Dwaraka 
  *
  */
@@ -46,7 +46,7 @@ public class AddUserController {
 			.getLogger(AddUserController.class);
 	
 	/**
-	 * Helps create add user form by getting the object ready for form jsp tags
+	 * @description : Helps create add {@link User} form by getting the object ready for form jsp tags
 	 * @param model
 	 * @param principal
 	 * @return
@@ -74,7 +74,7 @@ public class AddUserController {
 	}
 	
 	/**
-	 * Adds users by receiving the user details as object form
+	 * @description : Adds users by receiving the {@link User} details as object form
 	 * @param userForm
 	 * @param result
 	 * @param map

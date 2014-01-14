@@ -9,23 +9,24 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import edu.asu.lerna.iolaus.db.ILoginManager;
+import edu.asu.lerna.iolaus.domain.implementation.User;
 
 /**
- * Customized userDetailsService class get get user details and authenticate
- * @author Lohith Dwaraka 
+ * @description :  Customized {@link UserDetailsService} class to get user details and 
+ * authenticate it based on the {@link User} and encoded Password
+ * @author : Lohith Dwaraka 
  *
  */
 @Service(value = "lernaUserService")
 public class LernaUserService implements UserDetailsService{
-	
-	private static final Logger logger = LoggerFactory
-			.getLogger(LernaUserService.class);
+
 	
 	@Autowired
 	private ILoginManager userManager;
 
 	/**
-	 * Customize load user
+	 * @description :  Customized loadUser method for our project
+	 * {@inheritDoc}
 	 */
 	@Override
 	public synchronized UserDetails loadUserByUsername(String username)
