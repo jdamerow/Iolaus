@@ -11,21 +11,16 @@ import edu.asu.lerna.iolaus.domain.implementation.User;
 import edu.asu.lerna.iolaus.factory.IUserFactory;
 import edu.asu.lerna.iolaus.service.login.LernaGrantedAuthority;
 /**
- * Factory to create the user 
- * @author Lohith Dwaraka
+ * @description : Factory to create the user by encrypting the password
+ * @author : Lohith Dwaraka
  *
  */
 @Service
 public class UserFactory implements IUserFactory {
 
 	/**
-	 * Create User object
-	 * @param username
-	 * @param name
-	 * @param email
-	 * @param password
-	 * @param roles
-	 * @return
+	 * 
+	 * {@inheritDoc}
 	 */
 	@Override
 	public User createUser(String username, String name, String email,
@@ -45,14 +40,10 @@ public class UserFactory implements IUserFactory {
 	}
 
 	/**
-	 * Create User object
-	 * @param username
-	 * @param name
-	 * @param email
-	 * @param password
-	 * @param roles
-	 * @return
+	 * 
+	 * {@inheritDoc}
 	 */
+	
 	@Override
 	public User createUser(String username, String name, String email,
 			String password, Role[] roles) {
@@ -71,7 +62,8 @@ public class UserFactory implements IUserFactory {
 	}
 	
 	/**
-	 *  Encrypt the password
+	 * 
+	 * {@inheritDoc}
 	 */
 	@Override
 	public String encrypt(String pw) {

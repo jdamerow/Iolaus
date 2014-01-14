@@ -7,6 +7,12 @@ import javax.validation.ConstraintValidatorContext;
 
 import edu.asu.lerna.iolaus.domain.implementation.Role;
 
+/**
+ * @description :  This class works as a validator for {@link NotEmptyList}  annotation
+ * 
+ * @author Lohith Dwaraka
+ *
+ */
 public class NotEmptyValidatorList implements ConstraintValidator<NotEmptyList, List<Role>>{
 
 	@Override
@@ -14,6 +20,9 @@ public class NotEmptyValidatorList implements ConstraintValidator<NotEmptyList, 
 
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public boolean isValid(List<Role> arg0, ConstraintValidatorContext arg1) {
 		if((arg0 != null)&&(arg0.size()!=0)){

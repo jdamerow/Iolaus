@@ -14,13 +14,20 @@ import org.springframework.stereotype.Service;
 
 import edu.asu.lerna.iolaus.factory.IRestVelocityEngineFactory;
 
+/**
+ * @description : Prepares the {@link VelocityEngine} and {@link VelocityContext} 
+ * 					for any velocity based template utilization
+ * @author : 	Lohith Dwaraka
+ *
+ */
 @Service
 public class RestVelocityEngineFactory implements IRestVelocityEngineFactory{
 
 	private VelocityContext context;
 	
-	/* 
-	 * Creates the factory and sets the class resource paths
+	/**
+	 * 
+	 * {@inheritDoc}
 	 */
 	@Override
 	public VelocityEngine getVelocityEngine(HttpServletRequest req)
@@ -44,6 +51,10 @@ public class RestVelocityEngineFactory implements IRestVelocityEngineFactory{
 		return engine;
 	}
 
+	/**
+	 * 
+	 * {@inheritDoc}
+	 */
 	@Override
 	public VelocityContext getVelocityContext() {
 		// TODO Auto-generated method stub

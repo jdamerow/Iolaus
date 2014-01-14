@@ -26,6 +26,13 @@ import com.db4o.ext.DatabaseFileLockedException;
 import edu.asu.lerna.iolaus.db.IDatabaseManager;
 import edu.asu.lerna.iolaus.domain.implementation.User;
 
+/**
+ * @description : 	This is class implements {@link IDatabaseManager} interface.
+ * 					It works on initializing the DB objects for DB40 connectivity 
+ * 
+ * @author : Lohith Dwaraka
+ *
+ */
 @Component
 @PropertySource(value = "classpath:/db4o.properties")
 public class Db4oDatabaseManager implements Serializable, IDatabaseManager{
@@ -40,9 +47,18 @@ public class Db4oDatabaseManager implements Serializable, IDatabaseManager{
 			.getLogger(Db4oDatabaseManager.class);
 	
 	private static final long serialVersionUID = -3325272288078647257L;
+	
 	private ObjectServer server;
+	
 	private boolean encrypt = true;
+	
 	User user;
+	
+	/**
+	 * Initializes the DB4O connectivity by
+	 * starting the {@link ObjectServer} and initialize the {@link ObjectContainer} for querying 
+	 * @throws UnsupportedEncodingException
+	 */
 	@PostConstruct
 	public synchronized void init() throws UnsupportedEncodingException {
 		close();
@@ -76,10 +92,9 @@ public class Db4oDatabaseManager implements Serializable, IDatabaseManager{
 		}
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see edu.asu.momo.db.impl.IDatabaseManager#getClient()
+
+	/**
+	 * {@inheritDoc}
 	 */
 	@Override
 	public ObjectContainer getClient() {
@@ -102,20 +117,18 @@ public class Db4oDatabaseManager implements Serializable, IDatabaseManager{
 		close();
 	}
 
-	/*
-	 * (non-Javadoc)
+	/**
 	 * 
-	 * @see edu.asu.momo.db.impl.IDatabaseManager#isEncrypt()
+	 * {@inheritDoc}
 	 */
 	@Override
 	public boolean isEncrypt() {
 		return encrypt;
 	}
 
-	/*
-	 * (non-Javadoc)
+	/**
 	 * 
-	 * @see edu.asu.momo.db.impl.IDatabaseManager#setEncrypt(boolean)
+	 * {@inheritDoc}
 	 */
 	@Override
 	public void setEncrypt(boolean encrypt) {

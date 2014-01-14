@@ -8,6 +8,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import edu.asu.lerna.iolaus.domain.implementation.User;
 import edu.asu.lerna.iolaus.service.IUserManager;
 
+/**
+ * @description : 	Validator for the {@link UniqueUsername} annotation
+ *					This class helps the annotation to validate whether the username field is unique
+ * @author : Lohith Dwaraka
+ *
+ */
 public class UniqueUsernameValidator implements ConstraintValidator<UniqueUsername, String>{
 
 	@Autowired
@@ -18,6 +24,9 @@ public class UniqueUsernameValidator implements ConstraintValidator<UniqueUserna
 		
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public boolean isValid(String arg0, ConstraintValidatorContext arg1) {
 		User user = userManager.getUserById(arg0.trim().toLowerCase());

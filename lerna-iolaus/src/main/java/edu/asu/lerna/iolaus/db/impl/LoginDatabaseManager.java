@@ -7,9 +7,19 @@ import com.db4o.ObjectSet;
 import edu.asu.lerna.iolaus.db.ILoginManager;
 import edu.asu.lerna.iolaus.domain.implementation.User;
 
+/**
+ * @description : 	This service works on implementing {@link ILoginManager}.
+ * 					It is used for authenticating the user who tries to login to the system
+ * @author : Lohith Dwaraka
+ *
+ */
 @Service
 public class LoginDatabaseManager extends DBManager implements ILoginManager {
 
+	/**
+	 * 
+	 * {@inheritDoc}
+	 */
 	@Override
 	public User getUserById(String username) {
 		User example = new User();
