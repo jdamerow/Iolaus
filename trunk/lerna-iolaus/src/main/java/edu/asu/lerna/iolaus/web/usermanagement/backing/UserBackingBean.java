@@ -9,7 +9,7 @@ import edu.asu.lerna.iolaus.domain.implementation.Role;
 import edu.asu.lerna.iolaus.domain.implementation.User;
 
 /**
- * @description : Backing bean for {@link User} addition to db. 
+ * Backing bean for {@link User} addition to db. 
  * It also validates the {@link User} based on the user inputs in the form ( front end).  
  * This bean checks for the unique user input too.
  * @author Lohith Dwaraka 

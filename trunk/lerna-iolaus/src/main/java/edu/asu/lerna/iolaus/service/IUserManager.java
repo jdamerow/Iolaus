@@ -5,7 +5,7 @@ import java.util.List;
 import edu.asu.lerna.iolaus.domain.implementation.User;
 
 /**
- * @description :  Interface will all the user level activities like 
+ *  Interface will all the user level activities like 
  * List, save, modify, delete {@link User} 
  * @author : 	Lohith Dwaraka
  *
@@ -13,14 +13,14 @@ import edu.asu.lerna.iolaus.domain.implementation.User;
 public interface IUserManager {
 
 	/**
-	 * @description : Saves a given {@link User} in database.
+	 * Saves a given {@link User} in database.
 	 * @param {@link User} to be saved.
 	 * @return true if successful otherwise false.
 	 */
 	public abstract boolean saveUser(User user);
 
 	/**
-	 * description : Get {@link User} by username.
+	 * Get {@link User} by username.
 	 *  Can be used for authentication, and for fetching {@link User} info.
 	 * 
 	 * @param userId
@@ -29,20 +29,20 @@ public interface IUserManager {
 	public abstract User getUserById(String userId);
 
 	/**
-	 * @description : Get all stored {@link User} from the database.
+	 * Get all stored {@link User} from the database.
 	 * @return List of stored {@link User}.
 	 */
 	public abstract List<User> getAllUsers();
 
 	/**
-	 * @description : Deletes the {@link User} from the Database.
+	 * Deletes the {@link User} from the Database.
 	 * @param username to be deleted
 	 * @return {@link Boolean} value for the status of this operation
 	 */
 	public abstract boolean deleteUser(String username);
 
 	/**
-	 * @description : Modify the {@link User} based on the username
+	 * Modify the {@link User} based on the username
 	 * @param user This is used to get the object to be modified from DB
 	 * @param username 
 	 * @return {@link Boolean} value for the status of this operation
@@ -50,7 +50,7 @@ public interface IUserManager {
 	public abstract boolean modifyUser(User user, String username);
 	
 	/**
-	 * @description : Check if the {@link User} has any admin access, 
+	 * Check if the {@link User} has any admin access, 
 	 * used for accessing resources which is restricted to the Admin
 	 * @param user
 	 * @return {@link Boolean} value for the status of this operation

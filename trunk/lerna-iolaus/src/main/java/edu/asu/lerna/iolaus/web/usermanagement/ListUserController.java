@@ -22,7 +22,7 @@ import edu.asu.lerna.iolaus.roles.IRoleName;
 import edu.asu.lerna.iolaus.service.IUserManager;
 
 /**
- * @description : This controller class would list the users for view
+ * This controller class would list the users for view
  * 
  * @author Lohith Dwaraka 
  *
@@ -38,10 +38,10 @@ public class ListUserController {
 	private IUserManager userManager; 
 	
 	/**
-	 * @description : Lists the {@link User} list object for view
-	 * @param model
-	 * @param principal
-	 * @return
+	 * Lists the {@link User} list object for view
+	 * @param model {@link ModelMap} for this request
+	 * @param principal Used to fetch user details 
+	 * @return send the String for apache tiles to decide on the view 
 	 */
 	@RequestMapping(value = "auth/user/listuser", method = RequestMethod.GET)
 	public String getUserList( ModelMap model, Principal principal){

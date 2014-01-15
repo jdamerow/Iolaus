@@ -3,7 +3,7 @@ package edu.asu.lerna.iolaus.db;
 import com.db4o.ObjectContainer;
 
 /**
- * @description : Interface for Basic Data base functionality and set encryption in Db connectivity 
+ * Interface for Basic Data base functionality and set encryption in Db connectivity 
  *
  * @author : Lohith Dwaraka
  *

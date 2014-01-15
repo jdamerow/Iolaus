@@ -6,7 +6,7 @@ import edu.asu.lerna.iolaus.annotation.NotEmpty;
 import edu.asu.lerna.iolaus.annotation.NotEmptyList;
 import edu.asu.lerna.iolaus.domain.implementation.Role;
 /**
- * @description : Modify user backing bean used for validating data based on user input in the form for modify User 
+ * Modify user backing bean used for validating data based on user input in the form for modify User 
  * @author : Lohith Dwaraka 
  *
  */

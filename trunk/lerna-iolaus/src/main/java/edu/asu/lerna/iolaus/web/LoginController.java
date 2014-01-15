@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 
 /**
- * @description :  The controller to manage the login for user 
+ *  The controller to manage the login for user 
  * 
  * @author : Lohith Dwaraka
  */
@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 public class LoginController {
 
 	/**
-	 * @description : User requests a login page
+	 * User requests a login page
 	 * 
 	 * @return		Redirected to the login page
 	 */
@@ -28,7 +28,7 @@ public class LoginController {
 	}
  
 	/**
-	 * @description :  In case the User login fails
+	 *  In case the User login fails
 	 * @param model
 	 * @return login failed page
 	 */
@@ -41,7 +41,7 @@ public class LoginController {
 	}
  
 	/**
-	 * @description :  Handles the User logout page transfer
+	 *  Handles the User logout page transfer
 	 * @param model
 	 * @return
 	 */

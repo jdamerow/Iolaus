@@ -4,7 +4,7 @@ import edu.asu.lerna.iolaus.annotation.NotEmpty;
 import edu.asu.lerna.iolaus.domain.implementation.User;
 
 /**
- * @description : Backing bean for {@link User} change password, 
+ * Backing bean for {@link User} change password, 
  * it also handles any errors through annotation based validation
  * @author : Lohith Dwaraka 
  *
@@ -20,7 +20,7 @@ public class ChangePasswdBackingBean {
 	private String repeatpassword;
 
 	/**
-	 * @description : Getter method for new password entered
+	 * Getter method for new password entered
 	 * @return newpassword
 	 */
 	public String getNewpassword() {
@@ -28,7 +28,7 @@ public class ChangePasswdBackingBean {
 	}
 
 	/**
-	 * @description : Setter method for new password
+	 * Setter method for new password
 	 * @param newpassword
 	 */
 	public void setNewpassword(String newpassword) {
@@ -36,7 +36,7 @@ public class ChangePasswdBackingBean {
 	}
 
 	/**
-	 * @description : Getter method for repeatpassword
+	 * Getter method for repeatpassword
 	 * @return repeatpassword
 	 */
 	public String getRepeatpassword() {
@@ -44,7 +44,7 @@ public class ChangePasswdBackingBean {
 	}
 
 	/**
-	 * @description : Setter method for repeatpassword
+	 * Setter method for repeatpassword
 	 * @param repeatpassword
 	 */
 	public void setRepeatpassword(String repeatpassword) {

@@ -8,7 +8,7 @@ import edu.asu.lerna.iolaus.service.IUserManager;
 import edu.asu.lerna.iolaus.web.usermanagement.backing.UserBackingBean;
 
 /**
- * @description :  Converter for user backing bean from String
+ *  Converter for user backing bean from String
  * 
  * @author : Lohith Dwaraka
  *

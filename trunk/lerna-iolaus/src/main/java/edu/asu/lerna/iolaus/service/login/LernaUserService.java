@@ -12,7 +12,7 @@ import edu.asu.lerna.iolaus.db.ILoginManager;
 import edu.asu.lerna.iolaus.domain.implementation.User;
 
 /**
- * @description :  Customized {@link UserDetailsService} class to get user details and 
+ *  Customized {@link UserDetailsService} class to get user details and 
  * authenticate it based on the {@link User} and encoded Password
  * @author : Lohith Dwaraka 
  *
@@ -25,7 +25,7 @@ public class LernaUserService implements UserDetailsService{
 	private ILoginManager userManager;
 
 	/**
-	 * @description :  Customized loadUser method for our project
+	 *  Customized loadUser method for our project
 	 * {@inheritDoc}
 	 */
 	@Override

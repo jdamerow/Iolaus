@@ -8,7 +8,7 @@ import edu.asu.lerna.iolaus.db.ILoginManager;
 import edu.asu.lerna.iolaus.domain.implementation.User;
 
 /**
- * @description : 	This service works on implementing {@link ILoginManager}.
+ * 	This service works on implementing {@link ILoginManager}.
  * 					It is used for authenticating the user who tries to login to the system
  * @author : Lohith Dwaraka
  *

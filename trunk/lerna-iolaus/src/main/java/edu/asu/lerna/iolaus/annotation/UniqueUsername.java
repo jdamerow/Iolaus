@@ -10,7 +10,7 @@ import javax.validation.Constraint;
 import edu.asu.lerna.iolaus.web.usermanagement.backing.UserBackingBean;
 
 /**
- * @description :  Annotation for unique username for UI interface form 
+ *  Annotation for unique username for UI interface form 
  * 				   {@link UserBackingBean} uses this annoation
  * 
  * @author  : Lohith Dwaraka

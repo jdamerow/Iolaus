@@ -6,7 +6,7 @@ import edu.asu.lerna.iolaus.domain.implementation.Role;
 import edu.asu.lerna.iolaus.domain.implementation.User;
 
 /**
- * @description : Customized {@link GrantedAuthority} class for {@link Role} of the {@link User}
+ * Customized {@link GrantedAuthority} class for {@link Role} of the {@link User}
  * 
  * @author : Lohith Dwaraka 
  *

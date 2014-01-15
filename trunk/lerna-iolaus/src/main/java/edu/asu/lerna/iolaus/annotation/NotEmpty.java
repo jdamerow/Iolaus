@@ -8,7 +8,7 @@ import java.lang.annotation.Target;
 import javax.validation.Constraint;
 
 /**
- * @description : This annotation checks if the specified field is empty
+ * This annotation checks if the specified field is empty
  * 				  Validated by {@link NotEmptyValidator}
  * 
  * @author      : Lohith Dwaraka

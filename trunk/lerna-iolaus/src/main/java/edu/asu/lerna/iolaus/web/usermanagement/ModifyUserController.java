@@ -29,7 +29,7 @@ import edu.asu.lerna.iolaus.service.IUserManager;
 import edu.asu.lerna.iolaus.web.usermanagement.backing.ChangePasswdBackingBean;
 import edu.asu.lerna.iolaus.web.usermanagement.backing.ModifyUserBackingBean;
 /**
- * @description : This controller class would help in delete and edit {@link User} details
+ * This controller class would help in delete and edit {@link User} details
  * @author Lohith Dwaraka 
  *
  */
@@ -52,11 +52,11 @@ public class ModifyUserController {
 	private UserTranslator userTranslator;
 
 	/**
-	 * @description : Delete {@link User} from db and it can be accessed by Admin role {@link User} only
-	 * @param req
-	 * @param model
-	 * @param principal
-	 * @return
+	 * Delete {@link User} from db and it can be accessed by Admin role {@link User} only
+	 * @param req {@link HttpServletRequest} to fetch user id to be deleted
+	 * @param model {@link ModelMap} for this request
+	 * @param principal Used to fetch user details 
+	 * @return send the String for apache tiles to decide on the view 
 	 */
 	@RequestMapping(value = "auth/user/deleteUser", method = RequestMethod.POST)
 	public String deleteUser(HttpServletRequest req, ModelMap model,	Principal principal) {
@@ -94,7 +94,7 @@ public class ModifyUserController {
 	}
 
 	/**
-	 * @description : Sets up modify user form for UI and it can be access by Admin role {@link User} only
+	 * Sets up modify user form for UI and it can be access by Admin role {@link User} only
 	 * @param userName
 	 * @param req
 	 * @param model
@@ -135,7 +135,7 @@ public class ModifyUserController {
 	}
 
 	/**
-	 * @description : Modify user details based on form data and accessed by 
+	 * Modify user details based on form data and accessed by 
 	 * @param userName
 	 * @param userForm
 	 * @param result

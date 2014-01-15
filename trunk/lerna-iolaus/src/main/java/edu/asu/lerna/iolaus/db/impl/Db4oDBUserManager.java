@@ -13,7 +13,7 @@ import edu.asu.lerna.iolaus.service.IUserManager;
 import edu.asu.lerna.iolaus.service.login.LernaGrantedAuthority;
 
 /**
- * @description : Service uses {@link DBManager} to implement {@link IUserManager}.
+ * Service uses {@link DBManager} to implement {@link IUserManager}.
  * 					This class works on implementing all user level activities.
  * 
  * @author : Lohith Dwaraka

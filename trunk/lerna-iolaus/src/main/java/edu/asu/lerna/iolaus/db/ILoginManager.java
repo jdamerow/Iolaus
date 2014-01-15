@@ -5,7 +5,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import edu.asu.lerna.iolaus.domain.implementation.User;
 
 /**
- * @description : Interface for login based DB4O functionality
+ * Interface for login based DB4O functionality
  * 
  * @author : Lohith Dwaraka
  *
