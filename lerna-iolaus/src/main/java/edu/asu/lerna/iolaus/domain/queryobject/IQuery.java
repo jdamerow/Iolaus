@@ -21,7 +21,7 @@ public interface IQuery {
 	 *     {@link Database }
 	 *     
 	 */
-	public abstract IDatabaseList getDatabaseList();
+	public abstract List<String> getDatabaseList();
 
 	/**
 	 * Sets the value of the database property.
@@ -31,7 +31,7 @@ public interface IQuery {
 	 *     {@link Database }
 	 *     
 	 */
-	public abstract void setDatabaseList(IDatabaseList value);
+	public abstract void setDatabaseList(List<String> value);
 
 	/**
 	 * Gets the value of the dataset property.

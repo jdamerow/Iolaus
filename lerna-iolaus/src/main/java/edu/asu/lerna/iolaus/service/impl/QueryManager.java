@@ -91,7 +91,7 @@ public class QueryManager implements IQueryManager {
 		}
 
 		//Parse the query generated from the xml and get node, relation objects
-		//xmlToCypherConverter.parseQuery(q);	
+		xmlToCypherConverter.parseQuery(q);	
 
 		//This stage should return the nodes and relations
 		ResultSet rset=queryHandler.executeQuery(q);

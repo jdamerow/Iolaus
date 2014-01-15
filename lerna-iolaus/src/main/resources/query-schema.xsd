@@ -14,7 +14,9 @@
 
     <xs:element name="database">
         <xs:complexType>
-            <xs:attribute name="id" type="xs:string" use="required"/>
+        	<xs:simpleContent>
+        		<xs:extension base="xs:string"></xs:extension>
+        	</xs:simpleContent>
         </xs:complexType>
     </xs:element>
 

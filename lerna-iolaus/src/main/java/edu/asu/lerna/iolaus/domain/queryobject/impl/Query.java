@@ -12,6 +12,8 @@ import java.util.List;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 import javax.xml.bind.annotation.adapters.XmlAdapter;
@@ -56,8 +58,10 @@ import edu.asu.lerna.iolaus.domain.queryobject.IRelationship;
 })
 @XmlRootElement(name = "query")
 public class Query implements IQuery {
-
-	@XmlJavaTypeAdapter(DatabaseList.Adapter.class) protected IDatabaseList databaseList;
+	
+	@XmlElementWrapper(name="databaseList")
+    @XmlElement(name="database")
+	protected List<String> databaseList;
 	@XmlJavaTypeAdapter(Dataset.Adapter.class) protected IDataset dataset;
 	@XmlJavaTypeAdapter(Node.Adapter.class) protected INode node;
 	@XmlJavaTypeAdapter(RelNode.Adapter.class) protected IRelationship relationship;
@@ -67,7 +71,7 @@ public class Query implements IQuery {
 	 * @see edu.asu.lerna.iolaus.domain.queryobject.impl.IQuery#getDatabase()
 	 */
     @Override
-	public IDatabaseList getDatabaseList() {
+	public List<String> getDatabaseList() {
         return databaseList;
     }
 
@@ -75,7 +79,7 @@ public class Query implements IQuery {
 	 * @see edu.asu.lerna.iolaus.domain.queryobject.impl.IQuery#setDatabase(edu.asu.lerna.iolaus.domain.queryobject.IDatabase)
 	 */
     @Override
-	public void setDatabaseList(IDatabaseList value) {
+	public void setDatabaseList(List<String> value) {
         this.databaseList = value;
     }
 
