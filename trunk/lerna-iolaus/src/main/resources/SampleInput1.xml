@@ -3,7 +3,7 @@
 		xmlns="http://digitalhps.org/lerna-query-model" 
 		xsi:schemaLocation="http://digitalhps.org/lerna-query-model query-schema.xsd">
     <databaseList>
-    	<database id="1"/>
+    	<database>1</database>
     </databaseList>
     <dataset id = "mblcourses" />
     <node return="true">

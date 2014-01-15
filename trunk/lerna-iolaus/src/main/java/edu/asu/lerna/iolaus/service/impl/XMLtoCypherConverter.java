@@ -20,10 +20,10 @@ public class XMLtoCypherConverter implements IXMLtoCypherConverter{
 	@Override
 	public void parseQuery(IQuery q){
 		
-		List<IDatabase> dbList =  q.getDatabaseList().getDatabase();
-		Iterator<IDatabase> dbIterator = dbList.iterator();
+		List<String> dbList =  q.getDatabaseList();
+		Iterator<String> dbIterator = dbList.iterator();
 		while(dbIterator.hasNext()){
-			logger.info("Database ID : "+q.getDatabaseId(dbIterator.next()));
+			logger.info("Database ID : "+dbIterator.next());
 		}
 		logger.info("Dataset Name : "+q.getDatasetName(q.getDataset()));
 		if(q.getNode()!=null){

@@ -15,7 +15,6 @@
 
     
    <xsd:complexType name="databaseType">
-    <xsd:attribute name="id" type="xsd:string"></xsd:attribute>
    </xsd:complexType>
 
     

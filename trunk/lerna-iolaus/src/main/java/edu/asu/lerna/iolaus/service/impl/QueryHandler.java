@@ -63,10 +63,10 @@ public class QueryHandler implements IQueryHandler{
 	{
 		LabelTree tree=fragmentQuery.breakdownQuery(q);
 		List<String> dbInstances=new ArrayList<String>();
-		List<IDatabase> dbList =  q.getDatabaseList().getDatabase();
-		Iterator<IDatabase> dbIterator = dbList.iterator();
+		List<String> dbList =  q.getDatabaseList();
+		Iterator<String> dbIterator = dbList.iterator();
 		while(dbIterator.hasNext()){
-			dbInstances.add(dbIterator.next().getId());//add a dbInstance to the List;
+			dbInstances.add(dbIterator.next());//add a dbInstance to the List;
 		}
 		
 		if(dbInstances.size()==0){
