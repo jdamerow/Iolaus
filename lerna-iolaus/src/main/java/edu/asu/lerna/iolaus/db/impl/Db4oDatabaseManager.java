@@ -27,7 +27,7 @@ import edu.asu.lerna.iolaus.db.IDatabaseManager;
 import edu.asu.lerna.iolaus.domain.implementation.User;
 
 /**
- * @description : 	This is class implements {@link IDatabaseManager} interface.
+ * 	This is class implements {@link IDatabaseManager} interface.
  * 					It works on initializing the DB objects for DB40 connectivity 
  * 
  * @author : Lohith Dwaraka

@@ -8,14 +8,14 @@ import edu.asu.lerna.iolaus.domain.implementation.User;
 import edu.asu.lerna.iolaus.domain.implementation.Role;
 
 /**
- * @description : User object creation factory for adding users
+ * User object creation factory for adding users
  * @author : Lohith Dwaraka
  *
  */
 public interface IUserFactory {
 
 	/**
-	 * @description : Create User object and it encrypts the password info using {@link BCrypt}
+	 * Create User object and it encrypts the password info using {@link BCrypt}
 	 * This is usally called if List of {@link Role} is used
 	 * @param username
 	 * @param name
@@ -28,7 +28,7 @@ public interface IUserFactory {
 			String password, List<Role> roles);
 	
 	/**
-	 * @description : Create User object and it encryupts the password info using {@link BCrypt}. 
+	 * Create User object and it encryupts the password info using {@link BCrypt}. 
 	 * This is usually called if array of {@link Role} is used
 	 * @param username
 	 * @param name
@@ -41,7 +41,7 @@ public interface IUserFactory {
 			String password, Role[] roles);
 
 	/**
-	 * @description : 	Encrypt password based on {@link BCrypt}
+	 * 	Encrypt password based on {@link BCrypt}
 	 * @param pw takes password as input
 	 * @return Encrypted password to store in DB
 	 */

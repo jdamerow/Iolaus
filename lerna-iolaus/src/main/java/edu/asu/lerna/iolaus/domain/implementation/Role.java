@@ -1,7 +1,7 @@
 package edu.asu.lerna.iolaus.domain.implementation;
 
 /**
- * @description : {@link Role} is used to define a role for the {@link User}
+ * {@link Role} is used to define a role for the {@link User}
  * 
  * @author : Lohith Dwaraka
  *

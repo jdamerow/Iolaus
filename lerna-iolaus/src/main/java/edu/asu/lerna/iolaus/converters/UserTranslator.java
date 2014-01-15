@@ -13,7 +13,7 @@ import edu.asu.lerna.iolaus.web.usermanagement.backing.ModifyUserBackingBean;
 import edu.asu.lerna.iolaus.web.usermanagement.backing.UserBackingBean;
 
 /**
- * @description : Converts {@link User} to {@link UserBackingBean} and {@link ModifyUserBackingBean}
+ * Converts {@link User} to {@link UserBackingBean} and {@link ModifyUserBackingBean}
  *  
  * @author : Lohith Dwaraka
  *

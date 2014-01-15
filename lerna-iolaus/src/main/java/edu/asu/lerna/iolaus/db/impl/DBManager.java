@@ -19,7 +19,7 @@ import edu.asu.lerna.iolaus.factory.IUserFactory;
 import edu.asu.lerna.iolaus.roles.IRoleName;
 import edu.asu.lerna.iolaus.service.IRoleManager;
 /**
- * @description : 	This class initializes the DB connection for DB4O. 
+ * 	This class initializes the DB connection for DB4O. 
  * 					It also works on adding a "lernauser" user,
  *  				if there is no user in the database during startup 
  *  

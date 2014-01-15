@@ -8,7 +8,7 @@ import javax.validation.ConstraintValidatorContext;
 import edu.asu.lerna.iolaus.domain.implementation.Role;
 
 /**
- * @description :  This class works as a validator for {@link NotEmptyList}  annotation
+ *  This class works as a validator for {@link NotEmptyList}  annotation
  * 
  * @author Lohith Dwaraka
  *

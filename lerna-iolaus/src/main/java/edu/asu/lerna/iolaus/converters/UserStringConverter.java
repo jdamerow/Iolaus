@@ -7,7 +7,7 @@ import edu.asu.lerna.iolaus.domain.implementation.User;
 import edu.asu.lerna.iolaus.service.IUserManager;
 
 /**
- * @description : Converts String to {@link User}
+ * Converts String to {@link User}
  * 
  * @author : Lohith Dwaraka
  *

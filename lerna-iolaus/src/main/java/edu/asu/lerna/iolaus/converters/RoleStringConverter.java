@@ -7,7 +7,7 @@ import edu.asu.lerna.iolaus.domain.implementation.Role;
 import edu.asu.lerna.iolaus.service.IRoleManager;
 
 /**
- * @description : Converts for the spring conversion of String to role
+ * Converts for the spring conversion of String to role
  * 
  * @author : Lohith Dwaraka
  *

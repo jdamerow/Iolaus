@@ -15,7 +15,7 @@ import org.springframework.stereotype.Service;
 import edu.asu.lerna.iolaus.factory.IRestVelocityEngineFactory;
 
 /**
- * @description : Prepares the {@link VelocityEngine} and {@link VelocityContext} 
+ * Prepares the {@link VelocityEngine} and {@link VelocityContext} 
  * 					for any velocity based template utilization
  * @author : 	Lohith Dwaraka
  *

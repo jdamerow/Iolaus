@@ -11,7 +11,7 @@ import edu.asu.lerna.iolaus.domain.implementation.User;
 import edu.asu.lerna.iolaus.factory.IUserFactory;
 import edu.asu.lerna.iolaus.service.login.LernaGrantedAuthority;
 /**
- * @description : Factory to create the user by encrypting the password
+ * Factory to create the user by encrypting the password
  * @author : Lohith Dwaraka
  *
  */

@@ -9,7 +9,7 @@ import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.VelocityEngine;
 
 /**
- * @description :  Create a {@link VelocityEngine} Object based on the classpath
+ *  Create a {@link VelocityEngine} Object based on the classpath
  * 					for resources like velocity templates.	  
  * 
  * @author : Lohith Dwaraka
@@ -18,7 +18,7 @@ import org.apache.velocity.app.VelocityEngine;
 public interface IRestVelocityEngineFactory {
 
 	/**
-	 * @description : Prepares the {@link VelocityEngine} based on classpath
+	 * Prepares the {@link VelocityEngine} based on classpath
 	 * @param req used to form a URL for xsd access
 	 * @return {@link VelocityEngine} 
 	 * @throws FileNotFoundException
@@ -27,7 +27,7 @@ public interface IRestVelocityEngineFactory {
 	public abstract VelocityEngine getVelocityEngine(HttpServletRequest req) throws FileNotFoundException, IOException;
 	
 	/**
-	 * @description :  This is a getter for {@link VelocityContext}
+	 *  This is a getter for {@link VelocityContext}
 	 *  
 	 * @return {@link VelocityContext}
 	 */

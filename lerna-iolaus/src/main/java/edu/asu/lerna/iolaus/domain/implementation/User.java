@@ -8,7 +8,7 @@ import edu.asu.lerna.iolaus.service.login.LernaGrantedAuthority;
 
 
 /**
- * @description : User class describing the properties 
+ * User class describing the properties 
  *                of a User object
  * 
  * @author      : Lohith Dwaraka

@@ -6,7 +6,7 @@ import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
 /**
- * @description : This class works as a validator for NotEmpty annotation
+ * This class works as a validator for NotEmpty annotation
  * 
  * @author : Lohith Dwaraka
  *

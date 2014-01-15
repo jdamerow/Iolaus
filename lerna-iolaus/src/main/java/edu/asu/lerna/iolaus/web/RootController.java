@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 /**
- * @description : This class redirects requests to the root of Lerna to the Lerna home page.
+ * This class redirects requests to the root of Lerna to the Lerna home page.
  * @author : Lohith Dwaraka
  *
  */
@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 public class RootController {
 
 	/**
-	 * @description : Method that answers requests to root.
+	 * Method that answers requests to root.
 	 * @return the redirect path to the Quadriga home page.
 	 */
 	@RequestMapping(value="/", method = RequestMethod.GET)

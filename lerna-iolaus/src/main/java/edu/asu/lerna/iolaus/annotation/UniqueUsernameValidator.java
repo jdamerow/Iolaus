@@ -9,7 +9,7 @@ import edu.asu.lerna.iolaus.domain.implementation.User;
 import edu.asu.lerna.iolaus.service.IUserManager;
 
 /**
- * @description : 	Validator for the {@link UniqueUsername} annotation
+ * 	Validator for the {@link UniqueUsername} annotation
  *					This class helps the annotation to validate whether the username field is unique
  * @author : Lohith Dwaraka
  *

@@ -26,7 +26,8 @@ import edu.asu.lerna.iolaus.service.IUserManager;
 import edu.asu.lerna.iolaus.web.usermanagement.backing.UserBackingBean;
 
 /**
- *	@description : This controller class would help in adding user to the db
+ *	This controller class would help in adding user to the db.
+ *
  * @author Lohith Dwaraka 
  *
  */
@@ -46,10 +47,10 @@ public class AddUserController {
 			.getLogger(AddUserController.class);
 	
 	/**
-	 * @description : Helps create add {@link User} form by getting the object ready for form jsp tags
-	 * @param model
-	 * @param principal
-	 * @return
+	 * Helps create add {@link User} form by getting the object ready for form jsp tags
+	 * @param model ModelMap object for this request
+	 * @param principal User related details are access using this
+	 * @return Prepares the Page for AddUser form
 	 */
 	@RequestMapping(value = "auth/user/adduser", method = RequestMethod.GET)
 	public String getToAddUserPage( ModelMap model, Principal principal) {
@@ -74,11 +75,11 @@ public class AddUserController {
 	}
 	
 	/**
-	 * @description : Adds users by receiving the {@link User} details as object form
-	 * @param userForm
-	 * @param result
-	 * @param map
-	 * @return
+	 * Adds users by receiving the {@link User} details as object form
+	 * @param userForm This is a {@link UserBackingBean} used to get data from front end form
+	 * @param result {@link BindingResult} to check binding error
+	 * @param map {@link ModelMap} for this request
+	 * @return send the String for apache tiles to decide on the view 
 	 */
 	@RequestMapping(value = "auth/user/adduser", method = RequestMethod.POST)
 	public String addNewUser(@Valid @ModelAttribute UserBackingBean userForm, BindingResult result, ModelMap map) {

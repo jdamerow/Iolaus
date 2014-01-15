@@ -9,7 +9,7 @@ import edu.asu.lerna.iolaus.domain.implementation.Role;
 import edu.asu.lerna.iolaus.service.IRoleManager;
 
 /**
- * @description : Implemented by IRolemanager methods. 
+ * Implemented by IRolemanager methods. 
  * Class works on getting All {@link Role} in the DB, {@link Role} by role id
  * 
  * @author : Lohith Dwaraka
