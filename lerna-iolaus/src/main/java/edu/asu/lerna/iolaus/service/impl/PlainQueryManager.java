@@ -73,15 +73,15 @@ public class PlainQueryManager implements IPlainQueryManager {
 		//validateXml(xml);
 		IQuery query=xmlToQueryObject(xml);
 		String cypher=query.getCypher();
-		List<String> dbInstanceList=getInstanceList(query);
+		List<String> dbInstanceList=query.getDatabaseList();
 		if(dbInstanceList==null||dbInstanceList.size()==0){
 			for(INeo4jInstance instance:registry.getfileList()){
 				dbInstanceList.add(instance.getId());
 			}
 		}
-		System.out.println(dbInstanceList);
+		logger.info(" Db instance : "+dbInstanceList);
 		String json=cypherToJson.cypherToJson(cypher);
-		System.out.println(json);
+		logger.info(" JSon : "+json);
 		List<List<Object>> resultSet=repositoryManager.executeQuery(json, dbInstanceList);
 		Map<String,List<Object>> transformedResults=transformResults(resultSet);
 		String outputXml=queryManager.getRESTOutput(transformedResults);

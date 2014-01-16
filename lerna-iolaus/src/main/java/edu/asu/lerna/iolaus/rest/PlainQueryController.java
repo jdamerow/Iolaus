@@ -18,7 +18,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.xml.sax.SAXException;
 
 import edu.asu.lerna.iolaus.service.IPlainQueryManager;
-import edu.asu.lerna.iolaus.service.IQueryManager;
 
 @Controller
 public class PlainQueryController {

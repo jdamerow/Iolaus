@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<query 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+		xmlns="http://digitalhps.org/lerna-plainquery-model" 
+		xsi:schemaLocation="http://digitalhps.org/lerna-plainquery-model plainQuery.xsd">
+	<databaseList>
+    	<database>1</database>
+		<database>2</database>
+    </databaseList>
+    <cypher>
+		this is a test
+    </cypher>      
+</query>
