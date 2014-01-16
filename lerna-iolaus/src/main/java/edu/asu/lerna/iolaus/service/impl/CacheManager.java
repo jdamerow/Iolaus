@@ -72,6 +72,7 @@ public class CacheManager implements ICacheManager {
 	public List<List<Object>> executeQuery(String json,String instance) {
 		List<List<Object>> resultSet=null;
 
+		json="{\"query\":\"start n=node:node_auto_index(type={param1}) return n\",\"params\":{\"param1\":\"Person\"}}";
 		if(json !=null && instance != null && !json.equals("") && !instance.equals(""))		
 		{
 			//Check if the result is available in the cache
