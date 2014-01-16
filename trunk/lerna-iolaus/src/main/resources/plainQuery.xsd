@@ -1,29 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xsd:schema targetNamespace="http://digitalhps.org/lerna-plainquery-model" elementFormDefault="qualified" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://digitalhps.org/lerna-plainquery-model">
 
-    <xsd:element name="query" type="xsd:string"></xsd:element>
-
+    <xsd:element name="query" type="query"></xsd:element>
+    
     <xsd:complexType name="databaseList">
     	<xsd:sequence>
-    		<xsd:element ref="database"></xsd:element>
+    		<xsd:element ref="database" maxOccurs="unbounded" minOccurs="0"></xsd:element>
     	</xsd:sequence>
     </xsd:complexType>
 
 
     <xsd:element name="database" type="xsd:string"></xsd:element>
 
-    <xsd:complexType name="cypher">
-    	<xsd:sequence>
-    		<xsd:element ref="cypher"></xsd:element>
-    	</xsd:sequence>
-    </xsd:complexType>
     
-    <xsd:element name="cypher" type="xsd:string"></xsd:element>
 
     <xsd:complexType name="query">
     	<xsd:sequence>
     		<xsd:element name="databaseList" type="databaseList"></xsd:element>
-    		<xsd:element name="cypher" type="cypher"></xsd:element>
+    		<xsd:element name="cypher" type="xsd:string"></xsd:element>
     	</xsd:sequence>
     </xsd:complexType>
 </xsd:schema>
