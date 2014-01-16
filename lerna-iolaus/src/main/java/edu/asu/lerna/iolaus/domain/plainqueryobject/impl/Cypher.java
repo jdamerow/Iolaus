@@ -15,17 +15,16 @@ import javax.xml.bind.annotation.XmlType;
 
 
 /**
- * <p>Java class for query complex type.
+ * <p>Java class for cypher complex type.
  * 
  * <p>The following schema fragment specifies the expected content contained within this class.
  * 
  * <pre>
- * &lt;complexType name="query">
+ * &lt;complexType name="cypher">
  *   &lt;complexContent>
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
  *       &lt;sequence>
- *         &lt;element name="databaseList" type="{http://digitalhps.org/lerna-plainquery-model}databaseList"/>
- *         &lt;element name="cypher" type="{http://digitalhps.org/lerna-plainquery-model}cypher"/>
+ *         &lt;element ref="{http://digitalhps.org/lerna-plainquery-model}cypher"/>
  *       &lt;/sequence>
  *     &lt;/restriction>
  *   &lt;/complexContent>
@@ -35,50 +34,23 @@ import javax.xml.bind.annotation.XmlType;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "query", propOrder = {
-    "databaseList",
+@XmlType(name = "cypher", propOrder = {
     "cypher"
 })
-public class Query {
+public class Cypher {
 
     @XmlElement(required = true)
-    protected DatabaseList databaseList;
-    @XmlElement(required = true)
-    protected Cypher cypher;
-
-    /**
-     * Gets the value of the databaseList property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link DatabaseList }
-     *     
-     */
-    public DatabaseList getDatabaseList() {
-        return databaseList;
-    }
-
-    /**
-     * Sets the value of the databaseList property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link DatabaseList }
-     *     
-     */
-    public void setDatabaseList(DatabaseList value) {
-        this.databaseList = value;
-    }
+    protected String cypher;
 
     /**
      * Gets the value of the cypher property.
      * 
      * @return
      *     possible object is
-     *     {@link Cypher }
+     *     {@link String }
      *     
      */
-    public Cypher getCypher() {
+    public String getCypher() {
         return cypher;
     }
 
@@ -87,10 +59,10 @@ public class Query {
      * 
      * @param value
      *     allowed object is
-     *     {@link Cypher }
+     *     {@link String }
      *     
      */
-    public void setCypher(Cypher value) {
+    public void setCypher(String value) {
         this.cypher = value;
     }
 
