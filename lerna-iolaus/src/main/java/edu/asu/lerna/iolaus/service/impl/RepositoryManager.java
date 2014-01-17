@@ -52,7 +52,7 @@ public class RepositoryManager implements IRepositoryManager {
 				INeo4jInstance dbFile = fileIterator.next();
 				if (dbName.equals(dbFile.getId())&&dbFile.isActive())
 				{
-					instanceUrl.add("http://+"+dbFile.getHost()+":"+dbFile.getPort()+"/"+dbFile.getDbPath()+"/"+cypherEndPoint);
+					instanceUrl.add("http://"+dbFile.getHost()+":"+dbFile.getPort()+"/"+dbFile.getDbPath()+"/"+cypherEndPoint);
 				}
 			}
 		}

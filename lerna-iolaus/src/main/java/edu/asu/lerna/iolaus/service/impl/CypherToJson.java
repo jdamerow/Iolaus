@@ -58,4 +58,46 @@ public class CypherToJson implements ICypherToJson {
 		 json="{"+query+",\n"+params+"}";
 		return json;
 	}
+	
+	@Override
+	public String plainQueryToJson(String cypher){
+		cypher=eliminateWhiteSpaces(cypher);
+		System.out.println(cypher);
+		String json="";
+		String query="\"query\":";
+		String regex="(\")([a-zA-Z0-9_.\\s?*()]*)(\")";//Regular expression for extracting strings in ""
+		Pattern pattern = Pattern.compile(regex);
+		Matcher matcher = pattern.matcher(cypher);
+		Map<String,String> paramMap=new LinkedHashMap<String,String>();
+		String p="param";
+		int counter=0;
+		String temp=cypher;
+		while (matcher.find()) {
+			 if(!paramMap.containsValue(matcher.group())){
+				 counter++;
+				 String replacement="{"+p+counter+"}";
+				 String property=matcher.group();
+				 paramMap.put("\""+p+counter+"\"","\""+property.substring(1,property.length()-1)+"\"");
+				 temp=temp.replaceAll(matcher.group(),replacement );
+			 }
+		 }
+		 query+="\""+temp+"\"";
+		 String params="\"params\":{";
+		 for(Entry<String, String> entry:paramMap.entrySet()){
+			 if(!params.equals("\"params\":{")){
+				 params+=",";
+			 }
+			 params+=entry.getKey()+":"+entry.getValue();
+		 }
+		 params+="}";
+		 json="{"+query+",\n"+params+"}";
+		return json;
+	}
+
+	private String eliminateWhiteSpaces(String cypher) {
+		cypher=cypher.replaceAll("\\s+", " ");
+		return cypher;
+	}
+	
+	
 }
