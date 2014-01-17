@@ -7,6 +7,6 @@
 		<database>2</database>
     </databaseList>
     <cypher>
-		this is a test
+		start n=node:node_auto_index(type="Person") return node
     </cypher>      
 </query>

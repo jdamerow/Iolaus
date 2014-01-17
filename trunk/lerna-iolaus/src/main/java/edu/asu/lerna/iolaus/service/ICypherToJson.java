@@ -9,4 +9,6 @@ public interface ICypherToJson {
 	 */
 	String cypherToJson(String cypher);
 
+	String plainQueryToJson(String cypher);
+
 }

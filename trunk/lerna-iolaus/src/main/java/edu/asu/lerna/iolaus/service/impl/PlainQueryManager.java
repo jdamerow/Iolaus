@@ -69,10 +69,10 @@ public class PlainQueryManager implements IPlainQueryManager {
 	
 	@Override 
 	public String executeQuery(String xml) throws JAXBException, SAXException, IOException {
-		
-		//validateXml(xml);
+		validateXml(xml);
 		IQuery query=xmlToQueryObject(xml);
 		String cypher=query.getCypher();
+		logger.info(cypher);
 		List<String> dbInstanceList=query.getDatabaseList();
 		if(dbInstanceList==null||dbInstanceList.size()==0){
 			for(INeo4jInstance instance:registry.getfileList()){
@@ -80,7 +80,7 @@ public class PlainQueryManager implements IPlainQueryManager {
 			}
 		}
 		logger.info(" Db instance : "+dbInstanceList);
-		String json=cypherToJson.cypherToJson(cypher);
+		String json=cypherToJson.plainQueryToJson(cypher);
 		logger.info(" JSon : "+json);
 		List<List<Object>> resultSet=repositoryManager.executeQuery(json, dbInstanceList);
 		Map<String,List<Object>> transformedResults=transformResults(resultSet);
@@ -145,7 +145,7 @@ public class PlainQueryManager implements IPlainQueryManager {
 
 	private void validateXml(String res) throws SAXException, IOException {
 		String classPath=URLDecoder.decode(QueryManager.class.getProtectionDomain().getCodeSource().getLocation().getPath(),"UTF-8");
-		URL schemaFile = new File(classPath.substring(0,classPath.indexOf("classes"))+"classes/plain_query.xsd").toURI().toURL();
+		URL schemaFile = new File(classPath.substring(0,classPath.indexOf("classes"))+"classes/plainQuery.xsd").toURI().toURL();
 		BufferedWriter bw=new BufferedWriter(new FileWriter("input.xml"));
 		bw.write(res);
 		bw.close();

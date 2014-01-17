@@ -25,7 +25,7 @@ public class PlainQueryController {
 	private IPlainQueryManager plainQueryManager;
 	
 	private static final Logger logger = LoggerFactory
-			.getLogger(QueryController.class);
+			.getLogger(PlainQueryController.class);
 	/**
 	 * 
 	 * @param request
