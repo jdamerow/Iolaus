@@ -11,7 +11,11 @@
         http://www.springframework.org/schema/data/neo4j
 		http://www.springframework.org/schema/data/neo4j/spring-neo4j-2.0.xsd">
 
-
+	<bean id="cypherEndPoint" class="java.lang.String">
+		<constructor-arg>
+			<value>cypher</value>
+		</constructor-arg>
+	</bean>
 
 	<neo4j:repositories base-package="edu.asu.lerna.iolaus.repository"></neo4j:repositories>
 	<neo4j:config graphDatabaseService="graphDatabaseService" />
