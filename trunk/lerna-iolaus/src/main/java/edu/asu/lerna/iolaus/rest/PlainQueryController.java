@@ -11,13 +11,18 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.xml.sax.SAXException;
 
 import edu.asu.lerna.iolaus.service.IPlainQueryManager;
+
+/**
+ * This controller maps the url request /plainquery.
+ * It takes plain query as an input and executes it.
+ * @author Karan Kothari
+ */
 
 @Controller
 public class PlainQueryController {
@@ -28,15 +33,14 @@ public class PlainQueryController {
 			.getLogger(PlainQueryController.class);
 	/**
 	 * 
-	 * @param request
-	 * @param response
-	 * @param res
-	 * @param accept
+	 * @param request is a {@link HttpServletRequest} object
+	 * @param response is a {@link HttpServletResponse} object
+	 * @param res is a input plain query input xml
 	 * @return
 	 */
 	@ResponseBody
 	@RequestMapping(value = "/plainquery", method = RequestMethod.POST)
-	public String queryIolaus(HttpServletRequest request,	HttpServletResponse response,@RequestBody String res,@RequestHeader("Accept") String accept){
+	public String queryIolaus(HttpServletRequest request,	HttpServletResponse response,@RequestBody String res){
 		
 		if(res == null || res.isEmpty()){
 			response.setStatus(400);
@@ -52,7 +56,7 @@ public class PlainQueryController {
 		//Execute the input request and fetch outputxml from QueryManager
 		outputXml = plainQueryManager.executeQuery(res);
 		response.setStatus(200);
-		}catch(SAXException e){
+		}catch(SAXException e){//invalid xml
 			String err=e.toString();
 			outputXml=plainQueryManager.getErrorMsg(err.substring(err.indexOf("lineNumber")), request);
 			logger.error(e.getMessage());

@@ -105,10 +105,10 @@ public class QueryManager implements IQueryManager {
 	private void validateXml(String res) throws SAXException, IOException {
 		String classPath=URLDecoder.decode(QueryManager.class.getProtectionDomain().getCodeSource().getLocation().getPath(),"UTF-8");
 		URL schemaFile = new File(classPath.substring(0,classPath.indexOf("classes"))+"classes/query-schema.xsd").toURI().toURL();
-		BufferedWriter bw=new BufferedWriter(new FileWriter("input.xml"));
+		BufferedWriter bw=new BufferedWriter(new FileWriter(classPath.substring(0,classPath.indexOf("classes"))+"classes/input.xml"));
 		bw.write(res);
 		bw.close();
-		File inputFile=new File("input.xml");
+		File inputFile=new File(classPath.substring(0,classPath.indexOf("classes"))+"classes/input.xml");
 		Source xmlFile = new StreamSource(inputFile);
 		SchemaFactory schemaFactory = SchemaFactory
 		    .newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
