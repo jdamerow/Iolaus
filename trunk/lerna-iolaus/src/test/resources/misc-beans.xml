@@ -21,4 +21,6 @@
 	<bean class="edu.asu.lerna.iolaus.factory.impl.UserFactory"/>
 	<bean class="edu.asu.lerna.iolaus.service.impl.NodeManager"/>
 	
+	<bean class="edu.asu.lerna.iolaus.factory.impl.RestVelocityEngineFactory" />
+	
 </beans>
