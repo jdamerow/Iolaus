@@ -1,7 +1,6 @@
 package edu.asu.lerna.iolaus.factory.impl;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -58,12 +57,20 @@ public class UserFactoryTest {
 
 	@Test
 	public void testCreateUserStringStringStringStringRoleArray() {
-		fail("Not yet implemented");
+		Role role = roleManager.getRole("ROLE_USER");
+		Role roleArr [] = new Role[1];
+		roleArr[0] = role;
+		User user = userFactory.createUser("lernauser", "lerna", "lerna@iolaus.com", "test", roleArr);
+		assertEquals(user.getEmail(),"lerna@iolaus.com");
+		assertEquals(user.getUsername(),"lernauser");
+		assertEquals(user.getName(), "lerna");
+		assertEquals(user.getAuthorities().get(0).getAuthority(), "ROLE_USER");
 	}
 
 	@Test
 	public void testEncrypt() {
-		fail("Not yet implemented");
+		String encodedStr = userFactory.encrypt("something");
+		assertEquals(encodedStr.length(),60);
 	}
 
 }
