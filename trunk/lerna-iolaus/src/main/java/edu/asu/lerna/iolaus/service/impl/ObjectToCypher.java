@@ -14,6 +14,7 @@ import javax.xml.bind.JAXBElement;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import edu.asu.lerna.iolaus.domain.Node;
 import edu.asu.lerna.iolaus.domain.misc.ArgumentsInOTC;
 import edu.asu.lerna.iolaus.domain.misc.ReturnParametersOfOTC;
 import edu.asu.lerna.iolaus.domain.queryobject.INode;
@@ -22,7 +23,9 @@ import edu.asu.lerna.iolaus.domain.queryobject.IProperty;
 import edu.asu.lerna.iolaus.domain.queryobject.IRelNode;
 import edu.asu.lerna.iolaus.domain.queryobject.IRelationship;
 import edu.asu.lerna.iolaus.domain.queryobject.PropertyOf;
+import edu.asu.lerna.iolaus.domain.queryobject.impl.Operator;
 import edu.asu.lerna.iolaus.domain.queryobject.impl.Property;
+import edu.asu.lerna.iolaus.domain.queryobject.impl.RelNode;
 import edu.asu.lerna.iolaus.domain.queryobject.impl.Relationship;
 import edu.asu.lerna.iolaus.service.ICypherToJson;
 import edu.asu.lerna.iolaus.service.IObjectToCypher;
@@ -262,6 +265,7 @@ public class ObjectToCypher implements IObjectToCypher {
 	}
 	
 	/**
+	 * This method parses the {@link Node} object.
 	 * @param  node   is a INode object  
 	 * @param  args	  is a object which has all the maps, dataset and counters
 	 * @return        returns the source Operator(Operator between different relationships)
@@ -310,6 +314,7 @@ public class ObjectToCypher implements IObjectToCypher {
 	}
 
 	/**
+	 * This method parses the {@link RelNode} object.
 	 * @param  relNode   is a IRelNode object  
 	 * @param  args	  	 is a object which has all the maps, dataset and counters
 	 * @return        	 returns the source Operator(Operator between different relationships)
@@ -357,6 +362,7 @@ public class ObjectToCypher implements IObjectToCypher {
 	}
 	
 	/**
+	 * This method parses the {@link Relationship} object. It adds the relations in the matchMap of {@link ArgumentsInOTC}.
 	 * @param  relationship   is a IRelationship object  
 	 * @param  args	  		  is a object which has all the maps, dataset and counters
 	 */
@@ -410,6 +416,7 @@ public class ObjectToCypher implements IObjectToCypher {
 	}
 
 	/**
+	 * This method parses {@link Operator} object.
 	 * @param  op   is a IOperator object  
 	 * @param  args	is a object which has all the maps, dataset and counters
 	 */
@@ -463,6 +470,7 @@ public class ObjectToCypher implements IObjectToCypher {
 	}
  
 	/**
+	 * This method adds property in startMap or whereMap of {@link ArgumentsInOTC}.
 	 * @param  prop   is a IProperty object  
 	 * @param  args	  is a object which has all the maps, dataset and counters
 	 */
@@ -548,6 +556,7 @@ public class ObjectToCypher implements IObjectToCypher {
 	
 
 	/**
+	 * This method parses the {@link RelNode} object. 
 	 * @param  relNode   is a IRelNode object  
 	 * @param  args	  	 is a object which has all the maps, dataset and counters
 	 */
@@ -599,6 +608,7 @@ public class ObjectToCypher implements IObjectToCypher {
 
 
 	/**
+	 * This method adds relation to matchMap.
 	 * @param  node1     is a source Node  
 	 * @param  node2     is a target Node
 	 * @param  relation  is a label of relation
@@ -621,6 +631,7 @@ public class ObjectToCypher implements IObjectToCypher {
 	}
 
 	/**
+	 * This method adds property to the startMap
 	 * @param  startMap   is map with key=label and value=property
 	 * @param  label      is the label of property used in start clause
 	 * @param  prop 	  is a property to be stored in startMap
@@ -630,6 +641,7 @@ public class ObjectToCypher implements IObjectToCypher {
 	}
 
 	/**
+	 * This method checks if {@link Object} is of type {@link Property}
 	 * @param  o   is Object
 	 * @return     true if o is instance of the Property else return false
 	 */
@@ -638,6 +650,7 @@ public class ObjectToCypher implements IObjectToCypher {
 	}
 
 	/**
+	 * This method checks if {@link JAXBElement} is an Or operator.
 	 * @param  element   is JAXBElement
 	 * @return true      if element contains "}or" else return false
 	 */
@@ -646,6 +659,7 @@ public class ObjectToCypher implements IObjectToCypher {
 	}
 
 	/**
+	 * This method checks if {@link JAXBElement} element is an And operator. 
 	 * @param  element   is JAXBElement
 	 * @return           true if element contains "}and" else return false
 	 */
@@ -654,6 +668,7 @@ public class ObjectToCypher implements IObjectToCypher {
 	}
 	
 	/**
+	 * This method checks if {@link Object} is of type {@link Relationship}.
 	 * @param  element   is Object
 	 * @return           true if o is instance of the Relationship else return false
 	 */
@@ -662,6 +677,7 @@ public class ObjectToCypher implements IObjectToCypher {
 	}
 	
 	/**
+	 * This method checks if {@link JAXBElement} element is source node.
 	 * @param  element1   is JAXBElement
 	 * @return            true if element contains "}source" else return false
 	 */
@@ -670,6 +686,7 @@ public class ObjectToCypher implements IObjectToCypher {
 	}
 
 	/**
+	 * This method checks if {@link JAXBElement} is target node.
 	 * @param  element1   is JAXBElement
 	 * @return            true if element contains "}target" else return false
 	 */
@@ -678,6 +695,7 @@ public class ObjectToCypher implements IObjectToCypher {
 	}
 
 	/**
+	 * This method checks if {@link Object} is of type {@link JAXBElement}.
 	 * @param  element   is Object
 	 * @return           true if o is instance of the JAXBElement else return false
 	 */
@@ -686,6 +704,7 @@ public class ObjectToCypher implements IObjectToCypher {
 	}
 	
 	/**
+	 * This method checks if String is numeric.
 	 * @param  value   is a String
 	 * @return         true if it is Numeric else return false
 	 */
@@ -694,6 +713,7 @@ public class ObjectToCypher implements IObjectToCypher {
 	}
 	
 	/**
+	 * This method increments the number by 1.
 	 * @param  num   integer
 	 * @return       increment by 1
 	 */

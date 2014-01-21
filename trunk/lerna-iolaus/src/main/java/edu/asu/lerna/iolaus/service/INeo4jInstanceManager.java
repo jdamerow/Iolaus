@@ -6,8 +6,11 @@ import java.util.List;
 import edu.asu.lerna.iolaus.configuration.neo4j.iml.Neo4jRegistry;
 import edu.asu.lerna.iolaus.domain.INeo4jInstance;
 import edu.asu.lerna.iolaus.domain.implementation.Neo4jInstance;
-
-
+/**
+ * This interface manages the Neo4jInstances. It has methods for adding, deleting, modifying Neo4j instances.
+ * @author Karan Kothari
+ *
+ */
 public interface INeo4jInstanceManager {
 	
 	/**
