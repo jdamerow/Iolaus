@@ -20,6 +20,11 @@ import edu.asu.lerna.iolaus.domain.INeo4jInstance;
 import edu.asu.lerna.iolaus.domain.implementation.Neo4jInstance;
 import edu.asu.lerna.iolaus.service.INeo4jInstanceManager;
 
+/**
+ * This class manages the Neo4jInstances. It has methods for adding, deleting, modifying Neo4j instances.
+ * @author Karan Kothari
+ *
+ */
 @Service
 public class Neo4jInstanceManager implements INeo4jInstanceManager {
 
@@ -29,6 +34,9 @@ public class Neo4jInstanceManager implements INeo4jInstanceManager {
 	private static final Logger logger = LoggerFactory
 			.getLogger(Neo4jInstanceManager.class);
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public String addNeo4jInstance(INeo4jInstance instance) {
 		List<INeo4jInstance> fileList=neo4jRegistry.getfileList();
@@ -80,7 +88,13 @@ public class Neo4jInstanceManager implements INeo4jInstanceManager {
 		}
 		return String.valueOf(maxId+1);
 	}
-
+	
+	/**
+	 * This method ping the Neo4j server. If it is up then returns true else returns false.  
+	 * @param port is port number.
+	 * @param host is address of the host machine.
+	 * @return the status of server. If it is up then returns true else returns false. 
+	 */
 	private boolean checkConnectivity(String port, String host) {
 		boolean isAlive = true;
 		String urlStr="";
@@ -96,6 +110,9 @@ public class Neo4jInstanceManager implements INeo4jInstanceManager {
 		return isAlive;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public void deleteNeo4jInstance(String instanceId) throws UnsupportedEncodingException {
 
@@ -112,6 +129,9 @@ public class Neo4jInstanceManager implements INeo4jInstanceManager {
 		}
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public int updateNeo4jInstance(INeo4jInstance instance){
 		List<INeo4jInstance> configFileList=neo4jRegistry.getfileList();
@@ -135,6 +155,9 @@ public class Neo4jInstanceManager implements INeo4jInstanceManager {
 		return 0;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override 
 	public INeo4jInstance getInstance(String id){
 		INeo4jInstance instance=new Neo4jInstance();
@@ -147,11 +170,17 @@ public class Neo4jInstanceManager implements INeo4jInstanceManager {
 		return instance;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public List<INeo4jInstance> getAllInstances() {
 		return neo4jRegistry.getfileList();
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public String getInstanceId(String port, String host){
 		List<INeo4jInstance> fileList=neo4jRegistry.getfileList();

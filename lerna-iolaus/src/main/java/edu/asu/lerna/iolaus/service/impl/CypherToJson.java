@@ -9,6 +9,12 @@ import java.util.regex.Pattern;
 import org.springframework.stereotype.Service;
 
 import edu.asu.lerna.iolaus.service.ICypherToJson;
+
+/**
+ * This class converts a cypher query into a json query.
+ * @author Karan Kothari
+ *
+ */
 @Service
 public class CypherToJson implements ICypherToJson {
 	
@@ -59,6 +65,10 @@ public class CypherToJson implements ICypherToJson {
 		return json;
 	}
 	
+	
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public String plainQueryToJson(String cypher){
 		cypher=eliminateWhiteSpaces(cypher);

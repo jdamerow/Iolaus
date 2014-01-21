@@ -65,7 +65,7 @@ public class RepositoryHandler implements IRepositoryHandler {
 
 		String oneSingleJsonString = response.getEntity(String.class);
 		response.close();
-		System.out.println(oneSingleJsonString);
+		//System.out.println(oneSingleJsonString);
 		return getListOfNodesAndRelations(oneSingleJsonString);
 	}
 

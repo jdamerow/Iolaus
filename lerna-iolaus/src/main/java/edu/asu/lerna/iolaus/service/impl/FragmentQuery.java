@@ -22,13 +22,14 @@ import edu.asu.lerna.iolaus.domain.queryobject.INode;
 import edu.asu.lerna.iolaus.domain.queryobject.IQuery;
 import edu.asu.lerna.iolaus.domain.queryobject.IRelNode;
 import edu.asu.lerna.iolaus.domain.queryobject.PropertyOf;
+import edu.asu.lerna.iolaus.domain.queryobject.impl.Query;
 import edu.asu.lerna.iolaus.domain.queryobject.impl.RelNode;
 import edu.asu.lerna.iolaus.service.IFragmentQuery;
 import edu.asu.lerna.iolaus.service.IObjectToCypher;
 
 
 /**
- * 
+ * This class takes a {@link Query} object as an input and breaks it down and creates a tree of cypher queries   
  * @author Karan Kothari
  *
  */
@@ -43,9 +44,7 @@ public class FragmentQuery implements IFragmentQuery {
 	
 	
 	/**
-	 * This method takes the IQuery object and breaks it down into multiple queries.
-	 * @param q is a instance of Query.
-	 * @return the tree which has object of sourceToTargetLabelMap, targetJsonMap and oldLabelToNewLabelMap.
+	 * {@inheritDoc}
 	 */
 	@Override
 	public LabelTree breakdownQuery(IQuery q) {

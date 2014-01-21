@@ -1,0 +1,28 @@
+<xsd:schema xmlns="http://digitalhps.org/plain_query" xmlns:xsd="http://www.w3.org/2001/XMLSchema" targetNamespace="http://digitalhps.org/plain_query" elementFormDefault="qualified">
+
+
+    <xsd:complexType name="databaseList">
+    </xsd:complexType>
+    
+
+
+
+
+
+
+
+
+    <xsd:element name="query">
+    	
+        <xsd:complexType>
+    		<xsd:sequence>
+    			<xsd:element name="databaseList" type="databaseList"></xsd:element>
+    			<xsd:element name="cypher" type="xsd:string"></xsd:element>
+    		</xsd:sequence>
+    	</xsd:complexType>
+    </xsd:element>
+
+
+
+
+</xsd:schema>
