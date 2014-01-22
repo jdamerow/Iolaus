@@ -2,6 +2,11 @@ package edu.asu.lerna.iolaus.service;
 
 import java.util.List;
 
+/**
+ * This interface has method for executing Json query on the multiple Neo4j instances.
+ * @author Karan Kothari
+ *
+ */
 public interface IRepositoryManager {
 
 	/**
