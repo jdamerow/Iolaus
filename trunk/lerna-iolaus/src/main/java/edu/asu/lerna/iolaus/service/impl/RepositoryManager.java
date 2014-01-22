@@ -14,7 +14,11 @@ import edu.asu.lerna.iolaus.configuration.neo4j.iml.Neo4jRegistry;
 import edu.asu.lerna.iolaus.domain.INeo4jInstance;
 import edu.asu.lerna.iolaus.service.ICacheManager;
 import edu.asu.lerna.iolaus.service.IRepositoryManager;
-
+/**
+ * This class implements {@link IRepositoryManager}. It has method for executing json query on multiple Neo4j instances.
+ * @author Karan Kothari
+ *
+ */
 @Service
 public class RepositoryManager implements IRepositoryManager {
 
@@ -36,6 +40,9 @@ public class RepositoryManager implements IRepositoryManager {
 			//repoHanlders = new ArrayList<IRepositoryHandler>();
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public List<List<Object>> executeQuery(String json, List<String> dbInstances)
 	{

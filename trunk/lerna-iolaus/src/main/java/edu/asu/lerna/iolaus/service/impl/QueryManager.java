@@ -80,6 +80,9 @@ public class QueryManager implements IQueryManager {
 			.getLogger(QueryManager.class);
 
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public String executeQuery(String inputXML) throws JAXBException,SAXException,IOException
 	{
@@ -102,6 +105,9 @@ public class QueryManager implements IQueryManager {
 		return getRESTOutput(finalResultSet);
 	}
 	
+	/**
+	 * {@inheritDoc}
+	 */
 	private void validateXml(String res) throws SAXException, IOException {
 		String classPath=URLDecoder.decode(QueryManager.class.getProtectionDomain().getCodeSource().getLocation().getPath(),"UTF-8");
 		URL schemaFile = new File(classPath.substring(0,classPath.indexOf("classes"))+"classes/query-schema.xsd").toURI().toURL();
@@ -184,7 +190,10 @@ public class QueryManager implements IQueryManager {
 		return q;
 	}
 	
-		
+	
+	/**
+	 * {@inheritDoc}
+	 */	
 	@Override
 	public String getErrorMsg(String errorMsg,HttpServletRequest req) {
 		VelocityEngine engine = null;
