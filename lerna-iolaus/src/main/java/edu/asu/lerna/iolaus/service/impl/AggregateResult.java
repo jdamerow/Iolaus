@@ -37,26 +37,27 @@ public class AggregateResult implements IAggregateResult {
 			Map<String, List<Object>> processedResults,
 			Map<String, Label> sourceToTargetLabelMap,
 			Map<String, String> oldLabelToNewLabelMap, String sourceLabel) {
-
 		
-		Map<Integer,Map<String,List<Object>>> resultsOfTargets=new LinkedHashMap<Integer,Map<String, List<Object>>>();
-		int outerForCounter=0;
-		//This loop will take union of the results of the inner query. This process will be taken place for each target label used in the query having inner query.
-		for(List<String> targetsOfSameSource:sourceToTargetLabelMap.get(sourceLabel).getLabel()){
-			for(String sameTargets:targetsOfSameSource){
-				if(sourceToTargetLabelMap.containsKey(sameTargets)){
-					unionOfResults(aggregatedResults,resultsOfTargets,outerForCounter,sameTargets);
-				}	
+		if(aggregatedResults!=null&&processedResults!=null&&sourceToTargetLabelMap!=null&&oldLabelToNewLabelMap!=null&&sourceLabel!=null){
+			Map<Integer,Map<String,List<Object>>> resultsOfTargets=new LinkedHashMap<Integer,Map<String, List<Object>>>();
+			int outerForCounter=0;
+			//This loop will take union of the results of the inner query. This process will be taken place for each target label used in the query having inner query.
+			for(List<String> targetsOfSameSource:sourceToTargetLabelMap.get(sourceLabel).getLabel()){
+				for(String sameTargets:targetsOfSameSource){
+					if(sourceToTargetLabelMap.containsKey(sameTargets)){
+						unionOfResults(aggregatedResults,resultsOfTargets,outerForCounter,sameTargets);
+					}	
+				}
+				outerForCounter++;
 			}
-			outerForCounter++;
-		}
-		if(resultsOfTargets.size()==0){//if 0 rows are returned
-			aggregatedResults.put(sourceLabel, processedResults);
-		}else{
-			//This will take intersection of results of inner queries with the results of outer query  
-			Map<String, List<Object>> sourceLabelResults=intersectionOfResultsWithSourceQuery(processedResults,resultsOfTargets,oldLabelToNewLabelMap,sourceToTargetLabelMap,sourceLabel);	
-			
-			aggregatedResults.put(sourceLabel, sourceLabelResults);
+			if(resultsOfTargets.size()==0){//if 0 rows are returned
+				aggregatedResults.put(sourceLabel, processedResults);
+			}else{
+				//This will take intersection of results of inner queries with the results of outer query  
+				Map<String, List<Object>> sourceLabelResults=intersectionOfResultsWithSourceQuery(processedResults,resultsOfTargets,oldLabelToNewLabelMap,sourceToTargetLabelMap,sourceLabel);	
+				
+				aggregatedResults.put(sourceLabel, sourceLabelResults);
+			}
 		}
 
 	}
@@ -70,7 +71,7 @@ public class AggregateResult implements IAggregateResult {
 	 * @param currentTarget is the counter of the current target label.
 	 * @param targetLabel results of this label will take part the union.
 	 */
-	public void unionOfResults(
+	private void unionOfResults(
 			Map<String, Map<String, List<Object>>> aggregateResults,
 			Map<Integer, Map<String, List<Object>>> tempResults,
 			int currentTarget, String targetLabel) {
@@ -113,7 +114,7 @@ public class AggregateResult implements IAggregateResult {
 	 * @param sourceLabel is a label corresponding to the source label of the processedResults
 	 * @return the result after intersection with source node
 	 */
-	public Map<String, List<Object>> intersectionOfResultsWithSourceQuery(Map<String, List<Object>> processedResults,Map<Integer, Map<String, List<Object>>> resultsOfTargets,
+	private Map<String, List<Object>> intersectionOfResultsWithSourceQuery(Map<String, List<Object>> processedResults,Map<Integer, Map<String, List<Object>>> resultsOfTargets,
 			Map<String, String> oldLabelToNewLabelMap, Map<String, Label> sourceToTargetLabelMap, String sourceLabel) {
 		
 		
@@ -205,7 +206,7 @@ public class AggregateResult implements IAggregateResult {
 	 * @param iterator is the Iterator which iterates from 0 to startOfTempResults.  
 	 * @param lastColumn is the upper bound for the iterator to iterate.
 	 */
-	public void createRow(List<Object> row,
+	private void createRow(List<Object> row,
 			Map<Integer, Iterator<Object>> iterator, int lastColumn) {
 		
 		for(int i=0;i<lastColumn;i++){
@@ -221,7 +222,7 @@ public class AggregateResult implements IAggregateResult {
 	 * @param startOfTempResults is the lower bound for the iterator to iterate through.
 	 * @param labels is array of string(labels) which are unique labels
 	 */
-	public void getMatchedRows(Map<Integer, List<Object>> matchedRows,
+	private void getMatchedRows(Map<Integer, List<Object>> matchedRows,
 			Map<Integer, Iterator<Object>> iterator, String id,
 			int startOfTempResults, String[] labels) {
 		int rowCount=0;
@@ -251,7 +252,7 @@ public class AggregateResult implements IAggregateResult {
 	 * @param currentResults is the result of inersection of current target with the processedResults. (Output of this method).
 	 * @param labels is array of string(labels) which are unique labels.
 	 */
-	public void cartesianProduct(List<Object> row,
+	private void cartesianProduct(List<Object> row,
 			Map<Integer, List<Object>> matchedRows, int lastColumn,
 			Map<String, List<Object>> currentResults, String[] labels) {
 		if(matchedRows.size()!=0){
@@ -271,15 +272,17 @@ public class AggregateResult implements IAggregateResult {
 	
 	/**
 	 * This method reinitialize the iterators
-	 * @param iterator is the Iterator which iterates from startOfTempResults to the size of the labels.
-	 * @param resultsOfTargets is a map which has the results of current target label. key=label used in query and value=IJsonNode or IJsonRelation 
+	 * @param iterator is the Iterator which iterates from startOfTempResults to the size of the labels. It should not be null.
+	 * @param resultsOfTargets is a map which has the results of current target label. key=label used in query and value=IJsonNode or IJsonRelation. It should not be null. 
 	 * @param startOfTempResults is the lower bound for the iterator to iterate through.
 	 */
 	public void reinitializeIterators(
 			Map<Integer, Iterator<Object>> iterator,
 			Map<String, List<Object>> resultsOfTargets, int startOfTempResults) {
-		for(Entry<String, List<Object>> entry:resultsOfTargets.entrySet()){
-			iterator.put(startOfTempResults++, entry.getValue().iterator());
+		if(iterator!=null&&resultsOfTargets!=null){
+			for(Entry<String, List<Object>> entry:resultsOfTargets.entrySet()){
+				iterator.put(startOfTempResults++, entry.getValue().iterator());
+			}
 		}
 	}
 
