@@ -14,9 +14,8 @@ import edu.asu.lerna.iolaus.domain.implementation.Role;
 public interface IRoleManager {
 
 	/**
-	 * Returns {@link Role} object for role name as input. 
-	 * @param id role id
-	 * @return {@link Role} for appropriate id
+	 * Returns {@link Role} in a form of Array
+	 * @return array of all the {@link Role}
 	 */
 	public abstract Role getRole(String id);
 
