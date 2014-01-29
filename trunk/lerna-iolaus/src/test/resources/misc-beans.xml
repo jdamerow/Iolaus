@@ -18,6 +18,8 @@
 	<bean id="cacheManager" class="edu.asu.lerna.iolaus.service.impl.CacheManager" />
 	<bean id="cypherToJson" class="edu.asu.lerna.iolaus.service.impl.CypherToJson" />
 	<bean id="aggregateResult" class="edu.asu.lerna.iolaus.service.impl.AggregateResult" />
+	<bean id="fragmentQuery" class="edu.asu.lerna.iolaus.service.impl.FragmentQuery" />
+	<bean id="nodeManager" class="edu.asu.lerna.iolaus.service.impl.NodeManager" />
 	
 	<bean id="roleManager" class="edu.asu.lerna.iolaus.service.impl.RoleManager" />
 	<bean class="edu.asu.lerna.iolaus.factory.impl.UserFactory"/>

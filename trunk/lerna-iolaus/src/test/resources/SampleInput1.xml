@@ -1,0 +1,23 @@
+<query 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+		xmlns="http://digitalhps.org/lerna-query-model" 
+		xsi:schemaLocation="http://digitalhps.org/lerna-query-model query-schema.xsd">
+    <databaseList>
+    	<database>1</database>
+    </databaseList>
+    <dataset id = "mblcourses" />
+    <node return="true">
+        <and>
+            <property name="type" value="Person" />        
+            <relationship return="true">
+                <property name="type" value="attended" />
+                <property name="year" value="1900" />
+                    <target>
+                        <node>
+                            <property name="type" value="Series" />
+                            <property name="label" value="Botany" />
+                        </node>
+                    </target>
+            </relationship>
+        </and>
+    </node>      
+</query>

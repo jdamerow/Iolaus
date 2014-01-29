@@ -9,10 +9,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.LinkedHashMap;
 
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,29 +16,16 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import edu.asu.lerna.iolaus.domain.Label;
+import edu.asu.lerna.iolaus.domain.json.IJsonNode;
+import edu.asu.lerna.iolaus.domain.json.impl.JsonNode;
 
-@ContextConfiguration(locations={"file:src/test/resources/misc-beans.xml"})
+@ContextConfiguration(locations={"file:src/test/resources/root-context.xml"})
 @RunWith(SpringJUnit4ClassRunner.class)
 public class AggregateResultTest {
 
 	@Autowired
 	private AggregateResult aggregateResult;
 	
-	@BeforeClass
-	public static void setUpBeforeClass() throws Exception {
-	}
-
-	@AfterClass
-	public static void tearDownAfterClass() throws Exception {
-	}
-
-	@Before
-	public void setUp() throws Exception {
-	}
-
-	@After
-	public void tearDown() throws Exception {
-	}
 
 	@Test
 	public void testAggregateResults() {
@@ -68,6 +51,7 @@ public class AggregateResultTest {
 		sourceToTargetLabelMap=new HashMap<String, Label>();
 		oldLabelToNewLabelMap=new HashMap<String, String>();
 		sourceLabel="source";
+		
 		assertEquals(aggregatedResults.size(), 0);
 		
 		Label label=new Label();
@@ -80,6 +64,7 @@ public class AggregateResultTest {
 		labelList.add(targetLabelList);
 		label.setLabel(labelList);
 		sourceToTargetLabelMap.put("source", label);
+		
 		label=new Label();
 		labelList=new ArrayList<List<String>>();
 		targetLabelList=new ArrayList<String>();
@@ -87,6 +72,46 @@ public class AggregateResultTest {
 		labelList.add(targetLabelList);
 		label.setLabel(labelList);
 		sourceToTargetLabelMap.put("target1", label);
+		
+		oldLabelToNewLabelMap.put("source", "source");
+		oldLabelToNewLabelMap.put("target1", "target1");
+		oldLabelToNewLabelMap.put("target2", "target2");
+		oldLabelToNewLabelMap.put("target3", "target1");
+		
+		sourceLabel="source";
+		
+		Map<String, List<Object>> results=new LinkedHashMap<String, List<Object>>();
+		List<Object> column=new ArrayList<Object>();
+		for(int i=0;i<10;i++){
+			IJsonNode node=new JsonNode();
+			node.setId(String.valueOf(i));
+			column.add(node);
+		}
+		results.put("source", column);
+		column=new ArrayList<Object>();
+		for(int i=0;i<10;i++){
+			IJsonNode node=new JsonNode();
+			node.setId(String.valueOf(i));
+			column.add(node);
+		}
+		results.put("target1", column);
+		aggregatedResults.put("target1", results);
+		
+		column=new ArrayList<Object>();
+		for(int i=5;i<10;i++){
+			IJsonNode node=new JsonNode();
+			node.setId(String.valueOf(i));
+			column.add(node);
+		}
+		processedResults.put("source",column);
+		
+		aggregateResult.aggregateResults(aggregatedResults, processedResults, sourceToTargetLabelMap, oldLabelToNewLabelMap, sourceLabel);
+		
+		//test if size is increased if only two column in target nodes.
+		assertEquals(aggregatedResults.get("source").size(),2);
+		//check the size is results of intersection
+		assertEquals(aggregatedResults.get("source").get("target1").size(),5);
+		
 	}
 
 	@Test
