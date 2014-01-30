@@ -1,5 +1,6 @@
 package edu.asu.lerna.iolaus.service;
 
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.List;
 
@@ -44,8 +45,10 @@ public interface INeo4jInstanceManager {
 	 * This method takes the object of {@link INeo4jInstance} and updates it. 
 	 * @param instance object of {@link INeo4jInstance}
 	 * @return  the update code
+	 * @throws IOException 
+	 * @throws UnsupportedEncodingException 
 	 */
-	abstract int updateNeo4jInstance(INeo4jInstance instance);
+	abstract int updateNeo4jInstance(INeo4jInstance instance) throws UnsupportedEncodingException, IOException;
 	
 	/**
 	 * This method takes port number and host as input and returns the corresponding instance id.
