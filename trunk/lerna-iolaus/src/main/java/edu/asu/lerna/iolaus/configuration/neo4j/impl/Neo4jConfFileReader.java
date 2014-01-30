@@ -1,4 +1,4 @@
-package edu.asu.lerna.iolaus.configuration.neo4j.iml;
+package edu.asu.lerna.iolaus.configuration.neo4j.impl;
 
 import java.io.File;
 import java.io.FileInputStream;
