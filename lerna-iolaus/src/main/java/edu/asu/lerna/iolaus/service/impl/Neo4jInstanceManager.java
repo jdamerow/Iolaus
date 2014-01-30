@@ -29,7 +29,7 @@ import edu.asu.lerna.iolaus.service.INeo4jInstanceManager;
 public class Neo4jInstanceManager implements INeo4jInstanceManager {
 
 	@Autowired 
-	Neo4jRegistry neo4jRegistry;
+	private Neo4jRegistry neo4jRegistry;
 
 	private static final Logger logger = LoggerFactory
 			.getLogger(Neo4jInstanceManager.class);
@@ -140,26 +140,52 @@ public class Neo4jInstanceManager implements INeo4jInstanceManager {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public int updateNeo4jInstance(INeo4jInstance instance){
-		List<INeo4jInstance> configFileList=neo4jRegistry.getfileList();
-		String port=instance.getPort();
-		String host=instance.getHost();
-		if(!checkConnectivity(port, host)&&instance.isActive()==true?true:false){
-			return 2;
-		}
-		for(INeo4jInstance configFile:configFileList){
-			if(instance.getId().equals(configFile.getId())){
-				String modifiedDescription=instance.getDescription().replaceAll("\n", " ").replace("\r","");
-				configFile.setDescription(modifiedDescription);
-				configFile.setHost(instance.getHost());
-				configFile.setPort(instance.getPort());
-				configFile.setActive(instance.isActive()==true?true:false);
+	public int updateNeo4jInstance(INeo4jInstance instance) throws UnsupportedEncodingException, IOException{
+		if(instance!=null){
+			List<INeo4jInstance> configFileList=neo4jRegistry.getfileList();
+			String port=instance.getPort();
+			String host=instance.getHost();
+			if(!checkConnectivity(port, host)&&instance.isActive()==true?true:false){
+				return 2;
 			}
-			else if(configFile.getPort().equals(port)&&configFile.getHost().equalsIgnoreCase(host)){//if combination of port and host already exists then return false
-				return 1;
+			boolean flag=false;
+			for(INeo4jInstance configFile:configFileList){
+				if(instance.getId().equals(configFile.getId())){
+					String modifiedDescription=instance.getDescription().replaceAll("\n", " ").replace("\r","");
+					configFile.setDescription(modifiedDescription);
+					configFile.setHost(instance.getHost());
+					configFile.setPort(instance.getPort());
+					configFile.setActive(instance.isActive()==true?true:false);
+					updateFile(configFile);
+					flag=true;
+				}
+				else if(configFile.getPort().equals(port)&&configFile.getHost().equalsIgnoreCase(host)){
+					return 1;//combination of port and host already exists
+				}
 			}
+			if(flag)
+				return 0;//valid instance id
+			else
+				return -2;//instance id doesn't exists 
+		}else{
+			return -1;//instance id is null
 		}
-		return 0;
+	}
+
+	private void updateFile(INeo4jInstance instance) throws UnsupportedEncodingException, IOException {
+		if(instance!=null){
+			String classPath=Neo4jInstanceManager.class.getProtectionDomain().getCodeSource().getLocation().getPath();//gets the class path
+			BufferedWriter bw=null;
+			bw=new BufferedWriter(new FileWriter(URLDecoder.decode(classPath.substring(0,classPath.indexOf("classes")),"UTF-8")+"classes/ConfigurationFiles/Neo4jConfiguration"+instance.getId()+".txt"));
+			String modifiedDescription=instance.getDescription().replaceAll("\n", " ").replace("\r","");
+			bw.append("port:"+instance.getPort()+"\n");
+			bw.append("host:"+instance.getHost()+"\n");
+			bw.append("dbPath:"+instance.getDbPath()+"\n");
+			bw.append("description:"+modifiedDescription+"\n");
+			bw.append("active:"+String.valueOf(instance.isActive()==true?true:false)+"\n");
+			bw.append("userName:"+instance.getUserName());
+			bw.close();
+		}
 	}
 
 	/**

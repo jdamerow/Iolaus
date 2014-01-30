@@ -1,9 +1,14 @@
 package edu.asu.lerna.iolaus.service.impl;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.fail;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -40,14 +45,19 @@ public class Neo4jInstanceManagerTest {
 	}
 
 	@Test
-	public void testAddNeo4jInstance() {
+	public void testAddNeo4jInstance() throws UnsupportedEncodingException {
 		
+		String classPath=Neo4jInstanceManager.class.getProtectionDomain().getCodeSource().getLocation().getPath();//gets the class path
+		File folder=new File(URLDecoder.decode(classPath.substring(0,classPath.indexOf("classes")),"UTF-8")+"classes/ConfigurationFiles");
+		assertEquals(neo4jRegistry.getfileList().size(), folder.list().length);
 		//Try to null entry to the registry
 		assertNull(instanceManager.addNeo4jInstance(null));
 		//Try to add empty instance
 		assertNull(instanceManager.addNeo4jInstance(new Neo4jInstance()));
 		//Try to add an instance with the port number on which server is not running and isActive=true
 		assertEquals("-2", instanceManager.addNeo4jInstance(instance));
+		assertEquals(neo4jRegistry.getfileList().size(), folder.list().length);
+		
 		String existingPort="";
 		String existingHost="";
 		String maxId="0";
@@ -59,12 +69,15 @@ public class Neo4jInstanceManagerTest {
 			instance.setHost(existingHost);
 			//Try to add an instance which already exists
 			assertEquals("0", instanceManager.addNeo4jInstance(instance));
+			assertEquals(neo4jRegistry.getfileList().size(), folder.list().length);
 		}
+		//valid instance
 		maxId=getMaxId();
 		instance.setActive(false);
 		instance.setHost("localhost");
 		instance.setPort("1203");
 		assertEquals(String.valueOf(Integer.parseInt(maxId)+1), instanceManager.addNeo4jInstance(instance));
+		assertEquals(neo4jRegistry.getfileList().size(), folder.list().length);
 	}
 
 	private String getMaxId() {
@@ -95,8 +108,36 @@ public class Neo4jInstanceManagerTest {
 	}
 
 	@Test
-	public void testUpdateNeo4jInstance() {
-		fail("Not yet implemented");
+	public void testUpdateNeo4jInstance() throws UnsupportedEncodingException, IOException {
+		
+		if(neo4jRegistry.getfileList()!=null){
+			INeo4jInstance existingInstance=neo4jRegistry.getfileList().get(0);
+			String id=existingInstance.getId();
+			String host=existingInstance.getHost();
+			String port=existingInstance.getPort();
+			//already existing instance
+			assertEquals(0,instanceManager.updateNeo4jInstance(existingInstance));
+			assertEquals(id,neo4jRegistry.getfileList().get(0).getId());
+			assertEquals(host,neo4jRegistry.getfileList().get(0).getHost());
+			assertEquals(port,neo4jRegistry.getfileList().get(0).getPort());
+		}
+		//null instance
+		assertEquals(-1,instanceManager.updateNeo4jInstance(null));
+		
+		//invalid instance id
+		instance.setId("-1");
+		instance.setActive(false);
+		assertEquals(-2, instanceManager.updateNeo4jInstance(instance));
+		
+		//duplicate combination of host and port
+		if(neo4jRegistry.getfileList().size()>=2){
+			INeo4jInstance newInstace=neo4jRegistry.getfileList().get(0);
+			INeo4jInstance existingInstance=neo4jRegistry.getfileList().get(1);
+			newInstace.setHost(existingInstance.getHost());
+			newInstace.setPort(existingInstance.getPort());
+			assertEquals(1, instanceManager.updateNeo4jInstance(newInstace));
+		}
+		
 	}
 
 	@Test
@@ -113,13 +154,8 @@ public class Neo4jInstanceManagerTest {
 	}
 
 	@Test
-	public void testGetAllInstances() {
-		fail("Not yet implemented");
-	}
-
-	@Test
 	public void testGetInstanceId() {
-		fail("Not yet implemented");
+		assertNull(instanceManager.getInstanceId(null, null));
 	}
 
 }

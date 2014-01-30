@@ -1,5 +1,7 @@
 package edu.asu.lerna.iolaus.web;
 
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.security.Principal;
 import java.util.Collection;
 import java.util.List;
@@ -162,9 +164,11 @@ public class InstanceController {
 	 * @param instance is Neo4jInstance object having values entered by user.
 	 * @param model is a ModelMap
 	 * @return the redirect:/auth/listInstances string to tiles for creating view. 
+	 * @throws IOException 
+	 * @throws UnsupportedEncodingException 
 	 */
 	@RequestMapping(value = "/auth/editInstance/updateInstance", method = RequestMethod.POST)
-	public String updateInstance(@ModelAttribute("SpringWeb")Neo4jInstance instance, ModelMap model) {
+	public String updateInstance(@ModelAttribute("SpringWeb")Neo4jInstance instance, ModelMap model) throws UnsupportedEncodingException, IOException {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		Collection<? extends GrantedAuthority> authorities = auth.getAuthorities();
 		boolean access = false; 
