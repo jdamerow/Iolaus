@@ -3,7 +3,7 @@ package edu.asu.lerna.iolaus.service;
 import java.io.UnsupportedEncodingException;
 import java.util.List;
 
-import edu.asu.lerna.iolaus.configuration.neo4j.iml.Neo4jRegistry;
+import edu.asu.lerna.iolaus.configuration.neo4j.impl.Neo4jRegistry;
 import edu.asu.lerna.iolaus.domain.INeo4jInstance;
 import edu.asu.lerna.iolaus.domain.implementation.Neo4jInstance;
 /**
