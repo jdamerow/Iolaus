@@ -50,6 +50,8 @@ public class ObjectToCypher implements IObjectToCypher {
 	@Override
 	public ReturnParametersOfOTC objectToCypher(INode node,String dataSet) {
 		
+		if(node==null)
+			return null;
 		//key is label and value is its property used in Start clause of Cypher query
 		Map<String,String> startMap = new LinkedHashMap<String,String>();
 		//key is label and value is relation(source-[r1]->target1) used in Match clause of Cypher query
@@ -278,6 +280,7 @@ public class ObjectToCypher implements IObjectToCypher {
 		objectToLabelMap.put(node,PropertyOf.SOURCE.toString());
 		args.setCurrentTarget(0);
 		args.setCurrentRelationship(0);
+		args.getLabelToIsReturnMap().put(PropertyOf.SOURCE.toString(), node.isReturn()==null?false:node.isReturn());
 		String sourceOperator="";
 		List<Object> nodeDetails = node.getPropertyOrRelationshipOrAnd();
 		Iterator<Object> nodeDetailsIterator = nodeDetails.iterator();
@@ -328,6 +331,7 @@ public class ObjectToCypher implements IObjectToCypher {
 		objectToLabelMap.put(node,PropertyOf.SOURCE.toString());
 		args.setCurrentTarget(0);
 		args.setCurrentRelationship(0);
+		args.getLabelToIsReturnMap().put(PropertyOf.SOURCE.toString(), node.isReturn()==null?false:node.isReturn());
 		String sourceOperator="";
 		List<Object> nodeDetails = node.getPropertyOrRelationshipOrAnd();
 		Iterator<Object> nodeDetailsIterator = nodeDetails.iterator();

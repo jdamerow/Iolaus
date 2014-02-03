@@ -12,7 +12,7 @@
                 <property name="type" value="attended" />
                 <property name="year" value="1900" />
                     <target>
-                        <node>
+                        <node return="false">
                             <property name="type" value="Series" />
                             <property name="label" value="Botany" />
                         </node>

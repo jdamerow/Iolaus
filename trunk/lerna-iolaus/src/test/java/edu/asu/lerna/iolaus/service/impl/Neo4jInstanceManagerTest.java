@@ -156,6 +156,10 @@ public class Neo4jInstanceManagerTest {
 	@Test
 	public void testGetInstanceId() {
 		assertNull(instanceManager.getInstanceId(null, null));
+		if(neo4jRegistry.getfileList().size()!=0){
+			INeo4jInstance instance=neo4jRegistry.getfileList().get(0);
+			assertEquals(instance.getId(), instanceManager.getInstanceId(instance.getPort(), instance.getHost()));
+		}
 	}
 
 }

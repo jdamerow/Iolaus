@@ -19,6 +19,7 @@
 	<bean id="cypherToJson" class="edu.asu.lerna.iolaus.service.impl.CypherToJson" />
 	<bean id="aggregateResult" class="edu.asu.lerna.iolaus.service.impl.AggregateResult" />
 	<bean id="fragmentQuery" class="edu.asu.lerna.iolaus.service.impl.FragmentQuery" />
+	<bean id="objectToCypher" class="edu.asu.lerna.iolaus.service.impl.ObjectToCypher" />
 	<bean id="instanceManager" class="edu.asu.lerna.iolaus.service.impl.Neo4jInstanceManager" />
 	<bean id="neo4jRegistry" class="edu.asu.lerna.iolaus.configuration.neo4j.impl.Neo4jRegistry" />
 	<bean id="nodeManager" class="edu.asu.lerna.iolaus.service.impl.NodeManager" />
