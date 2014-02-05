@@ -5,8 +5,12 @@ import static org.junit.Assert.*;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.net.URLDecoder;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
+import javax.xml.bind.JAXBElement;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -17,8 +21,10 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import edu.asu.lerna.iolaus.domain.misc.ReturnParametersOfOTC;
 import edu.asu.lerna.iolaus.domain.queryobject.INode;
+import edu.asu.lerna.iolaus.domain.queryobject.IOperator;
 import edu.asu.lerna.iolaus.domain.queryobject.IQuery;
 import edu.asu.lerna.iolaus.domain.queryobject.IRelNode;
+import edu.asu.lerna.iolaus.domain.queryobject.IRelationship;
 import edu.asu.lerna.iolaus.domain.queryobject.PropertyOf;
 import edu.asu.lerna.iolaus.domain.queryobject.impl.Node;
 import edu.asu.lerna.iolaus.domain.queryobject.impl.RelNode;
@@ -29,6 +35,27 @@ public class ObjectToCypherTest {
 	
 	private IQuery querySimple;
 	private IQuery queryNested;
+	String json1= "{\"query\":\"Start source=node:node_auto_index(type={param1}) , target1=node:node_auto_index(type={param2})      " +
+			"Match source-[r1]->target1     " +
+			"Where (( source.dataset=~{param3} ) and (( r1.type=~{param4} and r1.year=1900 ) and (( target1.label=~{param5} and target1.dataset=~{param3} )) ) ) " +
+			"return source, target1, r1\",\n" +
+			"\"params\":{\"param1\":\"Person\"," +
+						"\"param2\":\"Series\"," +
+						"\"param3\":\"(?i).*mblcourses.*\"," +
+						"\"param4\":\"(?i).*attended.*\"," +
+						"\"param5\":\"(?i).*Botany.*\"," +
+						"\"param6\":\"(?i).*mblcourses.*\"}}";
+		
+	String json2="{\"query\":\"Start source=node:node_auto_index(type={param1}) , target1=node:node_auto_index(type={param2})      " +
+			"Match source-[r1]->target1     " +
+			"Where (( source.dataset=~{param3} ) and (( r1.type=~{param4} ) and (( target1.label=~{param5} and target1.dataset=~{param3} )) ) ) " +
+			"return source, target1, r1\",\n"+
+			"\"params\":{\"param1\":\"Person\"," +
+						"\"param2\":\"Institute\"," +
+						"\"param3\":\"(?i).*mblcourses.*\"," +
+						"\"param4\":\"(?i).*affiliatedWith.*\"," +
+						"\"param5\":\"(?i).*Harvard.*\"," +
+						"\"param6\":\"(?i).*mblcourses.*\"}}";
 
 	@Autowired
 	private QueryManager queryManager;
@@ -100,24 +127,29 @@ public class ObjectToCypherTest {
 				assertEquals(PropertyOf.TARGET.toString()+1,objectToTargetLabelMap.get(object));
 			counter++;
 		}
+		//validate the json query
+		assertEquals(json1,json);
+		
 	}
 
 	@Test
 	public void testObjectToCypherIRelNodeString() {
-		IRelNode node=null;
+		INode node=null;
+		IRelNode relNode=null;
 		//null node object
 		assertNull(objectToCypher.objectToCypher(node, null));
 		
 		//empty node object
 		assertNotNull(objectToCypher.objectToCypher(new RelNode(), null));
 		
+		node=queryNested.getNode();
+		relNode=getRelNode(node);
 		
-		
-		ReturnParametersOfOTC returnObject=objectToCypher.objectToCypher(queryNested.getNode(), querySimple.getDataset().getId());
+		ReturnParametersOfOTC returnObject=objectToCypher.objectToCypher(relNode, queryNested.getDataset().getId());
 		
 		//valid node object
 		assertNotNull(returnObject);
-		
+
 		Map<Object,String> objectToTargetLabelMap=returnObject.getObjectToTargetLabelMap();
 		Map<String,Boolean> isReturnMap=returnObject.getIsReturnMap();
 		String json=returnObject.getJson();
@@ -144,6 +176,27 @@ public class ObjectToCypherTest {
 				assertEquals(PropertyOf.TARGET.toString()+1,objectToTargetLabelMap.get(object));
 			counter++;
 		}
+		
+		//validate the json query
+		assertEquals(json2,json);
+	}
+
+	@SuppressWarnings("unchecked")
+	private IRelNode getRelNode(INode node) {
+		
+		IRelNode relNode=null;
+		List<Object> nodeDetails = node.getPropertyOrRelationshipOrAnd();
+		Iterator<Object> nodeDetailsIterator = nodeDetails.iterator();
+		if(nodeDetailsIterator.hasNext()){
+			Object obj=nodeDetailsIterator.next();
+			JAXBElement<?> element = (JAXBElement<Object>) obj;
+			IOperator op = (IOperator) element.getValue();
+			List<Object> objectList = op.getSourceOrTargetOrProperty();
+			IRelationship rel = (IRelationship) objectList.get(1);
+			JAXBElement<?> relElement = (JAXBElement<?>) rel.getSourceOrTargetOrProperty().get(1);
+			relNode=(IRelNode)relElement.getValue();
+		}
+		return relNode;
 	}
 
 }

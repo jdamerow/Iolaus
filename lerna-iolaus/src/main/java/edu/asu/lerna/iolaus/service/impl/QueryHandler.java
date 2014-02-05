@@ -61,9 +61,13 @@ public class QueryHandler implements IQueryHandler{
 	@Override
 	public ResultSet executeQuery(IQuery q)
 	{
+		if(q==null)
+			return null;
 		LabelTree tree=fragmentQuery.breakdownQuery(q);
 		List<String> dbInstances=new ArrayList<String>();
 		List<String> dbList =  q.getDatabaseList();
+		if(dbList==null)
+			return null;
 		Iterator<String> dbIterator = dbList.iterator();
 		while(dbIterator.hasNext()){
 			dbInstances.add(dbIterator.next());//add a dbInstance to the List;
@@ -98,7 +102,7 @@ public class QueryHandler implements IQueryHandler{
 	 * @return the map whose key is label used in the query and value is the List of IJsonNode or IJsonRelation.
 	 */
 	@SuppressWarnings("rawtypes")
-	public Map<String, List<Object>> processResults(List<List<Object>> results) {
+	private Map<String, List<Object>> processResults(List<List<Object>> results) {
 		//key->label used in the query   value->List of IJsonNode or IJsonRelatoin
 		Map<String, List<Object>> processedResults=new LinkedHashMap<String,List<Object>>();
 		String target=PropertyOf.TARGET.toString();
@@ -161,7 +165,7 @@ public class QueryHandler implements IQueryHandler{
 	 * @param dbInstances is the list of id's of Neo4j instances where queries are to be executed
 	 * @return the final result of the query
 	 */
-	public Map<String, List<Object>> traverseLabelsAndExecute(LabelTree tree, List<String> dbInstances) {
+	private Map<String, List<Object>> traverseLabelsAndExecute(LabelTree tree, List<String> dbInstances) {
 		
 		Map<String,Label> sourceToTargetLabelMap=tree.getSourceToTargetLabelMap();
 		Map<String,String> targetLabelToJsonMap=tree.getTargetJsonMap();
@@ -215,7 +219,7 @@ public class QueryHandler implements IQueryHandler{
 	 * @param currentTargetLabelMap is a map with key=label(source of a query) and value is list of the counts of target labels.
 	 * @param sourceToTargetLabelMap is a map with key=label used as a source and value=list of list of the target labels.
 	 */
-	public void initializeCurrentTargetLabelCounter(Map<String, List<Integer>> currentTargetLabelMap,
+	private void initializeCurrentTargetLabelCounter(Map<String, List<Integer>> currentTargetLabelMap,
 			Map<String, Label> sourceToTargetLabelMap) {
 		//This loop will initialize all the labels having other target labels to 0 
 		for(Entry<String, Label> entry:sourceToTargetLabelMap.entrySet()){
@@ -232,7 +236,7 @@ public class QueryHandler implements IQueryHandler{
 	 * @param sourceLabel is the label of the source node in the query.
 	 * @return true if any label for the source is yet to be processed else return false. 
 	 */
-	public boolean areMoreLabels(
+	private boolean areMoreLabels(
 			Map<String, List<Integer>> currentTargetLabelCounter,
 			String sourceLabel) {
 		return currentTargetLabelCounter.get(sourceLabel).get(0)!=-1;
@@ -246,7 +250,7 @@ public class QueryHandler implements IQueryHandler{
 	 * @param innerCount is count of the labels corresponding to same target.
 	 * @param outerCount is count of the target labels in a single query.
 	 */
-	public void changeTargetLabelCounts(Map<String, Label> sourceToTargetLabelMap,Map<String, List<Integer>> currentTargetLabelCounter,
+	private void changeTargetLabelCounts(Map<String, Label> sourceToTargetLabelMap,Map<String, List<Integer>> currentTargetLabelCounter,
 			String sourceLabel, int innerCount, int outerCount) {
 		
 		if(sourceToTargetLabelMap.get(sourceLabel).getLabel().get(outerCount).size()-1>=innerCount+1){//if all the labels corresponding to same target are added to the stack 
@@ -270,7 +274,7 @@ public class QueryHandler implements IQueryHandler{
 	 * @param outerCount is count of the target labels in a single query
 	 * @param stack is stack where labels are pushed.
 	 */
-	public void pushLabelsToStack(Map<String, Label> sourceToTargetLabelMap,String sourceLabel, int innerCount, int outerCount,Stack<String> stack) {
+	private void pushLabelsToStack(Map<String, Label> sourceToTargetLabelMap,String sourceLabel, int innerCount, int outerCount,Stack<String> stack) {
 		
 		int i=0;
 		for(List<String> targetLabelList: sourceToTargetLabelMap.get(sourceLabel).getLabel()){
