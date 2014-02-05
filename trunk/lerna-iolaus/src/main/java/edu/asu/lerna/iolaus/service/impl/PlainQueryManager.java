@@ -82,6 +82,7 @@ public class PlainQueryManager implements IPlainQueryManager {
 	@Override
 	public String executeQuery(String xml) throws JAXBException, SAXException,
 			IOException {
+		
 		validateXml(xml);
 		IQuery query = xmlToQueryObject(xml);
 		String cypher = query.getCypher();
@@ -100,7 +101,7 @@ public class PlainQueryManager implements IPlainQueryManager {
 		Map<String, List<Object>> transformedResults = transformResults(resultSet);
 		String outputXml = queryManager.getRESTOutput(transformedResults);
 		return outputXml;
-
+		
 	}
 
 	private Map<String, List<Object>> transformResults(

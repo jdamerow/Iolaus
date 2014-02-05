@@ -22,6 +22,7 @@
 	<bean id="objectToCypher" class="edu.asu.lerna.iolaus.service.impl.ObjectToCypher" />
 	<bean id="instanceManager" class="edu.asu.lerna.iolaus.service.impl.Neo4jInstanceManager" />
 	<bean id="neo4jRegistry" class="edu.asu.lerna.iolaus.configuration.neo4j.impl.Neo4jRegistry" />
+	<bean id="queryHandler" class="edu.asu.lerna.iolaus.service.impl.QueryHandler" />
 	<bean id="nodeManager" class="edu.asu.lerna.iolaus.service.impl.NodeManager" />
 	
 	<bean id="roleManager" class="edu.asu.lerna.iolaus.service.impl.RoleManager" />

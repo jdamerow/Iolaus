@@ -326,12 +326,13 @@ public class ObjectToCypher implements IObjectToCypher {
 	private String nestedRelNodeObject(IRelNode relNode,ArgumentsInOTC args) {
 		
 		INode node=relNode.getNode();
+		if(node!=null){
 		Map<Object, String> objectToLabelMap=args.getObjectToLabelMap();
 		String dataSet=args.getDataSet();
 		objectToLabelMap.put(node,PropertyOf.SOURCE.toString());
 		args.setCurrentTarget(0);
 		args.setCurrentRelationship(0);
-		args.getLabelToIsReturnMap().put(PropertyOf.SOURCE.toString(), node.isReturn()==null?false:node.isReturn());
+		args.getLabelToIsReturnMap().put(PropertyOf.SOURCE.toString(),node.isReturn()==null?false:node.isReturn());
 		String sourceOperator="";
 		List<Object> nodeDetails = node.getPropertyOrRelationshipOrAnd();
 		Iterator<Object> nodeDetailsIterator = nodeDetails.iterator();
@@ -363,6 +364,9 @@ public class ObjectToCypher implements IObjectToCypher {
 			propertyObject(newProperty,args);
 		}
 		return sourceOperator;
+		}else{
+			return null;
+		}
 	}
 	
 	/**
