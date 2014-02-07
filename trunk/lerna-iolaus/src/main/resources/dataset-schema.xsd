@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema targetNamespace="http://digitalhps.org/lerna-Dataset-model" elementFormDefault="qualified" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://digitalhps.org/lerna-Dataset-model">
+
+    <xsd:element name="DataSet">
+    	<xsd:complexType>
+    		<xsd:sequence>
+    			<xsd:element name="DatabaseList" type="DatabaseList" maxOccurs="1" minOccurs="0"></xsd:element>
+    			<xsd:element name="NodeList" maxOccurs="1" minOccurs="0"
+    				type="NodeList">
+    			</xsd:element>
+    			<xsd:element name="RelationList" maxOccurs="1"
+    				minOccurs="0" type="RelationList">
+    			</xsd:element>
+    		</xsd:sequence>
+    	</xsd:complexType>
+    </xsd:element>
+
+    
+
+
+    <xsd:element name="NodeList" type="NodeList"></xsd:element>
+    
+    <xsd:element name="RelationList" type="RelationList"></xsd:element>
+    
+    <xsd:complexType name="NodeList">
+    	<xsd:sequence>
+    		<xsd:element name="Node" maxOccurs="unbounded" minOccurs="1">
+    			<xsd:complexType>
+    				<xsd:sequence>
+    					<xsd:element name="id" type="xsd:long" maxOccurs="1" minOccurs="1"></xsd:element>
+    					<xsd:element name="propertyList" type="PropertyList" maxOccurs="1" minOccurs="0"></xsd:element>
+    				</xsd:sequence>
+    			</xsd:complexType>
+    		</xsd:element>
+    	</xsd:sequence>
+    </xsd:complexType>
+
+    <xsd:complexType name="RelationList">
+    	<xsd:sequence>
+    		<xsd:element name="Relation" maxOccurs="unbounded" minOccurs="0">
+    			<xsd:complexType>
+    				<xsd:sequence>
+    					<xsd:element name="id" type="xsd:long" maxOccurs="1" minOccurs="1"></xsd:element>
+    					<xsd:element name="type"
+    						type="xsd:string" maxOccurs="1" minOccurs="1">
+    					</xsd:element>
+    					<xsd:element name="propertyList"
+    						type="PropertyList" maxOccurs="1" minOccurs="0">
+    					</xsd:element>
+    					<xsd:element name="startNode" type="xsd:long" maxOccurs="1" minOccurs="1"></xsd:element>
+    					<xsd:element name="endNode" type="xsd:long" maxOccurs="1" minOccurs="1"></xsd:element>
+    				</xsd:sequence>
+    			</xsd:complexType></xsd:element>
+    	</xsd:sequence>
+    </xsd:complexType>
+
+
+
+    <xsd:element name="PropertyList" type="PropertyList"></xsd:element>
+    
+    <xsd:complexType name="PropertyList">
+    	<xsd:sequence>
+    		<xsd:element name="Property" maxOccurs="unbounded" minOccurs="0">
+    			<xsd:complexType>
+    				<xsd:sequence>
+    					<xsd:element name="name" type="xsd:string" maxOccurs="1" minOccurs="1">
+    					</xsd:element>
+    					<xsd:element name="value"
+    						type="xsd:string" maxOccurs="1" minOccurs="1">
+    					</xsd:element>
+    				</xsd:sequence>
+    			</xsd:complexType>
+    		</xsd:element>
+    	</xsd:sequence>
+    </xsd:complexType>
+    
+
+    <xsd:complexType name="DatabaseList">
+    	<xsd:sequence>
+    		<xsd:element name="database" maxOccurs="unbounded" minOccurs="0"><xsd:complexType></xsd:complexType></xsd:element>
+    	</xsd:sequence>
+    </xsd:complexType>
+
+    <xsd:element name="Property">
+    	<xsd:complexType></xsd:complexType>
+    </xsd:element>
+
+    <xsd:element name="database">
+    	<xsd:complexType></xsd:complexType>
+    </xsd:element>
+
+    <xsd:element name="Node">
+    	<xsd:complexType></xsd:complexType>
+    </xsd:element>
+
+    <xsd:element name="Relation">
+    	<xsd:complexType></xsd:complexType>
+    </xsd:element>
+
+    <xsd:element name="DatabaseList" type="DatabaseList"></xsd:element>
+</xsd:schema>

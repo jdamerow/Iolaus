@@ -94,11 +94,19 @@ public class Relation implements IRelation {
 		else{
 			jsonBody.append("{\n");
 			jsonBody.append("\t\"to : "+"\""+endNode+"\"");
-			jsonBody.append(" ,\n\t\"type : "+"\""+type+"\"");
+			jsonBody.append(" ,\n\t\"type : "+"\""+type+"\" ,");
 			if(properties!=null){
+				boolean firstProperty=true;
+				jsonBody.append("\"data\" : {");
 				for(Map.Entry<String,String> property:properties.entrySet()){
-					jsonBody.append(" ,\n\t\""+property.getKey()+" : "+"\""+property.getValue()+"\"");
+					if(firstProperty){
+						jsonBody.append("\n\t\""+property.getKey()+" : "+"\""+property.getValue()+"\"");
+						firstProperty=false;
+					}else{
+						jsonBody.append(" ,\n\t\""+property.getKey()+" : "+"\""+property.getValue()+"\"");
+					}
 				}
+				jsonBody.append("}");
 			}
 			jsonBody.append("\n}");
 		}
