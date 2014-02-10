@@ -1,6 +1,6 @@
 <%@ taglib uri="http://tiles.apache.org/tags-tiles" prefix="tiles"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
-<%@ taglib prefix="sec"
+<%@ taglib prefix="sec" 
 	uri="http://www.springframework.org/security/tags"%>
 
 <!DOCTYPE HTML>
@@ -21,7 +21,7 @@
 <script
 	src="${pageContext.servletContext.contextPath}/resources/txt-layout/js/skel.min.js"></script>
 <script
-	src="${pageContext.servletContext.contextPath}/resources/txt-layout/js/config.js"></script>
+	src="${pageContext.servletContext.contextPath}/resources/txt-layout/js/init.js"></script>
 <link rel="stylesheet"
 	href="${pageContext.servletContext.contextPath}/resources/txt-layout/css/skel-noscript.css" />
 <link rel="stylesheet"
@@ -30,8 +30,6 @@
 	href="${pageContext.servletContext.contextPath}/resources/txt-layout/css/style-desktop.css" />
 <link rel="stylesheet"
 	href="${pageContext.servletContext.contextPath}/resources/txt-layout/css/style-noscript.css" />
-<link rel="stylesheet"
-	href="${pageContext.servletContext.contextPath}/resources/txt-layout/css/style-1000px.css" />
 </head>
 <body class="no-sidebar">
 	<tiles:importAttribute name="currentPage" scope="request" />
@@ -40,7 +38,7 @@
 		<!-- Inner -->
 		<div class="inner">
 			<header>
-				<h1><a href="#" id="logo">Herculus</a></h1>
+				<h1><a href="#" id="logo">Iolaus</a></h1>
 				<span class="byline">Neo4J Management</span>
 			</header>
 		</div>
