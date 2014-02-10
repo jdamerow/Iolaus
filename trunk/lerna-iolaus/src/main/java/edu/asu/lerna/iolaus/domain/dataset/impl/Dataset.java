@@ -8,11 +8,22 @@
 
 package edu.asu.lerna.iolaus.domain.dataset.impl;
 
+import java.util.List;
+
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
+
+import edu.asu.lerna.iolaus.domain.dataset.IDataset;
+import edu.asu.lerna.iolaus.domain.dataset.INode;
+import edu.asu.lerna.iolaus.domain.dataset.IRelation;
+
+
 
 
 /**
@@ -38,19 +49,28 @@ import javax.xml.bind.annotation.XmlType;
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "", propOrder = {
+	"datasetType",
     "databaseList",
     "nodeList",
     "relationList"
 })
 @XmlRootElement(name = "DataSet")
-public class Dataset {
+public class Dataset implements IDataset {
 
-    @XmlElement(name = "DatabaseList")
-    protected DatabaseList databaseList;
-    @XmlElement(name = "NodeList")
-    protected NodeList nodeList;
-    @XmlElement(name = "RelationList")
-    protected RelationList relationList;
+	 @XmlAttribute(name = "datasetType")
+	 protected String datasetType;	
+	
+	@XmlElementWrapper(name="databaseList")
+    @XmlElement(name="database")
+	protected List<String> databaseList;
+    
+	@XmlElementWrapper(name="nodeList")
+    @XmlElement(name="node")
+	@XmlJavaTypeAdapter(Node.Adapter.class) protected List<INode> nodeList;
+	
+	@XmlElementWrapper(name="relationList")
+    @XmlElement(name="relation")
+	@XmlJavaTypeAdapter(Relation.Adapter.class) protected List<IRelation> relationList;
 
     /**
      * Gets the value of the databaseList property.
@@ -60,7 +80,8 @@ public class Dataset {
      *     {@link DatabaseList }
      *     
      */
-    public DatabaseList getDatabaseList() {
+	@Override
+    public List<String> getDatabaseList() {
         return databaseList;
     }
 
@@ -72,7 +93,8 @@ public class Dataset {
      *     {@link DatabaseList }
      *     
      */
-    public void setDatabaseList(DatabaseList value) {
+	@Override
+    public void setDatabaseList(List<String> value) {
         this.databaseList = value;
     }
 
@@ -84,7 +106,8 @@ public class Dataset {
      *     {@link NodeList }
      *     
      */
-    public NodeList getNodeList() {
+	@Override
+    public List<INode> getNodeList() {
         return nodeList;
     }
 
@@ -96,7 +119,8 @@ public class Dataset {
      *     {@link NodeList }
      *     
      */
-    public void setNodeList(NodeList value) {
+	@Override
+    public void setNodeList(List<INode> value) {
         this.nodeList = value;
     }
 
@@ -108,7 +132,8 @@ public class Dataset {
      *     {@link RelationList }
      *     
      */
-    public RelationList getRelationList() {
+	@Override
+    public List<IRelation> getRelationList() {
         return relationList;
     }
 
@@ -120,8 +145,18 @@ public class Dataset {
      *     {@link RelationList }
      *     
      */
-    public void setRelationList(RelationList value) {
+	@Override
+    public void setRelationList(List<IRelation> value) {
         this.relationList = value;
     }
 
+	@Override  
+	public String getDatasetType(){
+		return datasetType;
+	}
+	
+	@Override  
+	public void setDatasetType(String value){
+		this.datasetType=value;;
+	}
 }

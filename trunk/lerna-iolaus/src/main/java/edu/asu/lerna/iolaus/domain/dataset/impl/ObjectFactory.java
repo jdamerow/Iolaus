@@ -8,14 +8,16 @@
 
 package edu.asu.lerna.iolaus.domain.dataset.impl;
 
+import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.Method;
+import java.lang.reflect.Proxy;
+import java.util.HashMap;
+import java.util.Map;
+
 import javax.xml.bind.JAXBElement;
 import javax.xml.bind.annotation.XmlElementDecl;
 import javax.xml.bind.annotation.XmlRegistry;
 import javax.xml.namespace.QName;
-
-import edu.asu.lerna.iolaus.domain.dataset.IDatabase;
-import edu.asu.lerna.iolaus.domain.dataset.INode;
-import edu.asu.lerna.iolaus.domain.dataset.IProperty;
 
 
 /**
@@ -39,117 +41,6 @@ public class ObjectFactory {
     private final static QName _PropertyList_QNAME = new QName("http://digitalhps.org/lerna-Dataset-model", "PropertyList");
     private final static QName _DatabaseList_QNAME = new QName("http://digitalhps.org/lerna-Dataset-model", "DatabaseList");
     private final static QName _RelationList_QNAME = new QName("http://digitalhps.org/lerna-Dataset-model", "RelationList");
-
-    /**
-     * Create a new ObjectFactory that can be used to create new instances of schema derived classes for package: org.digitalhps.lerna_dataset_model
-     * 
-     */
-    public ObjectFactory() {
-    }
-
-    /**
-     * Create an instance of {@link PropertyList }
-     * 
-     */
-    public PropertyList createPropertyList() {
-        return new PropertyList();
-    }
-
-    /**
-     * Create an instance of {@link NodeList }
-     * 
-     */
-    public NodeList createNodeList() {
-        return new NodeList();
-    }
-
-    /**
-     * Create an instance of {@link DatabaseList }
-     * 
-     */
-    public DatabaseList createDatabaseList() {
-        return new DatabaseList();
-    }
-
-    /**
-     * Create an instance of {@link RelationList }
-     * 
-     */
-    public RelationList createRelationList() {
-        return new RelationList();
-    }
-
-    /**
-     * Create an instance of {@link org.digitalhps.lerna_dataset_model.Relation }
-     * 
-     */
-    public Relation createRelation() {
-        return new Relation();
-    }
-
-    /**
-     * Create an instance of {@link org.digitalhps.lerna_dataset_model.Node }
-     * 
-     */
-    public Node createNode() {
-        return new Node();
-    }
-
-    /**
-     * Create an instance of {@link Dataset }
-     * 
-     */
-    public Dataset createDataSet() {
-        return new Dataset();
-    }
-
-    /**
-     * Create an instance of {@link org.digitalhps.lerna_dataset_model.Property }
-     * 
-     */
-    public Property createProperty() {
-        return new Property();
-    }
-
-    /**
-     * Create an instance of {@link org.digitalhps.lerna_dataset_model.Database }
-     * 
-     */
-    public IDatabase createDatabase() {
-        return new Database();
-    }
-
-    /**
-     * Create an instance of {@link PropertyList.Property }
-     * 
-     */
-    public IProperty createPropertyListProperty() {
-        return new Property();
-    }
-
-    /**
-     * Create an instance of {@link NodeList.Node }
-     * 
-     */
-    public INode createNodeListNode() {
-        return new Node();
-    }
-
-    /**
-     * Create an instance of {@link DatabaseList.Database }
-     * 
-     */
-    public Database createDatabaseListDatabase() {
-        return new Database();
-    }
-
-    /**
-     * Create an instance of {@link RelationList.Relation }
-     * 
-     */
-    public RelationList.Relation createRelationListRelation() {
-        return new RelationList.Relation();
-    }
 
     /**
      * Create an instance of {@link JAXBElement }{@code <}{@link NodeList }{@code >}}
@@ -186,5 +77,23 @@ public class ObjectFactory {
     public JAXBElement<RelationList> createRelationList(RelationList value) {
         return new JAXBElement<RelationList>(_RelationList_QNAME, RelationList.class, null, value);
     }
-
+    
+    private <T> T createInstance(Class<T> anInterface) {
+        return (T) Proxy.newProxyInstance(anInterface.getClassLoader(), new Class[] {anInterface}, (InvocationHandler) new InterfaceInvocationHandler());
+    }
+  
+    private static class InterfaceInvocationHandler implements InvocationHandler {
+  
+        private Map<String, Object> values = new HashMap<String, Object>();
+  
+        public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
+            String methodName = method.getName();
+            if(methodName.startsWith("get")) {
+                return values.get(methodName.substring(3));
+            } else {
+                values.put(methodName.substring(3), args[0]);
+                return null;
+            }
+        }
+    }
 }

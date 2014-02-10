@@ -1,6 +1,7 @@
 package edu.asu.lerna.iolaus.domain.dataset;
 
-import edu.asu.lerna.iolaus.domain.dataset.impl.PropertyList;
+import java.util.List;
+
 
 public interface INode {
 
@@ -8,8 +9,8 @@ public interface INode {
 
 	void setId(long value);
 
-	PropertyList getPropertyList();
+	List<IProperty> getPropertyList();
 
-	void setPropertyList(PropertyList value);
+	void setPropertyList(List<IProperty> value);
 
 }

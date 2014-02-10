@@ -4,7 +4,10 @@
     <xsd:element name="DataSet">
     	<xsd:complexType>
     		<xsd:sequence>
-    			<xsd:element name="DatabaseList" type="DatabaseList" maxOccurs="1" minOccurs="0"></xsd:element>
+    			<xsd:element name="DatasetType" type="xsd:string"></xsd:element>
+    			<xsd:element name="DatabaseList" type="DatabaseList"
+    				maxOccurs="1" minOccurs="0">
+    			</xsd:element>
     			<xsd:element name="NodeList" maxOccurs="1" minOccurs="0"
     				type="NodeList">
     			</xsd:element>
