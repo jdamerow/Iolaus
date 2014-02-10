@@ -2,7 +2,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib prefix="sec"
 	uri="http://www.springframework.org/security/tags"%>
-
+ 
 <!DOCTYPE HTML>
 
 <html>
@@ -15,15 +15,21 @@
 	href="http://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600"
 	rel="stylesheet" type="text/css" />
 <script src="${pageContext.servletContext.contextPath}/resources/txt-layout/js/jquery.min.js"></script>
-<script src="${pageContext.servletContext.contextPath}/resources/txt-layout/js/html5shiv.js"></script>
+<script src="${pageContext.servletContext.contextPath}/resources/txt-layout/js/jquery.dataTables.js"></script>
 <script src="${pageContext.servletContext.contextPath}/resources/txt-layout/js/jquery.dropotron.min.js"></script>
 <script src="${pageContext.servletContext.contextPath}/resources/txt-layout/js/skel.min.js"></script>
-<script src="${pageContext.servletContext.contextPath}/resources/txt-layout/js/config.js"></script>
+<script src="${pageContext.servletContext.contextPath}/resources/txt-layout/js/init.js"></script>
+<script src="${pageContext.servletContext.contextPath}/resources/txt-layout/js/jquery-ui.js"></script>
+<script src="${pageContext.servletContext.contextPath}/resources/txt-layout/js/jquery-alert.js"></script>
+<script src="${pageContext.servletContext.contextPath}/resources/txt-layout/js/jquery.quick.pagination.min.js"></script>
 <link rel="stylesheet" href="${pageContext.servletContext.contextPath}/resources/txt-layout/css/skel-noscript.css" />
 <link rel="stylesheet" href="${pageContext.servletContext.contextPath}/resources/txt-layout/css/style.css" />
-<link rel="stylesheet" href="${pageContext.servletContext.contextPath}/resources/txt-layout/css/style-1000px.css" />
-<link rel="stylesheet" href="${pageContext.servletContext.contextPath}/resources/txt-layout/css/style-desktop.css" />
-<link rel="stylesheet"	href="${pageContext.servletContext.contextPath}/resources/txt-layout/css/style-mobile.css" />
+<link rel="stylesheet" href="${pageContext.servletContext.contextPath}/resources/txt-layout/css/jquery-ui.css" />
+<link rel="stylesheet" href="${pageContext.servletContext.contextPath}/resources/txt-layout/css/style-noscript.css" />
+<link rel="stylesheet" href="${pageContext.servletContext.contextPath}/resources/txt-layout/css/ul-pagination-styles.css" />
+<link rel="stylesheet"	href="${pageContext.servletContext.contextPath}/resources/txt-layout/css/jquery.dataTables_themeroller.css" />
+<link rel="stylesheet"	href="${pageContext.servletContext.contextPath}/resources/txt-layout/css/demo_table_jui.css" />
+<link rel="stylesheet"	href="${pageContext.servletContext.contextPath}/resources/txt-layout/css/ul-pagination-styles.css" />
 
 
 </head>
@@ -38,7 +44,7 @@
 		<div class="inner">
 			<header>
 				<h1>
-					<a href="#" id="logo">Herculus</a>
+					<a href="#" id="logo">Iolaus</a>
 				</h1>
 				<span class="byline">Neo4J Management</span>
 			</header>
