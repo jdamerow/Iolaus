@@ -14,6 +14,7 @@ import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlType;
 import javax.xml.bind.annotation.adapters.XmlAdapter;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 import edu.asu.lerna.iolaus.domain.dataset.IDatabase;
 import edu.asu.lerna.iolaus.domain.dataset.IDatabaseList;
@@ -52,7 +53,7 @@ import edu.asu.lerna.iolaus.domain.dataset.IDatabaseList;
 })
 public class DatabaseList implements IDatabaseList{
 
-    protected List<IDatabase> database;
+	@XmlJavaTypeAdapter(Database.Adapter.class) protected List<IDatabase> database;
 
     /**
      * Gets the value of the database property.

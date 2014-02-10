@@ -14,6 +14,10 @@ import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
+import javax.xml.bind.annotation.adapters.XmlAdapter;
+
+import edu.asu.lerna.iolaus.domain.dataset.IRelation;
+import edu.asu.lerna.iolaus.domain.dataset.IRelationList;
 
 
 /**
@@ -53,10 +57,10 @@ import javax.xml.bind.annotation.XmlType;
 @XmlType(name = "RelationList", propOrder = {
     "relation"
 })
-public class RelationList {
+public class RelationList implements IRelationList{
 
     @XmlElement(name = "Relation")
-    protected List<RelationList.Relation> relation;
+    protected List<IRelation> relation;
 
     /**
      * Gets the value of the relation property.
@@ -80,150 +84,17 @@ public class RelationList {
      * 
      * 
      */
-    public List<RelationList.Relation> getRelation() {
+    @Override
+    public List<IRelation> getRelation() {
         if (relation == null) {
-            relation = new ArrayList<RelationList.Relation>();
+            relation = new ArrayList<IRelation>();
         }
         return this.relation;
     }
-
-
-    /**
-     * <p>Java class for anonymous complex type.
-     * 
-     * <p>The following schema fragment specifies the expected content contained within this class.
-     * 
-     * <pre>
-     * &lt;complexType>
-     *   &lt;complexContent>
-     *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
-     *       &lt;sequence>
-     *         &lt;element name="id" type="{http://www.w3.org/2001/XMLSchema}long"/>
-     *         &lt;element name="type" type="{http://www.w3.org/2001/XMLSchema}string"/>
-     *         &lt;element name="propertyList" type="{http://digitalhps.org/lerna-Dataset-model}PropertyList" minOccurs="0"/>
-     *         &lt;element name="startNode" type="{http://www.w3.org/2001/XMLSchema}long"/>
-     *         &lt;element name="endNode" type="{http://www.w3.org/2001/XMLSchema}long"/>
-     *       &lt;/sequence>
-     *     &lt;/restriction>
-     *   &lt;/complexContent>
-     * &lt;/complexType>
-     * </pre>
-     * 
-     * 
-     */
-    @XmlAccessorType(XmlAccessType.FIELD)
-    @XmlType(name = "", propOrder = {
-        "id",
-        "type",
-        "propertyList",
-        "startNode",
-        "endNode"
-    })
-    public static class Relation {
-
-        protected long id;
-        @XmlElement(required = true)
-        protected String type;
-        protected PropertyList propertyList;
-        protected long startNode;
-        protected long endNode;
-
-        /**
-         * Gets the value of the id property.
-         * 
-         */
-        public long getId() {
-            return id;
-        }
-
-        /**
-         * Sets the value of the id property.
-         * 
-         */
-        public void setId(long value) {
-            this.id = value;
-        }
-
-        /**
-         * Gets the value of the type property.
-         * 
-         * @return
-         *     possible object is
-         *     {@link String }
-         *     
-         */
-        public String getType() {
-            return type;
-        }
-
-        /**
-         * Sets the value of the type property.
-         * 
-         * @param value
-         *     allowed object is
-         *     {@link String }
-         *     
-         */
-        public void setType(String value) {
-            this.type = value;
-        }
-
-        /**
-         * Gets the value of the propertyList property.
-         * 
-         * @return
-         *     possible object is
-         *     {@link PropertyList }
-         *     
-         */
-        public PropertyList getPropertyList() {
-            return propertyList;
-        }
-
-        /**
-         * Sets the value of the propertyList property.
-         * 
-         * @param value
-         *     allowed object is
-         *     {@link PropertyList }
-         *     
-         */
-        public void setPropertyList(PropertyList value) {
-            this.propertyList = value;
-        }
-
-        /**
-         * Gets the value of the startNode property.
-         * 
-         */
-        public long getStartNode() {
-            return startNode;
-        }
-
-        /**
-         * Sets the value of the startNode property.
-         * 
-         */
-        public void setStartNode(long value) {
-            this.startNode = value;
-        }
-
-        /**
-         * Gets the value of the endNode property.
-         * 
-         */
-        public long getEndNode() {
-            return endNode;
-        }
-
-        /**
-         * Sets the value of the endNode property.
-         * 
-         */
-        public void setEndNode(long value) {
-            this.endNode = value;
-        }
-
+    
+    public static class Adapter extends XmlAdapter<RelationList,IRelationList> {
+    	public IRelationList unmarshal(RelationList v) { return v; }
+    	public RelationList marshal(IRelationList v) { return (RelationList)v; }
     }
 
 }

@@ -10,8 +10,11 @@ package edu.asu.lerna.iolaus.domain.dataset.impl;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
+import javax.xml.bind.annotation.adapters.XmlAdapter;
+
+import edu.asu.lerna.iolaus.domain.dataset.IRelation;
 
 
 /**
@@ -23,6 +26,13 @@ import javax.xml.bind.annotation.XmlType;
  * &lt;complexType>
  *   &lt;complexContent>
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
+ *       &lt;sequence>
+ *         &lt;element name="id" type="{http://www.w3.org/2001/XMLSchema}long"/>
+ *         &lt;element name="type" type="{http://www.w3.org/2001/XMLSchema}string"/>
+ *         &lt;element name="propertyList" type="{http://digitalhps.org/lerna-Dataset-model}PropertyList" minOccurs="0"/>
+ *         &lt;element name="startNode" type="{http://www.w3.org/2001/XMLSchema}long"/>
+ *         &lt;element name="endNode" type="{http://www.w3.org/2001/XMLSchema}long"/>
+ *       &lt;/sequence>
  *     &lt;/restriction>
  *   &lt;/complexContent>
  * &lt;/complexType>
@@ -31,9 +41,131 @@ import javax.xml.bind.annotation.XmlType;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "")
-@XmlRootElement(name = "Relation")
-public class Relation {
+@XmlType(name = "", propOrder = {
+    "id",
+    "type",
+    "propertyList",
+    "startNode",
+    "endNode"
+})
+public class Relation implements IRelation {
 
+    protected long id;
+    @XmlElement(required = true)
+    protected String type;
+    protected PropertyList propertyList;
+    protected long startNode;
+    protected long endNode;
+
+    /**
+     * Gets the value of the id property.
+     * 
+     */
+    @Override
+    public long getId() {
+        return id;
+    }
+
+    /**
+     * Sets the value of the id property.
+     * 
+     */
+    @Override
+    public void setId(long value) {
+        this.id = value;
+    }
+
+    /**
+     * Gets the value of the type property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link String }
+     *     
+     */
+    @Override
+    public String getType() {
+        return type;
+    }
+
+    /**
+     * Sets the value of the type property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link String }
+     *     
+     */
+    @Override
+    public void setType(String value) {
+        this.type = value;
+    }
+
+    /**
+     * Gets the value of the propertyList property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link PropertyList }
+     *     
+     */
+    @Override
+    public PropertyList getPropertyList() {
+        return propertyList;
+    }
+
+    /**
+     * Sets the value of the propertyList property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link PropertyList }
+     *     
+     */
+    @Override
+    public void setPropertyList(PropertyList value) {
+        this.propertyList = value;
+    }
+
+    /**
+     * Gets the value of the startNode property.
+     * 
+     */
+    @Override
+    public long getStartNode() {
+        return startNode;
+    }
+
+    /**
+     * Sets the value of the startNode property.
+     * 
+     */
+    @Override
+    public void setStartNode(long value) {
+        this.startNode = value;
+    }
+
+    /**
+     * Gets the value of the endNode property.
+     * 
+     */
+    @Override
+    public long getEndNode() {
+        return endNode;
+    }
+
+    /**
+     * Sets the value of the endNode property.
+     * 
+     */
+    @Override
+    public void setEndNode(long value) {
+        this.endNode = value;
+    }
+    
+    public static class Adapter extends XmlAdapter<Relation,IRelation> {
+    	public IRelation unmarshal(Relation v) { return v; }
+    	public Relation marshal(IRelation v) { return (Relation)v; }
+    }
 
 }

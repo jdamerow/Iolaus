@@ -8,12 +8,18 @@
 
 package edu.asu.lerna.iolaus.domain.dataset.impl;
 
+import java.util.List;
+
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlType;
 import javax.xml.bind.annotation.adapters.XmlAdapter;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 import edu.asu.lerna.iolaus.domain.dataset.INode;
+import edu.asu.lerna.iolaus.domain.dataset.IProperty;
 
 
 
@@ -45,7 +51,10 @@ import edu.asu.lerna.iolaus.domain.dataset.INode;
 public class Node implements INode{
 
     protected long id;
-    protected PropertyList propertyList;
+    
+    @XmlElementWrapper(name="propertyList")
+    @XmlElement(name="property")
+    @XmlJavaTypeAdapter(Property.Adapter.class) protected List<IProperty> propertyList;
 
     /**
      * Gets the value of the id property.
@@ -74,7 +83,7 @@ public class Node implements INode{
      *     
      */
     @Override
-    public PropertyList getPropertyList() {
+    public List<IProperty> getPropertyList() {
         return propertyList;
     }
 
@@ -87,7 +96,7 @@ public class Node implements INode{
      *     
      */
     @Override
-    public void setPropertyList(PropertyList value) {
+    public void setPropertyList(List<IProperty> value) {
         this.propertyList = value;
     }
     public static class Adapter extends XmlAdapter<Node,INode> {
