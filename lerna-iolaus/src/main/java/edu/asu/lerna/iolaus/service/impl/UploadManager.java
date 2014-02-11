@@ -9,12 +9,13 @@ import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 import javax.xml.transform.stream.StreamSource;
 
+import org.springframework.stereotype.Service;
+
 import edu.asu.lerna.iolaus.domain.dataset.IDataset;
 import edu.asu.lerna.iolaus.domain.dataset.impl.Dataset;
-import edu.asu.lerna.iolaus.domain.queryobject.IQuery;
-import edu.asu.lerna.iolaus.domain.queryobject.impl.Query;
 import edu.asu.lerna.iolaus.service.IUploadManager;
 
+@Service
 public class UploadManager implements IUploadManager{
 
 	@Override

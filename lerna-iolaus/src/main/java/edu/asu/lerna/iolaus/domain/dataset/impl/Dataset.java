@@ -54,17 +54,17 @@ import edu.asu.lerna.iolaus.domain.dataset.IRelation;
     "nodeList",
     "relationList"
 })
-@XmlRootElement(name = "DataSet")
+@XmlRootElement(name = "dataset")
 public class Dataset implements IDataset {
 
-	 @XmlAttribute(name = "datasetType")
+	 @XmlAttribute(name = "datasetType", required = true)
 	 protected String datasetType;	
 	
-	@XmlElementWrapper(name="databaseList")
+	@XmlElementWrapper(name="databaseList", required = true)
     @XmlElement(name="database")
 	protected List<String> databaseList;
     
-	@XmlElementWrapper(name="nodeList")
+	@XmlElementWrapper(name="nodeList", required = true)
     @XmlElement(name="node")
 	@XmlJavaTypeAdapter(Node.Adapter.class) protected List<INode> nodeList;
 	
