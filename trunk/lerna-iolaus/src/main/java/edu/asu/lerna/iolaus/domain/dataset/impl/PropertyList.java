@@ -51,12 +51,12 @@ import edu.asu.lerna.iolaus.domain.dataset.IPropertyList;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "PropertyList", propOrder = {
+@XmlType(name = "propertyList", propOrder = {
     "property"
 })
 public class PropertyList implements IPropertyList{
 
-    @XmlElement(name = "Property")
+    @XmlElement(name = "property")
     protected List<IProperty> property;
 
     /**

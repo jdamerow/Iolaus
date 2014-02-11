@@ -50,11 +50,15 @@ import edu.asu.lerna.iolaus.domain.dataset.IRelation;
 })
 public class Relation implements IRelation {
 
-    protected long id;
+	@XmlElement(required = true)
+	protected long id;
     @XmlElement(required = true)
     protected String type;
+   
     protected PropertyList propertyList;
+    @XmlElement(required = true)
     protected long startNode;
+    @XmlElement(required = true)
     protected long endNode;
 
     /**

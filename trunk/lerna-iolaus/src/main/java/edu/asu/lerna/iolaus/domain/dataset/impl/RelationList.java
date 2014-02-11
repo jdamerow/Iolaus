@@ -54,12 +54,12 @@ import edu.asu.lerna.iolaus.domain.dataset.IRelationList;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "RelationList", propOrder = {
+@XmlType(name = "relationList", propOrder = {
     "relation"
 })
 public class RelationList implements IRelationList{
 
-    @XmlElement(name = "Relation")
+    @XmlElement(name = "relation")
     protected List<IRelation> relation;
 
     /**

@@ -48,7 +48,7 @@ import edu.asu.lerna.iolaus.domain.dataset.IDatabaseList;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "DatabaseList", propOrder = {
+@XmlType(name = "databaseList", propOrder = {
     "database"
 })
 public class DatabaseList implements IDatabaseList{

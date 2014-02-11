@@ -50,12 +50,12 @@ import edu.asu.lerna.iolaus.domain.dataset.INodeList;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "NodeList", propOrder = {
+@XmlType(name = "nodeList", propOrder = {
     "node"
 })
 public class NodeList implements INodeList{
 
-    @XmlElement(name = "Node", required = true)
+    @XmlElement(name = "node", required = true)
     protected List<INode> node;
 
     /**
