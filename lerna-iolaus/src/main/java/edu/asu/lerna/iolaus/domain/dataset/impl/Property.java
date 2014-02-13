@@ -57,6 +57,7 @@ public class Property implements IProperty {
      *     {@link String }
      *     
      */
+    @Override
     public String getName() {
         return name;
     }
@@ -69,6 +70,7 @@ public class Property implements IProperty {
      *     {@link String }
      *     
      */
+    @Override
     public void setName(String value) {
         this.name = value;
     }
@@ -81,6 +83,7 @@ public class Property implements IProperty {
      *     {@link String }
      *     
      */
+    @Override
     public String getValue() {
         return value;
     }
@@ -93,6 +96,7 @@ public class Property implements IProperty {
      *     {@link String }
      *     
      */
+    @Override
     public void setValue(String value) {
         this.value = value;
     }

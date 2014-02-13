@@ -57,7 +57,7 @@ import edu.asu.lerna.iolaus.domain.dataset.IRelation;
 @XmlRootElement(name = "dataset")
 public class Dataset implements IDataset {
 
-	 @XmlAttribute(name = "datasetType", required = true)
+	@XmlElement(required = true)
 	 protected String datasetType;	
 	
 	@XmlElementWrapper(name="databaseList", required = true)

@@ -13,4 +13,10 @@ public interface INode {
 
 	void setPropertyList(List<IProperty> value);
 
+	String getType();
+
+	void setType(String value);
+
+	String getJsonNode();
+
 }
