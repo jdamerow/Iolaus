@@ -15,6 +15,7 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
 import javax.xml.bind.annotation.adapters.XmlAdapter;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 import edu.asu.lerna.iolaus.domain.dataset.IProperty;
 import edu.asu.lerna.iolaus.domain.dataset.IPropertyList;
@@ -57,7 +58,7 @@ import edu.asu.lerna.iolaus.domain.dataset.IPropertyList;
 public class PropertyList implements IPropertyList{
 
     @XmlElement(name = "property")
-    protected List<IProperty> property;
+    @XmlJavaTypeAdapter(Property.Adapter.class) protected List<IProperty> property;
 
     /**
      * Gets the value of the property property.

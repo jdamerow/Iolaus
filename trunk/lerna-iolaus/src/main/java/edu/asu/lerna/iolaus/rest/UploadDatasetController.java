@@ -1,5 +1,9 @@
 package edu.asu.lerna.iolaus.rest;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.xml.bind.JAXBException;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -19,7 +23,7 @@ public class UploadDatasetController {
 	private IUploadManager uploadManager;
 	
 	@RequestMapping(value = "/uploadDataset", method = RequestMethod.POST)
-	public String uploadDataset(@RequestBody String datasetXml) {
+	public String uploadDataset(HttpServletRequest request,	HttpServletResponse response,@RequestBody String datasetXml) throws JAXBException {
 		logger.info("Uploading the dataset");
 		uploadManager.uploadDataset(datasetXml);
 		logger.info("Uploding finished");

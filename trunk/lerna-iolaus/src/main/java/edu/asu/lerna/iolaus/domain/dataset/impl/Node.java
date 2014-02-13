@@ -46,11 +46,13 @@ import edu.asu.lerna.iolaus.domain.dataset.IProperty;
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "", propOrder = {
     "id",
+    "type",
     "propertyList"
 })
 public class Node implements INode{
 
     protected long id;
+    protected String type;
     
     @XmlElementWrapper(name="propertyList")
     @XmlElement(name="property")
@@ -73,7 +75,16 @@ public class Node implements INode{
     public void setId(long value) {
         this.id = value;
     }
-
+    
+    @Override
+    public String getType(){
+    	return type;
+    }
+    
+    @Override
+    public void setType(String value){
+    	this.type=value;
+    }
     /**
      * Gets the value of the propertyList property.
      * 
@@ -99,6 +110,23 @@ public class Node implements INode{
     public void setPropertyList(List<IProperty> value) {
         this.propertyList = value;
     }
+    
+    @Override
+    public String getJsonNode(){
+    	StringBuffer jsonBody=new StringBuffer();
+		jsonBody.append("{\n\t");
+		if(type!=null){
+			jsonBody.append("\"type\" : "+"\""+type+"\"");
+		}
+		if(propertyList!=null){
+			for(IProperty property:propertyList){
+					jsonBody.append(",\n\t\""+property.getName()+"\" : \""+property.getValue()+"\" ");
+			}
+		}
+		jsonBody.append("\n}");
+		return jsonBody.toString();
+	}
+	
     public static class Adapter extends XmlAdapter<Node,INode> {
     	public INode unmarshal(Node v) { return v; }
     	public Node marshal(INode v) { return (Node)v; }

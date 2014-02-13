@@ -15,6 +15,7 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
 import javax.xml.bind.annotation.adapters.XmlAdapter;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 import edu.asu.lerna.iolaus.domain.dataset.IRelation;
 import edu.asu.lerna.iolaus.domain.dataset.IRelationList;
@@ -60,7 +61,7 @@ import edu.asu.lerna.iolaus.domain.dataset.IRelationList;
 public class RelationList implements IRelationList{
 
     @XmlElement(name = "relation")
-    protected List<IRelation> relation;
+    @XmlJavaTypeAdapter(Relation.Adapter.class) protected List<IRelation> relation;
 
     /**
      * Gets the value of the relation property.

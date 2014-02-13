@@ -8,13 +8,18 @@
 
 package edu.asu.lerna.iolaus.domain.dataset.impl;
 
+import java.util.List;
+
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlType;
 import javax.xml.bind.annotation.adapters.XmlAdapter;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 import edu.asu.lerna.iolaus.domain.dataset.IRelation;
+import edu.asu.lerna.iolaus.domain.dataset.IProperty;
 
 
 /**
@@ -55,11 +60,15 @@ public class Relation implements IRelation {
     @XmlElement(required = true)
     protected String type;
    
-    protected PropertyList propertyList;
+    @XmlElementWrapper(name="propertyList")
+    @XmlElement(name="property")
+    @XmlJavaTypeAdapter(Property.Adapter.class) protected List<IProperty> propertyList;
+    
     @XmlElement(required = true)
     protected long startNode;
     @XmlElement(required = true)
     protected long endNode;
+
 
     /**
      * Gets the value of the id property.
@@ -114,7 +123,7 @@ public class Relation implements IRelation {
      *     
      */
     @Override
-    public PropertyList getPropertyList() {
+    public List<IProperty> getPropertyList() {
         return propertyList;
     }
 
@@ -127,7 +136,7 @@ public class Relation implements IRelation {
      *     
      */
     @Override
-    public void setPropertyList(PropertyList value) {
+    public void setPropertyList(List<IProperty> value) {
         this.propertyList = value;
     }
 
@@ -167,6 +176,35 @@ public class Relation implements IRelation {
         this.endNode = value;
     }
     
+    
+    @Override
+    public String getJsonRelation(String endNode) {
+    	StringBuffer jsonBody=new StringBuffer();
+		if(endNode==null || type==null){
+			return null;	
+		}
+		else{
+			jsonBody.append("{\n");
+			jsonBody.append("\t\"to\" : "+"\""+endNode+"\"");
+			jsonBody.append(" ,\n\t\"type\" : "+"\""+type+"\", ");
+			if(propertyList!=null){
+				jsonBody.append("\n\t\"data\" : {");
+				boolean firstProperty=true;
+				for(IProperty property:propertyList){
+					if(firstProperty){
+						jsonBody.append(" \n\t\t\""+property.getName()+"\" : "+"\""+property.getValue()+"\"");
+						firstProperty=false;
+					}
+					else{
+						jsonBody.append(" ,\n\t\t\""+property.getName()+"\" : "+"\""+property.getValue()+"\"");
+					}
+				}
+				jsonBody.append("\n\t}");
+			}
+			jsonBody.append("\n}");
+		}
+		return jsonBody.toString();
+	}
     public static class Adapter extends XmlAdapter<Relation,IRelation> {
     	public IRelation unmarshal(Relation v) { return v; }
     	public Relation marshal(IRelation v) { return (Relation)v; }

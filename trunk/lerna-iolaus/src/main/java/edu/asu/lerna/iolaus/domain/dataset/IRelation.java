@@ -1,6 +1,7 @@
 package edu.asu.lerna.iolaus.domain.dataset;
 
-import edu.asu.lerna.iolaus.domain.dataset.impl.PropertyList;
+import java.util.List;
+
 
 public interface IRelation {
 
@@ -12,9 +13,9 @@ public interface IRelation {
 
 	void setType(String value);
 
-	PropertyList getPropertyList();
+	List<IProperty> getPropertyList();
 
-	void setPropertyList(PropertyList value);
+	void setPropertyList(List<IProperty> value);
 
 	long getStartNode();
 
@@ -23,5 +24,7 @@ public interface IRelation {
 	long getEndNode();
 
 	void setEndNode(long value);
+
+	String getJsonRelation(String endNode);
 
 }
