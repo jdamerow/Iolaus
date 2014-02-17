@@ -192,19 +192,36 @@ public class Relation implements IRelation {
 				boolean firstProperty=true;
 				for(IProperty property:propertyList){
 					if(firstProperty){
-						jsonBody.append(" \n\t\t\""+property.getName()+"\" : "+"\""+property.getValue()+"\"");
+						if(!isNumeric(property.getValue()))
+							jsonBody.append(" \n\t\t\""+property.getName()+"\" : "+"\""+property.getValue()+"\"");
+						else
+							jsonBody.append(" \n\t\t\""+property.getName()+"\" : "+property.getValue());
 						firstProperty=false;
 					}
 					else{
-						jsonBody.append(" ,\n\t\t\""+property.getName()+"\" : "+"\""+property.getValue()+"\"");
+						if(!isNumeric(property.getValue()))
+							jsonBody.append(" ,\n\t\t\""+property.getName()+"\" : "+"\""+property.getValue()+"\"");
+						else
+							jsonBody.append(" ,\n\t\t\""+property.getName()+"\" : "+property.getValue());
 					}
 				}
+				jsonBody.append(" ,\n\t\t\"type\" : "+"\""+type+"\"");
 				jsonBody.append("\n\t}");
 			}
 			jsonBody.append("\n}");
 		}
 		return jsonBody.toString();
 	}
+    
+    /**
+	 * This method checks if String is numeric.
+	 * @param  value   is a String
+	 * @return         true if it is Numeric else return false
+	 */
+	private boolean isNumeric(String value) {
+		return value.matches("(\\d*)");
+	}
+    
     public static class Adapter extends XmlAdapter<Relation,IRelation> {
     	public IRelation unmarshal(Relation v) { return v; }
     	public Relation marshal(IRelation v) { return (Relation)v; }

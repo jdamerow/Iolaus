@@ -54,6 +54,8 @@ public class UploadManager implements IUploadManager{
 			return false;
 		
 		List<String> serverRootUriList=getServerRootUriList(dataset.getDatabaseList());
+		List<String> nodeIndexUriList=getIndexList(dataset.getDatabaseList(),nodeIndexEntryPoint);
+		List<String> relationIndexUriList=getIndexList(dataset.getDatabaseList(),relationIndexEntryPoint);
 		
 		initializeList(nodeUriList,serverRootUriList.size());
 		
@@ -71,6 +73,7 @@ public class UploadManager implements IUploadManager{
 			node.getPropertyList().add(datasetProperty);
 			//inserts nodes in multiple instances of Neo4j
 			List<String> storedUri=insertNode(node.getJsonNode(),serverRootUriList);
+			addPropertyToNodeIndex(node,storedUri,nodeIndexUriList);
 			for(int i=0;i<serverRootUriList.size();i++){
 				nodeUriList.get(i).put(node.getId(), storedUri.get(i));
 			}
@@ -81,11 +84,55 @@ public class UploadManager implements IUploadManager{
 		 */
 		for(IRelation relation:dataset.getRelationList()){
 			relation.getPropertyList().add(datasetProperty);
-			addRelations(relation,nodeUriList,serverRootUriList);
+			addRelations(relation,nodeUriList,serverRootUriList,relationIndexUriList);
 		}
 		return true;
 	}
 	
+	private List<String> getIndexList(List<String> databaseList, String entrypoint) {
+		if(databaseList==null || databaseList.size()==0)
+			return null;
+		else{
+			List<String> indexNameUriList=new ArrayList<String>();
+			for(INeo4jInstance instance:registry.getfileList()){
+				if(instance.isActive()){
+					//http://localhost:7474/db/data/index/node/favorites
+					if(databaseList.contains(instance.getId())){
+						String index;
+						String indexName;
+						if(entrypoint.equals(nodeIndexEntryPoint)){
+							index=nodeIndexEntryPoint;
+							indexName=instance.getNodeIndex();
+						}else{
+							index=relationIndexEntryPoint;
+							indexName=instance.getRelationIndex();
+						}
+						indexNameUriList.add("http://"+instance.getHost()+":"+
+								instance.getPort()+"/"+instance.getDbPath()+"/"+
+								indexNameEntryPoint+"/"+index+"/"+indexName);
+					}
+				}
+			}
+			return indexNameUriList;
+		}
+	}
+
+	private void addPropertyToNodeIndex(INode node,	List<String> nodeUriList, List<String> indexNameList) {
+		for(IProperty property : node.getPropertyList()){
+			for(String nodeUri : nodeUriList){
+				addPropertyToNodeIndex(property.getJsonProperty(nodeUri),indexNameList);
+			}
+		}
+	}
+
+	private void addPropertyToNodeIndex(String jsonProperty,
+			List<String> indexNameUriList) {
+		
+		for(String indexNameUri:indexNameUriList){
+			executeJson(indexNameUri, jsonProperty);
+		}
+	}
+
 	private long getNodeId(String nodeUri) {
 		if(nodeUri!=null)
 			return Long.parseLong(nodeUri.substring(nodeUri.lastIndexOf("/")+1));
@@ -93,30 +140,38 @@ public class UploadManager implements IUploadManager{
 			return 0;
 	}
 
-	private void addRelations(IRelation relation,List<Map<Long, String>> nodeUriList, List<String> serverRootUriList) {
+	private void addRelations(IRelation relation,List<Map<Long, String>> nodeUriList, List<String> serverRootUriList, List<String> relationIndexUriList) {
 		
 		for(int i=0;i<serverRootUriList.size();i++){
 			long startNode=relation.getStartNode();//local id specified in the xml
 			long endNode=relation.getEndNode();
 			long startNodeId=getNodeId(getNodeUri(nodeUriList,startNode,i));//unique id assigned by the database
 			String endNodeUri=getNodeUri(nodeUriList,endNode,i);
-			addRelation(startNodeId,relation.getJsonRelation(endNodeUri),serverRootUriList.get(i));
+			String location=addRelation(startNodeId,relation.getJsonRelation(endNodeUri),serverRootUriList.get(i));
+			addPropertyToRelationIndex(relation,location,relationIndexUriList.get(i));
 		}
 		
 	}
 	
-	private void addRelation(long startNodeId, String json, String serverRootUri) {
+	private String addRelation(long startNodeId, String json, String serverRootUri) {
+		
 		final String relationEntryPointUri = serverRootUri + nodeEntryPoint + "/" + startNodeId + "/" +relationEntryPoint;
 		// http://localhost:7474/db/data/node/1/relationships
-		logger.info(relationEntryPointUri);
-		WebResource resource = Client.create().resource( relationEntryPointUri );
-		// POST json to the relation entry point URI
-		ClientResponse response = resource.accept( MediaType.APPLICATION_JSON ).type( MediaType.APPLICATION_JSON ).entity( json ).post( ClientResponse.class );
-		final URI location = response.getLocation();
-		logger.info(String.format("POST to [%s], status code [%d], location header [%s]",relationEntryPointUri, response.getStatus(), location.toString()));
-		response.close();
+		return executeJson(relationEntryPointUri, json);
 	}
-
+	
+	private void addPropertyToRelationIndex(IRelation relation,	String location, String relationIndexUri) {
+		for(IProperty property : relation.getPropertyList()){
+				addPropertyToRelationIndex(property.getJsonProperty(location),relationIndexUri);
+		}
+	}
+	
+	private void addPropertyToRelationIndex(String jsonProperty,
+			String relationIndexUri) {
+			
+		executeJson(relationIndexUri, jsonProperty);
+	}
+	
 	private String getNodeUri(List<Map<Long,String>> nodeUriList, long nodeId, int i) {
 		if(nodeUriList.size()>i){
 			if(nodeUriList.get(i).containsKey(nodeId)){
@@ -160,11 +215,18 @@ public class UploadManager implements IUploadManager{
 	private String insertNode(String json,String serverRootUri){
 		final String nodeEntryPointUri = serverRootUri + nodeEntryPoint;
 		// http://localhost:7474/db/data/node
-		WebResource resource = Client.create().resource( nodeEntryPointUri );
-		// POST json to the node entry point URI
-		ClientResponse response = resource.accept( MediaType.APPLICATION_JSON ).type( MediaType.APPLICATION_JSON ).entity( json ).post( ClientResponse.class );
+		return executeJson(nodeEntryPointUri, json);
+	}	
+	
+	private String executeJson(String entryPointUri,String json){
+		WebResource resource = Client.create().resource( entryPointUri );
+		ClientResponse response = resource.accept( MediaType.APPLICATION_JSON ).
+				type( MediaType.APPLICATION_JSON ).
+				entity( json ).
+				post( ClientResponse.class );
 		final URI location = response.getLocation();
-		logger.info(String.format("POST to [%s], status code [%d], location header [%s]",nodeEntryPointUri, response.getStatus(), location.toString()));
+		logger.info(String.format("POST to [%s], status code [%d], location header [%s]",
+				entryPointUri, response.getStatus(), location.toString()));
 		response.close();
 		return location.toString();
 	}

@@ -60,6 +60,10 @@ public class Neo4jConfFileReader {
 					instance.setActive(Boolean.parseBoolean(value));
 				if(key.equals("userName"))
 					instance.setUserName(value);
+				if(key.equals("nodeIndex"))
+					instance.setNodeIndex(value);
+				if(key.equals("relationIndex"))
+					instance.setRelationIndex(value);
 				if(key.equals("dbPath"))
 					instance.setDbPath(value);
 			}

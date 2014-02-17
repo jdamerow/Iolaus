@@ -8,6 +8,8 @@
 
 package edu.asu.lerna.iolaus.domain.dataset.impl;
 
+import java.lang.annotation.Inherited;
+
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
@@ -101,6 +103,33 @@ public class Property implements IProperty {
         this.value = value;
     }
     
+    /**
+     * {@link Inherited}
+     */
+    @Override
+    public String getJsonProperty(String nodeURI){
+    	StringBuilder json=new StringBuilder();
+    	if(nodeURI==null || name==null || value == null){
+    		return null;
+    	}
+    	json.append("{\n");
+    	if(!isNumeric(value))
+    		json.append("\"value\" : \""+value+"\" ,\n");
+    	else
+    		json.append("\"value\" : "+value+" ,\n");
+    	json.append("\"uri\"  :\""+ nodeURI+"\" ,\n");
+    	json.append("\"key\"  :\""+ name +"\"\n");
+    	json.append("}");
+    	return json.toString();
+    }
+    /**
+	 * This method checks if String is numeric.
+	 * @param  value   is a String
+	 * @return         true if it is Numeric else return false
+	 */
+	private boolean isNumeric(String value) {
+		return value.matches("(\\d*)");
+	}
     public static class Adapter extends XmlAdapter<Property,IProperty> {
     	public IProperty unmarshal(Property v) { return v; }
     	public Property marshal(IProperty v) { return (Property)v; }
