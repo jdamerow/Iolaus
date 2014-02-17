@@ -116,15 +116,29 @@ public class Node implements INode{
     	StringBuffer jsonBody=new StringBuffer();
 		jsonBody.append("{\n\t");
 		if(type!=null){
-			jsonBody.append("\"type\" : "+"\""+type+"\"");
+			if(!isNumeric(type))
+				jsonBody.append("\"type\" : "+"\""+type+"\"");
+			else
+				jsonBody.append("\"type\" : "+type);
 		}
 		if(propertyList!=null){
 			for(IProperty property:propertyList){
+				if(!isNumeric(property.getValue()))
 					jsonBody.append(",\n\t\""+property.getName()+"\" : \""+property.getValue()+"\" ");
+				else 
+					jsonBody.append(",\n\t\""+property.getName()+"\" : "+property.getValue());
 			}
 		}
 		jsonBody.append("\n}");
 		return jsonBody.toString();
+	}
+    /**
+	 * This method checks if String is numeric.
+	 * @param  value   is a String
+	 * @return         true if it is Numeric else return false
+	 */
+	private boolean isNumeric(String value) {
+		return value.matches("(\\d*)");
 	}
 	
     public static class Adapter extends XmlAdapter<Node,INode> {

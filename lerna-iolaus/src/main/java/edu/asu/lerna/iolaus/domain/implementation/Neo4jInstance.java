@@ -10,6 +10,8 @@ public class Neo4jInstance implements INeo4jInstance{
 	private String port;
 	private boolean active;
 	private String userName;
+	private String nodeIndex;
+	private String relationIndex;
 	private String dbPath;
 	
 	@Override
@@ -78,5 +80,21 @@ public class Neo4jInstance implements INeo4jInstance{
 	@Override
 	public void setUserName(String userName) {
 		this.userName = userName;
+	}
+	@Override
+	public String getNodeIndex() {
+		return nodeIndex;
+	}
+	@Override
+	public void setNodeIndex(String indexName) {
+		this.nodeIndex = indexName;
+	}
+	@Override
+	public String getRelationIndex() {
+		return relationIndex;
+	}
+	@Override
+	public void setRelationIndex(String relationIndex) {
+		this.relationIndex = relationIndex;
 	}
 }

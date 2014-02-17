@@ -1,18 +1,22 @@
 package edu.asu.lerna.iolaus.domain;
 
 public interface INeo4jInstance {
-	public abstract String getUserName();
-	public abstract void setUserName(String userName);
-	public abstract boolean isActive();
-	public abstract void setActive(boolean active);
-	public abstract String getId();
-	public abstract String getHost();
-	public abstract String getDescription();
-	public abstract String getPort();
-	public abstract void setPort(String path);
-	public abstract void setHost(String host);
-	public abstract void setDescription(String description);
-	public abstract void setId(String id);
-	public abstract void setDbPath(String dbPath);
-	public abstract String getDbPath();
+	String getUserName();
+	void setUserName(String userName);
+	boolean isActive();
+	void setActive(boolean active);
+	String getId();
+	String getHost();
+	String getDescription();
+	String getPort();
+	void setPort(String path);
+	void setHost(String host);
+	void setDescription(String description);
+	void setId(String id);
+	void setDbPath(String dbPath);
+	String getDbPath();
+	String getNodeIndex();
+	void setNodeIndex(String indexName);
+	String getRelationIndex();
+	void setRelationIndex(String indexName);
 }
