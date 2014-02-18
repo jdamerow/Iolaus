@@ -10,5 +10,12 @@ public interface IUploadManager {
 	String indexNameEntryPoint="index";
 	String nodeIndexEntryPoint="node";
 	String relationIndexEntryPoint="relationship";
+	
+	/**
+	 * This method adds datasetXml into Neo4j instances specified in xml
+	 * @param datasetXml is input xml
+	 * @return whether dataset is added or not
+	 * @throws JAXBException
+	 */
 	boolean uploadDataset(String datasetXml) throws JAXBException;
 }

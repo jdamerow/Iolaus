@@ -2,6 +2,7 @@ package edu.asu.lerna.iolaus.service.impl;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
+import java.lang.annotation.Inherited;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -43,10 +44,16 @@ public class UploadManager implements IUploadManager{
 	@Autowired
 	private Neo4jRegistry registry;
 	
+	/**
+	 * {@link Inherited}
+	 */
 	@Override
 	public boolean uploadDataset(String datasetXml) throws JAXBException {
 		
 		IDataset dataset=xmlToObject(datasetXml);
+		
+		/*size of list is equal to the count of Neo4j instances where data is getting replicated. 
+		map stores mapping between local and global Id of nodes for a particular instance.*/  
 		List<Map<Long,String>> nodeUriList=new ArrayList<Map<Long,String>>();
 		
 		//return false if dataset is null or empty
@@ -57,17 +64,18 @@ public class UploadManager implements IUploadManager{
 		List<String> nodeIndexUriList=getIndexList(dataset.getDatabaseList(),nodeIndexEntryPoint);
 		List<String> relationIndexUriList=getIndexList(dataset.getDatabaseList(),relationIndexEntryPoint);
 		
+		/* initialize the List equal to the nodes that you  */
 		initializeList(nodeUriList,serverRootUriList.size());
 		
-		/**
-		 * Add a default datasetType property to each node and relation
-		 */
+		
+		 /* Adds a default datasetType property to each node and relation*/
 		IProperty datasetProperty=new Property();
 		datasetProperty.setName(datasetType);
 		datasetProperty.setValue(dataset.getDatasetType());
 		
 		/**
-		 * inserts all nodes present in the dataset
+		 * inserts nodes to the Neo4j instances specified in the xml.
+		 * adds properties of nodes to the index.  
 		 */
 		for(INode node:dataset.getNodeList()){
 			node.getPropertyList().add(datasetProperty);
@@ -80,7 +88,8 @@ public class UploadManager implements IUploadManager{
 		}
 
 		/**
-		 * inserts all relationships in the dataset
+		 * inserts relationships to the Neo4j instances specified in the xml.
+		 * adds properties of relationship to the index.
 		 */
 		for(IRelation relation:dataset.getRelationList()){
 			relation.getPropertyList().add(datasetProperty);
@@ -89,6 +98,15 @@ public class UploadManager implements IUploadManager{
 		return true;
 	}
 	
+	/**
+	 * This method retrieves the index names from Neo4j instances corresponding to databaseList.  
+	 * @param databaseList is list of id of database instances.
+	 * @param entrypoint specifies the node index or relation index.
+	 * 			if entry point is "node" then index name for node will be retrieved. 
+	 * 			if entry point is "relationship" then index name for relationship will be retrieved. 
+	 * @return the list of uri for nodes or relationships. 
+	 * 			e.g. [http://localhost:7474/db/data/index/node/favorites,http://localhost:7476/db/data/index/node/new_index].
+	 */
 	private List<String> getIndexList(List<String> databaseList, String entrypoint) {
 		if(databaseList==null || databaseList.size()==0)
 			return null;
@@ -107,6 +125,7 @@ public class UploadManager implements IUploadManager{
 							index=relationIndexEntryPoint;
 							indexName=instance.getRelationIndex();
 						}
+						//creates uri for adding properties to the index.
 						indexNameUriList.add("http://"+instance.getHost()+":"+
 								instance.getPort()+"/"+instance.getDbPath()+"/"+
 								indexNameEntryPoint+"/"+index+"/"+indexName);
@@ -117,17 +136,19 @@ public class UploadManager implements IUploadManager{
 		}
 	}
 
-	private void addPropertyToNodeIndex(INode node,	List<String> nodeUriList, List<String> indexNameList) {
+	private void addPropertyToNodeIndex(INode node,	List<String> nodeUriList, List<String> nodeIndexUriList) {
+		
+		/*adds properties of nodes to the list of node index uri's*/
 		for(IProperty property : node.getPropertyList()){
 			for(String nodeUri : nodeUriList){
-				addPropertyToNodeIndex(property.getJsonProperty(nodeUri),indexNameList);
+				addPropertyToNodeIndex(property.getJsonProperty(nodeUri),nodeIndexUriList);
 			}
 		}
 	}
 
 	private void addPropertyToNodeIndex(String jsonProperty,
 			List<String> indexNameUriList) {
-		
+		/*adds single property to the list of node index uri's*/
 		for(String indexNameUri:indexNameUriList){
 			executeJson(indexNameUri, jsonProperty);
 		}
@@ -141,7 +162,7 @@ public class UploadManager implements IUploadManager{
 	}
 
 	private void addRelations(IRelation relation,List<Map<Long, String>> nodeUriList, List<String> serverRootUriList, List<String> relationIndexUriList) {
-		
+
 		for(int i=0;i<serverRootUriList.size();i++){
 			long startNode=relation.getStartNode();//local id specified in the xml
 			long endNode=relation.getEndNode();
