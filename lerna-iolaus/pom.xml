@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-
-
-v4_0_0.xsd">
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>edu.asu</groupId>
 	<artifactId>lerna</artifactId>
@@ -60,12 +58,12 @@ v4_0_0.xsd">
 		<dependency>
 			<groupId>com.db4o</groupId>
 			<artifactId>db4o-full-java5</artifactId>
-			<version>8.1-SNAPSHOT</version>
+			<version>7.13-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>com.db4o</groupId>
 			<artifactId>db4o-core-java5</artifactId>
-			<version>8.1-SNAPSHOT</version>
+			<version>7.13-SNAPSHOT</version>
 		</dependency>
 		
 		<!-- Test -->
@@ -85,27 +83,27 @@ v4_0_0.xsd">
 		<dependency>
 			<groupId>org.springframework.security</groupId>
 			<artifactId>spring-security-web</artifactId>
-			<version>3.1.4.RELEASE</version>
+			<version>3.2.0.RELEASE</version>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.security</groupId>
 			<artifactId>spring-security-core</artifactId>
-			<version>3.1.4.RELEASE</version>
+			<version>3.2.0.RELEASE</version>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.security</groupId>
 			<artifactId>spring-security-config</artifactId>
-			<version>3.1.4.RELEASE</version>
+			<version>3.2.0.RELEASE</version>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.security</groupId>
 			<artifactId>spring-security-taglibs</artifactId>
-			<version>3.1.4.RELEASE</version>
+			<version>3.2.0.RELEASE</version>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.security</groupId>
 			<artifactId>spring-security-ldap</artifactId>
-			<version>3.1.4.RELEASE</version>
+			<version>3.2.0.RELEASE</version>
 		</dependency>
 		<dependency>
 			<groupId>commons-httpclient</groupId>
