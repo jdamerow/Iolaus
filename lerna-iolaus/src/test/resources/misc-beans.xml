@@ -23,6 +23,7 @@
 	<bean id="instanceManager" class="edu.asu.lerna.iolaus.service.impl.Neo4jInstanceManager" />
 	<bean id="neo4jRegistry" class="edu.asu.lerna.iolaus.configuration.neo4j.impl.Neo4jRegistry" />
 	<bean id="queryHandler" class="edu.asu.lerna.iolaus.service.impl.QueryHandler" />
+	<bean id="plainQueryManager" class="edu.asu.lerna.iolaus.service.impl.PlainQueryManager" />
 	<bean id="uploadDataset" class="edu.asu.lerna.iolaus.service.impl.UploadManager" />
 	
 	<bean id="roleManager" class="edu.asu.lerna.iolaus.service.impl.RoleManager" />

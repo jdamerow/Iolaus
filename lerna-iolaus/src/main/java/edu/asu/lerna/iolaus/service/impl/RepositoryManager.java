@@ -53,14 +53,17 @@ public class RepositoryManager implements IRepositoryManager {
 		List<String> instanceUrl = new ArrayList<String>();
 		Iterator<String> iterator = dbInstances.iterator();
 		Map<String,INeo4jInstance> idInstanceMap=new HashMap<String, INeo4jInstance>();
+		
 		for(INeo4jInstance instance:neo4jInstances.getfileList()){
 			idInstanceMap.put(instance.getId(), instance);
 		}
 		while(iterator.hasNext())
 		{
 			String dbName = iterator.next();
-			INeo4jInstance dbFile=idInstanceMap.get(dbName);
-			instanceUrl.add("http://"+dbFile.getHost()+":"+dbFile.getPort()+"/"+dbFile.getDbPath()+"/"+cypherEndPoint);
+			if(idInstanceMap.containsKey(dbName)){
+				INeo4jInstance dbFile=idInstanceMap.get(dbName);
+				instanceUrl.add("http://"+dbFile.getHost()+":"+dbFile.getPort()+"/"+dbFile.getDbPath()+"/"+cypherEndPoint);
+			}
 		}
 		List<List<Object>> queryResults;
 		for (String instance: instanceUrl)
