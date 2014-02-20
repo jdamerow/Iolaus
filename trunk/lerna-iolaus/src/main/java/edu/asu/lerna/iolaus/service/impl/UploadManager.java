@@ -40,6 +40,10 @@ import edu.asu.lerna.iolaus.exception.UploadDatasetException;
 import edu.asu.lerna.iolaus.service.IUploadManager;
 import edu.asu.lerna.iolaus.web.InstanceController;
 
+/**
+ * This Service uploads the nodes and Relations present in the xml to the Neo4j instances specified in the Xml.  
+ * @author Karan Kothari
+ */
 @Service
 public class UploadManager implements IUploadManager{
 
@@ -162,6 +166,13 @@ public class UploadManager implements IUploadManager{
 		}
 	}
 
+	/**
+	 * This method adds properties of Node to the node index name.
+	 * @param node is {@link INode} consisting List of properties.
+	 * @param nodeUriList is the list of uri. each uri corresponds to the URI of node for particular instance. 
+	 * @param nodeIndexUriList is list of index name URI of instances specified in the xml.
+	 * @throws IndexPropertyException when REST call fails.
+	 */
 	private void addPropertyToNodeIndex(INode node,	List<String> nodeUriList, List<String> nodeIndexUriList) throws IndexPropertyException {
 		
 		/*adds properties of nodes to the list of node index uri's*/
@@ -171,18 +182,34 @@ public class UploadManager implements IUploadManager{
 			}
 		}
 	}
-
+	
+	/**
+	 * This method adds a single property of {@link INode} to the node index name.
+	 * @param jsonProperty is a Property of node in Json form. e.g. 
+		 * 		{
+		    	  "value" : "some value",
+		    	  "uri" : "http://localhost:7474/db/data/node/83",
+		    	  "key" : "some-key"
+	    		} 
+	 * @param nodeIndexUriList is list of index name URI of instances specified in the xml. 
+	 * @throws IndexPropertyException when REST call fails.
+	 */
 	private void addPropertyToNodeIndex(String jsonProperty,
 			List<String> nodeIndexUriList) throws IndexPropertyException {
 		/*adds single property to the list of node index uri's*/
 		for(String nodeIndexUri:nodeIndexUriList){
-			if(executeJson(nodeIndexUri, jsonProperty)==null){
+			if(makeRESTCall(nodeIndexUri, jsonProperty)==null){
 				throw new IndexPropertyException("Error in inserting relations into Neo4j instance\n" +
 						"Relation index URI - "+nodeIndexUri +"Json Property - "+jsonProperty);
 			}
 		}
 	}
 
+	/**
+	 * This method parse the nodeURI and extracts node id from it.
+	 * @param nodeUri is URI of node.
+	 * @return node id.
+	 */
 	private long getNodeId(String nodeUri) {
 		if(nodeUri!=null)
 			return Long.parseLong(nodeUri.substring(nodeUri.lastIndexOf("/")+1));
@@ -190,14 +217,24 @@ public class UploadManager implements IUploadManager{
 			return 0;
 	}
 
-	private void addRelations(IRelation relation,List<Map<Long, String>> nodeUriList, 
+	/**
+	 * This method adds {@link IRelation} in the specified NEo4j instances. 
+	 * It also adds properties associated with them to the Relation Index Name.
+	 * @param relation is a {@link IRelation}. 
+	 * @param nodeURIList is a list of Node URI for finding mapping between local id's and id's assigned by Neo4j.
+	 * @param serverRootUriList is a list of server root URI for adding Relations to Neo4j.
+	 * @param relationIndexUriList is a list of Relation index names for adding properties of Relations.
+	 * @throws InsertRelationException when REST call for adding relation fails.
+	 * @throws IndexPropertyException when REST call for adding property to relation index name fails.
+	 */
+	private void addRelations(IRelation relation,List<Map<Long, String>> nodeURIList, 
 			List<String> serverRootUriList, List<String> relationIndexUriList) throws InsertRelationException,IndexPropertyException {
 
 		for(int i=0;i<serverRootUriList.size();i++){
 			long startNode=relation.getStartNode();//local id specified in the xml
 			long endNode=relation.getEndNode();
-			long startNodeId=getNodeId(getNodeUri(nodeUriList,startNode,i));//unique id assigned by the database
-			String endNodeUri=getNodeUri(nodeUriList,endNode,i);
+			long startNodeId=getNodeId(getNodeUri(nodeURIList,startNode,i));//unique id assigned by the database
+			String endNodeUri=getNodeUri(nodeURIList,endNode,i);
 			String location=addRelation(startNodeId,relation.getJsonRelation(endNodeUri),serverRootUriList.get(i));
 			if(location==null){
 				throw new InsertRelationException("Error in inserting relations into Neo4j instance\n" +
@@ -208,37 +245,77 @@ public class UploadManager implements IUploadManager{
 		
 	}
 	
+	/**
+	 * This method adds relation to the specified Neo4j instance.
+	 * @param startNodeId is id of the start node of the relation
+	 * @param json is a json of relation. e.g.
+	 * 		 	{
+	 *		  	  "to"   : "http://localhost:7474/db/data/node/10",
+	 *			  "type" : "LOVES",
+	 *			  "data" : {
+	 *		    	"foo": "bar"
+	 *			   }	
+	 *			 }
+	 * @param serverRootUri is a URI for identifying Neo4j instance
+	 * @return the URI of the relationship.
+	 */
 	private String addRelation(long startNodeId, String json, String serverRootUri) {
 		
 		final String relationEntryPointUri = serverRootUri + nodeEntryPoint + "/" + startNodeId + "/" +relationEntryPoint;
 		// http://localhost:7474/db/data/node/1/relationships
-		return executeJson(relationEntryPointUri, json);
+		return makeRESTCall(relationEntryPointUri, json);
 	}
 	
+	/**
+	 * This method adds all the properties of the relation to the relation index URI.
+	 * @param relation is a {@link IRelation}.
+	 * @param location is the URI of the relation.
+	 * @param relationIndexUri is the URI of relation index name.
+	 * @throws IndexPropertyException when REST call for adding property to Relation Index URI fails.
+	 */
 	private void addPropertyToRelationIndex(IRelation relation,	String location, String relationIndexUri) throws IndexPropertyException {
 		for(IProperty property : relation.getPropertyList()){
 				addPropertyToRelationIndex(property.getJsonProperty(location),relationIndexUri);
 		}
 	}
 	
+	
+	/**
+	 * This method adds a single property to the Relation Index URI.
+	 * @param jsonProperty is json form of the property.
+	 * @param relationIndexUri is the URI of relation index name. 
+	 * @throws IndexPropertyException when REST call for adding property to Relation Index URI fails. 
+	 */
 	private void addPropertyToRelationIndex(String jsonProperty,
 			String relationIndexUri) throws IndexPropertyException {
 			
-		if(executeJson(relationIndexUri, jsonProperty)==null){
+		if(makeRESTCall(relationIndexUri, jsonProperty)==null){
 				throw new IndexPropertyException("Error in inserting relations into Neo4j instance\n" +
 						"Relation index URI - "+relationIndexUri +"Json Property - "+jsonProperty);
 		}
 	}
 	
-	private String getNodeUri(List<Map<Long,String>> nodeUriList, long nodeId, int i) {
-		if(nodeUriList.size()>i){
-			if(nodeUriList.get(i).containsKey(nodeId)){
-				return nodeUriList.get(i).get(nodeId);
+	/**
+	 * This method gets Node URI from the List.
+	 * @param nodeUriList is List of mappings between local id's and URI.
+	 * @param nodeId is local id.
+	 * @param index is index of the Map within the List
+	 * @return the URI which refers the global id.
+	 */
+	private String getNodeUri(List<Map<Long,String>> nodeUriList, long nodeId, int index) {
+		if(nodeUriList.size()>index){
+			if(nodeUriList.get(index).containsKey(nodeId)){
+				return nodeUriList.get(index).get(nodeId);
 			}
 		}
 		return null;
 	}
 
+	/**
+	 * This method generates the server root URI using the databaseList.
+	 * @param databaseList is list of id's of the instances specified in the xml.
+	 * @return the list of server root URI corresponding to the list of database id's.
+	 */
 	private List<String> getServerRootUriList(List<String> databaseList) {
 		if(databaseList==null || databaseList.size()==0)
 			return null;
@@ -255,11 +332,27 @@ public class UploadManager implements IUploadManager{
 		}
 	}
 
+	/**
+	 * This method creates empty objects of Map<Long,String> and adds it to the List
+	 * @param nodeUriList is a node URI list
+	 * @param size is equal to the number of instances specified in the xml.
+	 */
 	private void initializeList(List<Map<Long, String>> nodeUriList, int size) {
 		for(int i=0;i<size;i++)
 			nodeUriList.add(new HashMap<Long,String>());
 	}
-
+	
+	
+	/**
+	 * This method inserts json to the list of server root URI.
+	 * @param json is a json form of the node.
+	 * 			e.g. {
+  	 *					"foo" : "bar"
+	 *				 } 
+	 * @param serverRootUriList is the list of server root URI.
+	 * @return the list of URI assigned by the Neo4j instances.
+	 * @throws InsertNodeException when REST call for adding nodes to the Neo4j fails.
+	 */
 	private List<String> insertNode(String json,List<String> serverRootUriList) throws InsertNodeException{
 		if(json==null || serverRootUriList==null || serverRootUriList.size()==0)
 			return null;
@@ -274,13 +367,26 @@ public class UploadManager implements IUploadManager{
 		return nodeUriList;
 	}
 	
+	
+	/**
+	 * This method adds a json node to single Neo4j instance.
+	 * @param json is json form of the node.
+	 * @param serverRootUri is the server root URI of the Neo4j instance.
+	 * @return the location (URI assigned by the Neo4j).
+	 */
 	private String insertNode(String json,String serverRootUri){
 		final String nodeEntryPointUri = serverRootUri + nodeEntryPoint;
 		// http://localhost:7474/db/data/node
-		return executeJson(nodeEntryPointUri, json);
+		return makeRESTCall(nodeEntryPointUri, json);
 	}	
 	
-	private String executeJson(String entryPointUri,String json){
+	/**
+	 * This method makes a POST REST call to the REST api of Neo4j.
+	 * @param entryPointUri is the target URI. 
+	 * @param json is the entity passed with the POST request.
+	 * @return
+	 */
+	private String makeRESTCall(String entryPointUri,String json){
 		WebResource resource = Client.create().resource( entryPointUri );
 		ClientResponse response = resource.accept( MediaType.APPLICATION_JSON ).
 				type( MediaType.APPLICATION_JSON ).
@@ -296,11 +402,17 @@ public class UploadManager implements IUploadManager{
 		return location.toString();
 	}
 	
-	private IDataset xmlToObject(String res) throws JAXBException{
+	/**
+	 * Use Unmarshaller to unmarshal the XMl into Query object.
+	 * @param xml is input xml
+	 * @return the {@link IDataset} object after unmarshalling the xml.
+	 * @throws JAXBException when unmarshalling fails.
+	 */
+	private IDataset xmlToObject(String xml) throws JAXBException{
 		JAXBContext context = JAXBContext.newInstance(Dataset.class);
 		Unmarshaller unmarshaller = context.createUnmarshaller();
 		unmarshaller.setEventHandler(new javax.xml.bind.helpers.DefaultValidationEventHandler());
-		InputStream is = new ByteArrayInputStream(res.getBytes());
+		InputStream is = new ByteArrayInputStream(xml.getBytes());
 		JAXBElement<Dataset> response =  unmarshaller.unmarshal(new StreamSource(is), Dataset.class);
 		IDataset dataset = response.getValue();
 		return dataset;

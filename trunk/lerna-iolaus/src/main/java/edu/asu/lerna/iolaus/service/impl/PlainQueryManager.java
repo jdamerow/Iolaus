@@ -83,6 +83,14 @@ public class PlainQueryManager implements IPlainQueryManager {
 	public String executeQuery(String xml) throws JAXBException, SAXException,
 			IOException {
 		
+		if(xml==null)
+			return null;
+		
+		xml=eliminateWhiteSpaces(xml);
+		
+		if(xml.equals(" "))
+			return null;
+		
 		validateXml(xml);
 		IQuery query = xmlToQueryObject(xml);
 		String cypher = query.getCypher();
@@ -104,33 +112,42 @@ public class PlainQueryManager implements IPlainQueryManager {
 		
 	}
 
+	private String eliminateWhiteSpaces(String cypher) {
+		cypher=cypher.replaceAll("\\s+", " ");
+		return cypher;
+	}
+	
 	private Map<String, List<Object>> transformResults(
 			List<List<Object>> resultSet) {
 		Map<String, List<Object>> transformedResults = new LinkedHashMap<String, List<Object>>();
 
 		if (resultSet != null) {
-			Map<Integer, Iterator<Object>> iteratorMap = new HashMap<Integer, Iterator<Object>>();
-			for (int i = 0; i < resultSet.size(); i++) {
-				iteratorMap.put(i, resultSet.get(i).iterator());
-			}
-			while (iteratorMap.get(0).hasNext()) {
-				List<Object> rowList = new ArrayList<Object>();
-				String key = "";
-				for (int j = 0; j < resultSet.size(); j++) {
-					Object entity = iteratorMap.get(j).next();
-					if (entity instanceof JsonNode) {
-						IJsonNode node = (JsonNode) entity;
-						key = key + node.getId();
-					} else {
-						IJsonRelation node = (JsonRelation) entity;
-						key = key + node.getId();
-					}
-					rowList.add(entity);
+				if(resultSet.size()>0){
+				Map<Integer, Iterator<Object>> iteratorMap = new HashMap<Integer, Iterator<Object>>();
+				for (int i = 0; i < resultSet.size(); i++) {
+					iteratorMap.put(i, resultSet.get(i).iterator());
 				}
-				transformedResults.put(key, rowList);
+				while (iteratorMap.get(0).hasNext()) {
+					List<Object> rowList = new ArrayList<Object>();
+					String key = "";
+					for (int j = 0; j < resultSet.size(); j++) {
+						Object entity = iteratorMap.get(j).next();
+						if (entity instanceof JsonNode) {
+							IJsonNode node = (JsonNode) entity;
+							key = key + node.getId();
+						} else {
+							IJsonRelation node = (JsonRelation) entity;
+							key = key + node.getId();
+						}
+						rowList.add(entity);
+					}
+					transformedResults.put(key, rowList);
+				}
 			}
+			return transformedResults;
+		}else{
+			return null;
 		}
-		return transformedResults;
 	}
 
 	/**
@@ -149,7 +166,7 @@ public class PlainQueryManager implements IPlainQueryManager {
 		return q;
 	}
 
-	/**
+	/** 
 	 * {@inheritDoc}
 	 */
 	@Override
