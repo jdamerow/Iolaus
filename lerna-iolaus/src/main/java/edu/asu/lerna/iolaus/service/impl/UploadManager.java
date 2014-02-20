@@ -33,6 +33,10 @@ import edu.asu.lerna.iolaus.domain.dataset.IProperty;
 import edu.asu.lerna.iolaus.domain.dataset.IRelation;
 import edu.asu.lerna.iolaus.domain.dataset.impl.Dataset;
 import edu.asu.lerna.iolaus.domain.dataset.impl.Property;
+import edu.asu.lerna.iolaus.exception.IndexPropertyException;
+import edu.asu.lerna.iolaus.exception.InsertNodeException;
+import edu.asu.lerna.iolaus.exception.InsertRelationException;
+import edu.asu.lerna.iolaus.exception.UploadDatasetException;
 import edu.asu.lerna.iolaus.service.IUploadManager;
 import edu.asu.lerna.iolaus.web.InstanceController;
 
@@ -46,11 +50,23 @@ public class UploadManager implements IUploadManager{
 	
 	/**
 	 * {@link Inherited}
+	 * @throws UploadDatasetException 
 	 */
 	@Override
-	public boolean uploadDataset(String datasetXml) throws JAXBException {
+	public boolean uploadDataset(String datasetXml) throws JAXBException, UploadDatasetException {
 		
-		IDataset dataset=xmlToObject(datasetXml);
+		boolean returnFlag=true;
+		IDataset dataset=null;
+		
+		if(datasetXml==null){
+			return false;
+		}
+		
+		try{
+			dataset=xmlToObject(datasetXml);
+		}catch(JAXBException exception){
+			return false;
+		}
 		
 		/*size of list is equal to the count of Neo4j instances where data is getting replicated. 
 		map stores mapping between local and global Id of nodes for a particular instance.*/  
@@ -77,25 +93,35 @@ public class UploadManager implements IUploadManager{
 		 * inserts nodes to the Neo4j instances specified in the xml.
 		 * adds properties of nodes to the index.  
 		 */
-		for(INode node:dataset.getNodeList()){
-			node.getPropertyList().add(datasetProperty);
-			//inserts nodes in multiple instances of Neo4j
-			List<String> storedUri=insertNode(node.getJsonNode(),serverRootUriList);
-			addPropertyToNodeIndex(node,storedUri,nodeIndexUriList);
-			for(int i=0;i<serverRootUriList.size();i++){
-				nodeUriList.get(i).put(node.getId(), storedUri.get(i));
+		try {
+			for (INode node : dataset.getNodeList()) {
+				node.getPropertyList().add(datasetProperty);
+				// inserts nodes in multiple instances of Neo4j
+				List<String> storedUri = insertNode(node.getJsonNode(),
+						serverRootUriList);
+				addPropertyToNodeIndex(node, storedUri, nodeIndexUriList);
+				for (int i = 0; i < serverRootUriList.size(); i++) {
+					nodeUriList.get(i).put(node.getId(), storedUri.get(i));
+				}
 			}
+		} catch (UploadDatasetException exception) {
+			returnFlag=false;
 		}
 
 		/**
 		 * inserts relationships to the Neo4j instances specified in the xml.
 		 * adds properties of relationship to the index.
 		 */
-		for(IRelation relation:dataset.getRelationList()){
-			relation.getPropertyList().add(datasetProperty);
-			addRelations(relation,nodeUriList,serverRootUriList,relationIndexUriList);
+		try {
+			for (IRelation relation : dataset.getRelationList()) {
+				relation.getPropertyList().add(datasetProperty);
+				addRelations(relation, nodeUriList, serverRootUriList,
+						relationIndexUriList);
+			}
+		} catch (UploadDatasetException exception) {
+			returnFlag = false;
 		}
-		return true;
+		return returnFlag;
 	}
 	
 	/**
@@ -136,7 +162,7 @@ public class UploadManager implements IUploadManager{
 		}
 	}
 
-	private void addPropertyToNodeIndex(INode node,	List<String> nodeUriList, List<String> nodeIndexUriList) {
+	private void addPropertyToNodeIndex(INode node,	List<String> nodeUriList, List<String> nodeIndexUriList) throws IndexPropertyException {
 		
 		/*adds properties of nodes to the list of node index uri's*/
 		for(IProperty property : node.getPropertyList()){
@@ -147,10 +173,13 @@ public class UploadManager implements IUploadManager{
 	}
 
 	private void addPropertyToNodeIndex(String jsonProperty,
-			List<String> indexNameUriList) {
+			List<String> nodeIndexUriList) throws IndexPropertyException {
 		/*adds single property to the list of node index uri's*/
-		for(String indexNameUri:indexNameUriList){
-			executeJson(indexNameUri, jsonProperty);
+		for(String nodeIndexUri:nodeIndexUriList){
+			if(executeJson(nodeIndexUri, jsonProperty)==null){
+				throw new IndexPropertyException("Error in inserting relations into Neo4j instance\n" +
+						"Relation index URI - "+nodeIndexUri +"Json Property - "+jsonProperty);
+			}
 		}
 	}
 
@@ -161,7 +190,8 @@ public class UploadManager implements IUploadManager{
 			return 0;
 	}
 
-	private void addRelations(IRelation relation,List<Map<Long, String>> nodeUriList, List<String> serverRootUriList, List<String> relationIndexUriList) {
+	private void addRelations(IRelation relation,List<Map<Long, String>> nodeUriList, 
+			List<String> serverRootUriList, List<String> relationIndexUriList) throws InsertRelationException,IndexPropertyException {
 
 		for(int i=0;i<serverRootUriList.size();i++){
 			long startNode=relation.getStartNode();//local id specified in the xml
@@ -169,6 +199,10 @@ public class UploadManager implements IUploadManager{
 			long startNodeId=getNodeId(getNodeUri(nodeUriList,startNode,i));//unique id assigned by the database
 			String endNodeUri=getNodeUri(nodeUriList,endNode,i);
 			String location=addRelation(startNodeId,relation.getJsonRelation(endNodeUri),serverRootUriList.get(i));
+			if(location==null){
+				throw new InsertRelationException("Error in inserting relations into Neo4j instance\n" +
+						"URI - "+serverRootUriList.get(i));
+			}
 			addPropertyToRelationIndex(relation,location,relationIndexUriList.get(i));
 		}
 		
@@ -181,16 +215,19 @@ public class UploadManager implements IUploadManager{
 		return executeJson(relationEntryPointUri, json);
 	}
 	
-	private void addPropertyToRelationIndex(IRelation relation,	String location, String relationIndexUri) {
+	private void addPropertyToRelationIndex(IRelation relation,	String location, String relationIndexUri) throws IndexPropertyException {
 		for(IProperty property : relation.getPropertyList()){
 				addPropertyToRelationIndex(property.getJsonProperty(location),relationIndexUri);
 		}
 	}
 	
 	private void addPropertyToRelationIndex(String jsonProperty,
-			String relationIndexUri) {
+			String relationIndexUri) throws IndexPropertyException {
 			
-		executeJson(relationIndexUri, jsonProperty);
+		if(executeJson(relationIndexUri, jsonProperty)==null){
+				throw new IndexPropertyException("Error in inserting relations into Neo4j instance\n" +
+						"Relation index URI - "+relationIndexUri +"Json Property - "+jsonProperty);
+		}
 	}
 	
 	private String getNodeUri(List<Map<Long,String>> nodeUriList, long nodeId, int i) {
@@ -223,12 +260,16 @@ public class UploadManager implements IUploadManager{
 			nodeUriList.add(new HashMap<Long,String>());
 	}
 
-	private List<String> insertNode(String json,List<String> serverRootUriList){
+	private List<String> insertNode(String json,List<String> serverRootUriList) throws InsertNodeException{
 		if(json==null || serverRootUriList==null || serverRootUriList.size()==0)
 			return null;
 		List<String> nodeUriList=new ArrayList<String>();
 		for(String serverUri:serverRootUriList){
-			nodeUriList.add(insertNode(json,serverUri));
+			String nodeUri=insertNode(json,serverUri);
+			if(nodeUri==null)
+				throw new InsertNodeException("Problem in inserting node - " + json+"\n to server uri - "+serverUri);
+			else 
+				nodeUriList.add(nodeUri);
 		}
 		return nodeUriList;
 	}
@@ -246,6 +287,9 @@ public class UploadManager implements IUploadManager{
 				entity( json ).
 				post( ClientResponse.class );
 		final URI location = response.getLocation();
+		if(location==null){
+			return null;
+		}
 		logger.info(String.format("POST to [%s], status code [%d], location header [%s]",
 				entryPointUri, response.getStatus(), location.toString()));
 		response.close();

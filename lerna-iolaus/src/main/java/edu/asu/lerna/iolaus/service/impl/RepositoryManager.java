@@ -1,8 +1,10 @@
 package edu.asu.lerna.iolaus.service.impl;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -50,18 +52,15 @@ public class RepositoryManager implements IRepositoryManager {
 		List<List<Object>> listOfNodesAndRelations = new ArrayList<List<Object>>();;
 		List<String> instanceUrl = new ArrayList<String>();
 		Iterator<String> iterator = dbInstances.iterator();
+		Map<String,INeo4jInstance> idInstanceMap=new HashMap<String, INeo4jInstance>();
+		for(INeo4jInstance instance:neo4jInstances.getfileList()){
+			idInstanceMap.put(instance.getId(), instance);
+		}
 		while(iterator.hasNext())
 		{
 			String dbName = iterator.next();
-			Iterator<INeo4jInstance> fileIterator = neo4jInstances.getfileList().iterator();
-			while(fileIterator.hasNext())
-			{
-				INeo4jInstance dbFile = fileIterator.next();
-				if (dbName.equals(dbFile.getId())&&dbFile.isActive())
-				{
-					instanceUrl.add("http://"+dbFile.getHost()+":"+dbFile.getPort()+"/"+dbFile.getDbPath()+"/"+cypherEndPoint);
-				}
-			}
+			INeo4jInstance dbFile=idInstanceMap.get(dbName);
+			instanceUrl.add("http://"+dbFile.getHost()+":"+dbFile.getPort()+"/"+dbFile.getDbPath()+"/"+cypherEndPoint);
 		}
 		List<List<Object>> queryResults;
 		for (String instance: instanceUrl)
