@@ -2,6 +2,8 @@ package edu.asu.lerna.iolaus.service;
 
 import javax.xml.bind.JAXBException;
 
+import edu.asu.lerna.iolaus.exception.UploadDatasetException;
+
 public interface IUploadManager {
 
 	String datasetType="dataset";
@@ -16,6 +18,7 @@ public interface IUploadManager {
 	 * @param datasetXml is input xml
 	 * @return whether dataset is added or not
 	 * @throws JAXBException
+	 * @throws UploadDatasetException 
 	 */
-	boolean uploadDataset(String datasetXml) throws JAXBException;
+	boolean uploadDataset(String datasetXml) throws JAXBException, UploadDatasetException;
 }

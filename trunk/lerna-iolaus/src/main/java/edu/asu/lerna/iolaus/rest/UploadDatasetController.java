@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import edu.asu.lerna.iolaus.exception.UploadDatasetException;
 import edu.asu.lerna.iolaus.service.IUploadManager;
 
 @Controller
@@ -25,7 +26,15 @@ public class UploadDatasetController {
 	@RequestMapping(value = "/uploadDataset", method = RequestMethod.POST)
 	public String uploadDataset(HttpServletRequest request,	HttpServletResponse response,@RequestBody String datasetXml) throws JAXBException {
 		logger.info("Uploading the dataset");
-		uploadManager.uploadDataset(datasetXml);
+		try{
+			uploadManager.uploadDataset(datasetXml);
+		}catch(JAXBException jaxBexception){
+			
+		}catch(UploadDatasetException uploadDatasetException){
+			
+		}catch(Exception unknownException){
+			
+		}
 		logger.info("Uploding finished");
 		return null;
 	}
