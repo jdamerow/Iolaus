@@ -100,7 +100,7 @@ public class Neo4jInstanceTest {
 		neo4jInstance.setPort(null);
 		assertEquals(neo4jInstance.getPort(), null);
 		
-		neo4jInstance.setDescription("7474");
+		neo4jInstance.setPort("7474");
 		assertEquals(neo4jInstance.getPort(),"7474");
 	}
 
@@ -109,7 +109,7 @@ public class Neo4jInstanceTest {
 		neo4jInstance.setPort(null);
 		assertEquals(neo4jInstance.getPort(), null);
 		
-		neo4jInstance.setDescription("7474");
+		neo4jInstance.setPort("7474");
 		assertEquals(neo4jInstance.getPort(),"7474");
 	}
 

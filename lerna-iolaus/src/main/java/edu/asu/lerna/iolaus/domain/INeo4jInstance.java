@@ -19,4 +19,6 @@ public interface INeo4jInstance {
 	void setNodeIndex(String indexName);
 	String getRelationIndex();
 	void setRelationIndex(String indexName);
+	void setProtocol(String protocol);
+	String getProtocol();
 }

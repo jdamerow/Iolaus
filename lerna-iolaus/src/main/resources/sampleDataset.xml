@@ -1,6 +1,6 @@
 <dataset xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xmlns="http://digitalhps.org/lerna-Dataset-model" xsi:schemaLocation="http://digitalhps.org/lerna-Dataset-model dataset-schema.xsd">
-	<datasetType>kk</datasetType>
+	<datasetType>ABC</datasetType>
 	<databaseList>
 		<database>1</database>
 	</databaseList>
@@ -11,7 +11,7 @@
 			<propertyList>
 				<property>
 					<name>Name</name>
-					<value>Karan</value>
+					<value>John</value>
 				</property>
 			</propertyList>
 		</node>
