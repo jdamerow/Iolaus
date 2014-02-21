@@ -324,7 +324,7 @@ public class UploadManager implements IUploadManager{
 			for(INeo4jInstance instance:registry.getfileList()){
 				if(instance.isActive()){
 					if(databaseList.contains(instance.getId())){
-						serverRootUriList.add("http://"+instance.getHost()+":"+instance.getPort()+"/"+instance.getDbPath()+"/");
+						serverRootUriList.add(instance.getProtocol()+"://"+instance.getHost()+":"+instance.getPort()+"/"+instance.getDbPath()+"/");
 					}
 				}
 			}

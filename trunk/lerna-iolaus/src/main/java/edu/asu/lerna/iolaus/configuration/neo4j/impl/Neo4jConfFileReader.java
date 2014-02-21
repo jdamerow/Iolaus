@@ -66,6 +66,8 @@ public class Neo4jConfFileReader {
 					instance.setRelationIndex(value);
 				if(key.equals("dbPath"))
 					instance.setDbPath(value);
+				if(key.equals("protocol"))
+					instance.setProtocol(value);
 			}
 			listOfFiles.add(instance);
 		}

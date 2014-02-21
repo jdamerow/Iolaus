@@ -13,6 +13,7 @@ public class Neo4jInstance implements INeo4jInstance{
 	private String nodeIndex;
 	private String relationIndex;
 	private String dbPath;
+	private String protocol;
 	
 	@Override
 	public String getDbPath() {
@@ -96,5 +97,15 @@ public class Neo4jInstance implements INeo4jInstance{
 	@Override
 	public void setRelationIndex(String relationIndex) {
 		this.relationIndex = relationIndex;
+	}
+	
+	@Override
+	public String getProtocol() {
+		return protocol;
+	}
+
+	@Override
+	public void setProtocol(String protocol) {
+		this.protocol = protocol;
 	}
 }

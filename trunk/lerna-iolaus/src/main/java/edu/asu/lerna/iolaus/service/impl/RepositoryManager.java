@@ -50,23 +50,29 @@ public class RepositoryManager implements IRepositoryManager {
 	{
 		logger.debug("\n\n");
 		List<List<Object>> listOfNodesAndRelations = new ArrayList<List<Object>>();;
-		List<String> instanceUrl = new ArrayList<String>();
+		List<String> cypherRootURI = new ArrayList<String>();
 		Iterator<String> iterator = dbInstances.iterator();
+		/* key=instance id , value=Neo4jInstance*/
 		Map<String,INeo4jInstance> idInstanceMap=new HashMap<String, INeo4jInstance>();
 		
+		/* create Map using Neo4jRregistry*/
 		for(INeo4jInstance instance:neo4jInstances.getfileList()){
 			idInstanceMap.put(instance.getId(), instance);
 		}
+		
+		/*Iterate through the list of instance id's
+		 *  create cypher root URI
+		 *  add it to a instance URI list*/
 		while(iterator.hasNext())
 		{
 			String dbName = iterator.next();
 			if(idInstanceMap.containsKey(dbName)){
 				INeo4jInstance dbFile=idInstanceMap.get(dbName);
-				instanceUrl.add("http://"+dbFile.getHost()+":"+dbFile.getPort()+"/"+dbFile.getDbPath()+"/"+cypherEndPoint);
+				cypherRootURI.add(dbFile.getProtocol()+"://"+dbFile.getHost()+":"+dbFile.getPort()+"/"+dbFile.getDbPath()+"/"+cypherEndPoint);
 			}
 		}
 		List<List<Object>> queryResults;
-		for (String instance: instanceUrl)
+		for (String instance: cypherRootURI)
 		{
 			queryResults = cacheManager.executeQuery(json, instance);
 			if(queryResults!=null)
