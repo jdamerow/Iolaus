@@ -77,7 +77,7 @@ public class QueryController {
 	@ResponseBody
 	@RequestMapping(value = "/isalive", method = RequestMethod.GET)
 	public String isAlive(HttpServletRequest request,	HttpServletResponse response){
-		
+		response.setStatus(200);
 		return "LIVE";
 		
 	}
