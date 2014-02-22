@@ -66,4 +66,19 @@ public class QueryController {
 		}
 		return outputXml;
 	}
+	
+	/**
+	 * REST API to tell the client that server is up
+	 * Herckules is expected to access this API to verify connectivity of the newly added Iolaus details into Herckules
+	 * @param request 		would contain nothing
+	 * @param response		would be a string, telling I am LIVE
+	 * @return
+	 */
+	@ResponseBody
+	@RequestMapping(value = "/isalive", method = RequestMethod.GET)
+	public String isAlive(HttpServletRequest request,	HttpServletResponse response){
+		
+		return "LIVE";
+		
+	}
 }
