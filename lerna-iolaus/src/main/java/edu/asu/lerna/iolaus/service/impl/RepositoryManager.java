@@ -55,7 +55,7 @@ public class RepositoryManager implements IRepositoryManager {
 		/* key=instance id , value=Neo4jInstance*/
 		Map<String,INeo4jInstance> idInstanceMap=new HashMap<String, INeo4jInstance>();
 		
-		/* create Map using Neo4jRregistry*/
+		/* create Map using Neo4jRegistry*/
 		for(INeo4jInstance instance:neo4jInstances.getfileList()){
 			idInstanceMap.put(instance.getId(), instance);
 		}

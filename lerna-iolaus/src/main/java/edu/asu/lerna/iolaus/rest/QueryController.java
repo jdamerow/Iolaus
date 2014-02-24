@@ -67,6 +67,7 @@ public class QueryController {
 		} catch (JAXBException e) {
 			outputXml=errorMessage.getErrorMsg("Error in the input Xml",request);
 			logger.error(e.getMessage());
+			e.printStackTrace();
 		}
 		return outputXml;
 	}
