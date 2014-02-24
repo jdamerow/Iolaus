@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.xml.sax.SAXException;
 
+import edu.asu.lerna.iolaus.error.ErrorMessage;
 import edu.asu.lerna.iolaus.service.IQueryManager;
 
 @Controller
@@ -24,6 +25,9 @@ public class QueryController {
 
 	@Autowired
 	private IQueryManager queryManager;
+	
+	@Autowired
+	private ErrorMessage errorMessage;
 	
 	private static final Logger logger = LoggerFactory
 			.getLogger(QueryController.class);
@@ -55,13 +59,13 @@ public class QueryController {
 		response.setStatus(200);
 		}catch(SAXException e){
 			String err=e.toString();
-			outputXml=queryManager.getErrorMsg(err.substring(err.indexOf("lineNumber")), request);
+			outputXml=errorMessage.getErrorMsg(err.substring(err.indexOf("lineNumber")), request);
 			logger.error(e.getMessage());
 		} catch (IOException e) {
-			outputXml=queryManager.getErrorMsg("There is some problem in reading the file",request);
+			outputXml=errorMessage.getErrorMsg("There is some problem in reading the file",request);
 			e.printStackTrace();
 		} catch (JAXBException e) {
-			outputXml=queryManager.getErrorMsg("Error in the input Xml",request);
+			outputXml=errorMessage.getErrorMsg("Error in the input Xml",request);
 			logger.error(e.getMessage());
 		}
 		return outputXml;
