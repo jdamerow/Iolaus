@@ -121,6 +121,7 @@ public class AggregateResult implements IAggregateResult {
 		Map<Integer,Map<String, List<Object>>>intermediateResults=new LinkedHashMap<Integer,Map<String, List<Object>>>();
 		intermediateResults.put(0, processedResults);
 		int loopCounter;
+		//This loop takes intersection of results of source query with the results target query. 
 		for(loopCounter=0;loopCounter<resultsOfTargets.size();loopCounter++){
 			
 			Map<String,List<Object>> currentIterationResults=new LinkedHashMap<String,List<Object>>();
@@ -185,6 +186,7 @@ public class AggregateResult implements IAggregateResult {
 				 iterator.put(i++, column.iterator());
 			}
 			List<Object> row;
+			/*creates a row and takes its intersection with the results of the source node of target query*/
 			while(iterator.get(targetId).hasNext()){
 				row=new LinkedList<Object>();
 				createRow(row,iterator,startOfTempResults);

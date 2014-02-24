@@ -6,7 +6,6 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.StringWriter;
 import java.net.URL;
 import java.net.URLDecoder;
 import java.util.ArrayList;
@@ -16,7 +15,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.LinkedHashMap;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.xml.XMLConstants;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBElement;
@@ -28,10 +26,6 @@ import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
 import javax.xml.validation.Validator;
 
-import org.apache.velocity.Template;
-import org.apache.velocity.VelocityContext;
-import org.apache.velocity.app.VelocityEngine;
-import org.apache.velocity.exception.ResourceNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,7 +40,6 @@ import edu.asu.lerna.iolaus.domain.json.impl.JsonNode;
 import edu.asu.lerna.iolaus.domain.json.impl.JsonRelation;
 import edu.asu.lerna.iolaus.domain.plainqueryobject.IQuery;
 import edu.asu.lerna.iolaus.domain.plainqueryobject.impl.Query;
-import edu.asu.lerna.iolaus.factory.IRestVelocityEngineFactory;
 import edu.asu.lerna.iolaus.service.ICypherToJson;
 import edu.asu.lerna.iolaus.service.IPlainQueryManager;
 import edu.asu.lerna.iolaus.service.IQueryManager;
@@ -61,9 +54,8 @@ import edu.asu.lerna.iolaus.service.IRepositoryManager;
 @Service
 public class PlainQueryManager implements IPlainQueryManager {
 
-	@Autowired
-	private IRestVelocityEngineFactory restVelocityEngineFactory;
 
+	
 	@Autowired
 	private ICypherToJson cypherToJson;
 
@@ -96,40 +88,56 @@ public class PlainQueryManager implements IPlainQueryManager {
 		String cypher = query.getCypher();
 		logger.info(cypher);
 		List<String> dbInstanceList = query.getDatabaseList();
+		//create list Neo4jInstances corresponding to database list from the xml.  
 		if (dbInstanceList == null || dbInstanceList.size() == 0) {
 			for (INeo4jInstance instance : registry.getfileList()) {
 				dbInstanceList.add(instance.getId());
 			}
 		}
-		logger.info(" Db instance : " + dbInstanceList);
+		//logger.info(" Db instance : " + dbInstanceList);
 		String json = cypherToJson.plainQueryToJson(cypher);
-		logger.info(" JSon : " + json);
+		//logger.info(" JSon : " + json);
 		List<List<Object>> resultSet = repositoryManager.executeQuery(json,
 				dbInstanceList);
+		//convert list of columns to rows. 
 		Map<String, List<Object>> transformedResults = transformResults(resultSet);
 		String outputXml = queryManager.getRESTOutput(transformedResults);
 		return outputXml;
 		
 	}
 
+	/**
+	 * converts sequence of white spaces to  blank space.
+	 * e.g. "                " will be converted to " ". 
+	 * @param cypher is a input cypher query.
+	 * @return the modified cypher query.
+	 */
 	private String eliminateWhiteSpaces(String cypher) {
 		cypher=cypher.replaceAll("\\s+", " ");
 		return cypher;
 	}
 	
+	/**
+	 * Converts column results to the row result.
+	 * @param resultSet is in the column form.(List<List<Object>>)--inner list represent a column.
+	 * @return the results in the form of rows.(Map<String,List<Object>)--List represent a row.
+	 */
 	private Map<String, List<Object>> transformResults(
 			List<List<Object>> resultSet) {
 		Map<String, List<Object>> transformedResults = new LinkedHashMap<String, List<Object>>();
-
+		
 		if (resultSet != null) {
 				if(resultSet.size()>0){
 				Map<Integer, Iterator<Object>> iteratorMap = new HashMap<Integer, Iterator<Object>>();
 				for (int i = 0; i < resultSet.size(); i++) {
 					iteratorMap.put(i, resultSet.get(i).iterator());
 				}
+				
+				/* iterate through an element of each column at a time*/
 				while (iteratorMap.get(0).hasNext()) {
 					List<Object> rowList = new ArrayList<Object>();
 					String key = "";
+					/* create a row and add a entry to the Map(key=concatenation of  id's of each column element) */
 					for (int j = 0; j < resultSet.size(); j++) {
 						Object entity = iteratorMap.get(j).next();
 						if (entity instanceof JsonNode) {
@@ -164,32 +172,6 @@ public class PlainQueryManager implements IPlainQueryManager {
 				is), Query.class);
 		IQuery q = response1.getValue();
 		return q;
-	}
-
-	/** 
-	 * {@inheritDoc}
-	 */
-	@Override
-	public String getErrorMsg(String errorMsg, HttpServletRequest req) {
-		VelocityEngine engine = null;
-		Template template = null;
-		StringWriter sw = new StringWriter();
-
-		try {
-			engine = restVelocityEngineFactory.getVelocityEngine(req);
-			engine.init();
-			template = engine.getTemplate("velocitytemplates/error.vm");
-			VelocityContext context = new VelocityContext(
-					restVelocityEngineFactory.getVelocityContext());
-			context.put("errMsg", errorMsg);
-			template.merge(context, sw);
-			return sw.toString();
-		} catch (ResourceNotFoundException e) {
-			logger.error("Exception:", e);
-		} catch (Exception e) {
-			logger.error("Exception:", e);
-		}
-		return errorMsg;
 	}
 
 	/**
