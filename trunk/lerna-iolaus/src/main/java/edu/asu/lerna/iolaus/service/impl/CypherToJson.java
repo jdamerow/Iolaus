@@ -82,6 +82,7 @@ public class CypherToJson implements ICypherToJson {
 		String p="param";
 		int counter=0;
 		String temp=cypher;
+		/*replaces all  values "" with param from the keys of "params" */
 		while (matcher.find()) {
 			 if(!paramMap.containsValue(matcher.group())){
 				 counter++;
@@ -91,6 +92,7 @@ public class CypherToJson implements ICypherToJson {
 				 temp=temp.replaceAll(matcher.group(),replacement );
 			 }
 		 }
+		 /*creates adds keys and values in the "params" of the json*/
 		 query+="\""+temp+"\"";
 		 String params="\"params\":{";
 		 for(Entry<String, String> entry:paramMap.entrySet()){
@@ -108,6 +110,4 @@ public class CypherToJson implements ICypherToJson {
 		cypher=cypher.replaceAll("\\s+", " ");
 		return cypher;
 	}
-	
-	
 }

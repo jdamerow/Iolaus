@@ -2,7 +2,6 @@ package edu.asu.lerna.iolaus.service;
 
 import java.io.IOException;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.xml.bind.JAXBException;
 
 import org.xml.sax.SAXException;
@@ -29,11 +28,4 @@ public interface IPlainQueryManager {
 	 */
 	IQuery xmlToQueryObject(String res) throws JAXBException;
 
-	/**
-	 * This method takes error message and generates error xml. 
-	 * @param errorMsg
-	 * @param req
-	 * @return
-	 */
-	String getErrorMsg(String errorMsg, HttpServletRequest req); 
 }

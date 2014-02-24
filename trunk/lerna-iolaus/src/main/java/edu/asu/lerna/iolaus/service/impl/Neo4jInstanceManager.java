@@ -17,7 +17,6 @@ import org.springframework.stereotype.Service;
 
 import edu.asu.lerna.iolaus.configuration.neo4j.impl.Neo4jRegistry;
 import edu.asu.lerna.iolaus.domain.INeo4jInstance;
-import edu.asu.lerna.iolaus.domain.implementation.Neo4jInstance;
 import edu.asu.lerna.iolaus.service.INeo4jInstanceManager;
 
 /**
@@ -62,10 +61,13 @@ public class Neo4jInstanceManager implements INeo4jInstanceManager {
 					maxId=Integer.parseInt(file.getId());
 				}
 			}
+			/* create a file and write configuration to the file */
 			String classPath=Neo4jInstanceManager.class.getProtectionDomain().getCodeSource().getLocation().getPath();//gets the class path
 			BufferedWriter bw=null;
 			try{
-				bw=new BufferedWriter(new FileWriter(URLDecoder.decode(classPath.substring(0,classPath.indexOf("classes")),"UTF-8")+"classes/ConfigurationFiles/Neo4jConfiguration"+(maxId+1)+".txt"));
+				bw=new BufferedWriter(new FileWriter(URLDecoder.decode
+						(classPath.substring(0,classPath.indexOf("classes")),"UTF-8")+
+						"classes/ConfigurationFiles/Neo4jConfiguration"+(maxId+1)+".txt"));
 				bw.append("id:"+(maxId+1)+"\n"); 
 				String modifiedDescription=instance.getDescription().replaceAll("\n", " ").replace("\r","");
 				bw.append("port:"+instance.getPort()+"\n");

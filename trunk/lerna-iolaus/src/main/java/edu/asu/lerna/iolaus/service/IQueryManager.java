@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.xml.bind.JAXBException;
 
 import org.xml.sax.SAXException;
@@ -64,13 +63,4 @@ public interface IQueryManager {
 	 */
 	public abstract Map<String, List<Object>> deleteDuplicateRows(Map<String, List<Object>> resultSet);
 
-	/**
-	 * This method puts the error message in Xml body.
-	 * @param errorMsg is a error message
-	 * @param req is object of {@link HttpServletRequest}. 
-	 * @return the xml form of the error.
-	 * 
-	 * @author Karan Kothari
-	 */
-	public abstract String getErrorMsg(String errorMsg, HttpServletRequest req);
 }

@@ -21,7 +21,6 @@ import java.util.Map.Entry;
 import java.util.Properties;
 
 import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
@@ -29,10 +28,6 @@ import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 import javax.xml.transform.stream.StreamSource;
 
-import org.apache.velocity.Template;
-import org.apache.velocity.VelocityContext;
-import org.apache.velocity.app.VelocityEngine;
-import org.apache.velocity.exception.ResourceNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -191,33 +186,6 @@ public class QueryManager implements IQueryManager {
 	}
 	
 	
-	/**
-	 * {@inheritDoc}
-	 */	
-	@Override
-	public String getErrorMsg(String errorMsg,HttpServletRequest req) {
-		VelocityEngine engine = null;
-		Template template = null;
-		StringWriter sw = new StringWriter();
-
-		try {
-			engine = restVelocityEngineFactory.getVelocityEngine(req);
-			engine.init();
-			template = engine
-					.getTemplate("velocitytemplates/error.vm");
-			VelocityContext context = new VelocityContext(
-					restVelocityEngineFactory.getVelocityContext());
-			context.put("errMsg", errorMsg);
-			template.merge(context, sw);
-			return sw.toString();
-		} catch (ResourceNotFoundException e) {
-			logger.error("Exception:", e);
-		} catch (Exception e) {
-			logger.error("Exception:", e);
-		}
-		return errorMsg;
-	}
-
 	/**
 	 * {@inheritDoc}
 	 */
