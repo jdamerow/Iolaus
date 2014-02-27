@@ -11,11 +11,11 @@
             <property name="type" value="Series" />              
             <relationship return="true">
                 <property name="type" value="attended" />
-                <property name="year" type="range" start="1900" end="1920" />
+                <property name="year" type="range" start="1800" end="1920" />
                     <source>
                         <node>
-                            <property name="FirstName" value="W.A." />  
-	    		    		<property name="LastName" value="Rankin" /> 
+                            <property name="firstName" value="W.A." />  
+	    		    		<property name="lastName" value="Setchell" /> 
                         </node>
                     </source>
             </relationship>
