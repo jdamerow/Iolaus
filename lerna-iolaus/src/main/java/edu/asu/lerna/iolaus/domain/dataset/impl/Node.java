@@ -84,6 +84,10 @@ public class Node implements INode{
     @Override
     public void setType(String value){
     	this.type=value;
+    	IProperty property=new Property();
+    	property.setName("type");
+    	property.setValue(type);
+    	propertyList.add(property);
     }
     /**
      * Gets the value of the propertyList property.

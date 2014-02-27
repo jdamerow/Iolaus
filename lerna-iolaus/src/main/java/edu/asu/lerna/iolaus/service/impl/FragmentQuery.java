@@ -198,7 +198,7 @@ public class FragmentQuery implements IFragmentQuery {
 		Map<Object, String> objectToLabelMap = nodeListObject
 				.getObjectToTargetLabelMap();
 		targetJsonMap.put(source, jsonQuery);
-
+		logger.info(jsonQuery);
 		List<String> targetLabelList = new ArrayList<String>();
 		List<List<String>> labelList = new ArrayList<List<String>>();
 		String lastTarget = "";

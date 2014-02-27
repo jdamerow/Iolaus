@@ -6,3 +6,4 @@ active:true
 nodeIndex:new_index
 relationIndex:new_rel_index
 dbPath:db/data
+protocol:http

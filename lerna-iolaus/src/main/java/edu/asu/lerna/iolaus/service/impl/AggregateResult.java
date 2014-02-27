@@ -228,19 +228,21 @@ public class AggregateResult implements IAggregateResult {
 			Map<Integer, Iterator<Object>> iterator, String id,
 			int startOfTempResults, String[] labels) {
 		int rowCount=0;
-		while(iterator.get(startOfTempResults).hasNext()){//while you have more results to compare with the results of inner query
-			JsonNode node=(JsonNode) iterator.get(startOfTempResults).next();
-			List<Object> newRow=null;
-			boolean flag=false;
-			if(node.getId().equals(id)){//if match is found
-				newRow=new LinkedList<Object>();
-				matchedRows.put(rowCount++, newRow);
-				flag=true;
-			}	
-			for(int j=startOfTempResults+1;j<labels.length;j++){//if any match is found, this loop will create a row
-				Object obj=iterator.get(j).next();
-				if(flag){
-					newRow.add(obj);
+		if(iterator!=null&&iterator.containsKey(startOfTempResults)){
+			while(iterator.get(startOfTempResults).hasNext()){//while you have more results to compare with the results of inner query
+				JsonNode node=(JsonNode) iterator.get(startOfTempResults).next();
+				List<Object> newRow=null;
+				boolean flag=false;
+				if(node.getId().equals(id)){//if match is found
+					newRow=new LinkedList<Object>();
+					matchedRows.put(rowCount++, newRow);
+					flag=true;
+				}	
+				for(int j=startOfTempResults+1;j<labels.length;j++){//if any match is found, this loop will create a row
+					Object obj=iterator.get(j).next();
+					if(flag){
+						newRow.add(obj);
+					}
 				}
 			}
 		}

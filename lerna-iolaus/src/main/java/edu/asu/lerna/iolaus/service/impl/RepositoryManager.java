@@ -69,6 +69,7 @@ public class RepositoryManager implements IRepositoryManager {
 			if(idInstanceMap.containsKey(dbName)){
 				INeo4jInstance dbFile=idInstanceMap.get(dbName);
 				cypherRootURI.add(dbFile.getProtocol()+"://"+dbFile.getHost()+":"+dbFile.getPort()+"/"+dbFile.getDbPath()+"/"+cypherEndPoint);
+				logger.info(dbFile.getProtocol()+"://"+dbFile.getHost()+":"+dbFile.getPort()+"/"+dbFile.getDbPath()+"/"+cypherEndPoint);
 			}
 		}
 		List<List<Object>> queryResults;
@@ -77,6 +78,7 @@ public class RepositoryManager implements IRepositoryManager {
 			queryResults = cacheManager.executeQuery(json, instance);
 			if(queryResults!=null)
 				listOfNodesAndRelations.addAll(queryResults);
+				logger.info(""+listOfNodesAndRelations.size());
 		}
 		return listOfNodesAndRelations;
 	}
