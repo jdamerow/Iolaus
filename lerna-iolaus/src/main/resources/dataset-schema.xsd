@@ -5,7 +5,8 @@
     	<xsd:complexType>
     		<xsd:sequence>
     			<xsd:element name="datasetType" type="xsd:string"></xsd:element>
-    			<xsd:element name="databaseList" type="DatabaseList"
+                <xsd:element name="indexRelation" type="xsd:boolean"></xsd:element>
+                <xsd:element name="databaseList" type="DatabaseList"
     				maxOccurs="1" minOccurs="0">
     			</xsd:element>
     			<xsd:element name="nodeList" maxOccurs="1" minOccurs="0"
@@ -33,7 +34,7 @@
     					<xsd:element name="id" type="xsd:long"
     						maxOccurs="1" minOccurs="1">
     					</xsd:element>
-    					<xsd:element name="type"
+    					<xsd:element name="label"
     						type="xsd:string" maxOccurs="1" minOccurs="1">
     					</xsd:element>
     					<xsd:element name="propertyList"

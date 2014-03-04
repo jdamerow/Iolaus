@@ -49,6 +49,7 @@ import edu.asu.lerna.iolaus.domain.dataset.IRelation;
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "", propOrder = {
 	"datasetType",
+	"indexRelation",
     "databaseList",
     "nodeList",
     "relationList"
@@ -57,7 +58,10 @@ import edu.asu.lerna.iolaus.domain.dataset.IRelation;
 public class Dataset implements IDataset {
 
 	@XmlElement(required = true)
-	 protected String datasetType;	
+	 protected String datasetType;
+	
+	@XmlElement(required = true)
+	 protected boolean indexRelation;
 	
 	@XmlElementWrapper(name="databaseList", required = true)
     @XmlElement(name="database")
@@ -158,4 +162,10 @@ public class Dataset implements IDataset {
 	public void setDatasetType(String value){
 		this.datasetType=value;;
 	}
+
+	@Override
+	public boolean isIndexRelation() {
+		return indexRelation;
+	}
+
 }
