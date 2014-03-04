@@ -1,13 +1,14 @@
 <dataset xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xmlns="http://digitalhps.org/lerna-Dataset-model" xsi:schemaLocation="http://digitalhps.org/lerna-Dataset-model dataset-schema.xsd">
 	<datasetType>ABC</datasetType>
+	<indexRelation>false</indexRelation>
 	<databaseList>
 		<database>1</database>
 	</databaseList>
 	<nodeList>
 		<node>
 			<id>1</id>
-			<type>Person</type>
+			<label>Person</label>
 			<propertyList>
 				<property>
 					<name>Name</name>
@@ -17,7 +18,7 @@
 		</node>
 		<node>
 			<id>2</id>
-			<type>Institute</type>
+			<label>Institute</label>
 			<propertyList>
 				<property>
 					<name>University</name>

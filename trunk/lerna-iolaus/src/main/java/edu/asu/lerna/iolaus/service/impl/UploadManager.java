@@ -38,7 +38,6 @@ import edu.asu.lerna.iolaus.exception.InsertNodeException;
 import edu.asu.lerna.iolaus.exception.InsertRelationException;
 import edu.asu.lerna.iolaus.exception.UploadDatasetException;
 import edu.asu.lerna.iolaus.service.IUploadManager;
-import edu.asu.lerna.iolaus.web.InstanceController;
 
 /**
  * This Service uploads the nodes and Relations present in the xml to the Neo4j instances specified in the Xml.  
@@ -48,7 +47,7 @@ import edu.asu.lerna.iolaus.web.InstanceController;
 public class UploadManager implements IUploadManager{
 
 	private static final Logger logger = LoggerFactory
-			.getLogger(InstanceController.class);
+			.getLogger(UploadManager.class);
 	@Autowired
 	private Neo4jRegistry registry;
 	
@@ -100,6 +99,13 @@ public class UploadManager implements IUploadManager{
 		try {
 			for (INode node : dataset.getNodeList()) {
 				node.getPropertyList().add(datasetProperty);
+				/*
+				 * Add type in the PropertyList in order to add type to node index
+				*/
+				IProperty property=new Property();
+		    	property.setName("label");
+		    	property.setValue(node.getLabel());
+		    	node.getPropertyList().add(property);
 				// inserts nodes in multiple instances of Neo4j
 				List<String> storedUri = insertNode(node.getJsonNode(),
 						serverRootUriList);
@@ -120,7 +126,7 @@ public class UploadManager implements IUploadManager{
 			for (IRelation relation : dataset.getRelationList()) {
 				relation.getPropertyList().add(datasetProperty);
 				addRelations(relation, nodeUriList, serverRootUriList,
-						relationIndexUriList);
+						relationIndexUriList,dataset.isIndexRelation());
 			}
 		} catch (UploadDatasetException exception) {
 			returnFlag = false;
@@ -156,7 +162,7 @@ public class UploadManager implements IUploadManager{
 							indexName=instance.getRelationIndex();
 						}
 						//creates uri for adding properties to the index.
-						indexNameUriList.add("http://"+instance.getHost()+":"+
+						indexNameUriList.add(instance.getProtocol()+"://"+instance.getHost()+":"+
 								instance.getPort()+"/"+instance.getDbPath()+"/"+
 								indexNameEntryPoint+"/"+index+"/"+indexName);
 					}
@@ -228,7 +234,7 @@ public class UploadManager implements IUploadManager{
 	 * @throws IndexPropertyException when REST call for adding property to relation index name fails.
 	 */
 	private void addRelations(IRelation relation,List<Map<Long, String>> nodeURIList, 
-			List<String> serverRootUriList, List<String> relationIndexUriList) throws InsertRelationException,IndexPropertyException {
+			List<String> serverRootUriList, List<String> relationIndexUriList, boolean isIndexRelation) throws InsertRelationException,IndexPropertyException {
 
 		for(int i=0;i<serverRootUriList.size();i++){
 			long startNode=relation.getStartNode();//local id specified in the xml
@@ -240,7 +246,9 @@ public class UploadManager implements IUploadManager{
 				throw new InsertRelationException("Error in inserting relations into Neo4j instance\n" +
 						"URI - "+serverRootUriList.get(i));
 			}
-			addPropertyToRelationIndex(relation,location,relationIndexUriList.get(i));
+			if(isIndexRelation){
+				addPropertyToRelationIndex(relation,location,relationIndexUriList.get(i));
+			}
 		}
 		
 	}

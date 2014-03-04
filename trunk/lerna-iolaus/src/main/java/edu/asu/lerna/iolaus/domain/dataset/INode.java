@@ -13,9 +13,9 @@ public interface INode {
 
 	void setPropertyList(List<IProperty> value);
 
-	String getType();
+	String getLabel();
 
-	void setType(String value);
+	void setLabel(String value);
 
 	String getJsonNode();
 

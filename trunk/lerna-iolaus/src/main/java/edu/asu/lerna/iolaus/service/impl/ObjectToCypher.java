@@ -521,8 +521,10 @@ public class ObjectToCypher implements IObjectToCypher {
 			}
 			if(flag){
 				String p="";
-				if(!(isNumeric(value)||propertyOf.equals(PropertyOf.RELATION)))
-					p=prop.getName()+"=~"+value;//"=~" is to treat this property as regex 
+				/*if(!(isNumeric(value)||propertyOf.equals(PropertyOf.RELATION)))
+					p=prop.getName()+"=~"+value;//"=~" is to treat this property as regex*/ 
+				if(!isNumeric(value))
+					p=prop.getName()+"=~"+value;
 				else{
 					p=prop.getName()+"="+value;//Numeric value can not be treated as regex
 				}

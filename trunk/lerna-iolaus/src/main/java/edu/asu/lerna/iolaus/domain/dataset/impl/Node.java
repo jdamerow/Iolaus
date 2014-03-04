@@ -46,13 +46,13 @@ import edu.asu.lerna.iolaus.domain.dataset.IProperty;
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "", propOrder = {
     "id",
-    "type",
+    "label",
     "propertyList"
 })
 public class Node implements INode{
 
     protected long id;
-    protected String type;
+    protected String label;
     
     @XmlElementWrapper(name="propertyList")
     @XmlElement(name="property")
@@ -77,17 +77,13 @@ public class Node implements INode{
     }
     
     @Override
-    public String getType(){
-    	return type;
+    public String getLabel(){
+    	return label;
     }
     
     @Override
-    public void setType(String value){
-    	this.type=value;
-    	IProperty property=new Property();
-    	property.setName("type");
-    	property.setValue(type);
-    	propertyList.add(property);
+    public void setLabel(String value){
+    	this.label=value;
     }
     /**
      * Gets the value of the propertyList property.
@@ -119,11 +115,11 @@ public class Node implements INode{
     public String getJsonNode(){
     	StringBuffer jsonBody=new StringBuffer();
 		jsonBody.append("{\n\t");
-		if(type!=null){
-			if(!isNumeric(type))
-				jsonBody.append("\"type\" : "+"\""+type+"\"");
+		if(label!=null){
+			if(!isNumeric(label))
+				jsonBody.append("\"label\" : "+"\""+label+"\"");
 			else
-				jsonBody.append("\"type\" : "+type);
+				jsonBody.append("\"label\" : "+label);
 		}
 		if(propertyList!=null){
 			for(IProperty property:propertyList){

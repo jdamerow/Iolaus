@@ -205,7 +205,7 @@ public class Relation implements IRelation {
 							jsonBody.append(" ,\n\t\t\""+property.getName()+"\" : "+property.getValue());
 					}
 				}
-				jsonBody.append(" ,\n\t\t\"type\" : "+"\""+type+"\"");
+				jsonBody.append(" ,\n\t\t\"label\" : "+"\""+type+"\"");
 				jsonBody.append("\n\t}");
 			}
 			jsonBody.append("\n}");

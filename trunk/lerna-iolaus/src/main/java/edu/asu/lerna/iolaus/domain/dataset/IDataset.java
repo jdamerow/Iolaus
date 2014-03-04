@@ -20,4 +20,6 @@ public interface IDataset {
 
 	void setDatasetType(String value);
 
+	boolean isIndexRelation();
+
 }
