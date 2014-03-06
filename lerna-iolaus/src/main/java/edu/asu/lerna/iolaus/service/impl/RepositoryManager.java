@@ -1,5 +1,7 @@
 package edu.asu.lerna.iolaus.service.impl;
 
+import java.net.URL;
+import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -68,8 +70,12 @@ public class RepositoryManager implements IRepositoryManager {
 			String dbName = iterator.next();
 			if(idInstanceMap.containsKey(dbName)){
 				INeo4jInstance dbFile=idInstanceMap.get(dbName);
+				if(dbFile.isActive()&&
+					checkConnectivity(dbFile.getProtocol(), 
+							dbFile.getPort(), dbFile.getHost())){
 				cypherRootURI.add(dbFile.getProtocol()+"://"+dbFile.getHost()+":"+dbFile.getPort()+"/"+dbFile.getDbPath()+"/"+cypherEndPoint);
 				logger.info(dbFile.getProtocol()+"://"+dbFile.getHost()+":"+dbFile.getPort()+"/"+dbFile.getDbPath()+"/"+cypherEndPoint);
+				}
 			}
 		}
 		List<List<Object>> queryResults;
@@ -81,5 +87,26 @@ public class RepositoryManager implements IRepositoryManager {
 				logger.info(""+listOfNodesAndRelations.size());
 		}
 		return listOfNodesAndRelations;
+	}
+	
+	/**
+	 * This method ping the Neo4j server. If it is up then returns true else returns false.  
+	 * @param port is port number.
+	 * @param host is address of the host machine.
+	 * @return the status of server. If it is up then returns true else returns false. 
+	 */
+	private boolean checkConnectivity(String protocol,String port, String host) {
+		boolean isAlive = true;
+		String urlStr="";
+		try {
+			urlStr=protocol+"://"+host+":"+port+"/webadmin/";
+			URL url = new URL(urlStr); 
+			URLConnection connection= url.openConnection();//It will throw an exception if not able to connect to the server. 
+			connection.getInputStream();
+		} catch (Exception e) {
+			isAlive = false;
+			logger.error("Error in the connectivity : ",e);
+		}
+		return isAlive;
 	}
 }

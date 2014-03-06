@@ -1,5 +1,7 @@
 package edu.asu.lerna.iolaus.service.impl;
 
+import java.net.URL;
+import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,6 +22,10 @@ import edu.asu.lerna.iolaus.domain.INeo4jInstance;
 import edu.asu.lerna.iolaus.service.IDeleteDatasetManager;
 import edu.asu.lerna.iolaus.web.InstanceController;
 
+/**
+ * This service deletes the dataset from all the Neo4j instances
+ * @author Karan Kothari
+ */
 @Service
 public class DeleteDatasetManager implements IDeleteDatasetManager {
 
@@ -44,13 +50,21 @@ public class DeleteDatasetManager implements IDeleteDatasetManager {
 		if(serverRootUriList.size()==indexNameList.size()){
 			for(int i=0;i<serverRootUriList.size();i++){
 				String json=createJson(dataset,indexNameList.get(i));
-				deleteRestCall(serverRootUriList.get(i),json);
+				boolean flag=deleteRestCall(serverRootUriList.get(i),json);
+				if(!flag)
+					return false;
 			}
 		}
 
-		return false;
+		return true;
 	}
 	
+	/**
+	 * This method creates json for deleting all Nodes and Relations. 
+	 * @param dataset is a dataset property of node or relation.
+	 * @param indexName is a name of Node Index.
+	 * @return the json form for deleting all the Nodes and relations with dataset specified by the user.
+	 */
 	private String createJson(String dataset, String indexName) {
 
 		StringBuilder query=new StringBuilder();
@@ -66,16 +80,28 @@ public class DeleteDatasetManager implements IDeleteDatasetManager {
 		return json;
 	}
 
+	/**
+	 * This method retrieves the all index names from the Neo4j instances
+	 * @return the list for index names of the nodes.
+	 */
 	private List<String> getIndexNameList() {
 		List<String> indexNameList = new ArrayList<String>();
 		for (INeo4jInstance instance : registry.getfileList()) {
-			if (instance.isActive()) {
+			if (instance.isActive()&&
+					checkConnectivity(instance.getProtocol(), 
+							instance.getPort(), instance.getHost())) {
 				indexNameList.add(instance.getNodeIndex());
 			}
 		}
 		return indexNameList;
 	}
 
+	/**
+	 * This connects with the Neo4j rest api and passes json with the query. 
+	 * @param entryPointUri is a URI where Iolaus will be hitting Neo4j REST api. 
+	 * @param json is json for deleting dataset property.
+	 * @return true if deletion is successful.
+	 */
 	private boolean deleteRestCall(String entryPointUri, String json) {
 		WebResource resource = Client.create().resource( entryPointUri );
 		ClientResponse response = resource.accept( MediaType.APPLICATION_JSON ).
@@ -100,12 +126,35 @@ public class DeleteDatasetManager implements IDeleteDatasetManager {
 	private List<String> getCypherUriList() {
 		List<String> serverRootUriList = new ArrayList<String>();
 		for (INeo4jInstance instance : registry.getfileList()) {
-			if (instance.isActive()) {
+			if (instance.isActive()&&
+					checkConnectivity(instance.getProtocol(), 
+							instance.getPort(), instance.getHost())) {
 				serverRootUriList.add(instance.getProtocol() + "://"
 						+ instance.getHost() + ":" + instance.getPort() + "/"
 						+ instance.getDbPath() + "/" + cypherEndPoint);
 			}
 		}
 		return serverRootUriList;
+	}
+	
+	/**
+	 * This method ping the Neo4j server. If it is up then returns true else returns false.  
+	 * @param port is port number.
+	 * @param host is address of the host machine.
+	 * @return the status of server. If it is up then returns true else returns false. 
+	 */
+	private boolean checkConnectivity(String protocol,String port, String host) {
+		boolean isAlive = true;
+		String urlStr="";
+		try {
+			urlStr=protocol+"://"+host+":"+port+"/webadmin/";
+			URL url = new URL(urlStr); 
+			URLConnection connection= url.openConnection();//It will throw an exception if not able to connect to the server. 
+			connection.getInputStream();
+		} catch (Exception e) {
+			isAlive = false;
+			logger.error("Error in the connectivity : ",e);
+		}
+		return isAlive;
 	}
 }

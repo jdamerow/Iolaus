@@ -45,7 +45,7 @@ public class Neo4jInstanceManager implements INeo4jInstanceManager {
 			String host=instance.getHost();
 			if(port==null || host==null)
 				return null;
-			if(!checkConnectivity(port,host)&&instance.isActive()==true?true:false)
+			if(!checkConnectivity(instance.getProtocol(),port,host)&&instance.isActive()==true?true:false)
 			{
 				return "-2";
 			}
@@ -75,7 +75,8 @@ public class Neo4jInstanceManager implements INeo4jInstanceManager {
 				bw.append("dbPath:"+instance.getDbPath()+"\n");
 				bw.append("description:"+modifiedDescription+"\n");
 				bw.append("active:"+String.valueOf(instance.isActive()==true?true:false)+"\n");
-				bw.append("userName:"+instance.getUserName());
+				bw.append("userName:"+instance.getUserName()+"\n");
+				bw.append("protocol:"+instance.getProtocol());
 				bw.close();
 				instance.setId(String.valueOf(maxId+1));
 				neo4jRegistry.getfileList().add(instance);//add new instance to registry.
@@ -101,13 +102,14 @@ public class Neo4jInstanceManager implements INeo4jInstanceManager {
 	 * This method ping the Neo4j server. If it is up then returns true else returns false.  
 	 * @param port is port number.
 	 * @param host is address of the host machine.
+	 * @param protocol 
 	 * @return the status of server. If it is up then returns true else returns false. 
 	 */
-	private boolean checkConnectivity(String port, String host) {
+	private boolean checkConnectivity(String protocol,String port, String host) {
 		boolean isAlive = true;
 		String urlStr="";
 		try {
-			urlStr="http://"+host+":"+port+"/webadmin/";
+			urlStr=protocol+"://"+host+":"+port+"/webadmin/";
 			URL url = new URL(urlStr); 
 			URLConnection connection= url.openConnection();//It will throw an exception if not able to connect to the server. 
 			connection.getInputStream();
@@ -147,7 +149,7 @@ public class Neo4jInstanceManager implements INeo4jInstanceManager {
 			List<INeo4jInstance> configFileList=neo4jRegistry.getfileList();
 			String port=instance.getPort();
 			String host=instance.getHost();
-			if(!checkConnectivity(port, host)&&instance.isActive()==true?true:false){
+			if(!checkConnectivity(instance.getProtocol(),port, host)&&instance.isActive()==true?true:false){
 				return 2;
 			}
 			boolean flag=false;

@@ -22,13 +22,12 @@ import edu.asu.lerna.iolaus.domain.json.IJsonNode;
 import edu.asu.lerna.iolaus.domain.json.IJsonRelation;
 import edu.asu.lerna.iolaus.domain.misc.LabelTree;
 import edu.asu.lerna.iolaus.domain.misc.ResultSet;
-import edu.asu.lerna.iolaus.domain.queryobject.IDatabase;
 import edu.asu.lerna.iolaus.domain.queryobject.IQuery;
 import edu.asu.lerna.iolaus.domain.queryobject.PropertyOf;
 import edu.asu.lerna.iolaus.service.IAggregateResult;
 import edu.asu.lerna.iolaus.service.IFragmentQuery;
-import edu.asu.lerna.iolaus.service.IRepositoryManager;
 import edu.asu.lerna.iolaus.service.IQueryHandler;
+import edu.asu.lerna.iolaus.service.IRepositoryManager;
 
 /**
  * 
@@ -297,5 +296,4 @@ public class QueryHandler implements IQueryHandler{
 		}
 	}
 
-		
 }
