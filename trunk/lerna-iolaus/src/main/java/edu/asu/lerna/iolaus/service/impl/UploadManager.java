@@ -4,6 +4,8 @@ import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.lang.annotation.Inherited;
 import java.net.URI;
+import java.net.URL;
+import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -149,7 +151,9 @@ public class UploadManager implements IUploadManager{
 		else{
 			List<String> indexNameUriList=new ArrayList<String>();
 			for(INeo4jInstance instance:registry.getfileList()){
-				if(instance.isActive()){
+				if(instance.isActive()&&
+						checkConnectivity(instance.getProtocol(), 
+								instance.getPort(), instance.getHost())){
 					//http://localhost:7474/db/data/index/node/favorites
 					if(databaseList.contains(instance.getId())){
 						String index;
@@ -330,7 +334,9 @@ public class UploadManager implements IUploadManager{
 		else{
 			List<String> serverRootUriList=new ArrayList<String>();
 			for(INeo4jInstance instance:registry.getfileList()){
-				if(instance.isActive()){
+				if(instance.isActive()&&
+						checkConnectivity(instance.getProtocol(), 
+								instance.getPort(), instance.getHost())){
 					if(databaseList.contains(instance.getId())){
 						serverRootUriList.add(instance.getProtocol()+"://"+instance.getHost()+":"+instance.getPort()+"/"+instance.getDbPath()+"/");
 					}
@@ -424,6 +430,27 @@ public class UploadManager implements IUploadManager{
 		JAXBElement<Dataset> response =  unmarshaller.unmarshal(new StreamSource(is), Dataset.class);
 		IDataset dataset = response.getValue();
 		return dataset;
+	}
+	
+	/**
+	 * This method ping the Neo4j server. If it is up then returns true else returns false.  
+	 * @param port is port number.
+	 * @param host is address of the host machine.
+	 * @return the status of server. If it is up then returns true else returns false. 
+	 */
+	private boolean checkConnectivity(String protocol,String port, String host) {
+		boolean isAlive = true;
+		String urlStr="";
+		try {
+			urlStr=protocol+"://"+host+":"+port+"/webadmin/";
+			URL url = new URL(urlStr); 
+			URLConnection connection= url.openConnection();//It will throw an exception if not able to connect to the server. 
+			connection.getInputStream();
+		} catch (Exception e) {
+			isAlive = false;
+			logger.error("Error in the connectivity : ",e);
+		}
+		return isAlive;
 	}
 	
 }

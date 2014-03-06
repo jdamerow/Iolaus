@@ -36,10 +36,17 @@ public class DeleteDatasetController {
 		
 		logger.info("deleting the dataset");
 		
-		deleteDatasetManager.deleteDataset(dataset);
+		boolean flag=deleteDatasetManager.deleteDataset(dataset);
 		
-		logger.info("dataset deleted");
-		return "deleted";
+		if(flag){
+			logger.info("dataset deleted");
+			return "deleted";
+		}
+		else{
+			logger.info("dataset deletion failed");
+			return "failed";
+		}
+		
 	}
 	
 }
