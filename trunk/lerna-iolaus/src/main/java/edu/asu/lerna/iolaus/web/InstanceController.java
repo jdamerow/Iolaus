@@ -74,9 +74,10 @@ public class InstanceController {
 	 * @param model is a ModelMap
 	 * @param principal is a object of Principal
 	 * @return "redirect:/auth/listInstances" to tiles for creating view
+	 * @throws UnsupportedEncodingException 
 	 */
 	@RequestMapping(value = "/auth/addInstance", method = RequestMethod.POST)
-	public String addInstance(@ModelAttribute("SpringWeb")Neo4jInstance instance, ModelMap model,Principal principal) {
+	public String addInstance(@ModelAttribute("SpringWeb")Neo4jInstance instance, ModelMap model,Principal principal) throws UnsupportedEncodingException {
 		instance.setUserName(principal.getName());
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		Collection<? extends GrantedAuthority> authorities = auth.getAuthorities();
@@ -102,6 +103,12 @@ public class InstanceController {
 		}
 		if(instanceId.equals("-2")){//if connection failure then instanceId="-2"
 			model.addAttribute("noConnectivity", true);
+			model.addAttribute("instance", instance);
+			return "auth/addInstance";
+		}
+		if(instanceId.equals("-3")){//if unable to create index to Neo4j
+			model.addAttribute("unableToCreateIndex", true);
+			model.addAttribute("noConnectivity", false);
 			model.addAttribute("instance", instance);
 			return "auth/addInstance";
 		}
