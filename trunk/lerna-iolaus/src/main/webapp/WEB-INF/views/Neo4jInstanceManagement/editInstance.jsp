@@ -43,6 +43,21 @@ function validate()
      document.addInstanceForm.description.focus() ;
      return false;
    }
+   
+   if( document.addInstanceForm.protocol.value == "" )
+   {
+     alert( "Please provide protocol!" );
+     document.addInstanceForm.protocol.focus() ;
+     return false;
+   }
+   
+   if( document.addInstanceForm.dbPath.value == "" )
+   {
+     alert( "Please provide DB Path!" );
+     document.addInstanceForm.dbPath.focus() ;
+     return false;
+   }
+   
    return( true );
 }
 //-->
@@ -58,7 +73,7 @@ function validate()
 	</c:if>
 	<c:if test="${noConnectivity}">
 			<tr><td colspan="2" align="center">
-			<h5 class="response">**Could not connect to Port number ${instance.port} on ${instance.host}.<br/> For adding this instance, please uncheck the Activate Now checkbox or start the server.</h5>
+			<h5 class="response">**Could not connect to Port number ${instance.port} on ${instance.host}.<br/> For updating this instance, please uncheck the Activate Now checkbox or start the server.</h5>
 			</td></tr>
 	</c:if>
 	<tr> <td colspan="2" align="left"><h1>Edit a Neo4j Instance</h1></td></tr>
@@ -75,6 +90,22 @@ function validate()
 			<td><input class ="text" type="text" name="port" value="${instance.port}" /></td>
 			
 	</tr>
+	
+	<tr>		
+			<td><label>Protocol:</label></td>
+			<td><input class ="text" type="text" name="protocol" value="${instance.protocol}" /><div class="info">(e.g. Http, Https)</div></td>		
+	</tr>
+	
+	<tr>		
+			<td><label>Node Index Name:</label></td>
+			<td><input class ="text" type="text" name="nodeIndex" value="${instance.nodeIndex}" readonly /></td>		
+	</tr>
+	
+	<tr>		
+			<td><label>Relation Index Name:</label></td>
+			<td><input class ="text" type="text" name="relationIndex" value="${instance.relationIndex}" readonly /></td>		
+	</tr>
+	
 	<tr>		
 			<td><label>Database Path:</label></td>
 			<c:choose>
