@@ -11,7 +11,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -19,6 +18,12 @@ import org.xml.sax.SAXException;
 
 import edu.asu.lerna.iolaus.error.ErrorMessage;
 import edu.asu.lerna.iolaus.service.IQueryManager;
+
+/**
+ * This controller has mapping for /queryiolaus and /isalive. It accepts the query in XML format.. 
+ * @author Karan Kothari
+ *
+ */
 
 @Controller
 public class QueryController {
@@ -32,18 +37,17 @@ public class QueryController {
 	private static final Logger logger = LoggerFactory
 			.getLogger(QueryController.class);
 	/**
-	 * 
-	 * @param request
-	 * @param response
-	 * @param res
-	 * @param accept
-	 * @return
+	 * This method has mapping for POST request for /queryiolaus. 
+	 * @param request is {@link HttpServletRequest} object.
+	 * @param response is {@link HttpServletResponse} object.
+	 * @param query is a query in XML format. 
+	 * @return the results in the XML format.
 	 */
 	@ResponseBody
 	@RequestMapping(value = "/queryiolaus", method = RequestMethod.POST)
-	public String queryIolaus(HttpServletRequest request,	HttpServletResponse response,@RequestBody String res,@RequestHeader("Accept") String accept){
+	public String queryIolaus(HttpServletRequest request,	HttpServletResponse response,@RequestBody String query){
 		
-		if(res == null || res.isEmpty()){
+		if(query == null || query.isEmpty()){
 			response.setStatus(400);
 			return "Query XML is empty";
 		}
@@ -55,7 +59,7 @@ public class QueryController {
 		String outputXml=null;
 		try{
 		//Execute the input request and fetch outputxml from QueryManager
-		outputXml = queryManager.executeQuery(res);
+		outputXml = queryManager.executeQuery(query);
 		response.setStatus(200);
 		}catch(SAXException e){
 			String err=e.toString();

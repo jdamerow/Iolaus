@@ -16,13 +16,28 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import edu.asu.lerna.iolaus.exception.UploadDatasetException;
 import edu.asu.lerna.iolaus.service.IUploadManager;
 
+/**
+ * This controller has mapping for uploading dataset to the Neo4j. Endpoint of URI is /uploadDataset
+ * @author Karan Kothari
+ */
+
 @Controller
 public class UploadDatasetController {
+	
 	private static final Logger logger = LoggerFactory
 			.getLogger(UploadDatasetController.class);
+	
 	@Autowired
 	private IUploadManager uploadManager;
 	
+	/**
+	 * This method maps the POST request for uploading Dataset to the Neo4j. 
+	 * @param request is a {@link HttpServletRequest} object.
+	 * @param response is a {@link HttpServletResponse} object.
+	 * @param datasetXml is xml which contains list of Nodes and Relationships.
+	 * @return whether upload is successful or not.
+	 * @throws JAXBException
+	 */
 	@RequestMapping(value = "/uploadDataset", method = RequestMethod.POST)
 	public String uploadDataset(HttpServletRequest request,	HttpServletResponse response,@RequestBody String datasetXml) throws JAXBException {
 		logger.info("Uploading the dataset");
