@@ -31,7 +31,7 @@ public class DeleteDatasetController {
 	private IDeleteDatasetManager deleteDatasetManager;
 	
 	@ResponseBody
-	@RequestMapping(value = "/deleteDataset/{dataset}", method = RequestMethod.POST)
+	@RequestMapping(value = "/rest/data/deleteDataset/{dataset}", method = RequestMethod.POST)
 	public String deleteDataset(@PathVariable("dataset") String dataset,HttpServletRequest req, ModelMap model,Principal principal){
 		
 		logger.info("deleting the dataset");

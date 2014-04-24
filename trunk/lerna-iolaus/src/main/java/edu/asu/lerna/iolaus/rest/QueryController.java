@@ -20,7 +20,7 @@ import edu.asu.lerna.iolaus.error.ErrorMessage;
 import edu.asu.lerna.iolaus.service.IQueryManager;
 
 /**
- * This controller has mapping for /queryiolaus and /isalive. It accepts the query in XML format.. 
+ * This controller has mapping for /xmlquery. It accepts the query in XML format.. 
  * @author Karan Kothari
  *
  */
@@ -44,7 +44,7 @@ public class QueryController {
 	 * @return the results in the XML format.
 	 */
 	@ResponseBody
-	@RequestMapping(value = "/queryiolaus", method = RequestMethod.POST)
+	@RequestMapping(value = "/rest/query/xmlquery", method = RequestMethod.POST)
 	public String queryIolaus(HttpServletRequest request,	HttpServletResponse response,@RequestBody String query){
 		
 		if(query == null || query.isEmpty()){
@@ -76,18 +76,4 @@ public class QueryController {
 		return outputXml;
 	}
 	
-	/**
-	 * REST API to tell the client that server is up
-	 * Herckules is expected to access this API to verify connectivity of the newly added Iolaus details into Herckules
-	 * @param request 		would contain nothing
-	 * @param response		would be a string, telling I am LIVE
-	 * @return
-	 */
-	@ResponseBody
-	@RequestMapping(value = "/isalive", method = RequestMethod.GET)
-	public String isAlive(HttpServletRequest request,	HttpServletResponse response){
-		response.setStatus(200);
-		return "LIVE";
-		
-	}
 }
