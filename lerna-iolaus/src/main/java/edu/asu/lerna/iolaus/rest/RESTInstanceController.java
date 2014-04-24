@@ -32,8 +32,9 @@ public class RESTInstanceController {
 	 * @return the list of Neo4j instances in json format.
 	 */
 	@ResponseBody
-	@RequestMapping(value = "/getNeo4jInstances", method = RequestMethod.GET)
+	@RequestMapping(value = "/rest/getNeo4jInstances", method = RequestMethod.GET)
 	public String getNeo4jInstances(HttpServletRequest request,	HttpServletResponse response){
+		
 		return instanceManager.getJsonOfInstances();
 	}
 	

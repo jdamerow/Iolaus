@@ -2,6 +2,7 @@ package edu.asu.lerna.iolaus.service;
 
 import javax.xml.bind.JAXBException;
 
+import edu.asu.lerna.iolaus.domain.dataset.IDataset;
 import edu.asu.lerna.iolaus.exception.UploadDatasetException;
 
 public interface IUploadManager {
@@ -15,10 +16,10 @@ public interface IUploadManager {
 	
 	/**
 	 * This method adds datasetXml into Neo4j instances specified in xml
-	 * @param datasetXml is input xml
+	 * @param dataset is input xml
 	 * @return whether dataset is added or not
 	 * @throws JAXBException
 	 * @throws UploadDatasetException 
 	 */
-	boolean uploadDataset(String datasetXml) throws JAXBException, UploadDatasetException;
+	boolean uploadDataset(IDataset dataset) throws JAXBException, UploadDatasetException;
 }

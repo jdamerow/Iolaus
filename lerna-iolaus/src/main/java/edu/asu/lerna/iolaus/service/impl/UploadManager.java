@@ -23,6 +23,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import scala.util.Random;
+
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.WebResource;
@@ -58,28 +60,20 @@ public class UploadManager implements IUploadManager{
 	 * @throws UploadDatasetException 
 	 */
 	@Override
-	public boolean uploadDataset(String datasetXml) throws JAXBException, UploadDatasetException {
+	public boolean uploadDataset(IDataset dataset) throws JAXBException, UploadDatasetException {
 		
-		boolean returnFlag=true;
-		IDataset dataset=null;
-		
-		if(datasetXml==null){
-			return false;
-		}
-		
-		try{
-			dataset=xmlToObject(datasetXml);
-		}catch(JAXBException exception){
-			return false;
-		}
+		boolean success=true;
+		String randomNeo4jInstanceId = null;
 		
 		/*size of list is equal to the count of Neo4j instances where data is getting replicated. 
 		map stores mapping between local and global Id of nodes for a particular instance.*/  
 		List<Map<Long,String>> nodeUriList=new ArrayList<Map<Long,String>>();
 		
-		//return false if dataset is null or empty
-		if(dataset.getDatabaseList()==null || dataset.getDatabaseList().size()==0)
-			return false;
+		if(dataset.getDatabaseList()==null || dataset.getDatabaseList().size()==0){
+			
+				return false;
+			
+		}
 		
 		List<String> serverRootUriList=getServerRootUriList(dataset.getDatabaseList());
 		List<String> nodeIndexUriList=getIndexList(dataset.getDatabaseList(),nodeIndexEntryPoint);
@@ -117,7 +111,7 @@ public class UploadManager implements IUploadManager{
 				}
 			}
 		} catch (UploadDatasetException exception) {
-			returnFlag=false;
+			success=false;
 		}
 
 		/**
@@ -131,11 +125,12 @@ public class UploadManager implements IUploadManager{
 						relationIndexUriList,dataset.isIndexRelation());
 			}
 		} catch (UploadDatasetException exception) {
-			returnFlag = false;
+			success = false;
 		}
-		return returnFlag;
+		return success;
 	}
 	
+
 	/**
 	 * This method retrieves the index names from Neo4j instances corresponding to databaseList.  
 	 * @param databaseList is list of id of database instances.
