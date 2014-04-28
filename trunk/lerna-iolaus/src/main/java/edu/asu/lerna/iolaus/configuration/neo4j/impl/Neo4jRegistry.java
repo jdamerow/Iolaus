@@ -35,4 +35,23 @@ public class Neo4jRegistry {
 	{
 		return this.fileList;
 	}
+	
+	public String getNodeIndexName(String id){
+		
+		String indexName = null;
+		
+		for(INeo4jInstance instance : fileList){
+			
+			if(instance.getId().equals(id)){
+				
+				indexName = instance.getNodeIndex();
+				break;
+				
+			}
+			
+		}
+		
+		return indexName;
+		
+	}
 }

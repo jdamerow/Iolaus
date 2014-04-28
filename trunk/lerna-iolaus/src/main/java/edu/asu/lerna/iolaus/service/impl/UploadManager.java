@@ -1,7 +1,5 @@
 package edu.asu.lerna.iolaus.service.impl;
 
-import java.io.ByteArrayInputStream;
-import java.io.InputStream;
 import java.lang.annotation.Inherited;
 import java.net.URI;
 import java.net.URL;
@@ -12,18 +10,12 @@ import java.util.List;
 import java.util.Map;
 
 import javax.ws.rs.core.MediaType;
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
-import javax.xml.bind.Unmarshaller;
-import javax.xml.transform.stream.StreamSource;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import scala.util.Random;
 
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientResponse;
@@ -35,7 +27,6 @@ import edu.asu.lerna.iolaus.domain.dataset.IDataset;
 import edu.asu.lerna.iolaus.domain.dataset.INode;
 import edu.asu.lerna.iolaus.domain.dataset.IProperty;
 import edu.asu.lerna.iolaus.domain.dataset.IRelation;
-import edu.asu.lerna.iolaus.domain.dataset.impl.Dataset;
 import edu.asu.lerna.iolaus.domain.dataset.impl.Property;
 import edu.asu.lerna.iolaus.exception.IndexPropertyException;
 import edu.asu.lerna.iolaus.exception.InsertNodeException;
@@ -63,7 +54,6 @@ public class UploadManager implements IUploadManager{
 	public boolean uploadDataset(IDataset dataset) throws JAXBException, UploadDatasetException {
 		
 		boolean success=true;
-		String randomNeo4jInstanceId = null;
 		
 		/*size of list is equal to the count of Neo4j instances where data is getting replicated. 
 		map stores mapping between local and global Id of nodes for a particular instance.*/  
@@ -409,22 +399,6 @@ public class UploadManager implements IUploadManager{
 				entryPointUri, response.getStatus(), location.toString()));
 		response.close();
 		return location.toString();
-	}
-	
-	/**
-	 * Use Unmarshaller to unmarshal the XMl into Query object.
-	 * @param xml is input xml
-	 * @return the {@link IDataset} object after unmarshalling the xml.
-	 * @throws JAXBException when unmarshalling fails.
-	 */
-	private IDataset xmlToObject(String xml) throws JAXBException{
-		JAXBContext context = JAXBContext.newInstance(Dataset.class);
-		Unmarshaller unmarshaller = context.createUnmarshaller();
-		unmarshaller.setEventHandler(new javax.xml.bind.helpers.DefaultValidationEventHandler());
-		InputStream is = new ByteArrayInputStream(xml.getBytes());
-		JAXBElement<Dataset> response =  unmarshaller.unmarshal(new StreamSource(is), Dataset.class);
-		IDataset dataset = response.getValue();
-		return dataset;
 	}
 	
 	/**

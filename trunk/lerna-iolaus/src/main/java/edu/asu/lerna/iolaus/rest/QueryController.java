@@ -36,6 +36,7 @@ public class QueryController {
 	
 	private static final Logger logger = LoggerFactory
 			.getLogger(QueryController.class);
+	
 	/**
 	 * This method has mapping for POST request for /queryiolaus. 
 	 * @param request is {@link HttpServletRequest} object.
@@ -44,7 +45,7 @@ public class QueryController {
 	 * @return the results in the XML format.
 	 */
 	@ResponseBody
-	@RequestMapping(value = "/rest/query/xmlquery", method = RequestMethod.POST)
+	@RequestMapping(value = "/rest/query/xmlquery", method = RequestMethod.GET)
 	public String queryIolaus(HttpServletRequest request,	HttpServletResponse response,@RequestBody String query){
 		
 		if(query == null || query.isEmpty()){

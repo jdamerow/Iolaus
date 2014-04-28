@@ -8,6 +8,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLDecoder;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.ws.rs.core.MediaType;
@@ -56,7 +57,7 @@ public class Neo4jInstanceManager implements INeo4jInstanceManager {
 			String host = instance.getHost();
 			if (port == null || host == null)
 				return null;
-			if (!checkConnectivity(instance.getProtocol(), port, host)
+			if (!isAlive(instance.getProtocol(), port, host)
 					&& instance.isActive() == true ? true : false) {
 				return "-2";
 			}
@@ -188,7 +189,7 @@ public class Neo4jInstanceManager implements INeo4jInstanceManager {
 	 * @return the status of server. If it is up then returns true else returns
 	 *         false.
 	 */
-	private boolean checkConnectivity(String protocol, String port, String host) {
+	private boolean isAlive(String protocol, String port, String host) {
 		boolean isAlive = true;
 		String urlStr = "";
 		try {
@@ -240,7 +241,7 @@ public class Neo4jInstanceManager implements INeo4jInstanceManager {
 			List<INeo4jInstance> configFileList = neo4jRegistry.getfileList();
 			String port = instance.getPort();
 			String host = instance.getHost();
-			if (!checkConnectivity(instance.getProtocol(), port, host)
+			if (!isAlive(instance.getProtocol(), port, host)
 					&& instance.isActive() == true ? true : false) {
 				return 2;
 			}
@@ -374,19 +375,52 @@ public class Neo4jInstanceManager implements INeo4jInstanceManager {
 	 */
 	@Override
 	public String getJsonOfInstances() {
+		
 		StringBuilder json = new StringBuilder();
-		List<INeo4jInstance> instanceList = neo4jRegistry.getfileList();
+		List<INeo4jInstance> instanceList = getActiveInstances();
 		json.append("{\"instanceList\" : [ ");
-		boolean isFirst = true;
-		for (INeo4jInstance instance : instanceList) {
-			if (isFirst) {
-				json.append("\"" + instance.getId() + "\"");
-			} else {
-				json.append(", \"" + instance.getId() + "\"");
+		
+		if(instanceList != null){
+			
+			boolean isFirst = true;
+			for (INeo4jInstance instance : instanceList) {
+				if (isFirst) {
+					
+					json.append("\"" + instance.getId() + "\"");
+					isFirst = false;
+					
+				} else {
+					json.append(", \"" + instance.getId() + "\"");
+				}
 			}
+			
 		}
+		
 		json.append(" ] }");
 		return json.toString();
+	}
+
+	@Override
+	public List<INeo4jInstance> getActiveInstances() {
+
+		List<INeo4jInstance> instanceList = null;
+		
+		for(INeo4jInstance instance : neo4jRegistry.getfileList()){
+			
+			if(isAlive(instance.getProtocol(), instance.getPort(), instance.getHost())){
+				
+				if(instanceList == null){
+					
+					instanceList = new ArrayList<INeo4jInstance>();
+					
+				}
+				
+				instanceList.add(instance);
+			}
+			
+		}
+		
+		return instanceList;
 	}
 
 	/**
