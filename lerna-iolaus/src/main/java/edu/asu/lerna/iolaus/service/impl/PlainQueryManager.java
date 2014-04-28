@@ -6,19 +6,21 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.StringWriter;
 import java.net.URL;
 import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.LinkedHashMap;
 
 import javax.xml.XMLConstants;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
+import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 import javax.xml.transform.Source;
 import javax.xml.transform.stream.StreamSource;
@@ -202,5 +204,35 @@ public class PlainQueryManager implements IPlainQueryManager {
 		Validator validator = schema.newValidator();
 		validator.validate(xmlFile);
 		inputFile.delete();
+	}
+
+	@Override
+	public String generatePlainQueryXml(String cypher, List<String> instanceList) throws JAXBException {
+
+		IQuery query = new Query();
+		
+		query.setCypher(cypher);
+		query.setDatabaseList(instanceList);
+		
+		String plainQueryXml = convertQueryIntoXML(query);
+		return plainQueryXml;
+	}
+	
+	private String convertQueryIntoXML(IQuery query) throws JAXBException {
+
+		String plainQueryXml = null;
+
+		if (query != null) {
+
+			final Marshaller m = JAXBContext.newInstance(Query.class)
+					.createMarshaller();
+			m.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
+			final StringWriter w = new StringWriter();
+			m.marshal(query, w);
+			plainQueryXml = w.toString();
+
+		}
+
+		return plainQueryXml;
 	}
 }

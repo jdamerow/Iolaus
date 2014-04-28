@@ -1,6 +1,8 @@
 package edu.asu.lerna.iolaus.rest;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -16,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.xml.sax.SAXException;
 
+import edu.asu.lerna.iolaus.configuration.neo4j.impl.Neo4jRegistry;
 import edu.asu.lerna.iolaus.error.ErrorMessage;
 import edu.asu.lerna.iolaus.service.IPlainQueryManager;
 
@@ -27,11 +30,15 @@ import edu.asu.lerna.iolaus.service.IPlainQueryManager;
 
 @Controller
 public class PlainQueryController {
+	
 	@Autowired
 	private IPlainQueryManager plainQueryManager;
 	
 	@Autowired
 	private ErrorMessage errorMessage;
+	
+	@Autowired 
+	private Neo4jRegistry registry;
 	
 	private static final Logger logger = LoggerFactory
 			.getLogger(PlainQueryController.class);
@@ -73,4 +80,46 @@ public class PlainQueryController {
 		}
 		return outputXml;
 	}
+	
+	@ResponseBody
+	@RequestMapping(value = "/rest/query/getAll", method = RequestMethod.GET)
+	public String getAllData(HttpServletRequest request,	HttpServletResponse response) throws JAXBException, SAXException, IOException{
+		
+		/**
+		 * Controller does not know the internals of QueryManager. It only receives
+		 * the input xml and uses query manager to produce the xml output.
+		 */
+		String outputXml=null;
+
+		String instanceId = request.getParameter("instance");
+		
+		String datasetName = request.getParameter("dataset");
+
+		String indexName = registry.getNodeIndexName(instanceId);
+		
+		String cypher = createCypherQuery(datasetName, indexName);
+		
+		List<String> instanceList = new ArrayList<String>();
+		instanceList.add(instanceId);
+		
+		String plainQueryXml = plainQueryManager.generatePlainQueryXml(cypher, instanceList);
+		
+		outputXml = plainQueryManager.executeQuery(plainQueryXml);
+		
+		return outputXml;
+	}
+
+	private String createCypherQuery(String datasetName, String indexName) {
+
+		StringBuffer cypher = new StringBuffer();
+		
+		cypher.append("Start source = node:"+indexName+"(dataset=\""+datasetName+"\")\n");
+		cypher.append("Match source-[r]->target\n");
+		cypher.append("return source, r, target");
+		
+		
+		return cypher.toString();
+		
+	}
+	
 }

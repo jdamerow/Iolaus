@@ -1,6 +1,7 @@
 package edu.asu.lerna.iolaus.service;
 
 import java.io.IOException;
+import java.util.List;
 
 import javax.xml.bind.JAXBException;
 
@@ -27,5 +28,7 @@ public interface IPlainQueryManager {
 	 * @throws JAXBException
 	 */
 	IQuery xmlToQueryObject(String res) throws JAXBException;
+	
+	String generatePlainQueryXml(String query, List<String> instanceList ) throws JAXBException;
 
 }

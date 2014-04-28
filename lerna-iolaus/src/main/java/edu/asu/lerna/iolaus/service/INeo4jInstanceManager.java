@@ -60,4 +60,6 @@ public interface INeo4jInstanceManager {
 	 * @return the instance id
 	 */
 	abstract String getInstanceId(String port, String host);
+
+	List<INeo4jInstance> getActiveInstances();
 }

@@ -14,7 +14,6 @@ import javax.xml.transform.stream.StreamSource;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -23,12 +22,12 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import scala.util.Random;
-
 import edu.asu.lerna.iolaus.configuration.neo4j.impl.Neo4jRegistry;
 import edu.asu.lerna.iolaus.domain.INeo4jInstance;
 import edu.asu.lerna.iolaus.domain.dataset.IDataset;
 import edu.asu.lerna.iolaus.domain.dataset.impl.Dataset;
 import edu.asu.lerna.iolaus.exception.UploadDatasetException;
+import edu.asu.lerna.iolaus.service.INeo4jInstanceManager;
 import edu.asu.lerna.iolaus.service.IUploadManager;
 
 /**
@@ -47,6 +46,9 @@ public class UploadDatasetController {
 	
 	@Autowired
 	private Neo4jRegistry registry;
+	
+	@Autowired
+	private INeo4jInstanceManager neo4jInstanceManager;
 	
 	/**
 	 * This method maps the POST request for uploading Dataset to the Neo4j. 
@@ -130,7 +132,7 @@ public class UploadDatasetController {
 	
 	private String selectRandomNeo4jInstance() {
 
-		List<INeo4jInstance> instanceList = registry.getfileList();
+		List<INeo4jInstance> instanceList = neo4jInstanceManager.getActiveInstances();
 		
 		if(instanceList != null){
 			

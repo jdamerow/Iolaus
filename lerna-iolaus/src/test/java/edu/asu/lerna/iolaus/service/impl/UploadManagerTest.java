@@ -39,7 +39,7 @@ public class UploadManagerTest {
 		br.close();
 	}
 
-	@Test
+	/*@Test
 	public void testUploadDataset() throws UploadDatasetException {
 		try {
 			boolean result=uploadManager.uploadDataset(datasetXml.toString());
@@ -49,6 +49,6 @@ public class UploadManagerTest {
 		} catch (JAXBException e) {
 			e.printStackTrace();
 		}
-	}
+	}*/
 
 }
