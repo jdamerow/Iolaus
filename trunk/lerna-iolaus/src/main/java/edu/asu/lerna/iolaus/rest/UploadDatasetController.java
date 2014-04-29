@@ -2,6 +2,7 @@ package edu.asu.lerna.iolaus.rest;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -74,6 +75,10 @@ public class UploadDatasetController {
 				 * Randomly select a Neo4j instance and send that instance id to the Heckules
 				 */
 				randomNeo4jInstanceId = selectRandomNeo4jInstance();
+				List<String> databaseList = new ArrayList<String>();
+				databaseList.add(randomNeo4jInstanceId);
+				dataset.setDatabaseList(databaseList);
+				
 			}else{
 				
 				randomNeo4jInstanceId = dataset.getDatabaseList().get(0);
