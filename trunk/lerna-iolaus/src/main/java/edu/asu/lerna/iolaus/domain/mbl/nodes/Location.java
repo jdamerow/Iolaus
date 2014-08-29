@@ -6,7 +6,7 @@ import org.codehaus.jackson.JsonGenerationException;
 import org.codehaus.jackson.map.JsonMappingException;
 import org.codehaus.jackson.map.ObjectMapper;
 
-public class Location {
+public class Location extends Node {
 	
 	private String type = "Location";
 	private String uri;

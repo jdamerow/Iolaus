@@ -1,8 +1,14 @@
 package edu.asu.lerna.iolaus.domain.mbl.relations;
 
+import java.io.IOException;
+
+import org.codehaus.jackson.JsonGenerationException;
+import org.codehaus.jackson.map.JsonMappingException;
+import org.codehaus.jackson.map.ObjectMapper;
 
 
-public class HasLocation {
+
+public class HasLocation extends Relation {
 	
 	private String type = "hasLocation";
 	private String to;
@@ -41,6 +47,14 @@ public class HasLocation {
 			return year;
 		}
 
+	}
+
+	@Override
+	public String toJson() throws JsonGenerationException,
+			JsonMappingException, IOException {
+		ObjectMapper mapper = new ObjectMapper();
+		String json = mapper.writeValueAsString(this);
+		return json;
 	}
 	
 }
