@@ -46,13 +46,13 @@ public class CypherToJson implements ICypherToJson {
 				 String replacement="{"+p+counter+"}";
 				 String property=matcher.group();
 				 if(x>indexCount){// If property in where clause
-					 /*if(property.charAt(0)=='~'){
+					 if(property.charAt(0)=='~'){
 						 paramMap.put("\""+p+counter+"\"", "\"(?i).*"+property.substring(2,property.length()-1)+".*\"");
 						 temp=temp.replaceAll(property.substring(1),replacement );
-					 }else{*/
+					 }else{
 						 paramMap.put("\""+p+counter+"\"",property);
 						 temp=temp.replaceAll(matcher.group(),replacement );
-					 //}
+					 }
 				 }
 				 else {//If it is property in Start clause
 					 paramMap.put("\""+p+counter+"\"", property);
