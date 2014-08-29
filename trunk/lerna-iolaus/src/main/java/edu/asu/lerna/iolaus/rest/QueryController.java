@@ -45,7 +45,7 @@ public class QueryController {
 	 * @return the results in the XML format.
 	 */
 	@ResponseBody
-	@RequestMapping(value = "/rest/query/xmlquery", method = RequestMethod.GET)
+	@RequestMapping(value = "/rest/query/xmlquery", method = RequestMethod.POST)
 	public String queryIolaus(HttpServletRequest request,	HttpServletResponse response,@RequestBody String query){
 		
 		if(query == null || query.isEmpty()){
