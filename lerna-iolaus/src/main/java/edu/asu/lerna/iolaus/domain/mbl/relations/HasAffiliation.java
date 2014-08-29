@@ -6,7 +6,7 @@ import org.codehaus.jackson.JsonGenerationException;
 import org.codehaus.jackson.map.JsonMappingException;
 import org.codehaus.jackson.map.ObjectMapper;
 
-public class HasAffiliation {
+public class HasAffiliation extends Relation {
 	
 	private String type = "hasAffiliation";
 	private String to;
