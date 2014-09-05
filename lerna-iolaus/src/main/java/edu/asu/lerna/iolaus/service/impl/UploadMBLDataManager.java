@@ -5,12 +5,20 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 
+import javax.ws.rs.core.MediaType;
+
 import org.codehaus.jackson.JsonGenerationException;
 import org.codehaus.jackson.map.JsonMappingException;
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import com.sun.jersey.api.client.Client;
+import com.sun.jersey.api.client.ClientResponse;
+import com.sun.jersey.api.client.WebResource;
 
 import edu.asu.lerna.iolaus.configuration.neo4j.impl.Neo4jRegistry;
 import edu.asu.lerna.iolaus.domain.INeo4jInstance;
@@ -112,23 +120,66 @@ public class UploadMBLDataManager implements IUploadMBLDataManager {
 		if(nodeId == null) {
 			String entryPoint = createUri(instanceId);
 			String nodeEntryPointUri = entryPoint + nodeEntryPoint;
-			nodeId = uploadManager.makeRESTCall(nodeEntryPointUri, node.toJson());
-			cacheManager.cacheNodeId(node.getUri(), instanceId, nodeId);
 			String indexName = getNodeIndexName(instanceId);
-			if(indexName != null) {
-				String indexUri = entryPoint + indexNameEntryPoint + "/" + nodeEntryPoint + "/" + indexName;
-				for(String propertyJson : node.getPropertyJson(nodeId)) {
-					logger.info("Adding node property to index - " + nodeId);
-					if(uploadManager.makeRESTCall(indexUri, propertyJson) == null){
-						throw new IndexPropertyException("Error in inserting property to Neo4j instance\n" +
-								"Node index URI - " + nodeId + "Json Property - " + propertyJson);
+			nodeId = retrieveNodeIdFromNeo4j(node, entryPoint, indexName);
+			if(nodeId == null) {
+				nodeId = uploadManager.makeRESTCall(nodeEntryPointUri, node.toJson());
+				cacheManager.cacheNodeId(node.getUri(), instanceId, nodeId);
+				if(indexName != null) {
+					String indexUri = entryPoint + indexNameEntryPoint + "/" + nodeEntryPoint + "/" + indexName;
+					for(String propertyJson : node.getPropertyJson(nodeId)) {
+						logger.info("Adding node property to index - " + nodeId);
+						if(uploadManager.makeRESTCall(indexUri, propertyJson) == null){
+							throw new IndexPropertyException("Error in inserting property to Neo4j instance\n" +
+									"Node index URI - " + nodeId + "Json Property - " + propertyJson);
+						}
+					}
+				}
+			} else {
+				cacheManager.cacheNodeId(node.getUri(), instanceId, nodeId);
+			}
+		} 
+		return nodeId;
+	}
+
+	private String retrieveNodeIdFromNeo4j(Node node, String entryPoint, String indexName) {
+		String jsonQuery = createJsonQueryToGetNode(node.getUri(), indexName);
+		WebResource resource = Client.create().resource( entryPoint + "cypher" );
+		ClientResponse response = resource.accept(MediaType.APPLICATION_JSON)
+				.type(MediaType.APPLICATION_JSON)
+				.entity(jsonQuery)
+				.post(ClientResponse.class);
+
+
+		String jsonResponse = response.getEntity(String.class);
+		JSONObject jsonObect = new JSONObject(jsonResponse);
+		String nodeId = null;
+		if(jsonObect.has("data")) {
+			JSONArray dataArray = jsonObect.getJSONArray("data");
+			if(dataArray != null) {
+				if(dataArray.length() >= 1) {
+					JSONArray firstResult = dataArray.getJSONArray((0));
+					JSONObject firstNodeDataObject = firstResult.getJSONObject(0);
+					if(firstNodeDataObject.has("self")) {
+						nodeId = firstNodeDataObject.getString("self");
 					}
 				}
 			}
-		} else {
-			
+			logger.info("Retrived Node from Neo4j - " + nodeId);
 		}
+		response.close();
 		return nodeId;
+	}
+
+	private String createJsonQueryToGetNode(String uri, String indexName) {
+		StringBuilder json = new StringBuilder();
+		json.append("{");
+		json.append("\"query\" : ");
+		json.append("\"START root=node:" + indexName + "(uri={uri}) RETURN root\",");
+		json.append("\"params\" : {");
+		json.append("\"uri\" : " + "\"" + uri + "\"");
+		json.append("} }");
+		return json.toString();
 	}
 
 	private String getNodeIndexName(String instanceId) {
