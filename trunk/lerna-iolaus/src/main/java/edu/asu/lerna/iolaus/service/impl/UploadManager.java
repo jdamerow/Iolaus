@@ -385,7 +385,8 @@ public class UploadManager implements IUploadManager{
 	 * @param json is the entity passed with the POST request.
 	 * @return
 	 */
-	private String makeRESTCall(String entryPointUri,String json){
+	@Override
+	public String makeRESTCall(String entryPointUri,String json){
 		WebResource resource = Client.create().resource( entryPointUri );
 		ClientResponse response = resource.accept( MediaType.APPLICATION_JSON ).
 				type( MediaType.APPLICATION_JSON ).

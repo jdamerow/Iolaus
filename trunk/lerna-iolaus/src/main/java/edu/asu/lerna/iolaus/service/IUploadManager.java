@@ -22,4 +22,6 @@ public interface IUploadManager {
 	 * @throws UploadDatasetException 
 	 */
 	boolean uploadDataset(IDataset dataset) throws JAXBException, UploadDatasetException;
+
+	String makeRESTCall(String entryPointUri, String json);
 }

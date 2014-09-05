@@ -14,8 +14,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.encoding.Md5PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import edu.asu.lerna.iolaus.configuration.neo4j.impl.Neo4jRegistry;
+import edu.asu.lerna.iolaus.domain.mbl.nodes.Node;
 import edu.asu.lerna.iolaus.service.ICacheManager;
 import edu.asu.lerna.iolaus.service.IRepositoryHandler;
+import edu.asu.lerna.iolaus.service.IUploadManager;
 
 
 /**
@@ -30,6 +33,12 @@ public class CacheManager implements ICacheManager {
 
 	@Autowired 
 	private IRepositoryHandler repositoryHandler;
+	
+	@Autowired
+	private IUploadManager uploadManager;
+	
+	@Autowired
+	private Neo4jRegistry registry;
 
 	private static final Logger logger = LoggerFactory
 			.getLogger(CacheManager.class);
@@ -95,6 +104,43 @@ public class CacheManager implements ICacheManager {
 		}
 
 		return resultSet;
+	}
+	
+
+	@Override
+	public void cacheNodeId(String uri, String instance, String nodeId) {
+		try
+		{
+			memcachedClient.set(getKey(uri, instance),86400,nodeId);
+		}
+		catch(Exception e)
+		{
+			logger.debug("Error in storing the cache", e);
+		}
+	}
+
+	@Override
+	public String getCachedNodeId(Node node, String instance) {
+		String nodeId = null;
+		GetFuture<Object> returnedFutureObject = null;
+		try
+		{
+			// Try to get a value, for up to 5 seconds, and cancel if it doesn't return
+			returnedFutureObject = memcachedClient.asyncGet(getKey(node.getUri(), instance));
+			nodeId = (String) returnedFutureObject.get(5, TimeUnit.SECONDS); 
+		}
+		catch(Exception e) 
+		{
+			logger.debug("Error in retrieving the cache", e);
+			if(returnedFutureObject != null)
+				returnedFutureObject.cancel(false);
+			return null;
+		}
+		
+		if(nodeId != null) {
+			logger.info("Node Retrieved from the Memcached");
+		}
+		return nodeId;
 	}
 
 	/**
