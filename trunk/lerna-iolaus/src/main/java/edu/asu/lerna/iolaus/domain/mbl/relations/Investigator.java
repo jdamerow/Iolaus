@@ -6,13 +6,13 @@ import org.codehaus.jackson.JsonGenerationException;
 import org.codehaus.jackson.map.JsonMappingException;
 import org.codehaus.jackson.map.ObjectMapper;
 
-public class HasInvestigator extends Relation {
+public class Investigator extends Relation {
 	
 	private String type = "hasInvestigator";
 	private String to;
 	private Data data;
 
-	public HasInvestigator(String to, int year, String role, String subject) {
+	public Investigator(String to, int year, String role, String subject) {
 		data = new Data(year, role, subject);
 		this.to = to;
 	}
