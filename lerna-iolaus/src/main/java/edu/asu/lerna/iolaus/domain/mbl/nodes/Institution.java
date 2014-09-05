@@ -1,6 +1,8 @@
 package edu.asu.lerna.iolaus.domain.mbl.nodes;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.codehaus.jackson.JsonGenerationException;
 import org.codehaus.jackson.map.JsonMappingException;
@@ -38,5 +40,15 @@ public class Institution extends Node {
 		ObjectMapper mapper = new ObjectMapper();
 		String json = mapper.writeValueAsString(this);
 		return json;
+	}
+
+	@Override
+	public List<String> getPropertyJson(String nodeId) {
+		List<String> propertyJson = new ArrayList<String>();
+		propertyJson.add(createJson(nodeId, "type", type));
+		propertyJson.add(createJson(nodeId, "uri", uri));
+		propertyJson.add(createJson(nodeId, "name", name));
+		propertyJson.add(createJson(nodeId, "dataset", dataset));
+		return propertyJson;
 	}
 }
