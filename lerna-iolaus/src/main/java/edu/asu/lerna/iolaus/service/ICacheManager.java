@@ -1,6 +1,12 @@
 package edu.asu.lerna.iolaus.service;
 
+import java.io.IOException;
 import java.util.List;
+
+import org.codehaus.jackson.JsonGenerationException;
+import org.codehaus.jackson.map.JsonMappingException;
+
+import edu.asu.lerna.iolaus.domain.mbl.nodes.Node;
 
 /**
  * CacheManager connects to the various memcached servers to store the results.
@@ -20,6 +26,17 @@ public interface ICacheManager {
 	 * @return				List of nodes and relations fetched from neo4j instance for the given json
 	 */
 	public abstract List<List<Object>> executeQuery(String json,String instance);
+	
+	/**
+	 * If uri is already present in the cache, it returns corresponding node id. Otherwise, it will add this node to Neo4j and return its id.
+	 * @param node is {@link Node} of mbl dataset.
+	 * @return id provided by Neo4j.
+	 * @author Karan Kothari
+	 * @throws IOException 
+	 * @throws JsonMappingException 
+	 * @throws JsonGenerationException 
+	 */
+	public String getCachedNodeId(Node node, String instance);
 
 	/**
 	 * MD5 hash representation of the string formed based on input json and instance.
@@ -29,5 +46,7 @@ public interface ICacheManager {
 	 * @return				Hashcode representing the json and instance.
 	 */
 	public abstract String getKey(String json, String instance);
+
+	void cacheNodeId(String uri, String instance, String nodeId);
 
 }
