@@ -65,7 +65,7 @@
 			<artifactId>db4o-core-java5</artifactId>
 			<version>8.1-SNAPSHOT</version>
 		</dependency>
-		
+
 		<!-- Test -->
 		<dependency>
 			<groupId>junit</groupId>
@@ -118,7 +118,7 @@
 			<version>1.0.0</version>
 		</dependency>
 
-	<!-- Velocity -->
+		<!-- Velocity -->
 		<dependency>
 			<groupId>velocity</groupId>
 			<artifactId>velocity</artifactId>
@@ -257,6 +257,16 @@
 			<artifactId>commons-fileupload</artifactId>
 			<version>1.2.1</version>
 		</dependency>
+		<!-- Jackson Json dependency -->
+		<dependency>
+			<groupId>org.codehaus.jackson</groupId>
+			<artifactId>jackson-mapper-asl</artifactId>
+			<version>1.9.13</version>
+		</dependency>
+
+
+
+
 
 		<!-- Memcached Dependency -->
 		<dependency>
@@ -268,6 +278,13 @@
 			<groupId>net.spy</groupId>
 			<artifactId>spymemcached-test</artifactId>
 			<version>2.10.3</version>
+		</dependency>
+		
+		<!-- JSONObject Dependency -->
+		<dependency>
+			<groupId>org.json</groupId>
+			<artifactId>json</artifactId>
+			<version>20140107</version>
 		</dependency>
 
 	</dependencies>
