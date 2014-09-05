@@ -97,7 +97,7 @@ public class UploadMBLDatasetController {
 		String fileName = file.getName();
 		String message;
 		int status;
-		if((fileName.substring(fileName.lastIndexOf(".")).equalsIgnoreCase("csv"))) {
+		if((fileName.substring(fileName.lastIndexOf(".") + 1).equalsIgnoreCase("csv"))) {
 			logger.info("Uploading Attended dataset");
 			boolean success = uploadManager.uploadAttendedDataset(file, instanceId);
 			if(success) {
@@ -126,7 +126,7 @@ public class UploadMBLDatasetController {
 		String fileName = file.getName();
 		String message;
 		int status;
-		if((fileName.substring(fileName.lastIndexOf(".")).equalsIgnoreCase("csv"))) {
+		if((fileName.substring(fileName.lastIndexOf(".") + 1).equalsIgnoreCase("csv"))) {
 			logger.info("Uploading investigator dataset");
 			boolean success = uploadManager.uploadInvestigatorDataset(file, instanceId);
 			if(success) {
@@ -155,7 +155,7 @@ public class UploadMBLDatasetController {
 		String fileName = file.getName();
 		String message;
 		int status;
-		if((fileName.substring(fileName.lastIndexOf(".")).equalsIgnoreCase("csv"))) {
+		if((fileName.substring(fileName.lastIndexOf(".") + 1).equalsIgnoreCase("csv"))) {
 			logger.info("Uploading location dataset");
 			boolean success = uploadManager.uploadLocationDataset(file, instanceId);
 			if(success) {
@@ -184,7 +184,7 @@ public class UploadMBLDatasetController {
 		String fileName = file.getName();
 		String message;
 		int status;
-		if((fileName.substring(fileName.lastIndexOf(".")).equalsIgnoreCase("csv"))) {
+		if((fileName.substring(fileName.lastIndexOf(".") + 1).equalsIgnoreCase("csv"))) {
 			logger.info("Uploading CourseGroup dataset");
 			boolean success = uploadManager.uploadCourseGroupDataset(file, instanceId);
 			if(success) {
