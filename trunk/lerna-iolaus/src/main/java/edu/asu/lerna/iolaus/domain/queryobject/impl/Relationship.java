@@ -78,6 +78,8 @@ public class Relationship implements IRelationship {
     protected Boolean _return;
     @XmlAttribute(name = "id")
     protected String id;
+    @XmlAttribute(name = "type")
+    protected String type;
 
     /* (non-Javadoc)
 	 * @see edu.asu.lerna.iolaus.domain.queryobject.impl.IRelationship#getSourceOrTargetOrProperty()
@@ -120,6 +122,16 @@ public class Relationship implements IRelationship {
     @Override
 	public void setId(String value) {
         this.id = value;
+    }
+    
+    @Override
+    public void setType(String value) {
+    	this.type = value;
+    }
+    
+    @Override
+    public String getType() {
+    	return this.type;
     }
 
 	/* (non-Javadoc)

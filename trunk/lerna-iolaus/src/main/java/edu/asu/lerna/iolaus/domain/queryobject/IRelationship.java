@@ -95,5 +95,9 @@ public interface IRelationship {
 	public abstract void getRelationDetails(
 			IRelationship relationship);
 
+	void setType(String value);
+
+	String getType();
+
 
 }
