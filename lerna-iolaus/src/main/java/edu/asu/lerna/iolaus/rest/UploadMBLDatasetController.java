@@ -67,7 +67,7 @@ public class UploadMBLDatasetController {
 		String fileName = file.getName();
 		String message;
 		int status;
-		if((fileName.substring(fileName.lastIndexOf(".")).equalsIgnoreCase("csv"))) {
+		if((fileName.substring(fileName.lastIndexOf(".") + 1).equalsIgnoreCase("csv"))) {
 			logger.info("Uploading affiliation dataset");
 			boolean success = uploadManager.uploadAffilationDataset(file, instanceId);
 			if(success) {
