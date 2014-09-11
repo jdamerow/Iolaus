@@ -15,6 +15,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import edu.asu.lerna.iolaus.configuration.neo4j.impl.Neo4jRegistry;
+import edu.asu.lerna.iolaus.domain.INeo4jInstance;
 import edu.asu.lerna.iolaus.domain.Label;
 import edu.asu.lerna.iolaus.domain.misc.LabelTree;
 import edu.asu.lerna.iolaus.domain.misc.ReturnParametersOfOTC;
@@ -39,6 +41,9 @@ public class FragmentQuery implements IFragmentQuery {
 
 	@Autowired
 	private IObjectToCypher objectToCypher;
+	
+	@Autowired
+	private Neo4jRegistry registry;
 
 	private static final Logger logger = LoggerFactory
 			.getLogger(FragmentQuery.class);
@@ -73,8 +78,9 @@ public class FragmentQuery implements IFragmentQuery {
 			String source = "";
 			List<IRelNode> keyElements = new ArrayList<IRelNode>();
 			if (n != null) {
+				String indexName = getNodeIndexName(q.getDatabaseList());
 				ReturnParametersOfOTC nodeListObject = objectToCypher
-						.objectToCypher(n, q.getDataset().getId());
+						.objectToCypher(n, q.getDataset().getId(), indexName);
 				Map<String, Boolean> isReturnTempMap = nodeListObject
 						.getIsReturnMap();
 				source = PropertyOf.SOURCE.toString();
@@ -108,7 +114,7 @@ public class FragmentQuery implements IFragmentQuery {
 												// Object
 					while ((relNode = keyElements.get(counter++)) != null) {
 						nodeListObject = objectToCypher.objectToCypher(relNode,
-								q.getDataset().getId());
+								q.getDataset().getId(), indexName);
 						isReturnTempMap = nodeListObject.getIsReturnMap();
 						source = allNodeToLabelMap.get(relNode);
 						parsedNodeToLabelMap.put(relNode, source);
@@ -155,6 +161,20 @@ public class FragmentQuery implements IFragmentQuery {
 		} else {
 			return null;
 		}
+	}
+
+	private String getNodeIndexName(List<String> databaseList) {
+		String indexName = null;
+		
+		if(databaseList != null && databaseList.size()>=1) {
+			String instanceId = databaseList.get(0);
+			for(INeo4jInstance instance : registry.getfileList()) {
+				if(instance.getId().equals(instanceId)) {
+					indexName = instance.getNodeIndex();
+				}
+			}
+		}
+		return indexName;
 	}
 
 	/**

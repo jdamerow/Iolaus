@@ -14,6 +14,7 @@ import javax.xml.bind.JAXBElement;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import edu.asu.lerna.iolaus.configuration.neo4j.impl.Neo4jRegistry;
 import edu.asu.lerna.iolaus.domain.misc.ArgumentsInOTC;
 import edu.asu.lerna.iolaus.domain.misc.ReturnParametersOfOTC;
 import edu.asu.lerna.iolaus.domain.queryobject.INode;
@@ -43,11 +44,14 @@ public class ObjectToCypher implements IObjectToCypher {
 	@Autowired
 	private ICypherToJson cypherToJson;
 	
+	@Autowired
+	private Neo4jRegistry registry;
+	
 	/**
 	 * {@inheritDoc}
 	 */
 	@Override
-	public ReturnParametersOfOTC objectToCypher(INode node,String dataSet) {
+	public ReturnParametersOfOTC objectToCypher(INode node,String dataSet, String nodeIndexName) {
 		
 		if(node==null)
 			return null;
@@ -76,7 +80,7 @@ public class ObjectToCypher implements IObjectToCypher {
 		String match=m;
 		String where=w;
 		String ret=r;
-		start=buildStartClause(startMap,start);
+		start=buildStartClause(startMap,start, nodeIndexName);
 		match=buildMatchClause(matchMap,match);
 		where=buildWhereClause(whereMap,where,sourceOperator);
 		ret=buildReturnClause(whereMap.keySet(),startMap.keySet(),ret);
@@ -92,7 +96,7 @@ public class ObjectToCypher implements IObjectToCypher {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public ReturnParametersOfOTC objectToCypher(IRelNode node, String dataSet) {
+	public ReturnParametersOfOTC objectToCypher(IRelNode node, String dataSet, String nodeIndexName) {
 		
 		//key is label and value is its property used in Start clause of Cypher query
 		Map<String,String> startMap = new LinkedHashMap<String,String>();
@@ -119,7 +123,7 @@ public class ObjectToCypher implements IObjectToCypher {
 		String match=m;
 		String where=w;
 		String ret=r;
-		start=buildStartClause(startMap,start);
+		start=buildStartClause(startMap,start, nodeIndexName);
 		match=buildMatchClause(matchMap,match);
 		where=buildWhereClause(whereMap,where,sourceOperator);
 		ret=buildReturnClause(whereMap.keySet(),startMap.keySet(),ret);
@@ -137,13 +141,13 @@ public class ObjectToCypher implements IObjectToCypher {
 	 * @param  start	 Initially its value is "Start "  
 	 * @return      	 builds the start clause of cypher and returns it
 	 */
-	private String buildStartClause(Map<String, String> startMap,String start) {
+	private String buildStartClause(Map<String, String> startMap,String start, String nodeIndexName) {
 		//This loop builds the start clause of cypher query
 		for(Entry<String,String> entry:startMap.entrySet()){
 			if(!start.equals("Start ")){
 				start+=", ";
 			}
-			start+=entry.getKey()+"=node:node_auto_index("+entry.getValue()+") ";
+			start+=entry.getKey()+"=node:"+nodeIndexName+"("+entry.getValue()+")";
 		}
 		return start;
 	}
@@ -175,17 +179,17 @@ public class ObjectToCypher implements IObjectToCypher {
 	private String buildWhereClause(Map<String,List<String>> whereMap,String where, String sourceOperator) {
 		int labelCount=1;//initialized the count of label to 1
 		int totalLabels=whereMap.size();//Total number of labels used in Where clause
-		boolean isSourceProperty=false;//Does source label has property(if it is true then we need to add an extra parenthesis to the query) 
+		//boolean isSourceProperty=false;//Does source label has property(if it is true then we need to add an extra parenthesis to the query) 
 		for (Entry<String, List<String>> entry : whereMap.entrySet()){//For each label having a property
 			String key=entry.getKey();
-			if(key.equals(PropertyOf.SOURCE.toString()))//if a source label
-				isSourceProperty=true;
+			/*if(key.equals(PropertyOf.SOURCE.toString()))//if a source label
+				isSourceProperty=true;*/
 			List<String> propertyList=entry.getValue();
-			where+="(( ";
 			int totalProperties=propertyList.size();
 			int propertyCount=1;//count of property for a single label
 			boolean newParenthesis=false;
 			//This loop adds the multiple properties of a label to cypher query.
+			where+= "( ";
 			for(String property:propertyList){
 				
 				if(property.equals("or")||property.equals("and")){//if next object in List is an operator
@@ -201,9 +205,6 @@ public class ObjectToCypher implements IObjectToCypher {
 					  }
 					  where+=key+"."+property+" ";
 					  newParenthesis=false;
-					  if(key.contains(PropertyOf.TARGET.toString())&&propertyCount==totalProperties){//if it is last property of target label
-						  where+=")) ";
-					  }
 				}
 				propertyCount++;
 			}
@@ -213,8 +214,8 @@ public class ObjectToCypher implements IObjectToCypher {
 			}
 			labelCount++;
 		}
-		if(isSourceProperty)//If a source node in the query has a property
-			where+=") ";
+		/*if(isSourceProperty)//If a source node in the query has a property
+			where+=") ";*/
 		return where;
 	}
 	
@@ -407,13 +408,13 @@ public class ObjectToCypher implements IObjectToCypher {
 	    			args.setPropertyOf(PropertyOf.TARGET);
 	    			if(isTargetNode(element1)){
 	    				boolean direction=true;//outward arrow in the relationship
-	    				addRelationToMatch(node1, node2, relation, direction,matchMap);
+	    				addRelationToMatch(node1, node2, relation + ":" + relationship.getType(), direction,matchMap);
 	        			IRelNode relNode = (IRelNode) element1.getValue();
 	        			relNodeObject(relNode,args); 
 	    			}
 	    			if(isSourceNode(element1)){
 	    				boolean direction=false;//Inward arrow in the relationship
-	    				addRelationToMatch(node1, node2, relation, direction,matchMap);
+	    				addRelationToMatch(node1, node2, relation + ":" + relationship.getType(), direction,matchMap);
 	        			IRelNode relNode = (IRelNode) element1.getValue();
 	        			relNodeObject(relNode,args);
 	    			}	
@@ -463,11 +464,11 @@ public class ObjectToCypher implements IObjectToCypher {
     			args.setPropertyOf(PropertyOf.TARGET);
     			if(isTargetNode(element1)){
     				boolean direction=true;//Outward arrow in the relationship
-    				addRelationToMatch(node1, node2, relation, direction,matchMap);
+    				addRelationToMatch(node1, node2, relation , direction,matchMap);
         			IRelNode relNode = (IRelNode) element1.getValue();
         			relNodeObject(relNode,args);
     			}else if(isSourceNode(element1)){
-    				boolean direction=false;//Inward arrow in the relationship
+    				boolean direction=false;//Incoming arrow in the relationship
     				addRelationToMatch(node1, node2, relation, direction,matchMap);
         			IRelNode relNode = (IRelNode) element1.getValue();
         			relNodeObject(relNode,args);
@@ -729,4 +730,5 @@ public class ObjectToCypher implements IObjectToCypher {
 	private int increment(int num) {
 		return num+1;
 	}
+
 }
