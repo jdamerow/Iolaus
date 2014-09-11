@@ -9,6 +9,7 @@ import javax.xml.bind.JAXBException;
 import org.xml.sax.SAXException;
 
 import edu.asu.lerna.iolaus.domain.queryobject.IQuery;
+import edu.asu.lerna.iolaus.exception.Neo4jServerNotRunningException;
 
 public interface IQueryManager {
 
@@ -23,8 +24,9 @@ public interface IQueryManager {
 	 * 
 	 * @author Ram Kumar Kumaresan
 	 * @throws SAXException 
+	 * @throws Neo4jServerNotRunningException 
 	 */
-	public abstract String executeQuery(String inputXML) throws JAXBException, IOException, SAXException;
+	public abstract String executeQuery(String inputXML) throws JAXBException, IOException, SAXException, Neo4jServerNotRunningException;
 
 	/**
 	 * Use Unmarshaller to unmarshal the XMl into Query object

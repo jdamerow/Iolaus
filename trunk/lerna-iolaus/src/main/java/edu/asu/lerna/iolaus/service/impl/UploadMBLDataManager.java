@@ -162,10 +162,10 @@ public class UploadMBLDataManager implements IUploadMBLDataManager {
 					JSONObject firstNodeDataObject = firstResult.getJSONObject(0);
 					if(firstNodeDataObject.has("self")) {
 						nodeId = firstNodeDataObject.getString("self");
+						logger.info("Retrived Node from Neo4j - " + nodeId);
 					}
 				}
 			}
-			logger.info("Retrived Node from Neo4j - " + nodeId);
 		}
 		response.close();
 		return nodeId;

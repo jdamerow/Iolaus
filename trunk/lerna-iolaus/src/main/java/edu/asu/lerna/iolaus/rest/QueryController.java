@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.xml.sax.SAXException;
 
 import edu.asu.lerna.iolaus.error.ErrorMessage;
+import edu.asu.lerna.iolaus.exception.Neo4jServerNotRunningException;
 import edu.asu.lerna.iolaus.service.IQueryManager;
 
 /**
@@ -68,11 +69,11 @@ public class QueryController {
 			logger.error(e.getMessage());
 		} catch (IOException e) {
 			outputXml=errorMessage.getErrorMsg("There is some problem in reading the file",request);
-			e.printStackTrace();
 		} catch (JAXBException e) {
 			outputXml=errorMessage.getErrorMsg("Error in the input Xml",request);
 			logger.error(e.getMessage());
-			e.printStackTrace();
+		} catch (Neo4jServerNotRunningException e) {
+			outputXml=errorMessage.getErrorMsg(e.getMessage(),request);
 		}
 		return outputXml;
 	}
