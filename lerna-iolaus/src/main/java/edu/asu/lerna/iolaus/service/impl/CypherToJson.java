@@ -25,8 +25,8 @@ public class CypherToJson implements ICypherToJson {
 	public String cypherToJson(String cypher){
 		String json="";
 		String query="\"query\":";
-		//String regex="(~*)(\")([a-zA-Z0-9_.\\s?*()]*)(\")";//Regular expression for extracting strings in ~""
-		String regex="(\")([a-zA-Z0-9_.\\s?*()]*)(\")";//Regular expression for extracting strings in ""
+		String regex="(~*)(\")([a-zA-Z0-9_.\\s?*()]*)(\")";//Regular expression for extracting strings in ~""
+		//String regex="(\")([a-zA-Z0-9_.\\s?*()]*)(\")";//Regular expression for extracting strings in ""
 		Pattern pattern = Pattern.compile(regex);
 		Matcher matcher = pattern.matcher(cypher);
 		Map<String,String> paramMap=new LinkedHashMap<String,String>();
@@ -71,6 +71,7 @@ public class CypherToJson implements ICypherToJson {
 		 }
 		 params+="}";
 		 json="{"+query+",\n"+params+"}";
+		 System.out.println(json.toString());
 		return json;
 	}
 	

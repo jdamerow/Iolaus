@@ -9,6 +9,7 @@ import java.io.StringWriter;
 import java.io.File;
 
 import java.net.URL;
+import java.net.URLConnection;
 import java.net.URLDecoder;
 
 import java.util.ArrayList;
@@ -40,6 +41,8 @@ import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
 import javax.xml.validation.Validator;
 
+import edu.asu.lerna.iolaus.configuration.neo4j.impl.Neo4jRegistry;
+import edu.asu.lerna.iolaus.domain.INeo4jInstance;
 import edu.asu.lerna.iolaus.domain.json.IJsonNode;
 import edu.asu.lerna.iolaus.domain.json.IJsonRelation;
 import edu.asu.lerna.iolaus.domain.json.impl.JsonNode;
@@ -47,6 +50,7 @@ import edu.asu.lerna.iolaus.domain.json.impl.JsonRelation;
 import edu.asu.lerna.iolaus.domain.misc.ResultSet;
 import edu.asu.lerna.iolaus.domain.queryobject.IQuery;
 import edu.asu.lerna.iolaus.domain.queryobject.impl.Query;
+import edu.asu.lerna.iolaus.exception.Neo4jServerNotRunningException;
 import edu.asu.lerna.iolaus.factory.IRestVelocityEngineFactory;
 import edu.asu.lerna.iolaus.service.IObjecttoXMLConverter;
 import edu.asu.lerna.iolaus.service.IQueryHandler;
@@ -68,6 +72,9 @@ public class QueryManager implements IQueryManager {
 	@Autowired
 	private IQueryHandler queryHandler;
 	
+	@Autowired
+	private Neo4jRegistry registry;
+	
 	@Resource(name = "xmlStrings")
 	private Properties xmlProperties;
 
@@ -77,9 +84,10 @@ public class QueryManager implements IQueryManager {
 
 	/**
 	 * {@inheritDoc}
+	 * @throws Neo4jServerNotRunningException 
 	 */
 	@Override
-	public String executeQuery(String inputXML) throws JAXBException,SAXException,IOException
+	public String executeQuery(String inputXML) throws JAXBException,SAXException,IOException, Neo4jServerNotRunningException
 	{
 		validateXml(inputXML);
 		//Parse the xml and generate the query object from it
@@ -87,9 +95,15 @@ public class QueryManager implements IQueryManager {
 		if(q == null){
 			return "failure";
 		}
-
-		//Parse the query generated from the xml and get node, relation objects
-		xmlToCypherConverter.parseQuery(q);	
+		
+		for(String id : q.getDatabaseList()) {
+			for(INeo4jInstance instance : registry.getfileList()) {
+				if(id.equals(instance.getId()))
+				if(!isNeo4jServerUp(instance)) {
+					throw new Neo4jServerNotRunningException("Instance Id : " + id + ", Message : Neo4j Server is not running.");
+				}
+			}
+		}
 
 		//This stage should return the nodes and relations
 		ResultSet rset=queryHandler.executeQuery(q);
@@ -100,6 +114,23 @@ public class QueryManager implements IQueryManager {
 		return getRESTOutput(finalResultSet);
 	}
 	
+	private boolean isNeo4jServerUp(INeo4jInstance instance) {
+		boolean isAlive = true;
+		String urlStr = "";
+		try {
+			urlStr = instance.getProtocol() + "://" + instance.getHost() + ":" + instance.getPort() + "/webadmin/";
+			URL url = new URL(urlStr);
+			// It will throw an exception if not able to connect to the server.
+			URLConnection connection = url.openConnection();
+			connection.getInputStream();
+		} catch (Exception e) {
+			isAlive = false;
+			logger.error("Error in the connectivity : ", e.getLocalizedMessage());
+		}
+		return isAlive;
+	}
+	
+
 	/**
 	 * {@inheritDoc}
 	 */
