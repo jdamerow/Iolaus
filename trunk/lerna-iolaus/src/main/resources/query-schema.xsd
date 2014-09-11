@@ -60,6 +60,7 @@
                 <xs:element ref="or" minOccurs="0"/>
             </xs:choice>
             <xs:attribute name="return" type="xs:boolean" />
+            <xs:attribute name="type" type="xs:string" />
             <xs:attribute name="id" type="xs:string" />
         </xs:complexType>
     </xs:element>
