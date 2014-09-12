@@ -126,7 +126,13 @@ public class AggregateResult implements IAggregateResult {
 			
 			Map<String,List<Object>> currentIterationResults=new LinkedHashMap<String,List<Object>>();
 			Iterator<Entry<String, List<Object>>> intermediateResultsIterator = intermediateResults.get(loopCounter).entrySet().iterator();
-			Iterator<Entry<String, List<Object>>> tempResultsIterator = resultsOfTargets.get(loopCounter).entrySet().iterator();
+			Iterator<Entry<String, List<Object>>> tempResultsIterator = null;
+			if(resultsOfTargets.get(loopCounter) != null) {
+				tempResultsIterator = resultsOfTargets.get(loopCounter).entrySet().iterator();
+			} else {
+				intermediateResults.put(loopCounter+1, currentIterationResults);
+				return intermediateResults.get(loopCounter + 1);
+			}
 			Map<Integer,Iterator<Object>> iterator=new HashMap<Integer,Iterator<Object>>();
 			int targetCount=1;
 			int relationshipCount=1;
@@ -161,7 +167,7 @@ public class AggregateResult implements IAggregateResult {
 				 iterator.put(i++, column.iterator());
 			}
 			
-			int startOfTempResults=i;
+			int startOfTempResults=i; 
 			flag=true;
 			//This loop creates labels for the results of Target query
 			while(tempResultsIterator.hasNext()){

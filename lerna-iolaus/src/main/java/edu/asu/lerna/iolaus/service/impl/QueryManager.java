@@ -109,8 +109,14 @@ public class QueryManager implements IQueryManager {
 		ResultSet rset=queryHandler.executeQuery(q);
 		Map<String,List<Object>> resultSet=filterResults(rset.getResultSet(),rset.getLabelToIsReturnTrueMap());
 		Map<String,List<Object>> finalResultSet=deleteDuplicateRows(resultSet);
-
-		//Marshall to xml
+		if(finalResultSet != null) {
+			logger.info("Total Results = " + finalResultSet.size());
+			//Marshall to xml
+		}
+		else {
+			logger.info("Total Results = 0");
+		}
+		
 		return getRESTOutput(finalResultSet);
 	}
 	
@@ -155,7 +161,9 @@ public class QueryManager implements IQueryManager {
 	 */
 	@Override
 	public Map<String, List<Object>> filterResults(Map<String, List<Object>> resultSet, Map<String, Boolean> isReturnTrueMap) {
-
+		
+		if(resultSet == null || resultSet.size() == 0)
+			return null;
 		Map<String,List<Object>> filteredResults=new LinkedHashMap<String, List<Object>>();
 		//This loop will add only columns(labels) for which return="true"
 		for(Entry<String,List<Object>> entry:resultSet.entrySet()){
@@ -172,7 +180,11 @@ public class QueryManager implements IQueryManager {
 	 */
 	@Override
 	public Map<String, List<Object>> deleteDuplicateRows(Map<String, List<Object>> resultSet) {
-
+		
+		if(resultSet == null || resultSet.size() == 0) {
+			return null;
+		}
+		
 		Map<Integer,Iterator<Object>> iteratorMap=new HashMap<Integer, Iterator<Object>>();
 		int i=0;//Count of labels for which return="true"
 		for(Entry<String,List<Object>> entry:resultSet.entrySet()){

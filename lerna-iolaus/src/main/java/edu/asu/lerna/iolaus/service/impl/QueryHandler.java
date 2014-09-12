@@ -204,7 +204,8 @@ public class QueryHandler implements IQueryHandler{
 				String json=targetLabelToJsonMap.get(sourceLabel);
 				List<List<Object>> results=repositoryManager.executeQuery(json, dbInstances);
 				Map<String,List<Object>> processedResults=processResults(results);
-				aggregateResults.aggregateResults(aggregatedResults,processedResults,sourceToTargetLabelMap,oldLabelToNewLabelMap,sourceLabel);
+				if(processedResults != null && processedResults.size() != 0)
+					aggregateResults.aggregateResults(aggregatedResults,processedResults,sourceToTargetLabelMap,oldLabelToNewLabelMap,sourceLabel);
 				flag=false;
 			}
 		}while(!stack.isEmpty());
