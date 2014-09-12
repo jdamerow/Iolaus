@@ -15,6 +15,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import scala.sys.Prop;
+
 import edu.asu.lerna.iolaus.configuration.neo4j.impl.Neo4jRegistry;
 import edu.asu.lerna.iolaus.domain.INeo4jInstance;
 import edu.asu.lerna.iolaus.domain.Label;
@@ -92,6 +94,7 @@ public class FragmentQuery implements IFragmentQuery {
 				// used in the cypher to isReturnTrueMap
 				for (Entry<String, Boolean> entry : isReturnTempMap.entrySet()) {
 					String label = entry.getKey();
+					if(label.equals(PropertyOf.SOURCE.toString())) continue;
 					if (label.contains(PropertyOf.TARGET.toString())) {
 						isReturnTrueMap.put(PropertyOf.TARGET.toString()
 								+ uniqueTargetCounter, entry.getValue());
