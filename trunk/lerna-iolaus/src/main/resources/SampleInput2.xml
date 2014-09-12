@@ -8,14 +8,12 @@
     <dataset id = "mblcourses" />
     <node return="true">
         <and>
-            <property name="type" value="Series" />              
-            <relationship return="true">
-                <property name="type" value="attended" />
+            <property name="type" value="Course" />              
+            <relationship return="true" type="attended">
                 <property name="year" type="range" start="1800" end="1920" />
                     <source>
                         <node>
-                            <property name="firstName" value="W.A." />  
-	    		    		<property name="lastName" value="Setchell" /> 
+	    		    		<property name="lastname" value="Setchell" /> 
                         </node>
                     </source>
             </relationship>

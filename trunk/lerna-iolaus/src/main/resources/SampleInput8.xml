@@ -1,4 +1,4 @@
-<!--What courses did people from institution [I] attend? -->
+<!--What are the Locations of Person who attended Course[C] in year[1920] ?-->
 <query xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xmlns="http://digitalhps.org/lerna-query-model" xsi:schemaLocation="http://digitalhps.org/lerna-query-model query-schema.xsd">
 	<databaseList>
@@ -7,17 +7,18 @@
 	<dataset id="mblcourses" />
 	<node return="true">
 		<and>
-			<property name="type" value="Course" />
-			<relationship return="true" type="attended">
+			<property name="type" value="Location" />
+			<relationship return="false" type="hasLocation">
 				<source>
 					<node>
 						<and>
 							<property name="type" value="Person" />
-							<relationship return="true" type="hasAffiliation">
+							<relationship return="false" type="attended">
+								<property name="year" value="1920"/>
 								<target>
 									<node>
-										<property name="type" value="Institution" />
-										<property name="name" value="Harvard" />
+										<property name="type" value="Course" />
+										<property name="name" value="Botany" />
 									</node>
 								</target>
 							</relationship>

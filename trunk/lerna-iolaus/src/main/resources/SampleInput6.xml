@@ -9,13 +9,12 @@
     <node return="true">
         <and>
             <property name="type" value="Person" />   
-            <relationship return="true">
-                <property name="type" value="affiliatedWith" />
+            <relationship return="true" type="hasAffiliation">
                 <property name="year" type="range" start="1900" end="1920" />
                     <target>
                         <node>
-                            <property name="type" value="Institute" />
-                            <property name="label" value="Harvard" />
+                            <property name="type" value="Institution" />
+                            <property name="name" value="Harvard" />
                         </node>
                     </target>
             </relationship>

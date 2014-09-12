@@ -1,4 +1,4 @@
-<!--Where was institution [I] located?-->
+<!--Where was Person [P] located?-->
 <query 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
 		xmlns="http://digitalhps.org/lerna-query-model" 
 		xsi:schemaLocation="http://digitalhps.org/lerna-query-model query-schema.xsd">
@@ -9,12 +9,11 @@
     <node return="true">
         <and>
             <property name="type" value="Location" />   
-            <relationship return="true">
-				<property name="type" value="hasLocation" />
+            <relationship return="true" type="hasLocation">
 				<source>
 					<node>
-                        <property name="type" value="Institute" />
-                        <property name="label" value="Harvard" />
+                        <property name="type" value="Person" />
+                        <property name="lastname" value="Setchell" />
                     </node>
                 </source>
             </relationship>

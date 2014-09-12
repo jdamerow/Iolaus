@@ -9,13 +9,12 @@
     <node return="true">
         <and>
             <property name="type" value="Person" />              
-            <relationship return="true">
-                <property name="type" value="attended" />
+            <relationship return="true" type="attended">
                 <property name="year" value="1900" />
                     <target>
                         <node>
-							<property name="type" value="Series"/>
-							<property name="label" value="Zoolo" /> 
+							<property name="type" value="Course"/>
+							<property name="name" value="Zoolo" /> 
                         </node>
                     </target>
             </relationship>
