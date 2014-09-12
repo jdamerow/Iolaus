@@ -8,7 +8,7 @@ import org.codehaus.jackson.map.ObjectMapper;
 
 public class Attendance extends Relation {
 
-	private String type = "attendance";
+	private String type = "attended";
 	private String to;
 	private Data data;
 	
