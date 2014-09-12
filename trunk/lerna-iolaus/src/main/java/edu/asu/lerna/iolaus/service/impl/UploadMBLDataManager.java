@@ -234,7 +234,7 @@ public class UploadMBLDataManager implements IUploadMBLDataManager {
 				
 				//To Node
 				if(data[0] != null && data[6] != null) {
-					to = new Institution(data[6].trim().replaceAll("\"", ""), data[3].trim().replaceAll("\"", ""));
+					to = new Institution(data[0].trim().replaceAll("\"", ""), data[6].trim().replaceAll("\"", ""));
 					toNodeId = createNode(to, instanceId);
 				} else {
 					success = false;
@@ -244,7 +244,7 @@ public class UploadMBLDataManager implements IUploadMBLDataManager {
 				if(fromNodeId != null && toNodeId != null && data[2] != null && data[5] != null) {
 					int year;
 					try {
-						year = Integer.parseInt(data[0].trim().replaceAll("\"", ""));
+						year = Integer.parseInt(data[2].trim().replaceAll("\"", ""));
 					} catch (NumberFormatException e) {
 						year = 0;
 					}
