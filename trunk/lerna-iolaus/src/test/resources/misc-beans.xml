@@ -15,6 +15,7 @@
 	</bean>
 	
 	<bean id="repositoryHandler" class="edu.asu.lerna.iolaus.service.impl.RepositoryHandler" />
+	<bean id="memcachedKeySet" class="edu.asu.lerna.iolaus.service.impl.MemcachedKeySet" />	
 	<bean id="cacheManager" class="edu.asu.lerna.iolaus.service.impl.CacheManager" />
 	<bean id="cypherToJson" class="edu.asu.lerna.iolaus.service.impl.CypherToJson" />
 	<bean id="aggregateResult" class="edu.asu.lerna.iolaus.service.impl.AggregateResult" />

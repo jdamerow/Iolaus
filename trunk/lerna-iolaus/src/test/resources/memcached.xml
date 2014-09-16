@@ -4,7 +4,7 @@
 	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
 
 	<bean id="memcachedClientBean" class="net.spy.memcached.spring.MemcachedClientFactoryBean">
-		<property name="servers" value="127.0.0.1:11211,127.0.0.1:11212" />		
+		<property name="servers" value="127.0.0.1:11211" />		
 	</bean>
 
 </beans>
