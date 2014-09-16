@@ -47,6 +47,15 @@ public interface ICacheManager {
 	 */
 	public abstract String getKey(String json, String instance);
 
+	/**
+	 * adds nodeId to cache and deletes all cachedResults from memcache
+	 * @param uri is a property of a {@link Node}. Every node has a unique URI.
+	 * @param instance is a Neo4j instance id where node is inserted.
+	 * @param nodeId is unique uri assigned by Neo4j to a particular node.
+	 * @author Karan Kothari
+	 */
 	void cacheNodeId(String uri, String instance, String nodeId);
 
+	List<List<Object>> getCachedResults(String json, String instance);
+	void delete(String key);
 }
