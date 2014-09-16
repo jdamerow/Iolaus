@@ -91,12 +91,12 @@ public class ObjectToCypherTest {
 		
 		INode node=null;
 		//null node object
-		assertNull(objectToCypher.objectToCypher(node, null));
+		assertNull(objectToCypher.objectToCypher(node, null,null));
 		
 		//empty node object
-		assertNotNull(objectToCypher.objectToCypher(new Node(), null));
+		assertNotNull(objectToCypher.objectToCypher(new Node(), null, null));
 		
-		ReturnParametersOfOTC returnObject=objectToCypher.objectToCypher(querySimple.getNode(), querySimple.getDataset().getId());
+		ReturnParametersOfOTC returnObject=objectToCypher.objectToCypher(querySimple.getNode(), querySimple.getDataset().getId(), "new_index");
 		
 		//valid node object
 		assertNotNull(returnObject);
@@ -137,15 +137,15 @@ public class ObjectToCypherTest {
 		INode node=null;
 		IRelNode relNode=null;
 		//null node object
-		assertNull(objectToCypher.objectToCypher(node, null));
+		assertNull(objectToCypher.objectToCypher(node, null, null));
 		
 		//empty node object
-		assertNotNull(objectToCypher.objectToCypher(new RelNode(), null));
+		assertNotNull(objectToCypher.objectToCypher(new RelNode(), null, null));
 		
 		node=queryNested.getNode();
 		relNode=getRelNode(node);
 		
-		ReturnParametersOfOTC returnObject=objectToCypher.objectToCypher(relNode, queryNested.getDataset().getId());
+		ReturnParametersOfOTC returnObject=objectToCypher.objectToCypher(relNode, queryNested.getDataset().getId(), "new_index");
 		
 		//valid node object
 		assertNotNull(returnObject);
