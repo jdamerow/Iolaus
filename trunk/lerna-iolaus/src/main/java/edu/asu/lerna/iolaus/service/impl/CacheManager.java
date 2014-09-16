@@ -1,6 +1,7 @@
 package edu.asu.lerna.iolaus.service.impl;
 
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 import javax.annotation.PreDestroy;
@@ -17,6 +18,7 @@ import org.springframework.stereotype.Service;
 import edu.asu.lerna.iolaus.configuration.neo4j.impl.Neo4jRegistry;
 import edu.asu.lerna.iolaus.domain.mbl.nodes.Node;
 import edu.asu.lerna.iolaus.service.ICacheManager;
+import edu.asu.lerna.iolaus.service.IMemcachedKeySet;
 import edu.asu.lerna.iolaus.service.IRepositoryHandler;
 import edu.asu.lerna.iolaus.service.IUploadManager;
 
@@ -26,7 +28,7 @@ import edu.asu.lerna.iolaus.service.IUploadManager;
  * It also makes the decision to connect to a repository to execute a query and to store 
  * the result in the cache.
  * 
- * @author Ram Kumar Kumaresan
+ * @author Ram Kumar Kumaresan, Karan Kothari
  */
 @Service
 public class CacheManager implements ICacheManager {
@@ -45,6 +47,9 @@ public class CacheManager implements ICacheManager {
 
 	@Autowired
 	private MemcachedClient memcachedClient;
+	
+	@Autowired
+	private IMemcachedKeySet memcachedKeySet;
 
 	/**
 	 * {@inheritDoc}
@@ -112,6 +117,11 @@ public class CacheManager implements ICacheManager {
 		try
 		{
 			memcachedClient.set(getKey(uri, instance),86400,nodeId);
+			Set<String> keySet = memcachedKeySet.getKeySet();
+			for(String key : keySet) {
+				memcachedClient.delete(key);
+			}
+			memcachedKeySet.removeAll();
 		}
 		catch(Exception e)
 		{
@@ -155,7 +165,9 @@ public class CacheManager implements ICacheManager {
 	private void cacheResults(String json, String instance,List<List<Object>> resultSet) {
 		try
 		{
-			memcachedClient.set(getKey(json, instance),86400,resultSet);
+			String key = getKey(json, instance);
+			memcachedClient.set(key , 60 * 60 * 24 * 30,resultSet);
+			memcachedKeySet.addKey(key);
 		}
 		catch(Exception e)
 		{
@@ -171,7 +183,7 @@ public class CacheManager implements ICacheManager {
 	 * @param instance		The address of the neo4j server from which the result was fetched.
 	 * @return				The result for the corresponding input json which was cached.
 	 */
-	private List<List<Object>> getCachedResults(String json, String instance) {
+	public List<List<Object>> getCachedResults(String json, String instance) {
 		Object returnedObject = null;
 		GetFuture<Object> returnedFutureObject = null;
 		try
@@ -188,6 +200,14 @@ public class CacheManager implements ICacheManager {
 			return null;
 		}
 		return (List<List<Object>>) returnedObject;
+	}
+
+	@Override
+	public void delete(String key) {
+		if(key != null) {
+			memcachedClient.delete(key);
+			memcachedKeySet.remove(key);
+		}
 	}
 
 }
