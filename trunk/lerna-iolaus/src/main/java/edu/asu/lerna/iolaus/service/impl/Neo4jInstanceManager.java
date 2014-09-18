@@ -200,7 +200,7 @@ public class Neo4jInstanceManager implements INeo4jInstanceManager {
 			connection.getInputStream();
 		} catch (Exception e) {
 			isAlive = false;
-			logger.error("Error in the connectivity : ", e);
+			logger.error("Error in the connectivity");
 		}
 		return isAlive;
 	}
@@ -438,4 +438,18 @@ public class Neo4jInstanceManager implements INeo4jInstanceManager {
 		return null;
 	}
 
+	@Override
+	public boolean isNeo4jInstanceRunning(String instanceId) {
+		List<INeo4jInstance> activeInstances = getActiveInstances();
+			if(activeInstances != null && activeInstances.size() != 0) {
+			for(INeo4jInstance instance : activeInstances) {
+				if(instance.getId().equals(instanceId)) {
+					return true;
+				}
+			}
+		}
+		
+		return false;
+	}
+	
 }

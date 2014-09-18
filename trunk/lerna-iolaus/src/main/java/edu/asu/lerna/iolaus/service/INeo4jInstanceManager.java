@@ -62,4 +62,6 @@ public interface INeo4jInstanceManager {
 	abstract String getInstanceId(String port, String host);
 
 	List<INeo4jInstance> getActiveInstances();
+
+	boolean isNeo4jInstanceRunning(String instanceId);
 }
