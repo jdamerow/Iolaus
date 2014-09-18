@@ -62,55 +62,66 @@ public class UploadMBLDatasetController {
 			HttpServletResponse response, ModelMap model,Principal principal,
 			@RequestParam("file") MultipartFile multipartfile, @PathVariable("instanceId") String instanceId)
 			throws JAXBException, IOException, IndexPropertyException, Neo4jInstanceIdDoesNotExist {
-
-		File file = convertMultipartToFile(multipartfile);
-		String fileName = file.getName();
+		
 		String message;
 		int status;
-		if((fileName.substring(fileName.lastIndexOf(".") + 1).equalsIgnoreCase("csv"))) {
-			logger.info("Uploading affiliation dataset");
-			boolean success = uploadManager.uploadAffilationDataset(file, instanceId);
-			if(success) {
-				message = "SUCCESS";
-				status = 200;
-			} else {
-				message = "PARTIAL DATA UPLOADED";
-				status = 206;
-			}
-			logger.info("Finished Uploading affilation dataset");
-		} else {
-			status = 406;
-			message = "File format must be CSV";
-		}
 		
+		if(neo4jInstanceManager.isNeo4jInstanceRunning(instanceId)) {
+			File file = convertMultipartToFile(multipartfile);
+			String fileName = file.getName();
+			if((fileName.substring(fileName.lastIndexOf(".") + 1).equalsIgnoreCase("csv"))) {
+				logger.info("Uploading affiliation dataset");
+				boolean success = uploadManager.uploadAffilationDataset(file, instanceId);
+				if(success) {
+					message = "SUCCESS";
+					status = 200;
+				} else {
+					message = "PARTIAL DATA UPLOADED";
+					status = 206;
+				}
+				logger.info("Finished Uploading affilation dataset");
+			} else {
+				status = 406;
+				message = "File format must be CSV";
+			}
+		} else {
+			message = "Neo4j instance with id = " + instanceId + " is either not registered or not running";
+			status = 503;
+		}
 		return jsonMessage(status, message);
 	}
 	
 	@ResponseBody
-	@RequestMapping(value = "/rest/data/mbl/upload/{instanceId}/csv/attendance", method = RequestMethod.POST)
+	@RequestMapping(value = "/rest/data/mbl/upload/{instanceId}/csv/attended", method = RequestMethod.POST)
 	public String uploadAttendedDataset(HttpServletRequest request,
 			HttpServletResponse response, ModelMap model,Principal principal,
 			@RequestParam("file") MultipartFile multipartfile,  @PathVariable("instanceId") String instanceId)
 			throws JAXBException, IOException, IndexPropertyException, Neo4jInstanceIdDoesNotExist {
 
-		File file = convertMultipartToFile(multipartfile);
-		String fileName = file.getName();
 		String message;
 		int status;
-		if((fileName.substring(fileName.lastIndexOf(".") + 1).equalsIgnoreCase("csv"))) {
-			logger.info("Uploading Attended dataset");
-			boolean success = uploadManager.uploadAttendedDataset(file, instanceId);
-			if(success) {
-				message = "SUCCESS";
-				status = 200;
+		if(neo4jInstanceManager.isNeo4jInstanceRunning(instanceId)){
+			
+			File file = convertMultipartToFile(multipartfile);
+			String fileName = file.getName();
+			if((fileName.substring(fileName.lastIndexOf(".") + 1).equalsIgnoreCase("csv"))) {
+				logger.info("Uploading Attended dataset");
+				boolean success = uploadManager.uploadAttendedDataset(file, instanceId);
+				if(success) {
+					message = "SUCCESS";
+					status = 200;
+				} else {
+					message = "PARTIAL DATA UPLOADED";
+					status = 206;
+				}
+				logger.info("Finished Uploading Attended dataset");
 			} else {
-				message = "PARTIAL DATA UPLOADED";
-				status = 206;
+				status = 406;
+				message = "File format must be CSV";
 			}
-			logger.info("Finished Uploading Attended dataset");
 		} else {
-			status = 406;
-			message = "File format must be CSV";
+			message = "Neo4j instance with id = " + instanceId + " is either not registered or not running";
+			status = 503;
 		}
 		return jsonMessage(status, message);
 	}
@@ -122,24 +133,30 @@ public class UploadMBLDatasetController {
 			@RequestParam("file") MultipartFile multipartfile, @PathVariable("instanceId") String instanceId)
 			throws JAXBException, IOException, IndexPropertyException, Neo4jInstanceIdDoesNotExist {
 
-		File file = convertMultipartToFile(multipartfile);
-		String fileName = file.getName();
 		String message;
 		int status;
-		if((fileName.substring(fileName.lastIndexOf(".") + 1).equalsIgnoreCase("csv"))) {
-			logger.info("Uploading investigator dataset");
-			boolean success = uploadManager.uploadInvestigatorDataset(file, instanceId);
-			if(success) {
-				message = "SUCCESS";
-				status = 200;
+		if(neo4jInstanceManager.isNeo4jInstanceRunning(instanceId)){
+			File file = convertMultipartToFile(multipartfile);
+			String fileName = file.getName();
+			if((fileName.substring(fileName.lastIndexOf(".") + 1).equalsIgnoreCase("csv"))) {
+				logger.info("Uploading investigator dataset");
+				boolean success = uploadManager.uploadInvestigatorDataset(file, instanceId);
+				if(success) {
+					message = "SUCCESS";
+					status = 200;
+				} else {
+					message = "PARTIAL DATA UPLOADED";
+					status = 206;
+				}
+				logger.info("Finished Uploading investigator dataset");
 			} else {
-				message = "PARTIAL DATA UPLOADED";
-				status = 206;
-			}
-			logger.info("Finished Uploading investigator dataset");
+				status = 406;
+				message = "File format must be CSV";
+			} 
+			
 		} else {
-			status = 406;
-			message = "File format must be CSV";
+			message = "Neo4j instance with id = " + instanceId + " is either not registered or not running";
+			status = 503;
 		}
 		return jsonMessage(status, message);
 	}
@@ -151,24 +168,30 @@ public class UploadMBLDatasetController {
 			@RequestParam("file") MultipartFile multipartfile, @PathVariable("instanceId") String instanceId)
 			throws JAXBException, IOException, IndexPropertyException, Neo4jInstanceIdDoesNotExist {
 
-		File file = convertMultipartToFile(multipartfile);
-		String fileName = file.getName();
+		
 		String message;
 		int status;
-		if((fileName.substring(fileName.lastIndexOf(".") + 1).equalsIgnoreCase("csv"))) {
-			logger.info("Uploading location dataset");
-			boolean success = uploadManager.uploadLocationDataset(file, instanceId);
-			if(success) {
-				message = "SUCCESS";
-				status = 200;
+		if(neo4jInstanceManager.isNeo4jInstanceRunning(instanceId)){
+			File file = convertMultipartToFile(multipartfile);
+			String fileName = file.getName();
+			if((fileName.substring(fileName.lastIndexOf(".") + 1).equalsIgnoreCase("csv"))) {
+				logger.info("Uploading location dataset");
+				boolean success = uploadManager.uploadLocationDataset(file, instanceId);
+				if(success) {
+					message = "SUCCESS";
+					status = 200;
+				} else {
+					message = "PARTIAL DATA UPLOADED";
+					status = 206;
+				}
+				logger.info("Finished Uploading location dataset");
 			} else {
-				message = "PARTIAL DATA UPLOADED";
-				status = 206;
+				status = 406;
+				message = "File format must be CSV";
 			}
-			logger.info("Finished Uploading location dataset");
 		} else {
-			status = 406;
-			message = "File format must be CSV";
+				message = "Neo4j instance with id = " + instanceId + " is either not registered or not running";
+				status = 503;
 		}
 		return jsonMessage(status, message);
 	}
@@ -180,25 +203,31 @@ public class UploadMBLDatasetController {
 			@RequestParam("file") MultipartFile multipartfile, @PathVariable("instanceId") String instanceId)
 			throws JAXBException, IOException, IndexPropertyException, Neo4jInstanceIdDoesNotExist {
 
-		File file = convertMultipartToFile(multipartfile);
-		String fileName = file.getName();
 		String message;
 		int status;
-		if((fileName.substring(fileName.lastIndexOf(".") + 1).equalsIgnoreCase("csv"))) {
-			logger.info("Uploading CourseGroup dataset");
-			boolean success = uploadManager.uploadCourseGroupDataset(file, instanceId);
-			if(success) {
-				message = "SUCCESS";
-				status = 200;
+		if(neo4jInstanceManager.isNeo4jInstanceRunning(instanceId)){
+			File file = convertMultipartToFile(multipartfile);
+			String fileName = file.getName();
+			if((fileName.substring(fileName.lastIndexOf(".") + 1).equalsIgnoreCase("csv"))) {
+				logger.info("Uploading CourseGroup dataset");
+				boolean success = uploadManager.uploadCourseGroupDataset(file, instanceId);
+				if(success) {
+					message = "SUCCESS";
+					status = 200;
+				} else {
+					message = "PARTIAL DATA UPLOADED";
+					status = 206;
+				}
+				logger.info("Finished Uploading IsPartOf dataset");
 			} else {
-				message = "PARTIAL DATA UPLOADED";
-				status = 206;
+				status = 406;
+				message = "File format must be CSV";
 			}
-			logger.info("Finished Uploading IsPartOf dataset");
+			
 		} else {
-			status = 406;
-			message = "File format must be CSV";
-		}
+			message = "Neo4j instance with id = " + instanceId + " is either not registered or not running";
+			status = 503;
+	}
 		return jsonMessage(status, message);
 	}
 	
