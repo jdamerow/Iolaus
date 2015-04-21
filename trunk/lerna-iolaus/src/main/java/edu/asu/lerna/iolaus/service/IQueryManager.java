@@ -8,6 +8,7 @@ import javax.xml.bind.JAXBException;
 
 import org.xml.sax.SAXException;
 
+import edu.asu.lerna.iolaus.domain.json.impl.Resultset;
 import edu.asu.lerna.iolaus.domain.queryobject.IQuery;
 import edu.asu.lerna.iolaus.exception.Neo4jServerNotRunningException;
 
@@ -44,7 +45,7 @@ public interface IQueryManager {
 	 * 
 	 * @author Ram Kumar Kumaresan
 	 */
-	public abstract String getRESTOutput(Map<String,List<Object>> resultSet);
+	String getRESTOutput(Map<String,List<Object>> resultSet);
 	
 	/**
 	 * This method filters the columns of the results based on whether labels are to be displayed to user or not
@@ -64,5 +65,11 @@ public interface IQueryManager {
 	 * @author Karan Kothari
 	 */
 	public abstract Map<String, List<Object>> deleteDuplicateRows(Map<String, List<Object>> resultSet);
+
+	String executeStableQuery(String inputXML) throws JAXBException,
+			SAXException, IOException, Neo4jServerNotRunningException;
+
+	String getRESTOutuptForAQueryWithMappingAttribute(Resultset resultset)
+			throws JAXBException;
 
 }

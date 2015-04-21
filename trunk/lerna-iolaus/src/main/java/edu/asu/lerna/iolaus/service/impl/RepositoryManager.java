@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 import edu.asu.lerna.iolaus.configuration.neo4j.impl.Neo4jRegistry;
 import edu.asu.lerna.iolaus.domain.INeo4jInstance;
 import edu.asu.lerna.iolaus.service.ICacheManager;
+import edu.asu.lerna.iolaus.service.INeo4jInstanceManager;
 import edu.asu.lerna.iolaus.service.IRepositoryManager;
 /**
  * This class implements {@link IRepositoryManager}. It has method for executing json query on multiple Neo4j instances.
@@ -33,7 +34,10 @@ public class RepositoryManager implements IRepositoryManager {
 	private ICacheManager cacheManager;
 	
 	@Autowired
-	private Neo4jRegistry neo4jInstances;
+	private Neo4jRegistry instanceRegistry;
+	
+	@Autowired
+	private INeo4jInstanceManager instanceManager;
 
 	@Autowired
 	@Qualifier("cypherEndPoint")
@@ -58,7 +62,7 @@ public class RepositoryManager implements IRepositoryManager {
 		Map<String,INeo4jInstance> idInstanceMap=new HashMap<String, INeo4jInstance>();
 		
 		/* create Map using Neo4jRegistry*/
-		for(INeo4jInstance instance:neo4jInstances.getfileList()){
+		for(INeo4jInstance instance:instanceRegistry.getfileList()){
 			idInstanceMap.put(instance.getId(), instance);
 		}
 		
@@ -87,6 +91,27 @@ public class RepositoryManager implements IRepositoryManager {
 				logger.info(""+listOfNodesAndRelations.size());
 		}
 		return listOfNodesAndRelations;
+	}
+	
+	@Override
+	public List<List<Object>> executeQuery(String json, String id) {
+
+		INeo4jInstance dbFile = instanceManager.getInstance(id);
+		List<List<Object>> queryResults = null;
+		if (dbFile.isActive()
+				&& checkConnectivity(dbFile.getProtocol(), dbFile.getPort(),
+						dbFile.getHost())) {
+			
+			String uri = dbFile.getProtocol() + "://" + dbFile.getHost()
+					+ ":" + dbFile.getPort() + "/" + dbFile.getDbPath() + "/"
+					+ cypherEndPoint;
+			logger.info(dbFile.getProtocol() + "://" + dbFile.getHost() + ":"
+					+ dbFile.getPort() + "/" + dbFile.getDbPath() + "/"
+					+ cypherEndPoint);
+			queryResults = cacheManager.executeQuery(json, uri);
+		}
+
+		return queryResults;
 	}
 	
 	/**

@@ -1,5 +1,6 @@
 package edu.asu.lerna.iolaus.service;
 
+import edu.asu.lerna.iolaus.domain.json.impl.Resultset;
 import edu.asu.lerna.iolaus.domain.misc.ResultSet;
 import edu.asu.lerna.iolaus.domain.queryobject.IQuery;
 import edu.asu.lerna.iolaus.domain.queryobject.impl.Query;
@@ -17,5 +18,7 @@ public interface IQueryHandler {
 	 * @return the {@link ResultSet}
 	 */
 	public abstract ResultSet executeQuery(IQuery q);
+
+	Resultset executeStableQuery(IQuery q);
 
 }

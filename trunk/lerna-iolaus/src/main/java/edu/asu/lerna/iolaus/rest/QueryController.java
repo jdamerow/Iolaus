@@ -78,4 +78,47 @@ public class QueryController {
 		return outputXml;
 	}
 	
+	/**
+	 * This method has mapping for POST request for /rest/query/stable-query-execution. 
+	 * @param request is {@link HttpServletRequest} object.
+	 * @param response is {@link HttpServletResponse} object.
+	 * @param query is a query in XML format. 
+	 * @return the results in the XML format.
+	 */
+	@ResponseBody
+	@RequestMapping(value = "/rest/query/stable-query-execution", method = RequestMethod.POST)
+	public String stableQueryExecution(HttpServletRequest request,	HttpServletResponse response,@RequestBody String query){
+		
+		if(query == null || query.isEmpty()){
+			response.setStatus(400);
+			return "Query XML is empty";
+		}
+		
+		/**
+		 * Controller does not know the internals of QueryManager. It only receives
+		 * the input xml and uses query manager to produce the xml output.
+		 */
+		String outputXml=null;
+		try{
+		//Execute the input request and fetch outputxml from QueryManager
+			outputXml = queryManager.executeStableQuery(query);
+			System.out.println(outputXml);
+			response.setStatus(200);
+		}catch(SAXException e){
+			String err=e.toString();
+			outputXml=errorMessage.getErrorMsg(err.substring(err.indexOf("lineNumber")), request);
+			logger.error(e.getMessage());
+			e.printStackTrace();
+		} catch (IOException e) {
+			outputXml=errorMessage.getErrorMsg("There is some problem in reading the file",request);
+		} catch (JAXBException e) {
+			outputXml=errorMessage.getErrorMsg("Error in the input Xml",request);
+			logger.error(e.getMessage());
+			e.printStackTrace();
+		} catch (Neo4jServerNotRunningException e) {
+			outputXml=errorMessage.getErrorMsg(e.getMessage(),request);
+		}
+		return outputXml;
+	}
+	
 }

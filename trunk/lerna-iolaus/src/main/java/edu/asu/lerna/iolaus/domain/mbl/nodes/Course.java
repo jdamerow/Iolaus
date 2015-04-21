@@ -15,14 +15,21 @@ public class Course extends Node {
 	private String name;
 	private int year;
 	private String dataset = "mblcourses";
+	private String iolausMappingId;
 	
 	public Course(String uri, String name, int year) {
 		this.uri = uri;
 		this.name = name;
 		this.year = year;
+		this.iolausMappingId = name;
 	}
 
 	
+	public String getIolausMappingId() {
+		return iolausMappingId;
+	}
+
+
 	public String getType() {
 		return type;
 	}
@@ -58,6 +65,7 @@ public class Course extends Node {
 		propertyJson.add(createJson(nodeId, "name", name));
 		propertyJson.add(createJson(nodeId, "year", year));
 		propertyJson.add(createJson(nodeId, "dataset", dataset));
+		propertyJson.add(createJson(nodeId, "iolausMappingId", iolausMappingId));
 		return propertyJson;
 	}
 

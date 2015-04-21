@@ -15,11 +15,17 @@ public class Person extends Node {
 	private String firstname;
 	private String lastname;
 	private String dataset = "mblcourses";
+	private String iolausMappingId;
 	
 	public Person(String uri, String firstname, String lastname) {
 		this.uri = uri;
 		this.firstname = firstname;
 		this.lastname = lastname;
+		this.iolausMappingId = firstname + " " + lastname;
+	}
+	
+	public String getIolausMappingId() {
+		return iolausMappingId;
 	}
 	
 	public String getType() {
@@ -56,6 +62,7 @@ public class Person extends Node {
 		propertyJson.add(createJson(nodeId, "firstname", firstname));
 		propertyJson.add(createJson(nodeId, "lastname", lastname));
 		propertyJson.add(createJson(nodeId, "dataset", dataset));
+		propertyJson.add(createJson(nodeId, "iolausMappingId", iolausMappingId));
 		return propertyJson;
 	}
 

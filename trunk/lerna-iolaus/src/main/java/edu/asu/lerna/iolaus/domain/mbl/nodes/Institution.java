@@ -14,11 +14,18 @@ public class Institution extends Node {
 	private String uri;
 	private String name;
 	private String dataset = "mblcourses";
+	private String iolausMappingId;
 	
 	public Institution(String uri, String name) {
 		this.uri = uri;
 		this.name = name;
+		this.iolausMappingId = name;
 	}
+	
+	public String getIolausMappingId() {
+		return iolausMappingId;
+	}
+
 
 	public String getType() {
 		return type;
@@ -49,6 +56,7 @@ public class Institution extends Node {
 		propertyJson.add(createJson(nodeId, "uri", uri));
 		propertyJson.add(createJson(nodeId, "name", name));
 		propertyJson.add(createJson(nodeId, "dataset", dataset));
+		propertyJson.add(createJson(nodeId, "iolausMappingId", iolausMappingId));
 		return propertyJson;
 	}
 }

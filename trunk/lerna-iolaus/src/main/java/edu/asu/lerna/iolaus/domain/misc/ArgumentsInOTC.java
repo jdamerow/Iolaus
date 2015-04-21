@@ -1,7 +1,9 @@
 package edu.asu.lerna.iolaus.domain.misc;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import edu.asu.lerna.iolaus.domain.queryobject.PropertyOf;
 
@@ -13,10 +15,23 @@ public class ArgumentsInOTC {
 	Map<String,Boolean> labelToIsReturnMap;
 	PropertyOf propertyOf;
 	Map<Object,String> objectToLabelMap;
+	Set<String> relationshipLabels;
 	String dataSet;
 	String targetOperator;
 	int currentTarget;
 	int currentRelationship;
+	
+	public void addToRelationshipLabels(String label) {
+		if(relationshipLabels == null) {
+			relationshipLabels = new HashSet<String>();
+		}
+		
+		relationshipLabels.add(label);
+	}
+	
+	public Set<String> getRelationshipLabels() {
+		return relationshipLabels;
+	}
 	
 	public String getTargetOperator() {
 		return targetOperator;

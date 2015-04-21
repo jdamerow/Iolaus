@@ -14,10 +14,16 @@ public class Location extends Node {
 	private String uri;
 	private String location;
 	private String dataset = "mblcourses";
+	private String iolausMappingId;
 	
 	public Location(String uri, String location) {
 		this.uri = uri;
 		this.location = location;
+		this.iolausMappingId = location;
+	}
+	
+	public String getIolausMappingId() {
+		return iolausMappingId;
 	}
 	
 	public String getType() {
@@ -49,6 +55,7 @@ public class Location extends Node {
 		propertyJson.add(createJson(nodeId, "uri", uri));
 		propertyJson.add(createJson(nodeId, "location", location));
 		propertyJson.add(createJson(nodeId, "dataset", dataset));
+		propertyJson.add(createJson(nodeId, "iolausMappingId", iolausMappingId));
 		return propertyJson;
 	}
 }

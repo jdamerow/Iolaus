@@ -2,9 +2,6 @@ package edu.asu.lerna.iolaus.domain.json;
 
 import java.util.HashMap;
 
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
-
 public interface IJsonNode {
 
 	public abstract void setId(String id);
