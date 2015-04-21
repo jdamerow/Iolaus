@@ -13,9 +13,8 @@ import javax.xml.bind.JAXBElement;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
-
-import scala.sys.Prop;
 
 import edu.asu.lerna.iolaus.configuration.neo4j.impl.Neo4jRegistry;
 import edu.asu.lerna.iolaus.domain.INeo4jInstance;
@@ -29,7 +28,6 @@ import edu.asu.lerna.iolaus.domain.queryobject.PropertyOf;
 import edu.asu.lerna.iolaus.domain.queryobject.impl.Query;
 import edu.asu.lerna.iolaus.domain.queryobject.impl.RelNode;
 import edu.asu.lerna.iolaus.service.IFragmentQuery;
-import edu.asu.lerna.iolaus.service.IObjectToCypher;
 
 /**
  * This class takes a {@link Query} object as an input and breaks it down and
@@ -41,8 +39,9 @@ import edu.asu.lerna.iolaus.service.IObjectToCypher;
 @Service
 public class FragmentQuery implements IFragmentQuery {
 
+	@Qualifier("specific")
 	@Autowired
-	private IObjectToCypher objectToCypher;
+	private XMLToCypherConverter objectToCypher;
 	
 	@Autowired
 	private Neo4jRegistry registry;

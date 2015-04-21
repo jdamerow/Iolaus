@@ -17,5 +17,7 @@ public interface IRepositoryManager {
 	 */
 	public abstract List<List<Object>> executeQuery(String json, List<String> dbInstances);
 
+	List<List<Object>> executeQuery(String json, String id);
+
 
 }

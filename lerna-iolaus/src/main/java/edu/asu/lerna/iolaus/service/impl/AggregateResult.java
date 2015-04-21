@@ -205,6 +205,7 @@ public class AggregateResult implements IAggregateResult {
 			}
 			intermediateResults.put(loopCounter+1, currentIterationResults);
 		}
+		System.out.println(intermediateResults.get(loopCounter).get("source").size());
 		return intermediateResults.get(loopCounter);
 	}
 	

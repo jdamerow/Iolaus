@@ -13,6 +13,7 @@ import java.util.Stack;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import edu.asu.lerna.iolaus.configuration.neo4j.impl.Neo4jRegistry;
@@ -20,6 +21,12 @@ import edu.asu.lerna.iolaus.domain.INeo4jInstance;
 import edu.asu.lerna.iolaus.domain.Label;
 import edu.asu.lerna.iolaus.domain.json.IJsonNode;
 import edu.asu.lerna.iolaus.domain.json.IJsonRelation;
+import edu.asu.lerna.iolaus.domain.json.impl.Nodes;
+import edu.asu.lerna.iolaus.domain.json.impl.ReferenceNode;
+import edu.asu.lerna.iolaus.domain.json.impl.Resultset;
+import edu.asu.lerna.iolaus.domain.json.impl.Row;
+import edu.asu.lerna.iolaus.domain.json.impl.Rows;
+import edu.asu.lerna.iolaus.domain.json.impl.StepNodes;
 import edu.asu.lerna.iolaus.domain.misc.LabelTree;
 import edu.asu.lerna.iolaus.domain.misc.ResultSet;
 import edu.asu.lerna.iolaus.domain.queryobject.IQuery;
@@ -39,6 +46,7 @@ public class QueryHandler implements IQueryHandler{
 
 	@Autowired
 	private IRepositoryManager repositoryManager;
+
 	
 	@Autowired
 	private IFragmentQuery fragmentQuery;
@@ -48,6 +56,14 @@ public class QueryHandler implements IQueryHandler{
 	
 	@Autowired
 	private Neo4jRegistry registry;
+	
+	@Qualifier("specific")
+	@Autowired
+	private XMLToCypherConverter xmlToCypherConverter;
+	
+	@Qualifier("default")
+	@Autowired
+	private XMLToCypherConverterForMultipleDataset xmlToCypherConverterForMultipleDataset;
 
 	private static final Logger logger = LoggerFactory
 			.getLogger(QueryHandler.class);
@@ -94,13 +110,161 @@ public class QueryHandler implements IQueryHandler{
 		return rset;
 	}
 	
+	@Override
+	public Resultset executeStableQuery(IQuery q) {
+		if(q==null)
+			return null;
+		
+		List<List<Object>> finalResults = new ArrayList<List<Object>>();
+		
+		for(String id : q.getDatabaseList()) {
+			String cypherJson = null;
+			if(!q.getDataset().getId().equals("default")) {
+				cypherJson = xmlToCypherConverter.createStableQuery(q.getNode(), q.getDataset().getId(), registry.getNodeIndexName(id));
+			} else {
+				cypherJson = xmlToCypherConverterForMultipleDataset.createStableQuery(q.getNode(), q.getDataset().getId(), registry.getNodeIndexName(id));
+			}
+			List<List<Object>> results = repositoryManager.executeQuery(cypherJson, id);
+			if(results != null) {
+				finalResults.addAll(results);
+			}
+		}
+		
+		return processMappingResults(finalResults);
+	}
 	
+	/*private Map<String, List<Element>> processMappingResults(
+			List<List<Object>> results) {
+		//key->label used in the query   value->List of IJsonNode or IJsonRelatoin
+		Map<String, List<Element>> processedResults=new LinkedHashMap<String,List<Element>>();
+		String target=PropertyOf.TARGET.toString();
+		String rel=PropertyOf.RELATION.toString();
+		Map<String, StepNodes> stepNodeMap = new LinkedHashMap<String, StepNodes>();
+		if(results != null)
+		{
+			for(List<Object> rowList: results)
+			{
+				int targetCount=1;
+				int relationshipCount=1;
+				boolean flag=true;
+				for(Object obj: rowList)
+				{
+					
+					if(obj instanceof IJsonNode)
+					{
+						IJsonNode jsonNode = (IJsonNode) obj;
+						String current;
+						if(flag){//first object will always be "source" for each row
+							current=PropertyOf.SOURCE.toString();
+							flag=false;//flag=false after creating key for first label in each row
+						}else{
+							current=target+targetCount;
+							targetCount++;
+						}
+						
+						StepNodes stepNodes = null;
+						String mappingKey = jsonNode.getData().get("iolaus-mapping-key");
+						if(!stepNodeMap.containsKey(mappingKey)){
+							stepNodes = new StepNodes();
+							stepNodeMap.put(mappingKey, stepNodes);
+						} else{
+							stepNodes = stepNodeMap.get(current);
+						}
+						
+						stepNodes.addNode(jsonNode);
+						
+						if(!processedResults.containsKey(current)) {
+							processedResults.put(current, new LinkedList<Element>());
+						}
+						
+						processedResults.get(current).add(stepNodes);
+						
+					}
+					else if(obj instanceof IJsonRelation) {
+						IJsonRelation jsonRelation = (IJsonRelation) obj;
+						if(!processedResults.containsKey(rel+relationshipCount)){
+							processedResults.put(rel+relationshipCount, new LinkedList<Element>());
+						}
+										
+						processedResults.get(rel+relationshipCount).add((JsonRelation)jsonRelation);
+						relationshipCount++;
+					}
+				}
+			}
+		}
+	
+		return processedResults;
+	}
+*/
+	
+	
+	private Resultset processMappingResults(List<List<Object>> finalResults) {
+		
+		Resultset resultset = null;
+		Nodes nodes = null;
+		Rows rows = null;
+		
+		if(finalResults != null) {
+			resultset = new Resultset();
+			nodes = new Nodes();
+			rows = new Rows();
+			resultset.setNodes(nodes);
+			resultset.setRows(rows);
+			Map<String, String> idMap = new HashMap<String, String>(); 
+			Map<String, StepNodes> stepNodeMap = new LinkedHashMap<String, StepNodes>();
+			int idCounter = 0;
+			for(List<Object> line : finalResults) {
+				Row row = new Row();
+				for(Object obj : line) {
+					if(obj instanceof IJsonNode) {
+						IJsonNode jsonNode = (IJsonNode) obj;
+						StepNodes stepNodes = null;
+						String mappingKey = jsonNode.getData().get("iolausMappingId");
+						if(!stepNodeMap.containsKey(mappingKey)){
+							stepNodes = new StepNodes();
+							stepNodeMap.put(mappingKey, stepNodes);
+							stepNodes.setId(String.valueOf(idCounter++));
+							nodes.addStepNode(stepNodes);
+						} else{
+							stepNodes = stepNodeMap.get(mappingKey);
+						}
+						
+						stepNodes.addNode(jsonNode);
+						idMap.put(jsonNode.getId(), stepNodes.getId());
+						ReferenceNode referenceNode = new ReferenceNode();
+						referenceNode.setId(stepNodes.getId());
+						row.addReferenceNode(referenceNode);
+					}
+				}
+				for(Object obj : line) {
+					if(obj instanceof IJsonRelation) {
+						IJsonRelation jsonRelation = (IJsonRelation) obj;
+						if(idMap.containsKey(jsonRelation.getStartNode())) {
+							jsonRelation.setStartNode(idMap.get(jsonRelation.getStartNode()));
+						} else {
+							System.out.println("Id not found");
+						}
+						
+						if(idMap.containsKey(jsonRelation.getEndNode())) {
+							jsonRelation.setEndNode(idMap.get(jsonRelation.getEndNode()));
+						} else {
+							System.out.println("Id not found");
+						}
+						
+						row.addRelation(jsonRelation);
+					}
+				}
+				rows.addRow(row);
+			}
+		}
+		return resultset;
+	}
+
 	/**
 	 * This method process the results and convert rows into column
 	 * @param results is the List of Rows sent by the executeQuery
 	 * @return the map whose key is label used in the query and value is the List of IJsonNode or IJsonRelation.
 	 */
-	@SuppressWarnings("rawtypes")
 	private Map<String, List<Object>> processResults(List<List<Object>> results) {
 		//key->label used in the query   value->List of IJsonNode or IJsonRelatoin
 		Map<String, List<Object>> processedResults=new LinkedHashMap<String,List<Object>>();
@@ -109,7 +273,7 @@ public class QueryHandler implements IQueryHandler{
 		List<Object> column;
 		if(results != null)
 		{
-			for(List rowList: results)
+			for(List<Object> rowList: results)
 			{
 				int targetCount=1;
 				int relationshipCount=1;

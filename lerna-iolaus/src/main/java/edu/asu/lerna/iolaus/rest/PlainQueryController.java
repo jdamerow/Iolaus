@@ -50,7 +50,7 @@ public class PlainQueryController {
 	 * @return
 	 */
 	@ResponseBody
-	@RequestMapping(value = "/rest/query/plainquery", method = RequestMethod.GET)
+	@RequestMapping(value = "/rest/query/plainquery", method = RequestMethod.POST)
 	public String queryIolaus(HttpServletRequest request,	HttpServletResponse response,@RequestBody String res){
 		
 		if(res == null || res.isEmpty()){

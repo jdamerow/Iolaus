@@ -9,13 +9,14 @@
 		<and>
 			<property name="type" value="Course" />
 			<relationship return="true" type="attended">
+			<property name="year" start="1900"/>
 				<source>
-					<node>
+					<node return="true">
 						<and>
 							<property name="type" value="Person" />
 							<relationship return="true" type="hasAffiliation">
 								<target>
-									<node>
+									<node return="true">
 										<property name="type" value="Institution" />
 										<property name="name" value="Harvard" />
 									</node>

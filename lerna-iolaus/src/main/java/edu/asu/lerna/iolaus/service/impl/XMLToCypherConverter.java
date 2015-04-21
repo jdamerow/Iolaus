@@ -15,11 +15,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import edu.asu.lerna.iolaus.configuration.neo4j.impl.Neo4jRegistry;
+import edu.asu.lerna.iolaus.domain.dataset.impl.Node;
 import edu.asu.lerna.iolaus.domain.misc.ArgumentsInOTC;
 import edu.asu.lerna.iolaus.domain.misc.ReturnParametersOfOTC;
 import edu.asu.lerna.iolaus.domain.queryobject.INode;
 import edu.asu.lerna.iolaus.domain.queryobject.IOperator;
 import edu.asu.lerna.iolaus.domain.queryobject.IProperty;
+import edu.asu.lerna.iolaus.domain.queryobject.IQuery;
 import edu.asu.lerna.iolaus.domain.queryobject.IRelNode;
 import edu.asu.lerna.iolaus.domain.queryobject.IRelationship;
 import edu.asu.lerna.iolaus.domain.queryobject.PropertyOf;
@@ -28,7 +30,7 @@ import edu.asu.lerna.iolaus.domain.queryobject.impl.Property;
 import edu.asu.lerna.iolaus.domain.queryobject.impl.RelNode;
 import edu.asu.lerna.iolaus.domain.queryobject.impl.Relationship;
 import edu.asu.lerna.iolaus.service.ICypherToJson;
-import edu.asu.lerna.iolaus.service.IObjectToCypher;
+import edu.asu.lerna.iolaus.service.IXMLToCypherConverter;
 
 
 /**
@@ -36,13 +38,13 @@ import edu.asu.lerna.iolaus.service.IObjectToCypher;
  * @author Karan Kothari
  */
 
-@Service
-public class ObjectToCypher implements IObjectToCypher {
+@Service(value="specific")
+public class XMLToCypherConverter implements IXMLToCypherConverter {
 	
 	/*private static final Logger logger = LoggerFactory
 			.getLogger(ObjectToCypher.class);*/
 	@Autowired
-	private ICypherToJson cypherToJson;
+	protected ICypherToJson cypherToJson;
 	
 	@Autowired
 	private Neo4jRegistry registry;
@@ -83,7 +85,7 @@ public class ObjectToCypher implements IObjectToCypher {
 		start=buildStartClause(startMap,start, nodeIndexName);
 		match=buildMatchClause(matchMap,match);
 		where=buildWhereClause(whereMap,where,sourceOperator);
-		ret=buildReturnClause(whereMap.keySet(),startMap.keySet(),ret);
+		ret=buildReturnClause(whereMap.keySet(),startMap.keySet(),args.getRelationshipLabels(), ret);
 		String query=buildQuery(start,match,where,ret);
 		String json=cypherToJson.cypherToJson(query);//converts cypher query to json query
 		returnObj.setJson(json);
@@ -126,7 +128,7 @@ public class ObjectToCypher implements IObjectToCypher {
 		start=buildStartClause(startMap,start, nodeIndexName);
 		match=buildMatchClause(matchMap,match);
 		where=buildWhereClause(whereMap,where,sourceOperator);
-		ret=buildReturnClause(whereMap.keySet(),startMap.keySet(),ret);
+		ret=buildReturnClause(whereMap.keySet(),startMap.keySet(), args.getRelationshipLabels(), ret);
 		String query=buildQuery(start,match,where,ret);
 		String json=cypherToJson.cypherToJson(query);//Converts cypher query to json query
 		returnObj.setJson(json);
@@ -223,10 +225,11 @@ public class ObjectToCypher implements IObjectToCypher {
 	 * This method builds a Return clause of the cypher query
 	 * @param  whereMapKeySet  	  is the set of labels used in whereMap  
 	 * @param  startSet	 	  	  is the set of labels used in the start clause  
+	 * @param relationshipLabels  are labels are representing relationships present in the query. 
 	 * @param  ret     			  Initially its value is "return "
 	 * @return      	          returns the return clause of cypher by taking union of whereMapKeySet and startSet
 	 */
-	private String buildReturnClause(Set<String> whereMapKeySet,Set<String> startSet, String ret) {
+	private String buildReturnClause(Set<String> whereMapKeySet,Set<String> startSet, Set<String> relationshipLabels, String ret) {
 		
 		List<String> allVariable=new ArrayList<String>();
 		for(String returnElement:startSet){//adds all the labels that are used in the Start Clause of cypher query
@@ -237,6 +240,13 @@ public class ObjectToCypher implements IObjectToCypher {
 				allVariable.add(returnElement);
 			}
 		}
+		
+		for(String returnElement : relationshipLabels) {
+			if(!allVariable.contains(returnElement)) {
+				allVariable.add(returnElement);
+			}
+		}
+		
 		//This loop builds the return clause of the cypher query
 		for(String returnElement:allVariable){
 			if(!ret.equals("return "))
@@ -254,7 +264,7 @@ public class ObjectToCypher implements IObjectToCypher {
 	 * @param  ret   	 is return clause of cypher
 	 * @return      	 returns the cypher query
 	 */	
-	private String buildQuery(String start,String match,String where,String ret) {
+	protected String buildQuery(String start,String match,String where,String ret) {
 		String query=start;
 		if(!match.equals("Match ")){//If no relation specified in the XML
 			query=query+"     "+match;
@@ -385,6 +395,9 @@ public class ObjectToCypher implements IObjectToCypher {
 		objectToLabelMap.put(relationship,PropertyOf.RELATION.toString()+args.getCurrentRelationship());
 		List<Object> relationshipDetails = relationship.getSourceOrTargetOrProperty();
 		Iterator<Object> relationshipDetailsIterator = relationshipDetails.iterator();
+		
+		args.addToRelationshipLabels(PropertyOf.RELATION.toString() + args.getCurrentRelationship());
+		
 		while(relationshipDetailsIterator.hasNext()){
 
 			Object element =relationshipDetailsIterator.next();
@@ -718,7 +731,7 @@ public class ObjectToCypher implements IObjectToCypher {
 	 * @param  value   is a String
 	 * @return         true if it is Numeric else return false
 	 */
-	private boolean isNumeric(String value) {
+	protected boolean isNumeric(String value) {
 		return value.matches("(\\d*)");
 	}
 	
@@ -729,6 +742,368 @@ public class ObjectToCypher implements IObjectToCypher {
 	 */
 	private int increment(int num) {
 		return num+1;
+	}
+
+	@Override
+	public void createStableQuery(IQuery query) {
+
+		
+	}
+
+	@Override
+	public String createStableQuery(INode node, String dataset, String nodeIndex) {
+		
+		List<QueryFragment> queryFragments = new ArrayList<QueryFragment>(); 
+		
+		while(node != null) {
+			QueryFragment queryFragment = createQueryFragment(node);
+			queryFragments.add(queryFragment);
+			node = queryFragment.getNextNode();
+		}
+		
+		String startClause = createStart(queryFragments, nodeIndex);
+		String matchClause = createMatch(queryFragments); 
+		String whereClause = createWhere(queryFragments, dataset);
+		String returnClause = createReturn(queryFragments);
+		//System.out.println(startClause + " " + matchClause + " " + whereClause + " " + returnClause);
+		
+		String query = buildQuery(startClause, matchClause, whereClause, returnClause);
+		
+		String jsonQuery = cypherToJson.cypherToJson(query);
+		
+		System.out.println(jsonQuery);
+		
+		return jsonQuery;
+		
+	}
+	
+	protected String createReturn(List<QueryFragment> queryFragments) {
+
+		String returnClause = " " + r;
+		int nodeIndex = 1;
+		int relIndex = 1;
+		
+		boolean moreThanOneReturnLabels = false;
+		
+		for(QueryFragment fragment : queryFragments) {
+			if(fragment.returnNode) {
+				if(moreThanOneReturnLabels) {
+					returnClause += ",";
+				} else {
+					moreThanOneReturnLabels = true;
+				}
+				
+				returnClause += "n" + nodeIndex;
+				
+			}
+			
+			if(fragment.returnRelationship) {
+				if(moreThanOneReturnLabels) {
+					returnClause += ",";
+				} else {
+					moreThanOneReturnLabels = true;
+				}
+				
+				returnClause += "r" + relIndex;
+				
+			}
+
+			nodeIndex++;
+			relIndex++;
+		}
+		
+		return returnClause;
+	}
+
+	protected String createWhere(List<QueryFragment> queryFragments,
+			String dataset) {
+		String whereClause = w;
+		int nodeIndex = 1;
+		int relIndex = 1;
+		boolean moreThanOnePropertyInWhereClause = false;
+		
+		String datasetExpression = "dataset=\"" + dataset  + "\""; 
+		
+		for(QueryFragment fragment : queryFragments) {
+			String nodeLabel = "n" + nodeIndex;
+			String relLabel = "r" + relIndex;
+			
+			if(moreThanOnePropertyInWhereClause) {
+				whereClause += " and ";
+			} else {
+				moreThanOnePropertyInWhereClause = true;
+			}
+			
+			List<IProperty> nodeProperties = fragment.getNodeProperties();
+			whereClause += nodeLabel + "." + datasetExpression;
+
+			
+			if(nodeProperties != null) {
+				//start from 1 since 1st property is already included in Start clause
+				for(int i = 1; i < nodeProperties.size(); i++) {
+					IProperty property = nodeProperties.get(i);
+					whereClause += " and ";
+					String expression = null;
+					if(isNumeric(property.getValue())) {
+						expression= property.getName() + "=" + property.getValue();
+					} else {
+						expression = property.getName() + "=~\"" + property.getValue() + "\"";
+					}
+					whereClause += nodeLabel + "." + expression;
+				}
+			}
+			
+			List<IProperty> relationshipProperties = fragment.getRelationshipProperties();
+			if(relationshipProperties != null) {
+				for(int i = 0; i < relationshipProperties.size(); i++) {
+					IProperty property = relationshipProperties.get(i);
+					
+					if(property.getStart() != null) {
+						whereClause += " and ";
+						String expression = property.getName() + ">=" + property.getStart();
+						whereClause += relLabel + "." + expression;
+					}
+					
+					if(property.getEnd() != null) {
+						whereClause += " and ";
+						String expression = property.getName() + "<=" + property.getEnd();
+						whereClause += relLabel + "." + expression;
+					}
+					
+					if(property.getValue() != null) {
+						whereClause += " and ";
+						String expression;
+						if(isNumeric(property.getValue())) {
+							expression= property.getName() + "=" + property.getValue();
+						} else {
+							expression = property.getName() + "=~\"" + property.getValue() + "\"";
+						}
+						whereClause += relLabel + "." + expression;
+					}
+				}
+			}
+			
+			nodeIndex++;
+			relIndex++;
+		}
+		
+		
+		return whereClause;
+	}
+
+	protected String createMatch(List<QueryFragment> queryFragments) {
+		String matchClause = m;
+		
+		int index = 1;
+		for(QueryFragment fragment : queryFragments) {
+			
+			String rel;
+			matchClause += "n" + index;
+			if(fragment.getRelationshipType() != null) {
+				System.out.println(fragment.getRelationshipType());
+				if(!fragment.getRelationshipType().equals("--ALL--")) {
+					 rel = "[r" + index + ":" + fragment.getRelationshipType() +"]";
+				} else {
+					rel = "[r" + index +"]";
+				}
+				
+				
+				if(fragment.getNextNode() != null) {
+					
+					if(fragment.getDirection().equals(FORWARD)) {
+						matchClause += "-" + rel + "->";
+					} else {
+						matchClause += "<-" + rel + "-";
+					}
+					
+				} else {
+					if(fragment.getDirection().equals(FORWARD)) {
+						matchClause += "-" + rel + "->()";
+					} else {
+						matchClause += "<-" + rel + "-()";
+					}
+				}
+				
+			}
+			
+			index++;
+		}
+		
+		return matchClause;
+	}
+
+	private String createStart(List<QueryFragment> queryFragments,
+			String nodeIndex) {
+		
+		String startClause = s;
+		int index = 1;
+		for(QueryFragment fragment : queryFragments) {
+			
+			if(fragment.getNodeProperties().size() > 0){
+				if(index > 1) {
+					startClause += ",";
+				}
+				startClause += "n" + index + "=node:" + nodeIndex + "(" + fragment.getNodeProperties().get(0).getName() + "=\"" + fragment.getNodeProperties().get(0).getValue() + "\")";
+			}
+			index++;
+		}
+		
+		if(startClause.equals(s))
+			startClause = "";
+		
+		return startClause;
+	}
+
+	protected QueryFragment createQueryFragment(INode node) {
+		
+		QueryFragment fragment = null;
+		
+		if(node != null) {
+			
+			fragment = new QueryFragment();
+			
+			List<IProperty> nodeProperties = null;
+			List<IProperty> relationshipProperties = null;
+			String relationshipType = null;
+			String direction = null;
+			INode nextNode = null;
+			
+			IOperator op = null;
+			
+			if((op = getOperator(node)) != null){
+				nodeProperties = getProperties(op.getSourceOrTargetOrProperty());
+				IRelationship relationship = getRelationship(op);
+				if(relationship != null) {
+					relationshipProperties = getProperties(relationship.getSourceOrTargetOrProperty());
+					relationshipType = relationship.getType();
+					JAXBElement<?> relNode = getRelNodeJAXBElement(relationship);
+					if(relNode != null && relNode.getName().toString().contains("target")) {
+						direction = FORWARD;
+						nextNode = ((RelNode)relNode.getValue()).getNode();
+					} else if(relNode != null && relNode.getName().toString().contains("source")) {
+						direction = BACKWARD;
+						nextNode = ((RelNode)relNode.getValue()).getNode();
+					}
+					
+				}
+				
+				if(relationship.isReturn() != null) {
+					fragment.returnRelationship = relationship.isReturn();
+				}
+			
+			} else {
+				nodeProperties = getProperties(node.getPropertyOrRelationshipOrAnd());
+			}
+			
+			fragment.setNodeProperties(nodeProperties);
+			fragment.setRelationshipProperties(relationshipProperties);
+			fragment.setDirection(direction);
+			fragment.setRelationshipType(relationshipType);
+			fragment.setNextNode(nextNode);
+			if(node.isReturn() != null) {
+				fragment.returnNode = node.isReturn();
+			} 
+			
+		}
+		
+		return fragment;
+	}
+
+	
+	private JAXBElement<?> getRelNodeJAXBElement(IRelationship relationship) {
+		
+		for(Object element : relationship.getSourceOrTargetOrProperty()) {
+			if(element instanceof JAXBElement<?>) {
+				return (JAXBElement<?>)element;
+			}
+		}
+		
+		return null;
+	}
+
+	private IRelationship getRelationship(IOperator op) {
+		
+		for(Object element : op.getSourceOrTargetOrProperty()) {
+			if(element instanceof Relationship)
+				return (Relationship) element;
+		}
+
+		return null;
+	}
+
+	private List<IProperty> getProperties(List<Object> elements) {
+		
+		List<IProperty> nodeProperties = new ArrayList<IProperty>();
+		
+		for(Object element : elements) {
+			if(element instanceof Property) {
+				nodeProperties.add((Property)element);
+			}
+		}
+		return nodeProperties;
+	}
+
+	private IOperator getOperator(INode node) {
+		
+		for(Object element : node.getPropertyOrRelationshipOrAnd()) {
+			if(element instanceof JAXBElement<?>) {
+				return (Operator)((JAXBElement<?>)element).getValue();
+			}
+		}
+		
+		return null;
+	}
+	
+	protected class QueryFragment {
+		private List<IProperty> nodeProperties;
+		private List<IProperty> relationshipProperties;
+		private String relationshipType;
+		private String direction;
+		private INode nextNode;
+		boolean returnNode = false;
+		boolean returnRelationship = false;
+
+		public List<IProperty> getNodeProperties() {
+			return nodeProperties;
+		}
+
+		public void setNodeProperties(List<IProperty> nodeProperties) {
+			this.nodeProperties = nodeProperties;
+		}
+
+		public List<IProperty> getRelationshipProperties() {
+			return relationshipProperties;
+		}
+
+		public void setRelationshipProperties(
+				List<IProperty> relationshipProperties) {
+			this.relationshipProperties = relationshipProperties;
+		}
+
+		public String getRelationshipType() {
+			return relationshipType;
+		}
+
+		public void setRelationshipType(String relationshipType) {
+			this.relationshipType = relationshipType;
+		}
+
+		public String getDirection() {
+			return direction;
+		}
+
+		public void setDirection(String direction) {
+			this.direction = direction;
+		}
+
+		public INode getNextNode() {
+			return nextNode;
+		}
+
+		public void setNextNode(INode nextNode) {
+			this.nextNode = nextNode;
+		}
+
 	}
 
 }

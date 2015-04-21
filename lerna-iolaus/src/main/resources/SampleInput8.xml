@@ -8,15 +8,15 @@
 	<node return="true">
 		<and>
 			<property name="type" value="Location" />
-			<relationship return="false" type="hasLocation">
+			<relationship return="true" type="hasLocation">
 				<source>
-					<node>
+					<node return="true">
 						<and>
 							<property name="type" value="Person" />
 							<relationship return="false" type="attended">
 								<property name="year" value="1920"/>
 								<target>
-									<node>
+									<node return="true">
 										<property name="type" value="Course" />
 										<property name="name" value="Botany" />
 									</node>

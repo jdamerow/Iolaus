@@ -2,6 +2,7 @@ package edu.asu.lerna.iolaus.service;
 
 import edu.asu.lerna.iolaus.domain.misc.ReturnParametersOfOTC;
 import edu.asu.lerna.iolaus.domain.queryobject.INode;
+import edu.asu.lerna.iolaus.domain.queryobject.IQuery;
 import edu.asu.lerna.iolaus.domain.queryobject.IRelNode;
 import edu.asu.lerna.iolaus.domain.queryobject.impl.Node;
 import edu.asu.lerna.iolaus.domain.queryobject.impl.RelNode;
@@ -11,7 +12,7 @@ import edu.asu.lerna.iolaus.domain.queryobject.impl.RelNode;
  * @author Karan Kothari
  *
  */
-public interface IObjectToCypher {
+public interface IXMLToCypherConverter {
 	/**
 	 * This method converts {@link Node} to the cypher query.
 	 * @param node is a {@link Node} object.
@@ -28,8 +29,14 @@ public interface IObjectToCypher {
 	 */
 	ReturnParametersOfOTC objectToCypher(IRelNode node,String dataSet, String nodeIndexName);
 	
+	void createStableQuery(IQuery query);
+	
 	String s="Start ";
 	String m="Match ";
 	String w="Where ";
 	String r="return ";
+	String createStableQuery(INode node, String id, String nodeIndex);
+	
+	public final String FORWARD = "to";
+	public final String BACKWARD = "from";
 }
