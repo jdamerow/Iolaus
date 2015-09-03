@@ -3,7 +3,6 @@ package edu.asu.lerna.iolaus.service.login;
 import javax.persistence.Entity;
 
 import org.springframework.security.core.GrantedAuthority;
-import org.zoodb.jdo.spi.PersistenceCapableImpl;
 
 import edu.asu.lerna.iolaus.domain.implementation.Role;
 import edu.asu.lerna.iolaus.domain.implementation.User;
@@ -15,7 +14,7 @@ import edu.asu.lerna.iolaus.domain.implementation.User;
  *
  */
 @Entity
-public class LernaGrantedAuthority extends PersistenceCapableImpl implements GrantedAuthority{
+public class LernaGrantedAuthority implements GrantedAuthority{
 
 	private String roleName;
 	private static final long serialVersionUID = 711167440813692597L;

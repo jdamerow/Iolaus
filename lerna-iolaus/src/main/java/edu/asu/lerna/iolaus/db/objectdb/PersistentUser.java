@@ -5,10 +5,9 @@ import java.util.List;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 
-import org.zoodb.jdo.spi.PersistenceCapableImpl;
 
 @Entity
-public class PersistentUser extends PersistenceCapableImpl {
+public class PersistentUser {
 
 	private String name;
 	@Id

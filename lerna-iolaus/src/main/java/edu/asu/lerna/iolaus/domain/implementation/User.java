@@ -3,7 +3,6 @@ package edu.asu.lerna.iolaus.domain.implementation;
 import java.util.List;
 
 import org.springframework.security.core.userdetails.UserDetails;
-import org.zoodb.jdo.spi.PersistenceCapableImpl;
 
 import edu.asu.lerna.iolaus.service.login.LernaGrantedAuthority;
 
