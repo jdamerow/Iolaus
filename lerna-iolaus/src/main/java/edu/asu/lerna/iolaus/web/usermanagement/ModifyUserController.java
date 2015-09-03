@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import edu.asu.lerna.iolaus.converters.UserTranslator;
+import edu.asu.lerna.iolaus.domain.implementation.IUser;
 import edu.asu.lerna.iolaus.domain.implementation.User;
 import edu.asu.lerna.iolaus.factory.IUserFactory;
 import edu.asu.lerna.iolaus.roles.IRoleName;
@@ -165,7 +166,7 @@ public class ModifyUserController {
 		}
 		// Validate the user name modification for uniqueness or orginial name
 		if(!userName.equals(userForm.getUsername().toLowerCase())){
-			User user = userManager.getUserById(userForm.getUsername().toLowerCase());
+			IUser user = userManager.getUserById(userForm.getUsername().toLowerCase());
 			if (!(user == null)){
 				model.addAttribute("errorMsg", "Username should original or unique one");
 				model.addAttribute("availableRoles", roleManager.getRolesList());
@@ -183,8 +184,8 @@ public class ModifyUserController {
 		}
 
 		// Create user details for modification in the db
-		User user = userFactory.createUser(userForm.getUsername().toLowerCase(), userForm.getName(), userForm.getEmail(), userOld.getPassword(), userForm.getRoles());
-		userManager.modifyUser(user, userName);
+		IUser user = userFactory.createUser(userForm.getUsername().toLowerCase(), userForm.getName(), userForm.getEmail(), userOld.getPassword(), userForm.getRoles());
+		userManager.saveUser(user);
 
 		return "redirect:/auth/user/listuser";
 	}
@@ -207,7 +208,7 @@ public class ModifyUserController {
 		}
 		// If user is authorized
 		// get User object using username
-		User user = userManager.getUserById(userName);
+		IUser user = userManager.getUserById(userName);
 		// If user not found
 		if(user == null){
 			model.addAttribute("message","User not found");
@@ -259,7 +260,7 @@ public class ModifyUserController {
 		ModifyUserBackingBean mubb = userTranslator.translateModifyUser(user);
 
 		User userPassChange = userFactory.createUser(mubb.getUsername(), mubb.getName(), mubb.getEmail(), passForm.getNewpassword(), mubb.getRoles());
-		userManager.modifyUser(userPassChange, userName);
+		userManager.saveUser(userPassChange);
 
 		// Prepare user backing bean
 		mubb = userTranslator.translateModifyUser(userPassChange);

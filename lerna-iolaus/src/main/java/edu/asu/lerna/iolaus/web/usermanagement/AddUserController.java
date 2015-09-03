@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import edu.asu.lerna.iolaus.domain.implementation.IUser;
 import edu.asu.lerna.iolaus.domain.implementation.User;
 import edu.asu.lerna.iolaus.factory.IUserFactory;
 import edu.asu.lerna.iolaus.roles.IRoleName;
@@ -104,7 +105,7 @@ public class AddUserController {
 		}		
 		
 		// Create the user object with the form data
-		User user = userFactory.createUser(userForm.getUsername().toLowerCase(), userForm.getName(), userForm.getEmail(), userForm.getPassword(), userForm.getRoles());
+		IUser user = userFactory.createUser(userForm.getUsername().toLowerCase(), userForm.getName(), userForm.getEmail(), userForm.getPassword(), userForm.getRoles());
 		// Saves into db4o
 		userManager.saveUser(user);
 		

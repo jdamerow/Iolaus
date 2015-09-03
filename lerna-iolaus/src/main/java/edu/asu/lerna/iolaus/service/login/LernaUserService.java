@@ -1,15 +1,13 @@
 package edu.asu.lerna.iolaus.service.login;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import edu.asu.lerna.iolaus.db.ILoginManager;
 import edu.asu.lerna.iolaus.domain.implementation.User;
+import edu.asu.lerna.iolaus.service.IUserManager;
 
 /**
  *  Customized {@link UserDetailsService} class to get user details and 
@@ -22,7 +20,7 @@ public class LernaUserService implements UserDetailsService{
 
 	
 	@Autowired
-	private ILoginManager userManager;
+	private IUserManager userManager;
 
 	/**
 	 *  Customized loadUser method for our project

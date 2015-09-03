@@ -24,7 +24,7 @@ import edu.asu.lerna.iolaus.domain.implementation.Neo4jInstance;
  *
  */
 
-@PropertySource(value="/lerna.properties")
+@PropertySource(value="classpath:/lerna.properties")
 @Service
 public class Neo4jConfFileReader {
 	

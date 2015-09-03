@@ -2,6 +2,7 @@ package edu.asu.lerna.iolaus.service;
 
 import java.util.List;
 
+import edu.asu.lerna.iolaus.domain.implementation.IUser;
 import edu.asu.lerna.iolaus.domain.implementation.User;
 
 /**
@@ -17,7 +18,7 @@ public interface IUserManager {
 	 * @param {@link User} to be saved.
 	 * @return true if successful otherwise false.
 	 */
-	public abstract boolean saveUser(User user);
+	public abstract void saveUser(IUser user);
 
 	/**
 	 * Get {@link User} by username.
@@ -41,14 +42,6 @@ public interface IUserManager {
 	 */
 	public abstract boolean deleteUser(String username);
 
-	/**
-	 * Modify the {@link User} based on the username
-	 * @param user This is used to get the object to be modified from DB
-	 * @param username 
-	 * @return {@link Boolean} value for the status of this operation
-	 */
-	public abstract boolean modifyUser(User user, String username);
-	
 	/**
 	 * Check if the {@link User} has any admin access, 
 	 * used for accessing resources which is restricted to the Admin
