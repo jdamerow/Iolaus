@@ -1,6 +1,8 @@
 package edu.asu.lerna.iolaus.service.impl;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -13,7 +15,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import edu.asu.lerna.iolaus.domain.queryobject.INode;
 import edu.asu.lerna.iolaus.domain.queryobject.IQuery;
 import edu.asu.lerna.iolaus.domain.queryobject.impl.Query;
 
@@ -43,13 +44,23 @@ public class QueryHandlerTest {
 	}
 
 	@Test
-	public void testExecuteQuery() {
-		
+	public void testExecuteNullQuery() {	
 		assertNull(queryHandler.executeQuery(null));
+	}
+	
+	@Test
+	public void testExecuteEmptyQuery() {
 		assertNull(queryHandler.executeQuery(new Query()));
+	}
+	
+	@Test
+	public void testExecuteGetResultSet() {
 		assertNotNull(queryHandler.executeQuery(querySimple));
 		assertNotNull(queryHandler.executeQuery(querySimple).getResultSet());
-		assertNotSame(0, queryHandler.executeQuery(querySimple).getResultSet().size());
+	}
+	
+	@Test
+	public void testExecuteResultSetNotEmpty() {
 		assertEquals(3,queryHandler.executeQuery(querySimple).getResultSet().size());
 	}
 

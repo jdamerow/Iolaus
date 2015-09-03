@@ -8,6 +8,7 @@
 
 package edu.asu.lerna.iolaus.domain.dataset.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.xml.bind.annotation.XmlAccessType;
@@ -145,5 +146,33 @@ public class Node implements INode{
     	public INode unmarshal(Node v) { return v; }
     	public Node marshal(INode v) { return (Node)v; }
     }
+
+	@Override
+	public List<String> getNodeAsJsonForIndexing(String uri) {
+		List<String> jsons = new ArrayList<String>();
+		StringBuffer jsonBody=new StringBuffer();
+		
+		if(label != null){
+			jsonBody.append("{\n\t");
+			jsonBody.append("\"key\" : \"label\",");
+			jsonBody.append("\n\t\"value\" : \""+ label + "\",");
+			jsonBody.append("\n\t\"uri\" : \"" + uri + "\"");
+			jsonBody.append("\n}");
+			jsons.add(jsonBody.toString());
+		}
+		if(propertyList != null){
+			for(IProperty property:propertyList){
+				jsonBody=new StringBuffer();
+				jsonBody.append("{\n\t");
+				jsonBody.append("\"key\" : \""+property.getName()+"\",");
+				jsonBody.append("\n\t\"value\" : \"" + property.getValue() + "\",");
+				jsonBody.append("\n\t\"uri\" : \"" + uri + "\"");
+				jsonBody.append("\n}");
+				jsons.add(jsonBody.toString());
+			}
+		}
+		
+		return jsons;
+	}
 
 }

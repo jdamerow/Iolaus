@@ -111,7 +111,7 @@ public class UploadMBLDataManager implements IUploadMBLDataManager {
 
 	private void createRelationship(Relation relation, String fromNodeId) throws JsonGenerationException, JsonMappingException, IOException {
 		String relationshipIUri = fromNodeId + "/" + relationEntryPoint;
-		uploadManager.makeRESTCall(relationshipIUri, relation.toJson());
+		uploadManager.makeRESTCall(relationshipIUri, relation.toJson(), registry.getInstanceById("1"));
 	}
 
 	private String createNode(Node node, String instanceId) throws JsonGenerationException, JsonMappingException, IOException, IndexPropertyException, Neo4jInstanceIdDoesNotExist {
@@ -123,13 +123,13 @@ public class UploadMBLDataManager implements IUploadMBLDataManager {
 			String indexName = getNodeIndexName(instanceId);
 			nodeId = retrieveNodeIdFromNeo4j(node, entryPoint, indexName);
 			if(nodeId == null) {
-				nodeId = uploadManager.makeRESTCall(nodeEntryPointUri, node.toJson());
+				nodeId = uploadManager.makeRESTCall(nodeEntryPointUri, node.toJson(), registry.getInstanceById(instanceId));
 				cacheManager.cacheNodeId(node.getUri(), instanceId, nodeId);
 				if(indexName != null) {
 					String indexUri = entryPoint + indexNameEntryPoint + "/" + nodeEntryPoint + "/" + indexName;
 					for(String propertyJson : node.getPropertyJson(nodeId)) {
 						logger.info("Adding node property to index - " + nodeId);
-						if(uploadManager.makeRESTCall(indexUri, propertyJson) == null){
+						if(uploadManager.makeRESTCall(indexUri, propertyJson, registry.getInstanceById(instanceId)) == null){
 							throw new IndexPropertyException("Error in inserting property to Neo4j instance\n" +
 									"Node index URI - " + nodeId + "Json Property - " + propertyJson);
 						}

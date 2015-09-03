@@ -5,18 +5,19 @@ import java.util.List;
 
 public interface INode {
 
-	long getId();
+	public long getId();
 
-	void setId(long value);
+	public void setId(long value);
 
-	List<IProperty> getPropertyList();
+	public List<IProperty> getPropertyList();
 
-	void setPropertyList(List<IProperty> value);
+	public void setPropertyList(List<IProperty> value);
 
-	String getLabel();
+	public String getLabel();
 
-	void setLabel(String value);
+	public void setLabel(String value);
 
-	String getJsonNode();
+	public String getJsonNode();
 
+	public List<String> getNodeAsJsonForIndexing(String uri);
 }

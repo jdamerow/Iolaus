@@ -2,6 +2,7 @@ package edu.asu.lerna.iolaus.service;
 
 import javax.xml.bind.JAXBException;
 
+import edu.asu.lerna.iolaus.domain.INeo4jInstance;
 import edu.asu.lerna.iolaus.domain.dataset.IDataset;
 import edu.asu.lerna.iolaus.exception.UploadDatasetException;
 
@@ -21,7 +22,7 @@ public interface IUploadManager {
 	 * @throws JAXBException
 	 * @throws UploadDatasetException 
 	 */
-	boolean uploadDataset(IDataset dataset) throws JAXBException, UploadDatasetException;
+	public boolean uploadDataset(IDataset dataset) throws JAXBException, UploadDatasetException;
 
-	String makeRESTCall(String entryPointUri, String json);
+	public String makeRESTCall(String entryPointUri, String json, INeo4jInstance neo4jInstance);
 }

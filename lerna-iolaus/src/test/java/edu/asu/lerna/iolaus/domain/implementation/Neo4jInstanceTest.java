@@ -8,9 +8,11 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import edu.asu.lerna.iolaus.domain.INeo4jInstance;
+
 public class Neo4jInstanceTest {
 	
-	private Neo4jInstance neo4jInstance;
+	private INeo4jInstance neo4jInstance;
 	
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {

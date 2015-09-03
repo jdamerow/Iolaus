@@ -1,9 +1,11 @@
 id:1
-description:Instance is running at port 7476
+description:Instance is running at port 7474
 host:localhost
-port:7476
+port:7474
 active:true
 nodeIndex:new_index
 relationIndex:new_rel_index
 dbPath:db/data
 protocol:http
+password:neo4j123
+userName:neo4j

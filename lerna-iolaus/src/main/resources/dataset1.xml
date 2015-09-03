@@ -1,0 +1,103 @@
+<?xml version="1.0" ?>
+<dataset xmlns="http://digitalhps.org/lerna-Dataset-model"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://digitalhps.org/lerna-Dataset-model dataset-schema.xsd">
+
+	<datasetType>String</datasetType>
+	<indexRelation>true</indexRelation>
+	<databaseList>
+		<database>1</database>
+	</databaseList>
+
+	<nodeList>
+		<node>
+			<id>10000</id>
+			<label>Jennie</label>
+			<propertyList>
+				<property>
+					<name>type</name>
+					<value>Person</value>
+				</property>
+				<property>
+					<name>firstName</name>
+					<value>Jennie C. R.</value>
+				</property>
+				<property>
+					<name>lastName</name>
+					<value>Smith</value>
+				</property>
+			</propertyList>
+		</node>
+		<node>
+			<id>10001</id>
+			<label>John</label>
+			<propertyList>
+				<property>
+					<name>type</name>
+					<value>Person</value>
+				</property>
+				<property>
+					<name>firstName</name>
+					<value>John H.</value>
+				</property>
+				<property>
+					<name>lastName</name>
+					<value>Northrup</value>
+				</property>
+			</propertyList>
+		</node>
+		<node>
+			<id>10002</id>
+			<label>John</label>
+			<propertyList>
+				<property>
+					<name>type</name>
+					<value>Person</value>
+				</property>
+				<property>
+					<name>firstName</name>
+					<value>Joseph C.</value>
+				</property>
+				<property>
+					<name>lastName</name>
+					<value>Herrick</value>
+				</property>
+			</propertyList>
+		</node>
+	</nodeList>
+
+	<relationList>
+		<relation>
+			<id>20000</id>
+			<type>range</type>
+			<propertyList>
+				<property>
+					<name>start</name>
+					<value>1800</value>
+				</property>
+				<property>
+					<name>end</name>
+					<value>1920</value>
+				</property>
+			</propertyList>
+			<startNode>10000</startNode>
+			<endNode>10001</endNode>
+		</relation>
+		<relation>
+			<id>20001</id>
+			<type>range</type>
+			<propertyList>
+				<property>
+					<name>start</name>
+					<value>1700</value>
+				</property>
+				<property>
+					<name>end</name>
+					<value>1720</value>
+				</property>
+			</propertyList>
+			<startNode>10001</startNode>
+			<endNode>10002</endNode>
+		</relation>
+	</relationList>
+</dataset>

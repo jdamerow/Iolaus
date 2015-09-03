@@ -14,6 +14,7 @@ public class Neo4jInstance implements INeo4jInstance{
 	private String relationIndex;
 	private String dbPath;
 	private String protocol;
+	private String password;
 	
 	@Override
 	public String getDbPath() {
@@ -107,5 +108,27 @@ public class Neo4jInstance implements INeo4jInstance{
 	@Override
 	public void setProtocol(String protocol) {
 		this.protocol = protocol;
+	}
+
+	public String getPassword() {
+		return password;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
+	}
+	
+	@Override
+	public String getRootPath() {
+		StringBuffer sb = new StringBuffer();
+		sb.append(getProtocol());
+		sb.append("://");
+		sb.append(getHost());
+		sb.append(":");
+		sb.append(getPort());
+		sb.append("/");
+		sb.append(getDbPath());
+		sb.append("/");
+		return sb.toString();
 	}
 }

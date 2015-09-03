@@ -21,4 +21,8 @@ public interface INeo4jInstance {
 	void setRelationIndex(String indexName);
 	void setProtocol(String protocol);
 	String getProtocol();
+	
+	public void setPassword(String password);
+	public String getPassword();
+	public abstract String getRootPath();
 }

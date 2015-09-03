@@ -77,7 +77,7 @@ public class InstanceController {
 	 * @throws UnsupportedEncodingException 
 	 */
 	@RequestMapping(value = "/auth/addInstance", method = RequestMethod.POST)
-	public String addInstance(@ModelAttribute("SpringWeb")Neo4jInstance instance, ModelMap model,Principal principal) throws UnsupportedEncodingException {
+	public String addInstance(@ModelAttribute("SpringWeb")INeo4jInstance instance, ModelMap model,Principal principal) throws UnsupportedEncodingException {
 		instance.setUserName(principal.getName());
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		Collection<? extends GrantedAuthority> authorities = auth.getAuthorities();
@@ -175,7 +175,7 @@ public class InstanceController {
 	 * @throws UnsupportedEncodingException 
 	 */
 	@RequestMapping(value = "/auth/editInstance/updateInstance", method = RequestMethod.POST)
-	public String updateInstance(@ModelAttribute("SpringWeb")Neo4jInstance instance, ModelMap model) throws UnsupportedEncodingException, IOException {
+	public String updateInstance(@ModelAttribute("SpringWeb")INeo4jInstance instance, ModelMap model) throws UnsupportedEncodingException, IOException {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		Collection<? extends GrantedAuthority> authorities = auth.getAuthorities();
 		boolean access = false; 

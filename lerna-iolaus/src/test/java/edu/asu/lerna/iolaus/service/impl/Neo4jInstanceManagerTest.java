@@ -31,7 +31,7 @@ public class Neo4jInstanceManagerTest {
 	@Autowired
 	private Neo4jInstanceManager instanceManager;
 	
-	private Neo4jInstance instance;
+	private INeo4jInstance instance;
 	
 	@Before
 	public void setUp() throws Exception {

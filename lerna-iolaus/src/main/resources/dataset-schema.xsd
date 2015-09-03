@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xsd:schema targetNamespace="http://digitalhps.org/lerna-Dataset-model" elementFormDefault="qualified" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://digitalhps.org/lerna-Dataset-model">
+<xsd:schema targetNamespace="http://digitalhps.org/lerna-Dataset-model"
+	elementFormDefault="qualified" xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+	xmlns="http://digitalhps.org/lerna-Dataset-model">
 
     <xsd:element name="dataset">
     	<xsd:complexType>
