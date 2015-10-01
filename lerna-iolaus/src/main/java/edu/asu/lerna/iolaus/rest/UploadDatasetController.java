@@ -72,7 +72,6 @@ public class UploadDatasetController {
 			HttpServletResponse response, @RequestBody String datasetXml)
 			throws JAXBException, UploadDatasetException {
 
-		logger.info("Uploading the dataset");
 		String randomNeo4jInstanceId = null;
 
 		IDataset dataset = xmlToObject(datasetXml);
@@ -94,8 +93,6 @@ public class UploadDatasetController {
 		}
 
 		uploadManager.uploadDataset(dataset);
-
-		logger.info("Uploding finished");
 
 		String instanceIdInJsonForm = convertToJson(randomNeo4jInstanceId);
 
